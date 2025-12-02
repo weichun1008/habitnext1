@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Sun, Calendar, Target } from 'lucide-react';
+import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User } from 'lucide-react';
 import AppHeader from './AppHeader';
 import TaskCard from './TaskCard';
 import TaskFormModal from './TaskFormModal';
@@ -9,6 +9,7 @@ import TaskLibraryModal from './TaskLibraryModal';
 import DashboardSummaryCard from './DashboardSummaryCard';
 import DashboardDetailView from './DashboardDetailView';
 import { generateId, getTodayStr } from '@/lib/utils';
+import { CATEGORY_CONFIG } from '@/lib/constants';
 
 const MainApp = () => {
     const [tasks, setTasks] = useState([
@@ -18,7 +19,8 @@ const MainApp = () => {
             details: '目標是每日 8000 步，飯後散步是好幫手。',
             dailyProgress: { [getTodayStr()]: { value: 4500, completed: false } },
             recurrence: { type: 'daily', interval: 1 },
-            reminder: { type: 'smart', time: '20:00', condition: 'if_incomplete' },
+            time: '08:00',
+            reminder: { enabled: true, offset: 0 },
             history: { '2025-11-26': true, '2025-11-27': true }
         },
         {
@@ -27,7 +29,8 @@ const MainApp = () => {
             details: '分批小口喝水，定時提醒自己。',
             dailyProgress: { [getTodayStr()]: { value: 1200, completed: false } },
             recurrence: { type: 'daily', interval: 1 },
-            reminder: { type: 'fixed', time: '10:00' },
+            time: '09:00',
+            reminder: { enabled: true, offset: 60 },
             history: { '2025-11-26': false }
         },
         {
@@ -42,18 +45,20 @@ const MainApp = () => {
             recurrence: { type: 'daily', interval: 1 },
             history: {}
         },
+        // Flexible Weekly Goal
+        {
+            id: 't_flex_1', frequency: 'weekly', type: 'binary', category: 'dumbbell',
+            title: '重訓 3 次',
+            details: '每週目標：完成 3 次重訓。',
+            subtasks: [],
+            recurrence: { type: 'weekly', mode: 'period_count', periodTarget: 3 },
+            history: { '2025-11-25': true, '2025-11-27': true }
+        },
         {
             id: 't4', frequency: 'weekly', type: 'mission', category: 'aperture',
             title: '上傳本週體態照片', completed: false, date: '2025-11-30',
             details: '請在週末前上傳正面、側面、背面。', subtasks: [],
             recurrence: { type: 'weekly', interval: 1 },
-            history: {}
-        },
-        {
-            id: 't6', frequency: 'monthly', type: 'mission', category: 'target',
-            title: '設定下月體脂目標', completed: false, date: '2025-11-30',
-            details: '檢視本月成果，設定新的挑戰。', subtasks: [],
-            recurrence: { type: 'monthly', interval: 1 },
             history: {}
         },
     ]);
@@ -62,11 +67,20 @@ const MainApp = () => {
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(getTodayStr());
 
     const handleUpdateProgress = (task, action, value) => {
         setTasks(prev => prev.map(t => {
             if (t.id !== task.id) return t;
             const todayStr = getTodayStr();
+
+            // Period Goals Logic (Directly update history)
+            if (task.recurrence?.mode === 'period_count' && action === 'period_add') {
+                return {
+                    ...t,
+                    history: { ...t.history, [todayStr]: true }
+                };
+            }
 
             if (t.type === 'quantitative') {
                 const current = t.dailyProgress[todayStr]?.value || 0;
@@ -118,9 +132,10 @@ const MainApp = () => {
     };
 
     // Group Tasks
-    const dailyTasks = tasks.filter(t => t.frequency === 'daily');
-    const weeklyTasks = tasks.filter(t => t.frequency === 'weekly');
-    const monthlyTasks = tasks.filter(t => t.frequency === 'monthly');
+    // Filter 1: Daily Tasks (Fixed Time)
+    const dailyTasks = tasks.filter(t => t.frequency === 'daily' && t.recurrence?.mode !== 'period_count');
+    // Filter 2: Period Goals (Flexible)
+    const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
 
     return (
         <div className="bg-gray-50 min-h-screen font-sans flex flex-col md:flex-row w-full max-w-[420px] mx-auto border-x border-gray-200 shadow-2xl">
@@ -130,8 +145,8 @@ const MainApp = () => {
                 <AppHeader
                     onViewChange={setCurrentView}
                     currentView={currentView}
-                    onOpenAddFlow={() => setIsLibraryModalOpen(true)}
-                    onOpenBadges={() => alert('成就系統即將推出！')}
+                    onOpenAddFlow={() => { setIsLibraryModalOpen(true); setIsFormModalOpen(false); setEditingTask(null); setSelectedDate(getTodayStr()); }}
+                    onOpenBadges={() => setCurrentView('badges')}
                 />
 
                 <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-24 no-scrollbar">
@@ -141,57 +156,28 @@ const MainApp = () => {
                             <DashboardSummaryCard tasks={tasks} onOpenDetail={() => setCurrentView('dashboard_detail')} />
 
                             <div className="space-y-6">
-                                {/* Daily Section */}
+                                {/* Section 1: Today's Schedule (Fixed) */}
                                 <div>
-                                    <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                                        <Sun size={20} className="text-orange-500" /> 今日任務
-                                    </h2>
+                                    <h3 className="text-gray-800 font-bold text-lg mb-4 flex items-center gap-2">
+                                        <span className="w-1 h-5 bg-emerald-500 rounded-full"></span> 今日行程
+                                    </h3>
                                     <div className="space-y-3">
                                         {dailyTasks.map(task => (
-                                            <TaskCard
-                                                key={task.id}
-                                                task={task}
-                                                onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }}
-                                                onUpdate={handleUpdateProgress}
-                                            />
+                                            <TaskCard key={task.id} task={task} onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }} onUpdate={handleUpdateProgress} />
                                         ))}
-                                        {dailyTasks.length === 0 && <p className="text-gray-400 text-sm text-center py-4">今天沒有任務，去新增一個吧！</p>}
+                                        {dailyTasks.length === 0 && <p className="text-gray-400 text-sm col-span-full">今日無固定行程。</p>}
                                     </div>
                                 </div>
 
-                                {/* Weekly Section */}
-                                {weeklyTasks.length > 0 && (
+                                {/* Section 2: Period Goals (Flexible) */}
+                                {flexibleTasks.length > 0 && (
                                     <div>
-                                        <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                                            <Calendar size={20} className="text-blue-500" /> 本週目標
-                                        </h2>
+                                        <h3 className="text-gray-800 font-bold text-lg mb-4 flex items-center gap-2">
+                                            <span className="w-1 h-5 bg-amber-500 rounded-full"></span> 週期目標 (彈性)
+                                        </h3>
                                         <div className="space-y-3">
-                                            {weeklyTasks.map(task => (
-                                                <TaskCard
-                                                    key={task.id}
-                                                    task={task}
-                                                    onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }}
-                                                    onUpdate={handleUpdateProgress}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Monthly Section */}
-                                {monthlyTasks.length > 0 && (
-                                    <div>
-                                        <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                                            <Target size={20} className="text-purple-500" /> 本月挑戰
-                                        </h2>
-                                        <div className="space-y-3">
-                                            {monthlyTasks.map(task => (
-                                                <TaskCard
-                                                    key={task.id}
-                                                    task={task}
-                                                    onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }}
-                                                    onUpdate={handleUpdateProgress}
-                                                />
+                                            {flexibleTasks.map(task => (
+                                                <TaskCard key={task.id} task={task} onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }} onUpdate={handleUpdateProgress} />
                                             ))}
                                         </div>
                                     </div>
@@ -204,7 +190,43 @@ const MainApp = () => {
                         <DashboardDetailView tasks={tasks} />
                     )}
 
+                    {currentView === 'manage' && (
+                        <div className="p-4">
+                            <h2 className="text-2xl font-black text-gray-800 mb-6">計畫總覽</h2>
+                            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden divide-y divide-gray-100">
+                                {tasks.map(task => (
+                                    <div key={task.id} onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }} className="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50">
+                                        <div className="flex items-center gap-4">
+                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${(CATEGORY_CONFIG[task.category] || CATEGORY_CONFIG['star']).bg}`}>
+                                                <IconRenderer category={task.category} size={20} />
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-gray-800">{task.title}</h4>
+                                                <span className="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">
+                                                    {task.recurrence?.mode === 'period_count'
+                                                        ? `${task.frequency === 'weekly' ? '每週' : '每月'} ${task.recurrence.periodTarget} 次`
+                                                        : (task.frequency === 'daily' ? '每天' : '特定日')}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {currentView === 'badges' && (
+                        <div className="p-4 text-center py-20">
+                            <Award size={64} className="mx-auto text-yellow-400 mb-4" />
+                            <h2 className="text-2xl font-bold text-gray-800">成就中心</h2>
+                            <p className="text-gray-500">持續完成任務，解鎖更多徽章！</p>
+                        </div>
+                    )}
+
                 </div>
+
+                {/* Bottom Nav (Mobile Only - Mimicking the snippet's bottom nav if needed, but keeping it simple for now as per previous design) */}
+                {/* The previous design didn't have a bottom nav in MainApp, it relied on AppHeader. I'll stick to AppHeader for navigation within the mobile view context. */}
 
                 {/* Modals */}
                 <TaskFormModal
@@ -213,6 +235,7 @@ const MainApp = () => {
                     onSave={handleSaveTask}
                     onDelete={handleDeleteTask}
                     initialData={editingTask}
+                    defaultDate={selectedDate}
                 />
 
                 <TaskLibraryModal

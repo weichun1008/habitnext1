@@ -1,42 +1,51 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, ChevronLeft, ChevronRight, Clock, ChevronUp, ChevronDown, Trash2, Plus } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Clock, ChevronUp, ChevronDown, Trash2, Plus, Calendar, Check, Bell } from 'lucide-react';
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG } from '@/lib/constants';
-import { generateId, getTodayStr } from '@/lib/utils';
+import { generateId, getTodayStr, getNthWeekday } from '@/lib/utils';
 
-const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData }) => {
+const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, defaultDate }) => {
     const [formData, setFormData] = useState({
         title: '', details: '', type: 'binary', category: 'star', frequency: 'daily',
-        date: getTodayStr(), dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
-        recurrence: { type: 'daily', interval: 1, endType: 'never', endDate: '', endCount: 10 },
-        reminder: { type: 'none', time: '09:00', condition: 'none' }
+        date: defaultDate || getTodayStr(), time: '09:00',
+        dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
+        recurrence: { type: 'daily', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3 },
+        reminder: { enabled: false, offset: 0 }
     });
 
     const [customEmoji, setCustomEmoji] = useState('');
     const [activeTab, setActiveTab] = useState('basic');
     const iconContainerRef = useRef(null);
 
+    // Helper for monthly recurrence labels
+    const dateInfo = getNthWeekday(formData.date);
+
     useEffect(() => {
         if (isOpen) {
             if (initialData) {
                 setFormData({
                     ...initialData,
-                    recurrence: { type: 'daily', interval: 1, endType: 'never', endDate: '', endCount: 10, ...(initialData.recurrence || {}) },
-                    reminder: { type: 'none', time: '09:00', condition: 'none', ...(initialData.reminder || {}) },
+                    time: initialData.time || '09:00',
+                    recurrence: {
+                        type: 'daily', mode: 'specific_days', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3,
+                        ...(initialData.recurrence || {})
+                    },
+                    reminder: { enabled: false, offset: 0, ...(initialData.reminder || {}) },
                     stepValue: initialData.stepValue || 1,
                     subtasks: initialData.subtasks || []
                 });
             } else {
                 setFormData({
                     title: '', details: '', type: 'binary', category: 'star', frequency: 'daily',
-                    date: getTodayStr(), dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
-                    recurrence: { type: 'daily', interval: 1, endType: 'never', endDate: '', endCount: 10 },
-                    reminder: { type: 'none', time: '09:00', condition: 'none' }
+                    date: defaultDate || getTodayStr(), time: '09:00',
+                    dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
+                    recurrence: { type: 'daily', mode: 'specific_days', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3 },
+                    reminder: { enabled: false, offset: 0 }
                 });
             }
             setActiveTab('basic');
         }
-    }, [isOpen, initialData]);
+    }, [isOpen, initialData, defaultDate]);
 
     const scrollIcons = (direction) => {
         if (iconContainerRef.current) {
@@ -72,6 +81,15 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData }) => {
             setCustomEmoji('');
         }
     }
+
+    const toggleWeekDay = (dayIndex) => {
+        const currentDays = formData.recurrence.weekDays || [];
+        if (currentDays.includes(dayIndex)) {
+            setFormData({ ...formData, recurrence: { ...formData.recurrence, weekDays: currentDays.filter(d => d !== dayIndex) } });
+        } else {
+            setFormData({ ...formData, recurrence: { ...formData.recurrence, weekDays: [...currentDays, dayIndex].sort() } });
+        }
+    };
 
     const selectedConfig = CATEGORY_CONFIG[formData.category] || CATEGORY_CONFIG['star'];
 
@@ -135,19 +153,6 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData }) => {
                         </div>
                     </div>
 
-                    {/* Frequency Type */}
-                    <div className="flex gap-2 p-1 bg-gray-100 rounded-xl">
-                        {['daily', 'weekly', 'monthly'].map(freq => (
-                            <button
-                                key={freq}
-                                onClick={() => setFormData({ ...formData, frequency: freq })}
-                                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${formData.frequency === freq ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-500 hover:bg-gray-200'}`}
-                            >
-                                {freq === 'daily' ? '每日' : freq === 'weekly' ? '每週' : '每月'}
-                            </button>
-                        ))}
-                    </div>
-
                     {/* Type & Goal */}
                     <div className="pt-2">
                         <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
@@ -204,97 +209,211 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData }) => {
                         </div>
                     )}
 
-                    {/* Advanced Settings */}
+                    {/* Advanced Settings Toggle */}
                     <div className="border-t border-gray-100 pt-4">
                         <button
                             onClick={() => setActiveTab(activeTab === 'advance' ? 'basic' : 'advance')}
                             className="flex items-center justify-between w-full text-sm font-bold text-gray-600 mb-3"
                         >
-                            <span className="flex items-center gap-2"><Clock size={16} /> 提醒與重複設定</span>
+                            <span className="flex items-center gap-2"><Clock size={16} /> 日期、重複與提醒設定</span>
                             {activeTab === 'advance' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                         </button>
 
                         {activeTab === 'advance' && (
-                            <div className="bg-gray-50 p-4 rounded-xl space-y-4 animate-fade-in-down">
+                            <div className="space-y-4 animate-fade-in-down">
 
-                                {/* Reminder Settings (Smart) */}
-                                <div>
-                                    <label className="text-xs text-gray-500 block mb-2 font-bold">🔔 提醒設定</label>
-                                    <div className="flex gap-2 mb-2">
-                                        <button
-                                            onClick={() => setFormData({ ...formData, reminder: { ...formData.reminder, type: 'fixed' } })}
-                                            className={`flex-1 py-1.5 text-xs rounded border ${formData.reminder.type === 'fixed' ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-600 border-gray-200'}`}
-                                        >
-                                            固定時間
-                                        </button>
-                                        <button
-                                            onClick={() => setFormData({ ...formData, reminder: { ...formData.reminder, type: 'smart' } })}
-                                            className={`flex-1 py-1.5 text-xs rounded border ${formData.reminder.type === 'smart' ? 'bg-purple-500 text-white border-purple-500' : 'bg-white text-gray-600 border-gray-200'}`}
-                                        >
-                                            智慧提醒 (若未完成)
-                                        </button>
-                                        <button
-                                            onClick={() => setFormData({ ...formData, reminder: { ...formData.reminder, type: 'none' } })}
-                                            className={`flex-1 py-1.5 text-xs rounded border ${formData.reminder.type === 'none' ? 'bg-gray-500 text-white border-gray-500' : 'bg-white text-gray-600 border-gray-200'}`}
-                                        >
-                                            關閉
-                                        </button>
-                                    </div>
-                                    {formData.reminder.type !== 'none' && (
-                                        <div className="flex items-center gap-3 bg-white p-2 rounded border border-gray-200">
-                                            <Clock size={16} className="text-gray-400" />
+                                {/* SECTION 1: Date & Time */}
+                                <div className="bg-gray-50 p-4 rounded-xl">
+                                    <label className="text-xs text-gray-500 block mb-2 font-bold flex items-center gap-1"><Calendar size={12} /> 時間與頻率</label>
+
+                                    <div className="flex gap-3 mb-4">
+                                        <div className="flex-1">
+                                            <label className="text-[10px] text-gray-400 block mb-1">開始日期</label>
+                                            <input
+                                                type="date"
+                                                className="w-full bg-white border border-gray-200 rounded px-3 py-2 text-sm"
+                                                value={formData.date}
+                                                onChange={e => setFormData({ ...formData, date: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="flex-1">
+                                            <label className="text-[10px] text-gray-400 block mb-1">時間</label>
                                             <input
                                                 type="time"
-                                                className="outline-none text-sm text-gray-800 bg-transparent flex-1"
-                                                value={formData.reminder.time}
-                                                onChange={e => setFormData({ ...formData, reminder: { ...formData.reminder, time: e.target.value } })}
+                                                className="w-full bg-white border border-gray-200 rounded px-3 py-2 text-sm"
+                                                value={formData.time}
+                                                onChange={e => setFormData({ ...formData, time: e.target.value })}
                                             />
-                                            {formData.reminder.type === 'smart' && (
-                                                <span className="text-[10px] text-purple-500 bg-purple-50 px-2 py-0.5 rounded">
-                                                    僅在未完成時通知
-                                                </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="border-t border-gray-200 my-3"></div>
+
+                                    <label className="text-[10px] text-gray-400 block mb-1">重複頻率</label>
+                                    <div className="flex gap-2 mb-3">
+                                        {['once', 'daily', 'weekly', 'monthly'].map(freq => (
+                                            <button
+                                                key={freq}
+                                                onClick={() => setFormData({ ...formData, recurrence: { ...formData.recurrence, type: freq } })}
+                                                className={`flex-1 py-1.5 text-xs font-bold rounded border ${formData.recurrence.type === freq ? 'bg-emerald-100 text-emerald-700 border-emerald-300' : 'bg-white text-gray-500 border-gray-200'}`}
+                                            >
+                                                {freq === 'once' ? '不重複' : freq === 'daily' ? '每天' : freq === 'weekly' ? '每週' : '每月'}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Weekly Options (Specific Days vs Period Count) */}
+                                    {formData.recurrence.type === 'weekly' && (
+                                        <div className="bg-white p-3 rounded border border-gray-200 mb-3">
+                                            <div className="flex gap-4 mb-3 border-b border-gray-100 pb-2">
+                                                <label className="text-xs flex items-center gap-1 cursor-pointer">
+                                                    <input
+                                                        type="radio" name="weekMode"
+                                                        checked={formData.recurrence.mode !== 'period_count'}
+                                                        onChange={() => setFormData({ ...formData, recurrence: { ...formData.recurrence, mode: 'specific_days' } })}
+                                                    /> 固定星期
+                                                </label>
+                                                <label className="text-xs flex items-center gap-1 cursor-pointer">
+                                                    <input
+                                                        type="radio" name="weekMode"
+                                                        checked={formData.recurrence.mode === 'period_count'}
+                                                        onChange={() => setFormData({ ...formData, recurrence: { ...formData.recurrence, mode: 'period_count' } })}
+                                                    /> 彈性頻率 (週期目標)
+                                                </label>
+                                            </div>
+
+                                            {formData.recurrence.mode !== 'period_count' ? (
+                                                <div>
+                                                    <label className="text-[10px] text-gray-400 block mb-1">重複於：</label>
+                                                    <div className="flex justify-between">
+                                                        {['日', '一', '二', '三', '四', '五', '六'].map((d, i) => (
+                                                            <button
+                                                                key={i}
+                                                                onClick={() => toggleWeekDay(i)}
+                                                                className={`w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center border transition-all ${(formData.recurrence.weekDays || []).includes(i) ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white text-gray-400 border-gray-200'}`}
+                                                            >
+                                                                {d}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-sm text-gray-600">每週完成</span>
+                                                    <input
+                                                        type="number" className="w-16 border border-gray-300 rounded px-2 py-1 text-center"
+                                                        value={formData.recurrence.periodTarget}
+                                                        onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, periodTarget: parseInt(e.target.value) } })}
+                                                    />
+                                                    <span className="text-sm text-gray-600">次</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Monthly Options */}
+                                    {formData.recurrence.type === 'monthly' && (
+                                        <div className="bg-white p-3 rounded border border-gray-200 mb-3">
+                                            <div className="flex gap-4 mb-3 border-b border-gray-100 pb-2">
+                                                <label className="text-xs flex items-center gap-1 cursor-pointer">
+                                                    <input
+                                                        type="radio" name="monthMode"
+                                                        checked={formData.recurrence.mode !== 'period_count'}
+                                                        onChange={() => setFormData({ ...formData, recurrence: { ...formData.recurrence, mode: 'specific_days' } })}
+                                                    /> 固定日期
+                                                </label>
+                                                <label className="text-xs flex items-center gap-1 cursor-pointer">
+                                                    <input
+                                                        type="radio" name="monthMode"
+                                                        checked={formData.recurrence.mode === 'period_count'}
+                                                        onChange={() => setFormData({ ...formData, recurrence: { ...formData.recurrence, mode: 'period_count' } })}
+                                                    /> 彈性頻率
+                                                </label>
+                                            </div>
+
+                                            {formData.recurrence.mode !== 'period_count' ? (
+                                                <div className="flex flex-col gap-2">
+                                                    <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                                                        <input
+                                                            type="radio" name="monthType"
+                                                            checked={formData.recurrence.monthType === 'date'}
+                                                            onChange={() => setFormData({ ...formData, recurrence: { ...formData.recurrence, monthType: 'date' } })}
+                                                        />
+                                                        每月 {new Date(formData.date).getDate()} 日
+                                                    </label>
+                                                    <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                                                        <input
+                                                            type="radio" name="monthType"
+                                                            checked={formData.recurrence.monthType === 'day'}
+                                                            onChange={() => setFormData({ ...formData, recurrence: { ...formData.recurrence, monthType: 'day' } })}
+                                                        />
+                                                        {dateInfo.desc}
+                                                    </label>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-sm text-gray-600">每月完成</span>
+                                                    <input
+                                                        type="number" className="w-16 border border-gray-300 rounded px-2 py-1 text-center"
+                                                        value={formData.recurrence.periodTarget}
+                                                        onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, periodTarget: parseInt(e.target.value) } })}
+                                                    />
+                                                    <span className="text-sm text-gray-600">次</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {formData.recurrence.type !== 'once' && (
+                                        <div className="pt-2">
+                                            <div className="flex gap-2 items-center mb-2">
+                                                <span className="text-xs text-gray-500">停止條件:</span>
+                                                <select
+                                                    className="bg-white border border-gray-200 text-xs rounded px-2 py-1 outline-none"
+                                                    value={formData.recurrence.endType}
+                                                    onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, endType: e.target.value } })}
+                                                >
+                                                    <option value="never">永不停止</option>
+                                                    <option value="date">直到日期</option>
+                                                </select>
+                                            </div>
+                                            {formData.recurrence.endType === 'date' && (
+                                                <input type="date" className="w-full bg-white border border-gray-200 rounded px-3 py-2 text-sm" value={formData.recurrence.endDate} onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, endDate: e.target.value } })} />
                                             )}
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="border-t border-gray-200 my-2"></div>
-
-                                {/* Recurrence Settings */}
-                                <div>
-                                    <label className="text-xs text-gray-500 block mb-2 font-bold">🔁 重複與結束</label>
-                                    <div className="flex gap-2">
-                                        <select
-                                            className="bg-white border border-gray-200 text-sm rounded-lg px-3 py-2 flex-1 outline-none"
-                                            value={formData.recurrence.type}
-                                            onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, type: e.target.value } })}
-                                        >
-                                            <option value="daily">每天重複</option>
-                                            <option value="weekly">每週重複</option>
-                                            <option value="monthly">每月重複</option>
-                                            <option value="once">不重複 (單次)</option>
-                                        </select>
+                                {/* SECTION 2: Reminder (Independent) */}
+                                <div className="bg-gray-50 p-4 rounded-xl">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <label className="text-xs text-gray-500 font-bold flex items-center gap-1"><Bell size={12} /> 提醒通知</label>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" className="sr-only peer" checked={formData.reminder.enabled} onChange={e => setFormData({ ...formData, reminder: { ...formData.reminder, enabled: e.target.checked } })} />
+                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                                        </label>
                                     </div>
+
+                                    {formData.reminder.enabled && (
+                                        <div className="space-y-2">
+                                            <select
+                                                className="w-full bg-white border border-gray-200 text-sm rounded-lg px-3 py-2 outline-none"
+                                                value={formData.reminder.offset}
+                                                onChange={e => setFormData({ ...formData, reminder: { ...formData.reminder, offset: parseInt(e.target.value) } })}
+                                            >
+                                                <option value="0">準時 ({formData.time})</option>
+                                                <option value="10">10 分鐘前</option>
+                                                <option value="30">30 分鐘前</option>
+                                                <option value="60">1 小時前</option>
+                                                <option value="1440">1 天前</option>
+                                            </select>
+                                            <p className="text-[10px] text-gray-400 flex items-center gap-1">
+                                                <Check size={10} /> 若任務提早完成，系統將自動取消提醒
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
 
-                                {formData.recurrence.type !== 'once' && (
-                                    <div className="pt-2">
-                                        <div className="flex gap-2 mb-2">
-                                            {['never', 'date'].map(type => (
-                                                <button
-                                                    key={type}
-                                                    onClick={() => setFormData({ ...formData, recurrence: { ...formData.recurrence, endType: type } })}
-                                                    className={`px-3 py-1 text-xs rounded border ${formData.recurrence.endType === type ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white text-gray-600 border-gray-200'}`}
-                                                >
-                                                    {type === 'never' ? '永不停止' : '直到日期'}
-                                                </button>
-                                            ))}
-                                        </div>
-                                        {formData.recurrence.endType === 'date' && (
-                                            <input type="date" className="w-full bg-white border border-gray-200 rounded px-3 py-2 text-sm" value={formData.recurrence.endDate} onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, endDate: e.target.value } })} />
-                                        )}
-                                    </div>
-                                )}
                             </div>
                         )}
                     </div>
