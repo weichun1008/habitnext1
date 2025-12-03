@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL") // Uses Vercel Postgres connection string
+  directUrl = env("POSTGRES_URL_NON_POOLING") // Uses a direct connection
+}
+
+model User {
+  id        String   @id @default(cuid())
+  nickname  String
+  phone     String   @unique
+  createdAt DateTime @default(now())
+  tasks     Task[]
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  details     String?
+  type        String   // binary, quantitative, checklist
+  category    String
+  frequency   String   // daily, weekly, monthly (Display Group)
+  
+  // JSON fields for complex objects
+  recurrence  Json     // { type, interval, mode, ... }
+  reminder    Json     // { enabled, offset }
+  subtasks    Json     // Array of subtask objects
+  
+  // Task specific settings
+  dailyTarget Int?
+  unit        String?
+  stepValue   Int?
+  date        String?  // Start date
+  time        String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  history     TaskHistory[]
+}
+
+model TaskHistory {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  date      String   // YYYY-MM-DD
+  completed Boolean  @default(false)
+  value     Int      @default(0) // For quantitative or period count
+  
+  @@unique([taskId, date])
+}

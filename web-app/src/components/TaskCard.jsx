@@ -35,6 +35,14 @@ const TaskCard = ({ task, onClick, onUpdate }) => {
     const config = CATEGORY_CONFIG[task.category] || CATEGORY_CONFIG['star'];
     const isQuant = task.type === 'quantitative';
     const isPeriod = task.recurrence?.mode === 'period_count';
+    const isChecklist = task.type === 'checklist';
+
+    // Subtask Progress Display
+    let subtaskDisplay = null;
+    if (isChecklist && task.subtasks?.length > 0) {
+        const completedCount = task.subtasks.filter(s => s.completed).length;
+        subtaskDisplay = `${completedCount}/${task.subtasks.length}`;
+    }
 
     return (
         <div onClick={onClick} className={`bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${isCompleted ? 'border-emerald-200 bg-emerald-50/30' : 'border-gray-100'}`}>
@@ -68,12 +76,17 @@ const TaskCard = ({ task, onClick, onUpdate }) => {
                             {isCompleted ? '🎉 達成' : displayStatus}
                         </span>
                     ) : (
-                        <button
-                            onClick={(e) => { e.stopPropagation(); onUpdate(task, 'toggle'); }}
-                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-gray-200 hover:border-emerald-400'}`}
-                        >
-                            {isCompleted && <Check size={14} className="text-white" strokeWidth={3} />}
-                        </button>
+                        <div className="flex items-center gap-2">
+                            {isChecklist && subtaskDisplay && (
+                                <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-md">{subtaskDisplay}</span>
+                            )}
+                            <button
+                                onClick={(e) => { e.stopPropagation(); onUpdate(task, 'toggle'); }}
+                                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-gray-200 hover:border-emerald-400'}`}
+                            >
+                                {isCompleted && <Check size={14} className="text-white" strokeWidth={3} />}
+                            </button>
+                        </div>
                     )}
                 </div>
             </div>
@@ -88,7 +101,7 @@ const TaskCard = ({ task, onClick, onUpdate }) => {
             )}
 
             {/* Quick Add for Period Tasks */}
-            {isPeriod && !isCompleted && (
+            {isPeriod && (task.recurrence?.dailyLimit === false || !isCompletedToday(task)) && (
                 <div className="flex justify-end mt-2">
                     <button
                         onClick={(e) => { e.stopPropagation(); onUpdate(task, 'period_add'); }}

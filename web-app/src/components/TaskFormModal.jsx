@@ -9,7 +9,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
         title: '', details: '', type: 'binary', category: 'star', frequency: 'daily',
         date: defaultDate || getTodayStr(), time: '09:00',
         dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
-        recurrence: { type: 'daily', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3 },
+        recurrence: { type: 'daily', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3, dailyLimit: true },
         reminder: { enabled: false, offset: 0 }
     });
 
@@ -27,7 +27,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                     ...initialData,
                     time: initialData.time || '09:00',
                     recurrence: {
-                        type: 'daily', mode: 'specific_days', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3,
+                        type: 'daily', mode: 'specific_days', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3, dailyLimit: true,
                         ...(initialData.recurrence || {})
                     },
                     reminder: { enabled: false, offset: 0, ...(initialData.reminder || {}) },
@@ -39,7 +39,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                     title: '', details: '', type: 'binary', category: 'star', frequency: 'daily',
                     date: defaultDate || getTodayStr(), time: '09:00',
                     dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
-                    recurrence: { type: 'daily', mode: 'specific_days', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3 },
+                    recurrence: { type: 'daily', mode: 'specific_days', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3, dailyLimit: true },
                     reminder: { enabled: false, offset: 0 }
                 });
             }
@@ -298,14 +298,24 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-sm text-gray-600">每週完成</span>
-                                                    <input
-                                                        type="number" className="w-16 border border-gray-300 rounded px-2 py-1 text-center"
-                                                        value={formData.recurrence.periodTarget}
-                                                        onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, periodTarget: parseInt(e.target.value) } })}
-                                                    />
-                                                    <span className="text-sm text-gray-600">次</span>
+                                                <div className="flex flex-col gap-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm text-gray-600">每週完成</span>
+                                                        <input
+                                                            type="number" className="w-16 border border-gray-300 rounded px-2 py-1 text-center"
+                                                            value={formData.recurrence.periodTarget}
+                                                            onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, periodTarget: parseInt(e.target.value) } })}
+                                                        />
+                                                        <span className="text-sm text-gray-600">次</span>
+                                                    </div>
+                                                    <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={formData.recurrence.dailyLimit !== false}
+                                                            onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, dailyLimit: e.target.checked } })}
+                                                        />
+                                                        每日限完成 1 次
+                                                    </label>
                                                 </div>
                                             )}
                                         </div>
@@ -351,14 +361,24 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                                                     </label>
                                                 </div>
                                             ) : (
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-sm text-gray-600">每月完成</span>
-                                                    <input
-                                                        type="number" className="w-16 border border-gray-300 rounded px-2 py-1 text-center"
-                                                        value={formData.recurrence.periodTarget}
-                                                        onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, periodTarget: parseInt(e.target.value) } })}
-                                                    />
-                                                    <span className="text-sm text-gray-600">次</span>
+                                                <div className="flex flex-col gap-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm text-gray-600">每月完成</span>
+                                                        <input
+                                                            type="number" className="w-16 border border-gray-300 rounded px-2 py-1 text-center"
+                                                            value={formData.recurrence.periodTarget}
+                                                            onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, periodTarget: parseInt(e.target.value) } })}
+                                                        />
+                                                        <span className="text-sm text-gray-600">次</span>
+                                                    </div>
+                                                    <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={formData.recurrence.dailyLimit !== false}
+                                                            onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, dailyLimit: e.target.checked } })}
+                                                        />
+                                                        每日限完成 1 次
+                                                    </label>
                                                 </div>
                                             )}
                                         </div>

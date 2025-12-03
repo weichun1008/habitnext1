@@ -1,7 +1,7 @@
 import React from 'react';
 import { Calendar, Award, Plus, X } from 'lucide-react';
 
-const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges }) => {
+const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, user }) => {
     const weekDays = ['一', '二', '三', '四', '五', '六', '日'];
 
     return (
@@ -9,9 +9,9 @@ const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges }) =
             <div className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-2 cursor-pointer" onClick={() => onViewChange('daily')}>
                     <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden border border-gray-100">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Avatar" className="w-full h-full" />
+                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.nickname || 'User'}`} alt="Avatar" className="w-full h-full" />
                     </div>
-                    <span className="font-bold text-gray-800 text-sm md:text-base">火焰阿淳 🔥</span>
+                    <span className="font-bold text-gray-800 text-sm md:text-base">{user?.nickname || '訪客'}</span>
                 </div>
 
                 {currentView === 'daily' ? (

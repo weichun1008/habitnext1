@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User } from 'lucide-react';
 import AppHeader from './AppHeader';
 import TaskCard from './TaskCard';
@@ -8,134 +8,282 @@ import TaskFormModal from './TaskFormModal';
 import TaskLibraryModal from './TaskLibraryModal';
 import DashboardSummaryCard from './DashboardSummaryCard';
 import DashboardDetailView from './DashboardDetailView';
-import { generateId, getTodayStr } from '@/lib/utils';
+import TaskDetailModal from './TaskDetailModal';
+import LoginModal from './LoginModal';
+import { generateId, getTodayStr, isTaskDueToday } from '@/lib/utils';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 
 const MainApp = () => {
-    const [tasks, setTasks] = useState([
-        {
-            id: 't1', frequency: 'daily', type: 'quantitative', category: 'footprints',
-            title: '走 8000 步', dailyTarget: 8000, unit: '步', stepValue: 1000,
-            details: '目標是每日 8000 步，飯後散步是好幫手。',
-            dailyProgress: { [getTodayStr()]: { value: 4500, completed: false } },
-            recurrence: { type: 'daily', interval: 1 },
-            time: '08:00',
-            reminder: { enabled: true, offset: 0 },
-            history: { '2025-11-26': true, '2025-11-27': true }
-        },
-        {
-            id: 't2', frequency: 'daily', type: 'quantitative', category: 'droplet',
-            title: '喝水 1800 cc', dailyTarget: 1800, unit: 'cc', stepValue: 200,
-            details: '分批小口喝水，定時提醒自己。',
-            dailyProgress: { [getTodayStr()]: { value: 1200, completed: false } },
-            recurrence: { type: 'daily', interval: 1 },
-            time: '09:00',
-            reminder: { enabled: true, offset: 60 },
-            history: { '2025-11-26': false }
-        },
-        {
-            id: 't3', frequency: 'daily', type: 'checklist', category: 'pill',
-            title: '服用保健食品',
-            details: '請在早餐或午餐後服用。',
-            subtasks: [
-                { id: 's1', title: '魚油', completed: true },
-                { id: 's2', title: '維生素 B', completed: false },
-            ],
-            completed: false,
-            recurrence: { type: 'daily', interval: 1 },
-            history: {}
-        },
-        // Flexible Weekly Goal
-        {
-            id: 't_flex_1', frequency: 'weekly', type: 'binary', category: 'dumbbell',
-            title: '重訓 3 次',
-            details: '每週目標：完成 3 次重訓。',
-            subtasks: [],
-            recurrence: { type: 'weekly', mode: 'period_count', periodTarget: 3 },
-            history: { '2025-11-25': true, '2025-11-27': true }
-        },
-        {
-            id: 't4', frequency: 'weekly', type: 'mission', category: 'aperture',
-            title: '上傳本週體態照片', completed: false, date: '2025-11-30',
-            details: '請在週末前上傳正面、側面、背面。', subtasks: [],
-            recurrence: { type: 'weekly', interval: 1 },
-            history: {}
-        },
-    ]);
+    const [user, setUser] = useState(null);
+    const [tasks, setTasks] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const [currentView, setCurrentView] = useState('daily');
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
     const [editingTask, setEditingTask] = useState(null);
+    const [viewingTask, setViewingTask] = useState(null);
     const [selectedDate, setSelectedDate] = useState(getTodayStr());
 
-    const handleUpdateProgress = (task, action, value) => {
-        setTasks(prev => prev.map(t => {
-            if (t.id !== task.id) return t;
-            const todayStr = getTodayStr();
+    // 1. Check Auth on Load
+    useEffect(() => {
+        const storedUser = localStorage.getItem('habit_user');
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
+            fetchTasks(parsedUser.id);
+        } else {
+            setIsLoginModalOpen(true);
+            setLoading(false);
+        }
+    }, []);
 
-            // Period Goals Logic (Directly update history)
+    // 2. Fetch Tasks
+    const fetchTasks = async (userId) => {
+        setLoading(true);
+        try {
+            const res = await fetch(`/api/tasks?userId=${userId}`);
+            if (res.ok) {
+                const data = await res.json();
+                // Transform history array to object map for frontend compatibility
+                const formattedTasks = data.map(t => {
+                    const historyMap = {};
+                    const dailyProgressMap = {};
+
+                    if (t.history) {
+                        t.history.forEach(h => {
+                            const val = t.type === 'quantitative' || t.recurrence?.mode === 'period_count' ? h.value : h.completed;
+                            historyMap[h.date] = val;
+
+                            if (t.type === 'quantitative') {
+                                dailyProgressMap[h.date] = {
+                                    value: h.value,
+                                    completed: h.completed
+                                };
+                            }
+                        });
+                    }
+                    return { ...t, history: historyMap, dailyProgress: dailyProgressMap };
+                });
+                setTasks(formattedTasks);
+            }
+        } catch (err) {
+            console.error('Fetch tasks failed', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleLogin = (userData) => {
+        setUser(userData);
+        localStorage.setItem('habit_user', JSON.stringify(userData));
+        setIsLoginModalOpen(false);
+
+        // If user has tasks from DB, use them. 
+        // Note: The login API already returns tasks, so we could use that to save a fetch.
+        // But for consistency with the transformer above, let's just call fetchTasks or transform here.
+        // Let's use the data from login response if available to be faster.
+        if (userData.tasks) {
+            const formattedTasks = userData.tasks.map(t => {
+                const historyMap = {};
+                const dailyProgressMap = {};
+
+                if (t.history) {
+                    t.history.forEach(h => {
+                        const val = t.type === 'quantitative' || t.recurrence?.mode === 'period_count' ? h.value : h.completed;
+                        historyMap[h.date] = val;
+
+                        if (t.type === 'quantitative') {
+                            dailyProgressMap[h.date] = {
+                                value: h.value,
+                                completed: h.completed
+                            };
+                        }
+                    });
+                }
+                return { ...t, history: historyMap, dailyProgress: dailyProgressMap };
+            });
+            setTasks(formattedTasks);
+        } else {
+            fetchTasks(userData.id);
+        }
+    };
+
+    const handleUpdateProgress = async (task, action, value, subtaskId, dateStr = getTodayStr()) => {
+        // Optimistic Update
+        const prevTasks = [...tasks];
+
+        let updatedTask = null;
+        let historyUpdate = null;
+
+        const newTasks = tasks.map(t => {
+            if (t.id !== task.id) return t;
+
+            // Subtask Logic
+            if (action === 'toggle_subtask' && subtaskId) {
+                const newSubtasks = t.subtasks.map(s => s.id === subtaskId ? { ...s, completed: !s.completed } : s);
+                updatedTask = { ...t, subtasks: newSubtasks };
+                return updatedTask;
+            }
+
+            // Period Goals Logic
             if (task.recurrence?.mode === 'period_count' && action === 'period_add') {
-                return {
-                    ...t,
-                    history: { ...t.history, [todayStr]: true }
-                };
+                const currentVal = t.history[dateStr];
+                const dailyLimit = t.recurrence.dailyLimit !== false;
+
+                let newVal;
+                if (dailyLimit) {
+                    newVal = true;
+                } else {
+                    const base = typeof currentVal === 'number' ? currentVal : (currentVal ? 1 : 0);
+                    newVal = base + (value || 1);
+                    if (newVal < 0) newVal = 0;
+                    if (newVal === 0) newVal = false;
+                }
+
+                historyUpdate = { date: dateStr, completed: !!newVal, value: typeof newVal === 'number' ? newVal : (newVal ? 1 : 0) };
+                updatedTask = { ...t, history: { ...t.history, [dateStr]: newVal } };
+                return updatedTask;
             }
 
             if (t.type === 'quantitative') {
-                const current = t.dailyProgress[todayStr]?.value || 0;
-                const newVal = Math.max(0, current + (value || 0));
+                const current = t.dailyProgress?.[dateStr]?.value || 0; // Note: API data structure might need adjustment for dailyProgress if we rely on history map
+                // Actually, for quantitative, we should rely on history map now since we transformed it.
+                // But wait, the UI uses t.dailyProgress for quantitative. 
+                // We need to ensure t.dailyProgress is derived from history in the transformer or here.
+                // Let's assume for now we update history map, and UI reads from history map or we sync them.
+                // To minimize UI changes, let's keep dailyProgress structure in state but sync to history.
+
+                // Correction: The API doesn't store dailyProgress JSON, it stores history.
+                // So we should update the transformer to populate dailyProgress from history for the current date?
+                // Or just update the UI to read from history.
+                // Let's stick to updating history map in state.
+
+                const currentHist = t.history[dateStr] || 0;
+                const newVal = Math.max(0, currentHist + (value || 0));
                 const completedStatus = newVal >= t.dailyTarget;
-                return {
+
+                historyUpdate = { date: dateStr, completed: completedStatus, value: newVal };
+                updatedTask = {
                     ...t,
-                    dailyProgress: { ...t.dailyProgress, [todayStr]: { value: newVal, completed: completedStatus } },
-                    history: { ...(t.history || {}), [todayStr]: completedStatus }
+                    history: { ...t.history, [dateStr]: newVal },
+                    // Mock dailyProgress for UI compatibility if needed, or update UI to use history
+                    dailyProgress: { ...t.dailyProgress, [dateStr]: { value: newVal, completed: completedStatus } }
                 };
+                return updatedTask;
             } else {
-                const newCompleted = !t.completed;
-                return {
+                const currentStatus = !!t.history?.[dateStr];
+                const newCompleted = !currentStatus;
+
+                historyUpdate = { date: dateStr, completed: newCompleted, value: newCompleted ? 1 : 0 };
+                updatedTask = {
                     ...t,
-                    completed: newCompleted,
-                    history: { ...(t.history || {}), [todayStr]: newCompleted }
+                    completed: dateStr === getTodayStr() ? newCompleted : t.completed,
+                    history: { ...t.history, [dateStr]: newCompleted }
                 };
+                return updatedTask;
             }
-        }));
+        });
+
+        setTasks(newTasks);
+        if (viewingTask?.id === task.id && updatedTask) {
+            setViewingTask(updatedTask);
+        }
+
+        // API Call
+        try {
+            if (updatedTask) {
+                await fetch(`/api/tasks/${task.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ...updatedTask,
+                        historyUpdate
+                    })
+                });
+            }
+        } catch (err) {
+            console.error('Update failed', err);
+            setTasks(prevTasks); // Revert
+        }
     };
 
-    const handleSaveTask = (taskData) => {
-        const todayStr = getTodayStr();
-        const baseTask = {
-            ...taskData,
-            dailyTarget: taskData.dailyTarget || 1,
-            unit: taskData.unit || '次',
-            stepValue: taskData.stepValue || 1,
-            dailyProgress: taskData.type === 'quantitative' ? (taskData.dailyProgress || { [todayStr]: { value: 0, completed: false } }) : {},
-            completed: taskData.type !== 'quantitative' ? false : taskData.completed,
-            history: taskData.history || {}
-        };
+    const handleSaveTask = async (taskData) => {
+        // Optimistic update is hard for create (no ID). So we wait for API.
+        // For update, we can optimistic.
 
-        if (editingTask) {
-            setTasks(prev => prev.map(t => t.id === editingTask.id ? { ...baseTask, id: t.id } : t));
-        } else {
-            setTasks(prev => [...prev, { ...baseTask, id: generateId() }]);
+        try {
+            if (editingTask) {
+                // Update
+                const res = await fetch(`/api/tasks/${editingTask.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(taskData)
+                });
+                if (res.ok) {
+                    const updated = await res.json();
+                    // Merge history from state to keep it (API might return full history but let's be safe)
+                    // Actually API returns full history.
+                    // We need to re-transform history array to map.
+                    const historyMap = {};
+                    if (updated.history) {
+                        updated.history.forEach(h => {
+                            historyMap[h.date] = updated.type === 'quantitative' || updated.recurrence?.mode === 'period_count' ? h.value : h.completed;
+                        });
+                    }
+                    const formatted = { ...updated, history: historyMap };
+
+                    setTasks(prev => prev.map(t => t.id === editingTask.id ? formatted : t));
+                }
+            } else {
+                // Create
+                const res = await fetch('/api/tasks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...taskData, userId: user.id })
+                });
+                if (res.ok) {
+                    const created = await res.json();
+                    const formatted = { ...created, history: {} };
+                    setTasks(prev => [...prev, formatted]);
+                }
+            }
+        } catch (err) {
+            console.error('Save failed', err);
+            alert('儲存失敗');
         }
+
         setIsFormModalOpen(false);
         setEditingTask(null);
     };
 
-    const handleDeleteTask = (taskId) => {
+    const handleDeleteTask = async (taskId) => {
         if (window.confirm('確定要刪除此任務嗎？')) {
+            const prevTasks = [...tasks];
             setTasks(prev => prev.filter(t => t.id !== taskId));
             setIsFormModalOpen(false);
             setEditingTask(null);
+
+            try {
+                await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+            } catch (err) {
+                console.error('Delete failed', err);
+                setTasks(prevTasks);
+                alert('刪除失敗');
+            }
         }
     };
 
     // Group Tasks
-    // Filter 1: Daily Tasks (Fixed Time)
-    const dailyTasks = tasks.filter(t => t.frequency === 'daily' && t.recurrence?.mode !== 'period_count');
-    // Filter 2: Period Goals (Flexible)
+    const dailyTasks = tasks.filter(t => isTaskDueToday(t));
     const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
+
+    if (loading && !user) {
+        return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-emerald-600 font-bold">載入中...</div>;
+    }
 
     return (
         <div className="bg-gray-50 min-h-screen font-sans flex flex-col md:flex-row w-full max-w-[420px] mx-auto border-x border-gray-200 shadow-2xl">
@@ -147,6 +295,7 @@ const MainApp = () => {
                     currentView={currentView}
                     onOpenAddFlow={() => { setIsLibraryModalOpen(true); setIsFormModalOpen(false); setEditingTask(null); setSelectedDate(getTodayStr()); }}
                     onOpenBadges={() => setCurrentView('badges')}
+                    user={user}
                 />
 
                 <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-24 no-scrollbar">
@@ -163,7 +312,7 @@ const MainApp = () => {
                                     </h3>
                                     <div className="space-y-3">
                                         {dailyTasks.map(task => (
-                                            <TaskCard key={task.id} task={task} onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }} onUpdate={handleUpdateProgress} />
+                                            <TaskCard key={task.id} task={task} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} />
                                         ))}
                                         {dailyTasks.length === 0 && <p className="text-gray-400 text-sm col-span-full">今日無固定行程。</p>}
                                     </div>
@@ -177,7 +326,7 @@ const MainApp = () => {
                                         </h3>
                                         <div className="space-y-3">
                                             {flexibleTasks.map(task => (
-                                                <TaskCard key={task.id} task={task} onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }} onUpdate={handleUpdateProgress} />
+                                                <TaskCard key={task.id} task={task} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} />
                                             ))}
                                         </div>
                                     </div>
@@ -225,9 +374,6 @@ const MainApp = () => {
 
                 </div>
 
-                {/* Bottom Nav (Mobile Only - Mimicking the snippet's bottom nav if needed, but keeping it simple for now as per previous design) */}
-                {/* The previous design didn't have a bottom nav in MainApp, it relied on AppHeader. I'll stick to AppHeader for navigation within the mobile view context. */}
-
                 {/* Modals */}
                 <TaskFormModal
                     isOpen={isFormModalOpen}
@@ -238,11 +384,24 @@ const MainApp = () => {
                     defaultDate={selectedDate}
                 />
 
+                <TaskDetailModal
+                    isOpen={isDetailModalOpen}
+                    onClose={() => { setIsDetailModalOpen(false); setViewingTask(null); }}
+                    task={viewingTask}
+                    onEdit={(task) => { setIsDetailModalOpen(false); setEditingTask(task); setIsFormModalOpen(true); }}
+                    onUpdate={handleUpdateProgress}
+                />
+
                 <TaskLibraryModal
                     isOpen={isLibraryModalOpen}
                     onClose={() => setIsLibraryModalOpen(false)}
                     onSelectTask={(task) => { handleSaveTask({ ...task, id: generateId() }); setIsLibraryModalOpen(false); }}
                     onOpenCustomForm={() => { setIsLibraryModalOpen(false); setIsFormModalOpen(true); }}
+                />
+
+                <LoginModal
+                    isOpen={isLoginModalOpen}
+                    onLogin={handleLogin}
                 />
 
             </main>
