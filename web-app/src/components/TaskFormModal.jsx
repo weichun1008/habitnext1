@@ -172,7 +172,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                                 <div className="flex gap-3">
                                     <div className="flex-1">
                                         <label className="text-xs text-blue-600 block mb-1 font-bold">目標數值</label>
-                                        <input type="number" className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm" value={formData.dailyTarget} onChange={e => setFormData({ ...formData, dailyTarget: parseInt(e.target.value) })} />
+                                        <input type="number" className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm" value={formData.dailyTarget} onChange={e => setFormData({ ...formData, dailyTarget: parseInt(e.target.value) || 0 })} />
                                     </div>
                                     <div className="w-24">
                                         <label className="text-xs text-blue-600 block mb-1 font-bold">單位</label>
@@ -181,7 +181,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                                 </div>
                                 <div>
                                     <label className="text-xs text-blue-600 block mb-1 font-bold">每次增量 (例如 +200)</label>
-                                    <input type="number" className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm" value={formData.stepValue} onChange={e => setFormData({ ...formData, stepValue: parseInt(e.target.value) })} />
+                                    <input type="number" className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm" value={formData.stepValue} onChange={e => setFormData({ ...formData, stepValue: parseInt(e.target.value) || 0 })} />
                                 </div>
                             </div>
                         )}
@@ -304,7 +304,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                                                         <input
                                                             type="number" className="w-16 border border-gray-300 rounded px-2 py-1 text-center"
                                                             value={formData.recurrence.periodTarget}
-                                                            onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, periodTarget: parseInt(e.target.value) } })}
+                                                            onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, periodTarget: parseInt(e.target.value) || 0 } })}
                                                         />
                                                         <span className="text-sm text-gray-600">次</span>
                                                     </div>
@@ -367,7 +367,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                                                         <input
                                                             type="number" className="w-16 border border-gray-300 rounded px-2 py-1 text-center"
                                                             value={formData.recurrence.periodTarget}
-                                                            onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, periodTarget: parseInt(e.target.value) } })}
+                                                            onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, periodTarget: parseInt(e.target.value) || 0 } })}
                                                         />
                                                         <span className="text-sm text-gray-600">次</span>
                                                     </div>
@@ -419,7 +419,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                                             <select
                                                 className="w-full bg-white border border-gray-200 text-sm rounded-lg px-3 py-2 outline-none"
                                                 value={formData.reminder.offset}
-                                                onChange={e => setFormData({ ...formData, reminder: { ...formData.reminder, offset: parseInt(e.target.value) } })}
+                                                onChange={e => setFormData({ ...formData, reminder: { ...formData.reminder, offset: parseInt(e.target.value) || 0 } })}
                                             >
                                                 <option value="0">準時 ({formData.time})</option>
                                                 <option value="10">10 分鐘前</option>

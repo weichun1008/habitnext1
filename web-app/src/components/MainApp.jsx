@@ -212,8 +212,17 @@ const MainApp = () => {
     };
 
     const handleSaveTask = async (taskData) => {
-        // Optimistic update is hard for create (no ID). So we wait for API.
-        // For update, we can optimistic.
+        // Sanitize data before sending
+        const sanitizedData = {
+            ...taskData,
+            dailyTarget: taskData.dailyTarget || 1, // Ensure no NaN/null for required logic
+            stepValue: taskData.stepValue || 1,
+            unit: taskData.unit || '次',
+            recurrence: {
+                ...taskData.recurrence,
+                periodTarget: taskData.recurrence?.periodTarget || 1
+            }
+        };
 
         try {
             if (editingTask) {
@@ -221,39 +230,43 @@ const MainApp = () => {
                 const res = await fetch(`/api/tasks/${editingTask.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(taskData)
+                    body: JSON.stringify(sanitizedData)
                 });
                 if (res.ok) {
                     const updated = await res.json();
-                    // Merge history from state to keep it (API might return full history but let's be safe)
-                    // Actually API returns full history.
-                    // We need to re-transform history array to map.
                     const historyMap = {};
                     if (updated.history) {
                         updated.history.forEach(h => {
-                            historyMap[h.date] = updated.type === 'quantitative' || updated.recurrence?.mode === 'period_count' ? h.value : h.completed;
+                            const val = updated.type === 'quantitative' || updated.recurrence?.mode === 'period_count' ? h.value : h.completed;
+                            historyMap[h.date] = val;
                         });
                     }
                     const formatted = { ...updated, history: historyMap };
 
                     setTasks(prev => prev.map(t => t.id === editingTask.id ? formatted : t));
+                } else {
+                    const err = await res.json();
+                    alert(`儲存失敗: ${err.error || '未知錯誤'}`);
                 }
             } else {
                 // Create
                 const res = await fetch('/api/tasks', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ...taskData, userId: user.id })
+                    body: JSON.stringify({ ...sanitizedData, userId: user.id })
                 });
                 if (res.ok) {
                     const created = await res.json();
                     const formatted = { ...created, history: {} };
                     setTasks(prev => [...prev, formatted]);
+                } else {
+                    const err = await res.json();
+                    alert(`建立失敗: ${err.error || '未知錯誤'}`);
                 }
             }
         } catch (err) {
             console.error('Save failed', err);
-            alert('儲存失敗');
+            alert('儲存失敗，請檢查網路連線');
         }
 
         setIsFormModalOpen(false);
