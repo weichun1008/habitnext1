@@ -22,8 +22,8 @@ const TaskCard = ({ task, onClick, onUpdate }) => {
     else {
         isCompleted = isCompletedToday(task);
         if (task.type === 'quantitative') {
-            currentVal = task.dailyProgress[todayStr]?.value || 0;
-            targetVal = task.dailyTarget;
+            currentVal = task.dailyProgress?.[todayStr]?.value || 0;
+            targetVal = task.dailyTarget || 1;
             progressPercent = targetVal > 0 ? Math.min(100, (currentVal / targetVal) * 100) : 0;
             displayStatus = `${currentVal}/${targetVal} ${task.unit}`;
         } else {

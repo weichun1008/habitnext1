@@ -9,7 +9,10 @@ export const generateId = () => Math.random().toString(36).substr(2, 9);
 export const getTodayStr = () => new Date().toISOString().split('T')[0];
 
 export const getNthWeekday = (dateStr) => {
+    if (!dateStr) return { weekNum: 1, weekday: '', isLast: false, desc: '', lastDesc: '' };
     const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return { weekNum: 1, weekday: '', isLast: false, desc: '', lastDesc: '' };
+
     const day = date.getDay(); // 0-6
     const d = date.getDate();
     const weekNum = Math.ceil(d / 7);
