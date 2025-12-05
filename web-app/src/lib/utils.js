@@ -54,7 +54,7 @@ export const isCompletedToday = (task) => {
 
 export const isCompletedOnDate = (task, dateStr) => {
     if (task.type === 'quantitative') {
-        return (task.dailyProgress[dateStr]?.value || 0) >= task.dailyTarget;
+        return (task.dailyProgress?.[dateStr]?.value || 0) >= (task.dailyTarget || 1);
     }
     return !!task.history?.[dateStr];
 };

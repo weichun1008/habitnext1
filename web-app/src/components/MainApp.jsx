@@ -257,7 +257,7 @@ const MainApp = () => {
                 });
                 if (res.ok) {
                     const created = await res.json();
-                    const formatted = { ...created, history: {} };
+                    const formatted = { ...created, history: {}, dailyProgress: {} };
                     setTasks(prev => [...prev, formatted]);
                 } else {
                     const err = await res.json();
