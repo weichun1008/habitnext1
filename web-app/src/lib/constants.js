@@ -26,6 +26,7 @@ export const OFFICIAL_TASKS = [
     {
         id: 'template_water', type: 'quantitative', category: 'droplet',
         title: '飲水 2000 cc', dailyTarget: 2000, unit: 'cc', stepValue: 200, frequency: 'daily',
+        recurrence: { type: 'daily', interval: 1, endType: 'never', weekDays: [], monthType: 'date', periodTarget: 1, dailyLimit: true },
         details: '科學建議每日飲水 2000cc，有助於新陳代謝。',
         science: '飲水不足會影響腎臟功能及消化系統。',
         tool: '定時提醒 App (可選)', recommend: '200 cc / 次'
@@ -33,13 +34,15 @@ export const OFFICIAL_TASKS = [
     {
         id: 'template_steps', type: 'quantitative', category: 'footprints',
         title: '健走 8000 步', dailyTarget: 8000, unit: '步', stepValue: 1000, frequency: 'daily',
+        recurrence: { type: 'daily', interval: 1, endType: 'never', weekDays: [], monthType: 'date', periodTarget: 1, dailyLimit: true },
         details: '世界衛生組織建議，每日達 8000 步可維持基本活動量。',
         science: '規律步行能降低心血管疾病風險。',
         tool: '手機計步器', recommend: '飯後散步 20 分鐘'
     },
     {
-        id: 'template_weekly_review', type: 'mission', category: 'journal',
+        id: 'template_weekly_review', type: 'binary', category: 'journal',
         title: '每週健康回顧', frequency: 'weekly',
+        recurrence: { type: 'weekly', mode: 'specific_days', interval: 1, weekDays: [0], endType: 'never', monthType: 'date', periodTarget: 1, dailyLimit: true },
         details: '檢視本週的飲食與運動狀況，調整下週計畫。',
         science: '定期回顧能提升目標達成率 40%。',
         tool: '筆記本', recommend: '週日晚上'
