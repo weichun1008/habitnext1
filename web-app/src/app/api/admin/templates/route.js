@@ -48,7 +48,7 @@ export async function POST(request) {
                 description: description || '',
                 category,
                 isPublic: isPublic || false,
-                tasks: tasks // Array of task objects
+                tasks: tasks // Native JSON support in PostgreSQL
             },
             include: {
                 expert: {

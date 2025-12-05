@@ -3,9 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_URL") // Fallback to standard URL
-  directUrl = env("POSTGRES_URL") // Fallback to standard URL
+  provider  = "postgresql"
+  url       = env("POSTGRES_URL")
+  directUrl = env("POSTGRES_URL")
 }
 
 // ============================================
@@ -16,6 +16,8 @@ model User {
   id          String       @id @default(cuid())
   nickname    String
   phone       String       @unique
+  email       String?
+  isActive    Boolean      @default(true)
   createdAt   DateTime     @default(now())
   tasks       Task[]
   assignments Assignment[]
@@ -31,6 +33,9 @@ model Expert {
   title       String       // 職稱：醫師、營養師等
   pin         String       // 登入 PIN 碼
   avatar      String?
+  role        String       @default("expert")  // admin, expert, viewer
+  isActive    Boolean      @default(true)
+  createdBy   String?      // 建立此帳號的管理員 ID
   createdAt   DateTime     @default(now())
   templates   Template[]
   assignments Assignment[]
@@ -44,7 +49,7 @@ model Template {
   description String?
   category    String       // health, fitness, nutrition, mental
   isPublic    Boolean      @default(false) // 是否公開讓所有用戶選用
-  tasks       Json         // 模板包含的任務清單 (陣列)
+  tasks       Json         // 模板包含的任務清單
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   assignments Assignment[]

@@ -9,7 +9,8 @@ import {
     Users,
     ClipboardList,
     LogOut,
-    Shield
+    Shield,
+    UserCog
 } from 'lucide-react';
 
 export default function AdminDashboardLayout({ children }) {
@@ -33,12 +34,23 @@ export default function AdminDashboardLayout({ children }) {
         router.push('/admin/login');
     };
 
-    const navItems = [
-        { href: '/admin/dashboard', icon: LayoutDashboard, label: '總覽' },
-        { href: '/admin/dashboard/templates', icon: FileText, label: '模板管理' },
-        { href: '/admin/dashboard/users', icon: Users, label: '用戶管理' },
-        { href: '/admin/dashboard/assignments', icon: ClipboardList, label: '指派記錄' },
-    ];
+    const getNavItems = () => {
+        const items = [
+            { href: '/admin/dashboard', icon: LayoutDashboard, label: '總覽' },
+            { href: '/admin/dashboard/templates', icon: FileText, label: '模板管理' },
+            { href: '/admin/dashboard/users', icon: Users, label: '用戶管理' },
+            { href: '/admin/dashboard/assignments', icon: ClipboardList, label: '指派記錄' },
+        ];
+
+        // Only show experts management for admin role
+        if (expert?.role === 'admin') {
+            items.push({ href: '/admin/dashboard/experts', icon: UserCog, label: '專家管理' });
+        }
+
+        return items;
+    };
+
+    const navItems = getNavItems();
 
     if (loading) {
         return (

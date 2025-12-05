@@ -43,7 +43,7 @@ export async function PUT(request, { params }) {
                 ...(description !== undefined && { description }),
                 ...(category && { category }),
                 ...(isPublic !== undefined && { isPublic }),
-                ...(tasks && { tasks })
+                ...(tasks && { tasks }) // Native JSON support in PostgreSQL
             },
             include: {
                 expert: {
