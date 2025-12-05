@@ -8,40 +8,98 @@ datasource db {
   directUrl = env("POSTGRES_URL") // Fallback to standard URL
 }
 
+// ============================================
+// 用戶相關
+// ============================================
+
 model User {
-  id        String   @id @default(cuid())
-  nickname  String
-  phone     String   @unique
-  createdAt DateTime @default(now())
-  tasks     Task[]
+  id          String       @id @default(cuid())
+  nickname    String
+  phone       String       @unique
+  createdAt   DateTime     @default(now())
+  tasks       Task[]
+  assignments Assignment[]
 }
 
+// ============================================
+// 專家與模板系統
+// ============================================
+
+model Expert {
+  id          String       @id @default(cuid())
+  name        String
+  title       String       // 職稱：醫師、營養師等
+  pin         String       // 登入 PIN 碼
+  avatar      String?
+  createdAt   DateTime     @default(now())
+  templates   Template[]
+  assignments Assignment[]
+}
+
+model Template {
+  id          String       @id @default(cuid())
+  expertId    String
+  expert      Expert       @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  name        String       // 模板名稱，如「減重 30 天計畫」
+  description String?
+  category    String       // health, fitness, nutrition, mental
+  isPublic    Boolean      @default(false) // 是否公開讓所有用戶選用
+  tasks       Json         // 模板包含的任務清單 (陣列)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  assignments Assignment[]
+}
+
+model Assignment {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  templateId String
+  template   Template  @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  expertId   String
+  expert     Expert    @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  status     String    @default("active") // active, completed, paused
+  startDate  DateTime  @default(now())
+  endDate    DateTime?
+  notes      String?   // 專家備註
+  createdAt  DateTime  @default(now())
+}
+
+// ============================================
+// 任務系統
+// ============================================
+
 model Task {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title       String
-  details     String?
-  type        String   // binary, quantitative, checklist
-  category    String
-  frequency   String   // daily, weekly, monthly (Display Group)
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String
+  details      String?
+  type         String   // binary, quantitative, checklist
+  category     String
+  frequency    String   // daily, weekly, monthly (Display Group)
   
   // JSON fields for complex objects
-  recurrence  Json     // { type, interval, mode, ... }
-  reminder    Json     // { enabled, offset }
-  subtasks    Json     // Array of subtask objects
+  recurrence   Json     // { type, interval, mode, ... }
+  reminder     Json     // { enabled, offset }
+  subtasks     Json     // Array of subtask objects
   
   // Task specific settings
-  dailyTarget Int?
-  unit        String?
-  stepValue   Int?
-  date        String?  // Start date
-  time        String?
+  dailyTarget  Int?
+  unit         String?
+  stepValue    Int?
+  date         String?  // Start date
+  time         String?
   
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  // Expert assignment fields
+  assignmentId String?  // 如果是專家指派的任務
+  isLocked     Boolean  @default(false) // 是否鎖定不可編輯
+  expertName   String?  // 指派專家名稱 (方便顯示)
   
-  history     TaskHistory[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  history      TaskHistory[]
 }
 
 model TaskHistory {
@@ -54,3 +112,4 @@ model TaskHistory {
   
   @@unique([taskId, date])
 }
+

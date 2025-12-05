@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronLeft, ChevronRight, Clock, ChevronUp, ChevronDown, Trash2, Plus, Calendar, Check, Bell } from 'lucide-react';
 import IconRenderer from './IconRenderer';
+import LockedTaskAlert from './LockedTaskAlert';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 import { generateId, getTodayStr, getNthWeekday } from '@/lib/utils';
 
 const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, defaultDate }) => {
+    const [showLockedAlert, setShowLockedAlert] = useState(false);
     const [formData, setFormData] = useState({
         title: '', details: '', type: 'binary', category: 'star', frequency: 'daily',
         date: defaultDate || getTodayStr(), time: '09:00',
@@ -23,6 +25,10 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
     useEffect(() => {
         if (isOpen) {
             if (initialData) {
+                // Check if task is locked
+                if (initialData.isLocked) {
+                    setShowLockedAlert(true);
+                }
                 setFormData({
                     ...initialData,
                     time: initialData.time || '09:00',
@@ -44,6 +50,8 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                 });
             }
             setActiveTab('basic');
+        } else {
+            setShowLockedAlert(false);
         }
     }, [isOpen, initialData, defaultDate]);
 
@@ -92,6 +100,19 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
     };
 
     const selectedConfig = CATEGORY_CONFIG[formData.category] || CATEGORY_CONFIG['star'] || { type: 'icon', value: 'Star', color: 'text-gray-500', bg: 'bg-gray-50', label: '預設' };
+
+    // If task is locked, show the locked alert instead of the form
+    if (showLockedAlert && initialData?.isLocked) {
+        return (
+            <LockedTaskAlert
+                expertName={initialData.expertName}
+                onClose={() => {
+                    setShowLockedAlert(false);
+                    onClose();
+                }}
+            />
+        );
+    }
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">
