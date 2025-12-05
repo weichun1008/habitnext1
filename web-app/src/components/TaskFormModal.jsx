@@ -91,7 +91,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
         }
     };
 
-    const selectedConfig = CATEGORY_CONFIG[formData.category] || CATEGORY_CONFIG['star'];
+    const selectedConfig = CATEGORY_CONFIG[formData.category] || CATEGORY_CONFIG['star'] || { type: 'icon', value: 'Star', color: 'text-gray-500', bg: 'bg-gray-50', label: '預設' };
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">

@@ -32,7 +32,7 @@ const TaskCard = ({ task, onClick, onUpdate }) => {
         }
     }
 
-    const config = CATEGORY_CONFIG[task.category] || CATEGORY_CONFIG['star'];
+    const config = CATEGORY_CONFIG[task.category] || CATEGORY_CONFIG['star'] || { type: 'icon', value: 'Star', color: 'text-gray-500', bg: 'bg-gray-50', label: '預設' };
     const isQuant = task.type === 'quantitative';
     const isPeriod = task.recurrence?.mode === 'period_count';
     const isChecklist = task.type === 'checklist';
