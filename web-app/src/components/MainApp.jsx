@@ -12,15 +12,19 @@ import TaskDetailModal from './TaskDetailModal';
 import LoginModal from './LoginModal';
 import { generateId, getTodayStr, isTaskDueToday } from '@/lib/utils';
 import { CATEGORY_CONFIG } from '@/lib/constants';
+import PlanGroup from './PlanGroup';
+import TemplateExplorer from './TemplateExplorer';
 
 const MainApp = () => {
     const [user, setUser] = useState(null);
     const [tasks, setTasks] = useState([]);
+    const [assignments, setAssignments] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const [currentView, setCurrentView] = useState('daily');
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
+    const [isTemplateExplorerOpen, setIsTemplateExplorerOpen] = useState(false);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -35,6 +39,7 @@ const MainApp = () => {
             const parsedUser = JSON.parse(storedUser);
             setUser(parsedUser);
             fetchTasks(parsedUser.id);
+            fetchAssignments(parsedUser.id);
         } else {
             setIsLoginModalOpen(true);
             setLoading(false);
@@ -77,6 +82,18 @@ const MainApp = () => {
         }
     };
 
+    const fetchAssignments = async (userId) => {
+        try {
+            const res = await fetch(`/api/user/assignments?userId=${userId}`);
+            if (res.ok) {
+                const data = await res.json();
+                setAssignments(data);
+            }
+        } catch (err) {
+            console.error('Fetch assignments failed', err);
+        }
+    };
+
     const handleLogin = (userData) => {
         setUser(userData);
         localStorage.setItem('habit_user', JSON.stringify(userData));
@@ -107,8 +124,11 @@ const MainApp = () => {
                 return { ...t, history: historyMap, dailyProgress: dailyProgressMap };
             });
             setTasks(formattedTasks);
+            // Also fetch assignments
+            fetchAssignments(userData.id);
         } else {
             fetchTasks(userData.id);
+            fetchAssignments(userData.id);
         }
     };
 
@@ -294,23 +314,128 @@ const MainApp = () => {
     const dailyTasks = tasks.filter(t => isTaskDueToday(t));
     const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
 
+    const handleTaskClick = (task) => {
+        if (task.isLocked) {
+            // Cannot edit locked tasks directly
+            setViewingTask(task);
+            setIsDetailModalOpen(true);
+        } else {
+            setEditingTask(task);
+            setIsFormModalOpen(true);
+        }
+    };
+
+    const handleDeleteAssignment = async (id) => {
+        try {
+            const res = await fetch(`/api/user/assignments/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                fetchTasks(user.id);
+                fetchAssignments(user.id);
+            }
+        } catch (error) {
+            console.error('Delete assignment error:', error);
+        }
+    };
+
+    // Group tasks
+    const groupedTasks = assignments.map(assignment => ({
+        ...assignment,
+        tasks: tasks.filter(t => t.assignmentId === assignment.id)
+    }));
+
+    const soloTasks = tasks.filter(t => !t.assignmentId);
+
     if (loading && !user) {
         return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-emerald-600 font-bold">載入中...</div>;
     }
 
     return (
-        <div className="bg-gray-50 min-h-screen font-sans flex flex-col md:flex-row w-full max-w-[420px] mx-auto border-x border-gray-200 shadow-2xl">
+        <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row max-w-7xl mx-auto overflow-hidden shadow-2xl md:rounded-3xl md:my-8 md:border border-gray-100">
+            {/* Mobile Header */}
+            <AppHeader
+                onViewChange={setCurrentView}
+                currentView={currentView}
+                onOpenAddFlow={() => { setIsLibraryModalOpen(true); setIsFormModalOpen(false); setEditingTask(null); setSelectedDate(getTodayStr()); }}
+                onOpenBadges={() => setCurrentView('badges')}
+                user={user}
+                className="md:hidden" // Hide on desktop
+            />
+
+            {/* Sidebar (Desktop) */}
+            <aside className="hidden md:flex w-64 bg-white flex-col border-r border-gray-100">
+                <div className="p-8 pb-4">
+                    <div className="flex items-center gap-3 mb-8">
+                        <div className="w-10 h-10 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                            <Target className="text-white" size={24} />
+                        </div>
+                        <h1 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight">HabitNext</h1>
+                    </div>
+
+                    <button
+                        onClick={() => setIsTemplateExplorerOpen(true)}
+                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-4 rounded-2xl font-bold shadow-lg shadow-emerald-200 hover:shadow-emerald-300 transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2 mb-4"
+                    >
+                        <BookOpen size={20} />
+                        探索計畫
+                    </button>
+
+                    <button
+                        onClick={() => {
+                            setEditingTask(null);
+                            setIsFormModalOpen(true);
+                        }}
+                        className="w-full bg-white text-gray-700 border border-gray-200 p-4 rounded-2xl font-bold hover:bg-gray-50 transition-all flex items-center justify-center gap-2 shadow-sm"
+                    >
+                        <span className="text-xl leading-none">+</span>
+                        建立習慣
+                    </button>
+                </div>
+
+                <nav className="flex-1 px-4 py-2 space-y-2">
+                    <button
+                        onClick={() => setCurrentView('daily')}
+                        className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'daily' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
+                    >
+                        <Sun size={20} />
+                        今日
+                    </button>
+                    <button
+                        onClick={() => setCurrentView('manage')}
+                        className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'manage' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
+                    >
+                        <Grid size={20} />
+                        計畫總覽
+                    </button>
+                    <button
+                        onClick={() => setCurrentView('dashboard_detail')}
+                        className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'dashboard_detail' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
+                    >
+                        <Calendar size={20} />
+                        日曆
+                    </button>
+                    <button
+                        onClick={() => setCurrentView('badges')}
+                        className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'badges' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
+                    >
+                        <Award size={20} />
+                        成就
+                    </button>
+                </nav>
+
+                <div className="p-4 border-t border-gray-100">
+                    <button
+                        onClick={() => { /* handle user profile/settings */ }}
+                        className="w-full flex items-center gap-3 p-3 rounded-xl text-left text-gray-600 hover:bg-gray-100 transition-colors"
+                    >
+                        <User size={20} />
+                        {user?.name || '使用者'}
+                    </button>
+                </div>
+            </aside>
 
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
-                <AppHeader
-                    onViewChange={setCurrentView}
-                    currentView={currentView}
-                    onOpenAddFlow={() => { setIsLibraryModalOpen(true); setIsFormModalOpen(false); setEditingTask(null); setSelectedDate(getTodayStr()); }}
-                    onOpenBadges={() => setCurrentView('badges')}
-                    user={user}
-                />
-
+                {/* Mobile header is now handled above, desktop sidebar handles navigation */}
                 <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-24 no-scrollbar">
 
                     {currentView === 'daily' && (
@@ -355,23 +480,45 @@ const MainApp = () => {
                     {currentView === 'manage' && (
                         <div className="p-4">
                             <h2 className="text-2xl font-black text-gray-800 mb-6">計畫總覽</h2>
-                            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden divide-y divide-gray-100">
-                                {tasks.map(task => (
-                                    <div key={task.id} onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }} className="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50">
-                                        <div className="flex items-center gap-4">
-                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${(CATEGORY_CONFIG[task.category] || CATEGORY_CONFIG['star']).bg}`}>
-                                                <IconRenderer category={task.category} size={20} />
-                                            </div>
-                                            <div>
-                                                <h4 className="font-bold text-gray-800">{task.title}</h4>
-                                                <span className="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">
-                                                    {task.recurrence?.mode === 'period_count'
-                                                        ? `${task.frequency === 'weekly' ? '每週' : '每月'} ${task.recurrence.periodTarget} 次`
-                                                        : (task.frequency === 'daily' ? '每天' : '特定日')}
-                                                </span>
-                                            </div>
+                            {/* Tasks List */}
+                            <div className="space-y-4 pb-24 md:pb-0">
+                                {loading && <div className="text-center py-10 text-gray-400">載入中...</div>}
+
+                                {!loading && tasks.length === 0 && (
+                                    <div className="text-center py-20">
+                                        <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">🌵</div>
+                                        <h3 className="text-xl font-bold text-gray-800 mb-2">還沒有習慣</h3>
+                                        <p className="text-gray-500 mb-6">開始建立你的第一個習慣，或是探索專家計畫</p>
+                                        <div className="flex justify-center gap-4">
+                                            <button onClick={() => setIsTemplateExplorerOpen(true)} className="text-emerald-500 font-bold hover:underline">探索計畫</button>
+                                            <button onClick={() => setIsFormModalOpen(true)} className="text-indigo-500 font-bold hover:underline">建立習慣</button>
                                         </div>
                                     </div>
+                                )}
+
+                                {/* Plan Groups */}
+                                {groupedTasks.map(group => (
+                                    <PlanGroup
+                                        key={group.id}
+                                        assignment={group}
+                                        tasks={group.tasks}
+                                        onDelete={handleDeleteAssignment}
+                                        onTaskClick={handleTaskClick} // Actually toggle check but reusing handler name
+                                        onTaskEdit={handleTaskClick}
+                                        onTaskDelete={handleDeleteTask}
+                                    />
+                                ))}
+
+                                {/* Solo Tasks */}
+                                {soloTasks.map(task => (
+                                    <TaskCard
+                                        key={task.id}
+                                        task={task}
+                                        onToggle={() => handleUpdateProgress(task, 'toggle')} // Ensure correct toggle logic
+                                        onClick={() => handleTaskClick(task)}
+                                        onEdit={() => handleTaskClick(task)}
+                                        onDelete={() => handleDeleteTask(task.id)}
+                                    />
                                 ))}
                             </div>
                         </div>
