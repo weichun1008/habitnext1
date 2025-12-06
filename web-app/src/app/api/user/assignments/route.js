@@ -33,6 +33,7 @@ export async function POST(request) {
     try {
         const body = await request.json();
         const { userId, templateId } = body;
+        console.log('[API] Join Plan Request:', { userId, templateId });
 
         if (!userId || !templateId) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -45,10 +46,12 @@ export async function POST(request) {
         });
 
         if (!template) {
+            console.error('[API] Template not found:', templateId);
             return NextResponse.json({ error: 'Template not found' }, { status: 404 });
         }
 
         const tasksData = template.tasks || [];
+        console.log('[API] Template Tasks to copy:', tasksData.length);
 
         // Create Assignment
         const result = await prisma.$transaction(async (tx) => {
@@ -61,6 +64,7 @@ export async function POST(request) {
                     startDate: new Date(),
                 }
             });
+            console.log('[API] Assignment Created:', assignment.id);
 
             // Create Tasks for User
             // Note: For self-joined templates, we set isLocked to false (editable)
