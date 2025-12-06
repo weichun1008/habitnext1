@@ -1,21 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { ChevronLeft, Save, Plus, X, List, Hash, CheckSquare } from 'lucide-react';
-
-const CATEGORIES = [
-    { value: 'health', label: '健康', color: '#10b981' },
-    { value: 'fitness', label: '運動', color: '#f59e0b' },
-    { value: 'nutrition', label: '營養', color: '#3b82f6' },
-    { value: 'mental', label: '心理', color: '#8b5cf6' },
-];
-
-const TASK_TYPES = [
-    { value: 'binary', label: '一般 (達成/未達成)', icon: CheckSquare },
-    { value: 'quantitative', label: '計量 (步數/cc)', icon: Hash },
-    { value: 'checklist', label: '清單 (子任務)', icon: List },
-];
+import TaskFormModal from '@/components/TaskFormModal';
+import { generateId } from '@/lib/utils'; // Make sure this is imported or define it
 
 export default function TemplateForm({ initialData, mode = 'create' }) {
     const router = useRouter();
@@ -28,15 +14,9 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
         tasks: []
     });
 
-    const [newTask, setNewTask] = useState({
-        title: '',
-        type: 'binary',
-        category: 'star',
-        frequency: 'daily',
-        dailyTarget: 1,
-        unit: '次',
-        stepValue: 1
-    });
+    // Modal State
+    const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+    const [editingTaskIndex, setEditingTaskIndex] = useState(null);
 
     useEffect(() => {
         if (initialData) {
@@ -90,44 +70,57 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
         }
     };
 
-    const addTaskToTemplate = () => {
-        if (!newTask.title.trim()) {
-            alert('請輸入任務名稱');
-            return;
-        }
-
-        const taskToAdd = {
-            ...newTask,
-            id: Date.now().toString(),
-            recurrence: {
-                type: 'daily',
-                interval: 1,
-                endType: 'never',
-                weekDays: [],
-                monthType: 'date',
-                periodTarget: 1,
-                dailyLimit: true
-            }
-        };
-
-        setFormData(prev => ({
-            ...prev,
-            tasks: [...prev.tasks, taskToAdd]
-        }));
-
-        setNewTask({ title: '', type: 'binary', category: 'star', frequency: 'daily', dailyTarget: 1, unit: '次', stepValue: 1 });
+    // Open Modal for New Task
+    const openNewTaskModal = () => {
+        setEditingTaskIndex(null);
+        setIsTaskModalOpen(true);
     };
 
-    const removeTaskFromTemplate = (index) => {
+    // Open Modal to Edit Task
+    const openEditTaskModal = (index) => {
+        setEditingTaskIndex(index);
+        setIsTaskModalOpen(true);
+    };
+
+    // Handle Save from Modal
+    const handleTaskSave = (taskData) => {
+        if (editingTaskIndex !== null) {
+            // Update
+            const newTasks = [...formData.tasks];
+            newTasks[editingTaskIndex] = { ...taskData, id: newTasks[editingTaskIndex].id }; // Keep ID
+            setFormData({ ...formData, tasks: newTasks });
+        } else {
+            // Create
+            const newTask = { ...taskData, id: Date.now().toString() };
+            setFormData(prev => ({ ...prev, tasks: [...prev.tasks, newTask] }));
+        }
+        setIsTaskModalOpen(false);
+    };
+
+    // Handle Delete from Modal (or List)
+    const handleTaskDelete = (taskId) => {
+        // Since TaskFormModal passes ID, but we work with index sometimes, let's just filter
+        // If passed from modal, taskId is valid. If from list, we might pass index.
+        // Actually simplest is to filter by filtered ID logic if we have IDs.
+        // Our tasks have IDs.
+        setFormData(prev => ({
+            ...prev,
+            tasks: prev.tasks.filter(t => t.id !== taskId)
+        }));
+        setIsTaskModalOpen(false);
+    };
+
+    // Remove task directly from list
+    const removeTaskFromList = (index) => {
         if (!confirm('確定要移除此任務嗎？')) return;
         setFormData(prev => ({
             ...prev,
             tasks: prev.tasks.filter((_, i) => i !== index)
         }));
-    };
+    }
 
     return (
-        <div className="max-w-4xl mx-auto admin-animate-in">
+        <div className="max-w-4xl mx-auto admin-animate-in pb-20">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
@@ -210,33 +203,51 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                 {/* Right Column: Tasks */}
                 <div className="lg:col-span-2 space-y-6">
                     <div className="admin-card">
-                        <h3 className="admin-card-title flex justify-between items-center">
-                            <span>包含任務 ({formData.tasks.length})</span>
-                        </h3>
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="admin-card-title m-0">包含任務 ({formData.tasks.length})</h3>
+                            <button
+                                onClick={openNewTaskModal}
+                                className="px-3 py-1.5 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white rounded-lg text-sm font-bold transition-all flex items-center gap-2"
+                            >
+                                <Plus size={16} /> 新增任務
+                            </button>
+                        </div>
 
-                        <div className="space-y-4 mb-8">
+                        <div className="space-y-4">
                             {formData.tasks.length === 0 ? (
-                                <div className="text-center py-12 bg-white/5 rounded-xl border border-dashed border-white/10">
-                                    <p className="text-gray-500 text-sm">此模板尚未加入任何任務</p>
+                                <div className="text-center py-12 bg-white/5 rounded-xl border border-dashed border-white/10 cursor-pointer hover:border-emerald-500/50 transition-colors" onClick={openNewTaskModal}>
+                                    <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto mb-3">
+                                        <Plus size={24} />
+                                    </div>
+                                    <p className="text-gray-400 font-medium">尚未加入任何任務</p>
+                                    <p className="text-gray-600 text-xs mt-1">點擊此處開始建立</p>
                                 </div>
                             ) : (
                                 formData.tasks.map((task, index) => (
-                                    <div key={task.id || index} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10 hover:border-emerald-500/50 transition-colors">
+                                    <div
+                                        key={task.id || index}
+                                        className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10 hover:border-emerald-500/50 transition-colors cursor-pointer group"
+                                        onClick={() => openEditTaskModal(index)}
+                                    >
                                         <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                                            <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
                                                 {React.createElement(TASK_TYPES.find(t => t.value === task.type)?.icon || CheckSquare, { size: 20 })}
                                             </div>
                                             <div>
-                                                <h4 className="font-medium text-white">{task.title}</h4>
-                                                <span className="text-xs text-gray-500">
-                                                    {TASK_TYPES.find(t => t.value === task.type)?.label}
-                                                    {task.type === 'quantitative' && ` • 目標: ${task.dailyTarget}${task.unit}`}
-                                                </span>
+                                                <h4 className="font-medium text-white group-hover:text-emerald-400 transition-colors">{task.title}</h4>
+                                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                                    <span>{TASK_TYPES.find(t => t.value === task.type)?.label}</span>
+                                                    {task.recurrence?.type !== 'daily' && (
+                                                        <span className="bg-white/10 px-1.5 py-0.5 rounded text-gray-400">
+                                                            {task.recurrence?.type === 'weekly' ? '每週' : task.recurrence?.type === 'monthly' ? '每月' : '單次'}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                         <button
-                                            onClick={() => removeTaskFromTemplate(index)}
-                                            className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                                            onClick={(e) => { e.stopPropagation(); removeTaskFromList(index); }}
+                                            className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
                                         >
                                             <X size={18} />
                                         </button>
@@ -244,74 +255,18 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                                 ))
                             )}
                         </div>
-
-                        {/* Add Task Form */}
-                        <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-6">
-                            <h4 className="text-sm font-bold text-emerald-500 mb-4 uppercase tracking-wider">新增任務</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div className="admin-form-group text-left" style={{ textAlign: 'left' }}>
-                                    <label className="text-xs font-bold text-gray-500 uppercase mb-2 block">任務名稱</label>
-                                    <input
-                                        type="text"
-                                        className="admin-input"
-                                        placeholder="例如：喝水"
-                                        value={newTask.title}
-                                        onChange={e => setNewTask({ ...newTask, title: e.target.value })}
-                                    />
-                                </div>
-                                <div className="admin-form-group" style={{ textAlign: 'left' }}>
-                                    <label className="text-xs font-bold text-gray-500 uppercase mb-2 block">類型</label>
-                                    <select
-                                        className="admin-input admin-select"
-                                        value={newTask.type}
-                                        onChange={e => setNewTask({ ...newTask, type: e.target.value })}
-                                    >
-                                        {TASK_TYPES.map(type => (
-                                            <option key={type.value} value={type.value}>{type.label}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-
-                            {newTask.type === 'quantitative' && (
-                                <div className="grid grid-cols-3 gap-4 mb-6">
-                                    <div style={{ textAlign: 'left' }}>
-                                        <label className="text-xs font-bold text-gray-500 uppercase mb-2 block">目標數值</label>
-                                        <input
-                                            type="number"
-                                            className="admin-input"
-                                            value={newTask.dailyTarget}
-                                            onChange={e => setNewTask({ ...newTask, dailyTarget: parseInt(e.target.value) || 0 })}
-                                        />
-                                    </div>
-                                    <div style={{ textAlign: 'left' }}>
-                                        <label className="text-xs font-bold text-gray-500 uppercase mb-2 block">單位</label>
-                                        <input
-                                            type="text"
-                                            className="admin-input"
-                                            value={newTask.unit}
-                                            onChange={e => setNewTask({ ...newTask, unit: e.target.value })}
-                                        />
-                                    </div>
-                                    <div style={{ textAlign: 'left' }}>
-                                        <label className="text-xs font-bold text-gray-500 uppercase mb-2 block">每次增量</label>
-                                        <input
-                                            type="number"
-                                            className="admin-input"
-                                            value={newTask.stepValue}
-                                            onChange={e => setNewTask({ ...newTask, stepValue: parseInt(e.target.value) || 1 })}
-                                        />
-                                    </div>
-                                </div>
-                            )}
-
-                            <button className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2" onClick={addTaskToTemplate}>
-                                <Plus size={20} /> 加入任務到列表
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
+
+            {/* Reuse User Task Modal for Admin */}
+            <TaskFormModal
+                isOpen={isTaskModalOpen}
+                onClose={() => setIsTaskModalOpen(false)}
+                onSave={handleTaskSave}
+                onDelete={(id) => handleTaskDelete(id)}
+                initialData={editingTaskIndex !== null ? formData.tasks[editingTaskIndex] : null}
+            />
         </div>
     );
 }
