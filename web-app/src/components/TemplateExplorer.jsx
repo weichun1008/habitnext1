@@ -15,7 +15,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin }) => {
     const fetchTemplates = async () => {
         setLoading(true);
         try {
-            const res = await fetch('/api/templates/public');
+            const res = await fetch('/api/templates/public', { cache: 'no-store' });
             if (res.ok) {
                 const data = await res.json();
                 setTemplates(data);
