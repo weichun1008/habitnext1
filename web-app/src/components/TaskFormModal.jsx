@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ChevronLeft, ChevronRight, Clock, ChevronUp, ChevronDown, Trash2, Plus, Calendar, Check, Bell } from 'lucide-react';
 import IconRenderer from './IconRenderer';
 import LockedTaskAlert from './LockedTaskAlert';
@@ -6,6 +7,7 @@ import { CATEGORY_CONFIG } from '@/lib/constants';
 import { generateId, getTodayStr, getNthWeekday } from '@/lib/utils';
 
 const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, defaultDate }) => {
+    const [mounted, setMounted] = useState(false);
     const [showLockedAlert, setShowLockedAlert] = useState(false);
     const [formData, setFormData] = useState({
         title: '', details: '', type: 'binary', category: 'star', frequency: 'daily',
@@ -21,6 +23,10 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
 
     // Helper for monthly recurrence labels
     const dateInfo = getNthWeekday(formData.date);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         if (isOpen) {
@@ -61,13 +67,15 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
         }
     };
 
-    if (!isOpen) return null;
+    if (!isOpen || !mounted) return null;
 
     const handleSubtaskChange = (idx, field, value) => {
         const newSub = [...formData.subtasks];
         newSub[idx][field] = value;
         setFormData({ ...formData, subtasks: newSub });
     };
+
+    // ... (logic methods stay same)
 
     const addSubtask = () => {
         setFormData({
@@ -103,20 +111,21 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
 
     // If task is locked, show the locked alert instead of the form
     if (showLockedAlert && initialData?.isLocked) {
-        return (
+        return createPortal(
             <LockedTaskAlert
                 expertName={initialData.expertName}
                 onClose={() => {
                     setShowLockedAlert(false);
                     onClose();
                 }}
-            />
+            />,
+            document.body
         );
     }
 
-    return (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">
-            <div className="bg-white w-full md:max-w-md h-[90vh] md:h-auto md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up">
+    return createPortal(
+        <div className="fixed inset-0 z-[9999] bg-black bg-opacity-50 flex items-end md:items-center justify-center">
+            <div className="bg-white w-full md:max-w-md h-[90vh] md:h-auto md:max-h-[85vh] md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up">
 
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white rounded-t-2xl">
                     <div className="flex items-center gap-2">
