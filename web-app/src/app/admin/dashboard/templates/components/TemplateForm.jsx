@@ -1,7 +1,23 @@
 "use client";
 
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { ChevronLeft, Save, Plus, X, List, Hash, CheckSquare } from 'lucide-react';
 import TaskFormModal from '@/components/TaskFormModal';
-import { generateId } from '@/lib/utils'; // Make sure this is imported or define it
+import { generateId } from '@/lib/utils';
+
+const CATEGORIES = [
+    { value: 'health', label: '健康', color: '#10b981' },
+    { value: 'fitness', label: '運動', color: '#f59e0b' },
+    { value: 'nutrition', label: '營養', color: '#3b82f6' },
+    { value: 'mental', label: '心理', color: '#8b5cf6' },
+];
+
+const TASK_TYPES = [
+    { value: 'binary', label: '一般 (達成/未達成)', icon: CheckSquare },
+    { value: 'quantitative', label: '計量 (步數/cc)', icon: Hash },
+    { value: 'checklist', label: '清單 (子任務)', icon: List },
+];
 
 export default function TemplateForm({ initialData, mode = 'create' }) {
     const router = useRouter();
