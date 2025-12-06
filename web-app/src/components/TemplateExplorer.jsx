@@ -15,10 +15,15 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin }) => {
     const fetchTemplates = async () => {
         setLoading(true);
         try {
-            const res = await fetch('/api/templates/public', { cache: 'no-store' });
+            const timestamp = Date.now();
+            console.log('[Client] Fetching templates with timestamp:', timestamp);
+            const res = await fetch(`/api/templates/public?t=${timestamp}`, { cache: 'no-store' });
             if (res.ok) {
                 const data = await res.json();
+                console.log('[Client] Received templates:', data);
                 setTemplates(data);
+            } else {
+                console.error('[Client] Fetch failed:', res.status);
             }
         } catch (error) {
             console.error('Fetch templates error:', error);

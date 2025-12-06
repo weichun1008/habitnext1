@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
     try {
+        console.log('[API] Fetching public templates...');
         const templatesRaw = await prisma.template.findMany({
             where: { isPublic: true },
             include: {
@@ -17,6 +18,7 @@ export async function GET() {
             },
             orderBy: { createdAt: 'desc' }
         });
+        console.log(`[API] Found ${templatesRaw.length} public templates`);
 
         const templates = templatesRaw.map(t => ({
             ...t,
