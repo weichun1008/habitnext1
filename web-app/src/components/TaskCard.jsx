@@ -55,6 +55,7 @@ const TaskCard = ({ task, onClick, onUpdate }) => {
                 />
             )}
 
+            {/* Title & Status */}
             <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center gap-3">
                     <div className={`${config.bg} p-2 rounded-xl`}>
@@ -73,7 +74,9 @@ const TaskCard = ({ task, onClick, onUpdate }) => {
                 <div className="flex flex-col items-end gap-1">
                     {(isQuant || isPeriod) ? (
                         <span className={`text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap transition-colors ${isCompleted ? 'bg-yellow-100 text-yellow-700' : 'bg-emerald-50 text-emerald-600'}`}>
-                            {isCompleted ? '🎉 達成' : displayStatus}
+                            {isCompleted ? (
+                                <span className="flex items-center gap-1">🎉 {displayStatus}</span>
+                            ) : displayStatus}
                         </span>
                     ) : (
                         <div className="flex items-center gap-2">

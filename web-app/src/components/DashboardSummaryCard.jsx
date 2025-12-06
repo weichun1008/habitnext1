@@ -1,16 +1,19 @@
 import React from 'react';
 import { Sparkles, Target, Flame } from 'lucide-react';
-import { getTodayStr, isCompletedToday, calculatePeriodProgress } from '@/lib/utils';
+import { getTodayStr, isCompletedToday, calculatePeriodProgress, isTaskDueToday } from '@/lib/utils';
 
 const DashboardSummaryCard = ({ tasks, onOpenDetail }) => {
-    const dailyTasks = tasks.filter(t => t.frequency === 'daily' && !t.recurrence?.mode?.includes('period'));
+    // Filter tasks that are actually due today (including specific week days)
+    // Exclude 'period_count' as they don't have a single daily binary status usually, unless we want to track them.
+    // For now, let's track binary/quant tasks due today.
+    const activeTasks = tasks.filter(t => !t.recurrence?.mode?.includes('period') && isTaskDueToday(t));
 
-    const totalTasks = dailyTasks.length;
+    const totalTasks = activeTasks.length;
     let score = 0;
 
-    dailyTasks.forEach(t => {
+    activeTasks.forEach(t => {
         if (t.type === 'quantitative') {
-            const curr = t.dailyProgress[getTodayStr()]?.value || 0;
+            const curr = t.dailyProgress?.[getTodayStr()]?.value || 0;
             const target = t.dailyTarget || 1;
             const ratio = Math.min(1, curr / target);
             score += (100 / totalTasks) * ratio;

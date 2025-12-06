@@ -9,6 +9,12 @@ import { generateId, getTodayStr, getNthWeekday } from '@/lib/utils';
 const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, defaultDate }) => {
     const [mounted, setMounted] = useState(false);
     const [showLockedAlert, setShowLockedAlert] = useState(false);
+
+    // Ensure we only render on client and when body is available
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     const [formData, setFormData] = useState({
         title: '', details: '', type: 'binary', category: 'star', frequency: 'daily',
         date: defaultDate || getTodayStr(), time: '09:00',
@@ -23,10 +29,6 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
 
     // Helper for monthly recurrence labels
     const dateInfo = getNthWeekday(formData.date);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     useEffect(() => {
         if (isOpen) {
@@ -67,15 +69,17 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
         }
     };
 
-    if (!isOpen || !mounted) return null;
+    // Robust check for Portal target
+    if (!isOpen || !mounted || typeof document === 'undefined') return null;
+
+    const modalRoot = document.body;
+    if (!modalRoot) return null;
 
     const handleSubtaskChange = (idx, field, value) => {
         const newSub = [...formData.subtasks];
         newSub[idx][field] = value;
         setFormData({ ...formData, subtasks: newSub });
     };
-
-    // ... (logic methods stay same)
 
     const addSubtask = () => {
         setFormData({
@@ -119,7 +123,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                     onClose();
                 }}
             />,
-            document.body
+            modalRoot
         );
     }
 
