@@ -88,7 +88,7 @@ const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTas
             {/* Delete Confirmation Modal */}
             {showDeleteConfirm && (
                 <div className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-fade-in-up">
+                    <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
                         <h3 className="text-lg font-bold text-gray-800 mb-2">
                             {isExpertAssigned ? '確認刪除專家計畫？' : '確認刪除計畫？'}
                         </h3>
