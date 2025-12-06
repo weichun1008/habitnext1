@@ -8,10 +8,14 @@ const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onO
         <div className={`bg-white sticky top-0 z-30 shadow-sm ${className || ''}`}>
             <div className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-2 cursor-pointer" onClick={() => onViewChange('daily')}>
-                    <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden border border-gray-100">
-                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.nickname || 'User'}`} alt="Avatar" className="w-full h-full" />
+                    <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden border border-gray-100 flex items-center justify-center">
+                        {user?.nickname ? (
+                            <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.nickname}`} alt="Avatar" className="w-full h-full" />
+                        ) : (
+                            <span className="text-xs text-gray-500 font-bold">{user?.name?.[0] || 'U'}</span>
+                        )}
                     </div>
-                    <span className="font-bold text-gray-800 text-sm md:text-base">{user?.nickname || '訪客'}</span>
+                    <span className="font-bold text-gray-800 text-sm md:text-base">{user?.nickname || user?.name || '訪客'}</span>
                 </div>
 
                 {currentView === 'daily' ? (
