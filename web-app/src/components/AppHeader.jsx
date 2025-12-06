@@ -1,11 +1,11 @@
 import React from 'react';
 import { Calendar, Award, Plus, X, BookOpen } from 'lucide-react';
 
-const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onOpenExplore, user }) => {
+const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onOpenExplore, user, className }) => {
     const weekDays = ['一', '二', '三', '四', '五', '六', '日'];
 
     return (
-        <div className="bg-white sticky top-0 z-30 shadow-sm">
+        <div className={`bg-white sticky top-0 z-30 shadow-sm ${className || ''}`}>
             <div className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-2 cursor-pointer" onClick={() => onViewChange('daily')}>
                     <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden border border-gray-100">
