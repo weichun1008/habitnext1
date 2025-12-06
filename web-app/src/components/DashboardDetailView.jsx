@@ -6,7 +6,7 @@ const DashboardDetailView = ({ tasks }) => {
     const weekData = [45, 60, 55, 80, 70, 90, 65]; // Percentages
 
     return (
-        <div className="p-4 md:p-8 max-w-4xl mx-auto pb-24 animate-fade-in-up">
+        <div className="p-4 md:p-8 w-full pb-24 animate-fade-in-up">
             <h2 className="text-2xl font-black text-gray-800 mb-6 flex items-center gap-2">
                 <Activity className="text-emerald-600" /> 健康洞察報告
             </h2>
