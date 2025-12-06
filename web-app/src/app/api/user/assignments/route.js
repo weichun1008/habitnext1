@@ -82,7 +82,6 @@ export async function POST(request) {
                         dailyTarget: t.dailyTarget || 1,
                         unit: t.unit || '次',
                         stepValue: t.stepValue || 1,
-                        currentValue: 0,
                         history: [], // Postgres JSON
                         periodHistory: [], // Postgres JSON
                         subtasks: t.subtasks || [],
