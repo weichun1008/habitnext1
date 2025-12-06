@@ -128,12 +128,40 @@ export default function TemplatesPage() {
     };
 
     const addTaskToTemplate = () => {
-        if (!newTask.title.trim()) return;
-        setFormData({
-            ...formData,
-            tasks: [...formData.tasks, { ...newTask, id: Date.now().toString() }]
+        if (!newTask.title.trim()) {
+            alert('請輸入任務名稱');
+            return;
+        }
+
+        const taskToAdd = {
+            ...newTask,
+            id: Date.now().toString(),
+            recurrence: {
+                type: 'daily',
+                interval: 1,
+                endType: 'never',
+                weekDays: [],
+                monthType: 'date',
+                periodTarget: 1,
+                dailyLimit: true
+            }
+        };
+
+        setFormData(prev => ({
+            ...prev,
+            tasks: [...prev.tasks, taskToAdd]
+        }));
+
+        // Reset new task form
+        setNewTask({
+            title: '',
+            type: 'binary',
+            category: 'star',
+            frequency: 'daily',
+            dailyTarget: 1,
+            unit: '次',
+            stepValue: 1
         });
-        setNewTask({ title: '', type: 'binary', category: 'star', frequency: 'daily', dailyTarget: 1, unit: '次', stepValue: 1 });
     };
 
     const removeTaskFromTemplate = (index) => {
