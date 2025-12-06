@@ -82,13 +82,13 @@ export async function POST(request) {
                         dailyTarget: t.dailyTarget || 1,
                         unit: t.unit || '次',
                         stepValue: t.stepValue || 1,
-                        history: [], // Postgres JSON
-                        periodHistory: [], // Postgres JSON
+                        unit: t.unit || '次',
+                        stepValue: t.stepValue || 1,
                         subtasks: t.subtasks || [],
                         recurrence: t.recurrence || {},
                         reminder: {},
                         createdAt: new Date(),
-                        startDate: getTodayStr(),
+                        date: getTodayStr(),
                         assignmentId: assignment.id,
                         expertName: template.expert.name, // For display
                         isLocked: false // User joined templates are editable by default

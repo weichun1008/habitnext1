@@ -71,14 +71,11 @@ async function main() {
                     dailyTarget: t.dailyTarget || 1,
                     unit: t.unit || '次',
                     stepValue: t.stepValue || 1,
-                    currentValue: 0,
-                    history: [], // Postgres JSON? Check if this needs to be valid JSON
-                    periodHistory: [],
                     subtasks: t.subtasks || [],
                     recurrence: t.recurrence || {},
                     reminder: {},
                     createdAt: new Date(),
-                    startDate: mockGetTodayStr(),
+                    date: mockGetTodayStr(),
                     assignmentId: assignment.id,
                     expertName: template.expert.name,
                     isLocked: false
