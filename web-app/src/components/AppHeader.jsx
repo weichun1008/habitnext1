@@ -1,7 +1,7 @@
 import React from 'react';
-import { Calendar, Award, Plus, X } from 'lucide-react';
+import { Calendar, Award, Plus, X, BookOpen } from 'lucide-react';
 
-const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, user }) => {
+const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onOpenExplore, user }) => {
     const weekDays = ['一', '二', '三', '四', '五', '六', '日'];
 
     return (
@@ -28,6 +28,9 @@ const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, use
                 <div className="flex gap-2">
                     {currentView === 'daily' && (
                         <>
+                            <button onClick={onOpenExplore} className="w-8 h-8 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center hover:bg-indigo-100 transition-colors">
+                                <BookOpen size={20} />
+                            </button>
                             <button onClick={onOpenBadges} className="w-8 h-8 bg-gray-100 text-yellow-600 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors">
                                 <Award size={20} />
                             </button>

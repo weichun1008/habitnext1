@@ -357,6 +357,7 @@ const MainApp = () => {
                 currentView={currentView}
                 onOpenAddFlow={() => { setIsLibraryModalOpen(true); setIsFormModalOpen(false); setEditingTask(null); setSelectedDate(getTodayStr()); }}
                 onOpenBadges={() => setCurrentView('badges')}
+                onOpenExplore={() => setIsTemplateExplorerOpen(true)}
                 user={user}
                 className="md:hidden" // Hide on desktop
             />
