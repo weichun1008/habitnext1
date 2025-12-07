@@ -36,6 +36,8 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
         description: '',
         category: 'health',
         isPublic: false,
+        startDateType: 'user_choice', // 'user_choice' or 'fixed_date'
+        fixedStartDate: '', // Only used when startDateType === 'fixed_date'
         phases: [createDefaultPhase(0)] // New: array of phases
     });
 
@@ -85,6 +87,8 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                 description: initialData.description || '',
                 category: initialData.category || 'health',
                 isPublic: initialData.isPublic || false,
+                startDateType: initialData.startDateType || 'user_choice',
+                fixedStartDate: initialData.fixedStartDate || '',
                 phases: phases.length > 0 ? phases : [createDefaultPhase(0)]
             });
 
@@ -117,6 +121,8 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                 description: formData.description,
                 category: formData.category,
                 isPublic: formData.isPublic,
+                startDateType: formData.startDateType,
+                fixedStartDate: formData.fixedStartDate || null,
                 tasks: {
                     version: '2.0',
                     phases: formData.phases
@@ -339,6 +345,46 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                                 </div>
                             )}
                         </div>
+
+                        {/* Start Date Setting */}
+                        <div className="admin-form-group">
+                            <label className="admin-label">開始日期設定</label>
+                            <div className="space-y-2">
+                                <label className="flex items-center gap-3 p-3 rounded-lg bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
+                                    <input
+                                        type="radio"
+                                        name="startDateType"
+                                        value="user_choice"
+                                        checked={formData.startDateType === 'user_choice'}
+                                        onChange={e => setFormData({ ...formData, startDateType: e.target.value })}
+                                        className="w-4 h-4 text-emerald-500 focus:ring-emerald-500"
+                                    />
+                                    <div>
+                                        <span className="text-sm text-gray-300">用戶自選開始日</span>
+                                        <p className="text-xs text-gray-500">用戶加入時可選:今天/明天/指定日期</p>
+                                    </div>
+                                </label>
+                                <label className="flex items-center gap-3 p-3 rounded-lg bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
+                                    <input
+                                        type="radio"
+                                        name="startDateType"
+                                        value="fixed_date"
+                                        checked={formData.startDateType === 'fixed_date'}
+                                        onChange={e => setFormData({ ...formData, startDateType: e.target.value })}
+                                        className="w-4 h-4 text-emerald-500 focus:ring-emerald-500"
+                                    />
+                                    <span className="text-sm text-gray-300">指定固定日期</span>
+                                </label>
+                                {formData.startDateType === 'fixed_date' && (
+                                    <input
+                                        type="date"
+                                        className="admin-input mt-2"
+                                        value={formData.fixedStartDate}
+                                        onChange={e => setFormData({ ...formData, fixedStartDate: e.target.value })}
+                                    />
+                                )}
+                            </div>
+                        </div>
                     </div>
 
                     {/* Stats */}
@@ -432,61 +478,71 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                             {expandedPhases[phase.id] && (
                                 <div className="p-4 space-y-3">
                                     {phase.tasks.length === 0 ? (
-                                        <div
-                                            className="text-center py-8 border border-dashed border-white/10 rounded-xl cursor-pointer hover:border-emerald-500/50 transition-colors"
-                                            onClick={() => openNewTaskModal(phase.id)}
-                                        >
-                                            <Plus size={20} className="mx-auto text-gray-500 mb-2" />
-                                            <p className="text-sm text-gray-500">點擊新增任務</p>
-                                        </div>
-                                    ) : (
-                                        phase.tasks.map((task, taskIndex) => (
-                                            <div
-                                                key={task.id || taskIndex}
-                                                className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5 hover:border-emerald-500/30 transition-colors cursor-pointer group"
-                                                onClick={() => openEditTaskModal(phase.id, taskIndex)}
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500">
-                                                        {(() => {
-                                                            const iconConfig = TASK_TYPES.find(t => t.value === task.type);
-                                                            const IconComponent = iconConfig ? iconConfig.icon : CheckSquare;
-                                                            return <IconComponent size={16} />;
-                                                        })()}
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-sm font-medium text-white">{task.title}</p>
-                                                        <p className="text-xs text-gray-500">
-                                                            {TASK_TYPES.find(t => t.value === task.type)?.label}
-                                                            {task.recurrence?.type && task.recurrence.type !== 'daily' && ` • ${task.recurrence.type === 'weekly' ? '每週' : '每月'}`}
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                        <div className="text-center py-8 border border-dashed border-white/10 rounded-xl">
+                                            <p className="text-sm text-gray-500 mb-4">此階段尚無任務</p>
+                                            <div className="flex items-center justify-center gap-4">
                                                 <button
-                                                    onClick={(e) => { e.stopPropagation(); handleTaskDelete(phase.id, taskIndex); }}
-                                                    className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-400/10 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    onClick={() => openNewTaskModal(phase.id)}
+                                                    className="px-3 py-2 text-sm bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white rounded-lg flex items-center gap-2 transition-colors"
                                                 >
-                                                    <X size={16} />
+                                                    <Plus size={14} /> 手動新增
+                                                </button>
+                                                <button
+                                                    onClick={() => openLibraryModal(phase.id)}
+                                                    className="px-3 py-2 text-sm bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white rounded-lg flex items-center gap-2 transition-colors"
+                                                >
+                                                    <BookOpen size={14} /> 從習慣庫匯入
                                                 </button>
                                             </div>
-                                        ))
-                                    )}
-
-                                    {phase.tasks.length > 0 && (
-                                        <div className="flex items-center justify-center gap-4">
-                                            <button
-                                                onClick={() => openNewTaskModal(phase.id)}
-                                                className="py-2 text-sm text-gray-500 hover:text-emerald-500 flex items-center justify-center gap-1 transition-colors"
-                                            >
-                                                <Plus size={14} /> 新增任務
-                                            </button>
-                                            <button
-                                                onClick={() => openLibraryModal(phase.id)}
-                                                className="py-2 text-sm text-gray-500 hover:text-blue-500 flex items-center justify-center gap-1 transition-colors"
-                                            >
-                                                <BookOpen size={14} /> 從習慣庫匯入
-                                            </button>
                                         </div>
+                                    ) : (
+                                        <>
+                                            {phase.tasks.map((task, taskIndex) => (
+                                                <div
+                                                    key={task.id || taskIndex}
+                                                    className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5 hover:border-emerald-500/30 transition-colors cursor-pointer group"
+                                                    onClick={() => openEditTaskModal(phase.id, taskIndex)}
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                                                            {(() => {
+                                                                const iconConfig = TASK_TYPES.find(t => t.value === task.type);
+                                                                const IconComponent = iconConfig ? iconConfig.icon : CheckSquare;
+                                                                return <IconComponent size={16} />;
+                                                            })()}
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-sm font-medium text-white">{task.title}</p>
+                                                            <p className="text-xs text-gray-500">
+                                                                {TASK_TYPES.find(t => t.value === task.type)?.label}
+                                                                {task.recurrence?.type && task.recurrence.type !== 'daily' && ` • ${task.recurrence.type === 'weekly' ? '每週' : '每月'}`}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); handleTaskDelete(phase.id, taskIndex); }}
+                                                        className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-400/10 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    >
+                                                        <X size={16} />
+                                                    </button>
+                                                </div>
+                                            ))}
+
+                                            <div className="flex items-center justify-center gap-4 pt-2">
+                                                <button
+                                                    onClick={() => openNewTaskModal(phase.id)}
+                                                    className="py-2 text-sm text-gray-500 hover:text-emerald-500 flex items-center justify-center gap-1 transition-colors"
+                                                >
+                                                    <Plus size={14} /> 新增任務
+                                                </button>
+                                                <button
+                                                    onClick={() => openLibraryModal(phase.id)}
+                                                    className="py-2 text-sm text-gray-500 hover:text-blue-500 flex items-center justify-center gap-1 transition-colors"
+                                                >
+                                                    <BookOpen size={14} /> 從習慣庫匯入
+                                                </button>
+                                            </div>
+                                        </>
                                     )}
                                 </div>
                             )}

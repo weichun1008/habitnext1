@@ -58,17 +58,19 @@ model Expert {
 }
 
 model Template {
-  id          String       @id @default(cuid())
-  expertId    String
-  expert      Expert       @relation(fields: [expertId], references: [id], onDelete: Cascade)
-  name        String       // 模板名稱，如「減重 30 天計畫」
-  description String?
-  category    String       // health, fitness, nutrition, mental
-  isPublic    Boolean      @default(false) // 是否公開讓所有用戶選用
-  tasks       Json         // 模板包含的任務清單
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  assignments Assignment[]
+  id             String       @id @default(cuid())
+  expertId       String
+  expert         Expert       @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  name           String       // 模板名稱，如「減重 30 天計畫」
+  description    String?
+  category       String       // health, fitness, nutrition, mental
+  isPublic       Boolean      @default(false) // 是否公開讓所有用戶選用
+  startDateType  String       @default("user_choice") // user_choice or fixed_date
+  fixedStartDate DateTime?    // Only used when startDateType === 'fixed_date'
+  tasks          Json         // 模板包含的任務清單
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  assignments    Assignment[]
 }
 
 model Assignment {

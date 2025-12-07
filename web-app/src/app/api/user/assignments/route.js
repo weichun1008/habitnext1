@@ -32,8 +32,8 @@ export async function GET(request) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { userId, templateId } = body;
-        console.log('[API] Join Plan Request:', { userId, templateId });
+        const { userId, templateId, startDate: requestedStartDate } = body;
+        console.log('[API] Join Plan Request:', { userId, templateId, requestedStartDate });
 
         if (!userId || !templateId) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -53,7 +53,10 @@ export async function POST(request) {
         // Handle both legacy (flat array) and new 3-layer structure (Plan > Phase > Task)
         let tasksData = [];
         const rawTasks = template.tasks;
-        const startDate = new Date();
+        // Use user-provided start date, or fixed date from template, or default to today
+        const startDate = requestedStartDate
+            ? new Date(requestedStartDate)
+            : (template.fixedStartDate ? template.fixedStartDate : new Date());
 
         if (Array.isArray(rawTasks)) {
             // Legacy format: flat array of tasks

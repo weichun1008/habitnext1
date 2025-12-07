@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { X, Search, User, Check, Loader } from 'lucide-react';
+import { X, Search, User, Check, Loader, Calendar } from 'lucide-react';
 
 const TemplateExplorer = ({ isOpen, onClose, userId, onJoin }) => {
     const [templates, setTemplates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [joiningId, setJoiningId] = useState(null);
+
+    // Start date selection state
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [selectedTemplate, setSelectedTemplate] = useState(null);
+    const [startDateOption, setStartDateOption] = useState('today');
+    const [customDate, setCustomDate] = useState('');
 
     useEffect(() => {
         if (isOpen) {
@@ -32,15 +38,44 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin }) => {
         }
     };
 
-    const handleJoin = async (template) => {
+    const getStartDate = () => {
+        const today = new Date();
+        if (startDateOption === 'today') {
+            return today.toISOString().split('T')[0];
+        } else if (startDateOption === 'tomorrow') {
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            return tomorrow.toISOString().split('T')[0];
+        } else if (startDateOption === 'custom' && customDate) {
+            return customDate;
+        }
+        return today.toISOString().split('T')[0];
+    };
+
+    const handleJoinClick = (template) => {
+        // If template uses user_choice, show date picker
+        if (template.startDateType === 'user_choice' || !template.startDateType) {
+            setSelectedTemplate(template);
+            setStartDateOption('today');
+            setCustomDate('');
+            setShowDatePicker(true);
+        } else {
+            // Fixed date - join directly
+            confirmJoin(template, template.fixedStartDate);
+        }
+    };
+
+    const confirmJoin = async (template, startDate) => {
         setJoiningId(template.id);
+        setShowDatePicker(false);
         try {
             const res = await fetch('/api/user/assignments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     userId,
-                    templateId: template.id
+                    templateId: template.id,
+                    startDate: startDate
                 })
             });
 
@@ -55,6 +90,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin }) => {
             alert('發生錯誤');
         } finally {
             setJoiningId(null);
+            setSelectedTemplate(null);
         }
     };
 
@@ -99,7 +135,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin }) => {
                                             </div>
                                         </div>
                                         <button
-                                            onClick={() => handleJoin(template)}
+                                            onClick={() => handleJoinClick(template)}
                                             disabled={joiningId === template.id}
                                             className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors disabled:opacity-50 flex items-center gap-2"
                                         >
@@ -131,6 +167,90 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin }) => {
                     )}
                 </div>
             </div>
+
+            {/* Start Date Selection Modal */}
+            {showDatePicker && selectedTemplate && (
+                <div className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                                <Calendar size={20} className="text-emerald-600" />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-gray-800">選擇開始日期</h3>
+                                <p className="text-xs text-gray-500">{selectedTemplate.name}</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2 mb-6">
+                            <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+                                <input
+                                    type="radio"
+                                    name="startDate"
+                                    value="today"
+                                    checked={startDateOption === 'today'}
+                                    onChange={() => setStartDateOption('today')}
+                                    className="w-4 h-4 text-emerald-500"
+                                />
+                                <span className="text-sm font-medium text-gray-700">今天開始</span>
+                            </label>
+
+                            <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+                                <input
+                                    type="radio"
+                                    name="startDate"
+                                    value="tomorrow"
+                                    checked={startDateOption === 'tomorrow'}
+                                    onChange={() => setStartDateOption('tomorrow')}
+                                    className="w-4 h-4 text-emerald-500"
+                                />
+                                <span className="text-sm font-medium text-gray-700">明天開始</span>
+                            </label>
+
+                            <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+                                <input
+                                    type="radio"
+                                    name="startDate"
+                                    value="custom"
+                                    checked={startDateOption === 'custom'}
+                                    onChange={() => setStartDateOption('custom')}
+                                    className="w-4 h-4 text-emerald-500"
+                                />
+                                <span className="text-sm font-medium text-gray-700">指定日期</span>
+                            </label>
+
+                            {startDateOption === 'custom' && (
+                                <input
+                                    type="date"
+                                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm mt-2"
+                                    value={customDate}
+                                    onChange={e => setCustomDate(e.target.value)}
+                                    min={new Date().toISOString().split('T')[0]}
+                                />
+                            )}
+                        </div>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => {
+                                    setShowDatePicker(false);
+                                    setSelectedTemplate(null);
+                                }}
+                                className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                            >
+                                取消
+                            </button>
+                            <button
+                                onClick={() => confirmJoin(selectedTemplate, getStartDate())}
+                                disabled={startDateOption === 'custom' && !customDate}
+                                className="flex-1 py-3 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 transition-colors disabled:opacity-50"
+                            >
+                                確認加入
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
