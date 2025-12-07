@@ -486,52 +486,102 @@ export default function HabitsPage() {
                                                     <option value="monthly">每月</option>
                                                 </select>
                                             </div>
-
-                                            {formData.difficulties[activeDiffTab]?.recurrence?.type === 'weekly' && (
-                                                <div>
-                                                    <label className="admin-label">指定星期</label>
-                                                    <div className="flex gap-2 flex-wrap">
-                                                        {['日', '一', '二', '三', '四', '五', '六'].map((day, idx) => (
-                                                            <button
-                                                                key={idx}
-                                                                type="button"
-                                                                onClick={() => {
-                                                                    const currentDays = formData.difficulties[activeDiffTab]?.recurrence?.weekDays || [];
-                                                                    const newDays = currentDays.includes(idx)
-                                                                        ? currentDays.filter(d => d !== idx)
-                                                                        : [...currentDays, idx];
-                                                                    updateDifficulty(activeDiffTab, 'recurrence', {
-                                                                        ...formData.difficulties[activeDiffTab]?.recurrence,
-                                                                        weekDays: newDays
-                                                                    });
-                                                                }}
-                                                                className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${formData.difficulties[activeDiffTab]?.recurrence?.weekDays?.includes(idx)
-                                                                        ? 'bg-emerald-500 text-white'
-                                                                        : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
-                                                                    }`}
-                                                            >
-                                                                {day}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
-
+                                            {/* Weekly/Monthly Mode Selector */}
                                             {(formData.difficulties[activeDiffTab]?.recurrence?.type === 'weekly' ||
                                                 formData.difficulties[activeDiffTab]?.recurrence?.type === 'monthly') && (
                                                     <div>
-                                                        <label className="admin-label">每週期目標次數</label>
-                                                        <input
-                                                            type="number"
-                                                            className="admin-input w-24"
-                                                            min={1}
-                                                            max={30}
-                                                            value={formData.difficulties[activeDiffTab]?.recurrence?.periodTarget || 1}
-                                                            onChange={e => updateDifficulty(activeDiffTab, 'recurrence', {
-                                                                ...formData.difficulties[activeDiffTab]?.recurrence,
-                                                                periodTarget: parseInt(e.target.value) || 1
-                                                            })}
-                                                        />
+                                                        <label className="admin-label">週期模式</label>
+                                                        <div className="space-y-2">
+                                                            <label className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg cursor-pointer hover:bg-gray-700/70 transition-colors">
+                                                                <input
+                                                                    type="radio"
+                                                                    name={`weekMode-${activeDiffTab}`}
+                                                                    checked={formData.difficulties[activeDiffTab]?.recurrence?.weekMode !== 'flexible'}
+                                                                    onChange={() => updateDifficulty(activeDiffTab, 'recurrence', {
+                                                                        ...formData.difficulties[activeDiffTab]?.recurrence,
+                                                                        weekMode: 'fixed'
+                                                                    })}
+                                                                    className="w-4 h-4"
+                                                                />
+                                                                <div>
+                                                                    <span className="text-sm text-white font-medium">固定日期</span>
+                                                                    <p className="text-xs text-gray-400">指定每週的特定星期執行</p>
+                                                                </div>
+                                                            </label>
+                                                            <label className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg cursor-pointer hover:bg-gray-700/70 transition-colors">
+                                                                <input
+                                                                    type="radio"
+                                                                    name={`weekMode-${activeDiffTab}`}
+                                                                    checked={formData.difficulties[activeDiffTab]?.recurrence?.weekMode === 'flexible'}
+                                                                    onChange={() => updateDifficulty(activeDiffTab, 'recurrence', {
+                                                                        ...formData.difficulties[activeDiffTab]?.recurrence,
+                                                                        weekMode: 'flexible'
+                                                                    })}
+                                                                    className="w-4 h-4"
+                                                                />
+                                                                <div>
+                                                                    <span className="text-sm text-white font-medium">彈性次數</span>
+                                                                    <p className="text-xs text-gray-400">每週期達成目標次數即可，不限日期</p>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                            {/* Fixed Mode: Weekday Selector */}
+                                            {formData.difficulties[activeDiffTab]?.recurrence?.type === 'weekly' &&
+                                                formData.difficulties[activeDiffTab]?.recurrence?.weekMode !== 'flexible' && (
+                                                    <div>
+                                                        <label className="admin-label">指定星期</label>
+                                                        <div className="flex gap-2 flex-wrap">
+                                                            {['日', '一', '二', '三', '四', '五', '六'].map((day, idx) => (
+                                                                <button
+                                                                    key={idx}
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        const currentDays = formData.difficulties[activeDiffTab]?.recurrence?.weekDays || [];
+                                                                        const newDays = currentDays.includes(idx)
+                                                                            ? currentDays.filter(d => d !== idx)
+                                                                            : [...currentDays, idx];
+                                                                        updateDifficulty(activeDiffTab, 'recurrence', {
+                                                                            ...formData.difficulties[activeDiffTab]?.recurrence,
+                                                                            weekDays: newDays
+                                                                        });
+                                                                    }}
+                                                                    className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${formData.difficulties[activeDiffTab]?.recurrence?.weekDays?.includes(idx)
+                                                                            ? 'bg-emerald-500 text-white'
+                                                                            : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                                                                        }`}
+                                                                >
+                                                                    {day}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                            {/* Flexible Mode: Period Target */}
+                                            {(formData.difficulties[activeDiffTab]?.recurrence?.type === 'weekly' ||
+                                                formData.difficulties[activeDiffTab]?.recurrence?.type === 'monthly') &&
+                                                formData.difficulties[activeDiffTab]?.recurrence?.weekMode === 'flexible' && (
+                                                    <div>
+                                                        <label className="admin-label">
+                                                            每{formData.difficulties[activeDiffTab]?.recurrence?.type === 'weekly' ? '週' : '月'}目標次數
+                                                        </label>
+                                                        <div className="flex items-center gap-2">
+                                                            <input
+                                                                type="number"
+                                                                className="admin-input w-20"
+                                                                min={1}
+                                                                max={formData.difficulties[activeDiffTab]?.recurrence?.type === 'weekly' ? 7 : 31}
+                                                                value={formData.difficulties[activeDiffTab]?.recurrence?.periodTarget || 1}
+                                                                onChange={e => updateDifficulty(activeDiffTab, 'recurrence', {
+                                                                    ...formData.difficulties[activeDiffTab]?.recurrence,
+                                                                    periodTarget: parseInt(e.target.value) || 1
+                                                                })}
+                                                            />
+                                                            <span className="text-sm text-gray-400">次</span>
+                                                        </div>
                                                     </div>
                                                 )}
 
