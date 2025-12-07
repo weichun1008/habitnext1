@@ -216,6 +216,41 @@ const defaultRecurrence = {
 2. **漸進式挑戰**：不同階段可安排不同難度版本
 3. **避免重疊**：防止多個階段的習慣互相重疊
 
+### 12.4 實作位置
+
+| 檔案 | 說明 |
+|------|------|
+| `/api/user/assignments/route.js` | 用戶自行加入模板 |
+| `/api/admin/assignments/route.js` | 專家指派模板給用戶 |
+
+### 12.5 實作程式碼
+
+```javascript
+// 1. 計算任務結束日期
+const taskStartDate = new Date(phaseStartDate);
+const phaseDays = phaseDays || 7;
+const taskEndDate = new Date(taskStartDate);
+taskEndDate.setDate(taskEndDate.getDate() + phaseDays - 1);
+const endDateStr = taskEndDate.toISOString().split('T')[0];
+
+// 2. 覆蓋 recurrence 設定
+const recurrence = {
+    ...(taskData.recurrence || {}),
+    endType: 'date',        // 覆蓋 'never' 或 'count'
+    endDate: endDateStr     // 階段結束日期
+};
+
+// 3. 儲存到 metadata
+metadata: {
+    phaseId,
+    phaseName,
+    phaseOrder,
+    phaseDays,
+    phaseStartDate,
+    phaseEndDate: endDateStr  // 新增
+}
+```
+
 ---
 
 ## 13. 狀態
