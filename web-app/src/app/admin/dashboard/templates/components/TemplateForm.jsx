@@ -52,6 +52,7 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
     // Library Modal State
     const [isLibraryOpen, setIsLibraryOpen] = useState(false);
     const [libraryTargetPhaseId, setLibraryTargetPhaseId] = useState(null);
+    const [libraryTargetPhaseOrder, setLibraryTargetPhaseOrder] = useState(0);
 
     const [isApproved, setIsApproved] = useState(false);
 
@@ -234,8 +235,9 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
     };
 
     // Library Import
-    const openLibraryModal = (phaseId) => {
+    const openLibraryModal = (phaseId, phaseOrder) => {
         setLibraryTargetPhaseId(phaseId);
+        setLibraryTargetPhaseOrder(phaseOrder);
         setIsLibraryOpen(true);
     };
 
@@ -488,7 +490,7 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                                                     <Plus size={14} /> 手動新增
                                                 </button>
                                                 <button
-                                                    onClick={() => openLibraryModal(phase.id)}
+                                                    onClick={() => openLibraryModal(phase.id, phaseIndex)}
                                                     className="px-3 py-2 text-sm bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white rounded-lg flex items-center gap-2 transition-colors"
                                                 >
                                                     <BookOpen size={14} /> 從習慣庫匯入
@@ -536,7 +538,7 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                                                     <Plus size={14} /> 新增任務
                                                 </button>
                                                 <button
-                                                    onClick={() => openLibraryModal(phase.id)}
+                                                    onClick={() => openLibraryModal(phase.id, phaseIndex)}
                                                     className="py-2 text-sm text-gray-500 hover:text-blue-500 flex items-center justify-center gap-1 transition-colors"
                                                 >
                                                     <BookOpen size={14} /> 從習慣庫匯入
@@ -573,6 +575,7 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                 isOpen={isLibraryOpen}
                 onClose={() => setIsLibraryOpen(false)}
                 onSelect={handleLibraryImport}
+                phaseOrder={libraryTargetPhaseOrder}
             />
         </div>
     );

@@ -141,17 +141,25 @@ model TaskHistory {
 // 官方習慣庫
 // ============================================
 
+model HabitCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  color     String?  // Hex color for UI
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model OfficialHabit {
   id          String   @id @default(cuid())
-  title       String
+  name        String   // 習慣集合名稱，如「每日喝水」
   description String?
-  category    String   // health, fitness, nutrition, mental
-  difficulty  String   // EASY, MEDIUM, HARD
+  category    String   // Reference to category name
   icon        String?  // Icon key or emoji
   
-  // Default task configuration
-  taskType    String   @default("binary") // binary, quantitative, checklist
-  defaultConfig Json?  // { unit, stepValue, dailyTarget, frequency, recurrence, ... }
+  // NEW: Three difficulty levels (beginner/intermediate/challenge)
+  // Each contains: { enabled, label, type, dailyTarget, unit, stepValue, subtasks, recurrence }
+  difficulties Json    // { beginner?: DifficultyConfig, intermediate?: DifficultyConfig, challenge?: DifficultyConfig }
   
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())

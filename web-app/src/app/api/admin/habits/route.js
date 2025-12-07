@@ -5,12 +5,10 @@ export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);
         const category = searchParams.get('category');
-        const difficulty = searchParams.get('difficulty');
         const active = searchParams.get('active');
 
         const where = {};
         if (category) where.category = category;
-        if (difficulty) where.difficulty = difficulty;
         if (active !== null) where.isActive = active === 'true';
 
         const habits = await prisma.officialHabit.findMany({
@@ -27,26 +25,37 @@ export async function GET(request) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { title, description, category, difficulty, icon, taskType, defaultConfig } = body;
+        const { name, description, category, icon, difficulties } = body;
 
-        if (!title || !category || !difficulty) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+        if (!name?.trim()) {
+            return NextResponse.json({ error: '請輸入習慣名稱' }, { status: 400 });
+        }
+        if (!category) {
+            return NextResponse.json({ error: '請選擇分類' }, { status: 400 });
+        }
+
+        // Validate at least one difficulty is enabled
+        const hasDifficulty = difficulties && (
+            difficulties.beginner?.enabled ||
+            difficulties.intermediate?.enabled ||
+            difficulties.challenge?.enabled
+        );
+        if (!hasDifficulty) {
+            return NextResponse.json({ error: '請至少啟用一個難度等級' }, { status: 400 });
         }
 
         const habit = await prisma.officialHabit.create({
             data: {
-                title,
-                description,
+                name: name.trim(),
+                description: description || null,
                 category,
-                difficulty,
-                icon,
-                taskType: taskType || 'binary',
-                defaultConfig: defaultConfig || {}
+                icon: icon || null,
+                difficulties: difficulties || {}
             }
         });
         return NextResponse.json(habit);
     } catch (error) {
         console.error('Create habit error:', error);
-        return NextResponse.json({ error: 'Failed to create habit' }, { status: 500 });
+        return NextResponse.json({ error: '建立習慣失敗' }, { status: 500 });
     }
 }
