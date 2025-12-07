@@ -261,16 +261,19 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                                     <label className="text-xs text-gray-500 block mb-2 font-bold flex items-center gap-1"><Calendar size={12} /> 時間與頻率</label>
 
                                     <div className="flex gap-3 mb-4">
-                                        <div className="flex-1">
-                                            <label className="text-[10px] text-gray-400 block mb-1">開始日期</label>
-                                            <input
-                                                type="date"
-                                                className="w-full bg-white border border-gray-200 rounded px-3 py-2 text-sm"
-                                                value={formData.date}
-                                                onChange={e => setFormData({ ...formData, date: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="flex-1">
+                                        {/* Hide date picker in template mode - date is determined by plan start date + phase */}
+                                        {!templateMode && (
+                                            <div className="flex-1">
+                                                <label className="text-[10px] text-gray-400 block mb-1">開始日期</label>
+                                                <input
+                                                    type="date"
+                                                    className="w-full bg-white border border-gray-200 rounded px-3 py-2 text-sm"
+                                                    value={formData.date}
+                                                    onChange={e => setFormData({ ...formData, date: e.target.value })}
+                                                />
+                                            </div>
+                                        )}
+                                        <div className={templateMode ? "w-full" : "flex-1"}>
                                             <label className="text-[10px] text-gray-400 block mb-1">時間</label>
                                             <input
                                                 type="time"
