@@ -154,10 +154,13 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
 
     // Phase Management
     const addPhase = () => {
+        const newPhase = createDefaultPhase(formData.phases.length);
         setFormData(prev => ({
             ...prev,
-            phases: [...prev.phases, createDefaultPhase(prev.phases.length)]
+            phases: [...prev.phases, newPhase]
         }));
+        // Auto-expand new phase
+        setExpandedPhases(prev => ({ ...prev, [newPhase.id]: true }));
     };
 
     const updatePhase = (phaseId, updates) => {
@@ -455,7 +458,9 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                                             type="number"
                                             className="w-12 bg-white/10 border border-white/10 rounded px-2 py-1 text-sm text-white text-center"
                                             value={phase.days}
-                                            onChange={e => updatePhase(phase.id, { days: parseInt(e.target.value) || 1 })}
+                                            onChange={e => updatePhase(phase.id, { days: e.target.value === '' ? '' : (parseInt(e.target.value) || 1) })}
+                                            onBlur={e => { if (e.target.value === '' || parseInt(e.target.value) < 1) updatePhase(phase.id, { days: 1 }); }}
+                                            onFocus={e => e.target.select()}
                                             min={1}
                                         />
                                         <span className="text-xs text-gray-500">天</span>
@@ -517,7 +522,10 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                                                             <p className="text-sm font-medium text-white">{task.title}</p>
                                                             <p className="text-xs text-gray-500">
                                                                 {TASK_TYPES.find(t => t.value === task.type)?.label}
+                                                                {task.type === 'quantitative' && task.dailyTarget && ` • ${task.dailyTarget}${task.unit || '次'}/天`}
                                                                 {task.recurrence?.type && task.recurrence.type !== 'daily' && ` • ${task.recurrence.type === 'weekly' ? '每週' : '每月'}`}
+                                                                {task.recurrence?.weekMode === 'flexible' && task.recurrence?.periodTarget && ` ${task.recurrence.periodTarget}次`}
+                                                                {task.recurrence?.weekMode !== 'flexible' && task.recurrence?.weekDays?.length > 0 && ` (${task.recurrence.weekDays.map(d => ['日', '一', '二', '三', '四', '五', '六'][d]).join(',')})`}
                                                             </p>
                                                         </div>
                                                     </div>
