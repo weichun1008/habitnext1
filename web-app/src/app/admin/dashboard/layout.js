@@ -49,6 +49,7 @@ export default function AdminDashboardLayout({ children }) {
         // Let's assume the current user is admin.
         if (expert?.role === 'admin' || expert?.email === 'admin@habit.next') {
             items.push({ href: '/admin/dashboard/habits', icon: Heart, label: '習慣庫' });
+            items.push({ href: '/admin/dashboard/templates/categories', icon: FileText, label: '計畫分類' });
             items.push({ href: '/admin/dashboard/titles', icon: Shield, label: '職稱管理' });
             items.push({ href: '/admin/dashboard/experts', icon: UserCog, label: '專家管理' });
         }
