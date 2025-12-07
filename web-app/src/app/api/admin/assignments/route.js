@@ -68,20 +68,37 @@ export async function POST(request) {
         // Handle both legacy (flat array) and new 3-layer structure (Plan > Phase > Task)
         let templateTasks = [];
         const rawTasks = template.tasks;
+        const assignmentStartDate = assignment.startDate;
 
         if (Array.isArray(rawTasks)) {
-            templateTasks = rawTasks;
+            templateTasks = rawTasks.map(task => ({
+                ...task,
+                phaseName: null,
+                phaseOrder: 0,
+                phaseStartDate: assignmentStartDate.toISOString().split('T')[0]
+            }));
         } else if (rawTasks && rawTasks.version === '2.0' && Array.isArray(rawTasks.phases)) {
-            rawTasks.phases.forEach(phase => {
+            let cumulativeDays = 0;
+
+            rawTasks.phases.forEach((phase, phaseIndex) => {
+                const phaseStartDate = new Date(assignmentStartDate);
+                phaseStartDate.setDate(phaseStartDate.getDate() + cumulativeDays);
+                const phaseStartDateStr = phaseStartDate.toISOString().split('T')[0];
+
                 if (Array.isArray(phase.tasks)) {
                     phase.tasks.forEach(task => {
                         templateTasks.push({
                             ...task,
+                            phaseId: phase.id,
                             phaseName: phase.name,
-                            phaseDays: phase.days
+                            phaseOrder: phaseIndex,
+                            phaseDays: phase.days || 7,
+                            phaseStartDate: phaseStartDateStr
                         });
                     });
                 }
+
+                cumulativeDays += (phase.days || 7);
             });
         }
 
@@ -102,11 +119,18 @@ export async function POST(request) {
                     dailyTarget: taskData.dailyTarget || 1,
                     unit: taskData.unit || '次',
                     stepValue: taskData.stepValue || 1,
-                    date: todayStr,
+                    date: taskData.phaseStartDate || todayStr,
                     time: taskData.time || '09:00',
                     assignmentId: assignment.id,
                     isLocked: true,
-                    expertName: expert.name
+                    expertName: expert.name,
+                    metadata: {
+                        phaseId: taskData.phaseId,
+                        phaseName: taskData.phaseName,
+                        phaseOrder: taskData.phaseOrder,
+                        phaseDays: taskData.phaseDays,
+                        phaseStartDate: taskData.phaseStartDate
+                    }
                 }
             });
         });

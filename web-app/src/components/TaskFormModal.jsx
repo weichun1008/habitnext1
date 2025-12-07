@@ -6,7 +6,7 @@ import LockedTaskAlert from './LockedTaskAlert';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 import { generateId, getTodayStr, getNthWeekday } from '@/lib/utils';
 
-const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, defaultDate }) => {
+const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, defaultDate, templateMode = false }) => {
     const [mounted, setMounted] = useState(false);
     const [showLockedAlert, setShowLockedAlert] = useState(false);
 
@@ -428,9 +428,23 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                                                     onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, endType: e.target.value } })}
                                                 >
                                                     <option value="never">永不停止</option>
-                                                    <option value="date">直到日期</option>
+                                                    <option value="count">重複幾次後</option>
+                                                    {!templateMode && <option value="date">直到日期</option>}
                                                 </select>
                                             </div>
+                                            {formData.recurrence.endType === 'count' && (
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xs text-gray-500">重複</span>
+                                                    <input
+                                                        type="number"
+                                                        min={1}
+                                                        className="w-16 bg-white border border-gray-200 rounded px-2 py-1 text-sm text-center"
+                                                        value={formData.recurrence.endCount || 30}
+                                                        onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, endCount: parseInt(e.target.value) || 1 } })}
+                                                    />
+                                                    <span className="text-xs text-gray-500">次後終止</span>
+                                                </div>
+                                            )}
                                             {formData.recurrence.endType === 'date' && (
                                                 <input type="date" className="w-full bg-white border border-gray-200 rounded px-3 py-2 text-sm" value={formData.recurrence.endDate} onChange={e => setFormData({ ...formData, recurrence: { ...formData.recurrence, endDate: e.target.value } })} />
                                             )}

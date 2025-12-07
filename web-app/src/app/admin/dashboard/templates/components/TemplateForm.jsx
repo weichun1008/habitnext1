@@ -509,6 +509,7 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                         ? formData.phases.find(p => p.id === editingTaskData.phaseId)?.tasks[editingTaskData.taskIndex]
                         : null
                 }
+                templateMode={true}
             />
 
             {/* Habit Library Modal */}

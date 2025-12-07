@@ -53,22 +53,41 @@ export async function POST(request) {
         // Handle both legacy (flat array) and new 3-layer structure (Plan > Phase > Task)
         let tasksData = [];
         const rawTasks = template.tasks;
+        const startDate = new Date();
 
         if (Array.isArray(rawTasks)) {
             // Legacy format: flat array of tasks
-            tasksData = rawTasks;
+            tasksData = rawTasks.map(task => ({
+                ...task,
+                phaseName: null,
+                phaseOrder: 0,
+                phaseStartDate: startDate.toISOString().split('T')[0]
+            }));
         } else if (rawTasks && rawTasks.version === '2.0' && Array.isArray(rawTasks.phases)) {
-            // New 3-layer format: extract tasks from all phases
-            rawTasks.phases.forEach(phase => {
+            // New 3-layer format: extract tasks from all phases with calculated start dates
+            let cumulativeDays = 0;
+
+            rawTasks.phases.forEach((phase, phaseIndex) => {
+                // Calculate this phase's start date
+                const phaseStartDate = new Date(startDate);
+                phaseStartDate.setDate(phaseStartDate.getDate() + cumulativeDays);
+                const phaseStartDateStr = phaseStartDate.toISOString().split('T')[0];
+
                 if (Array.isArray(phase.tasks)) {
                     phase.tasks.forEach(task => {
                         tasksData.push({
                             ...task,
+                            phaseId: phase.id,
                             phaseName: phase.name,
-                            phaseDays: phase.days
+                            phaseOrder: phaseIndex,
+                            phaseDays: phase.days || 7,
+                            phaseStartDate: phaseStartDateStr
                         });
                     });
                 }
+
+                // Add this phase's days to cumulative total
+                cumulativeDays += (phase.days || 7);
             });
         }
 
@@ -82,7 +101,7 @@ export async function POST(request) {
                     templateId,
                     expertId: template.expertId,
                     status: 'active',
-                    startDate: new Date(),
+                    startDate: startDate,
                 }
             });
             console.log('[API] Assignment Created:', assignment.id);
@@ -93,6 +112,7 @@ export async function POST(request) {
                     data: tasksData.map(t => ({
                         userId,
                         title: t.title,
+                        details: t.details || '',
                         type: t.type || 'binary',
                         frequency: t.frequency || 'daily',
                         time: '09:00',
@@ -104,10 +124,18 @@ export async function POST(request) {
                         recurrence: t.recurrence || {},
                         reminder: {},
                         createdAt: new Date(),
-                        date: getTodayStr(),
+                        date: t.phaseStartDate || getTodayStr(),
                         assignmentId: assignment.id,
                         expertName: template.expert?.name || 'Unknown',
-                        isLocked: false
+                        isLocked: false,
+                        // Phase info stored in metadata JSON field or custom fields
+                        metadata: {
+                            phaseId: t.phaseId,
+                            phaseName: t.phaseName,
+                            phaseOrder: t.phaseOrder,
+                            phaseDays: t.phaseDays,
+                            phaseStartDate: t.phaseStartDate
+                        }
                     }))
                 });
             }

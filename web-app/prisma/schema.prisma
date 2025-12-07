@@ -116,6 +116,7 @@ model Task {
   assignmentId String?  // 如果是專家指派的任務
   isLocked     Boolean  @default(false) // 是否鎖定不可編輯
   expertName   String?  // 指派專家名稱 (方便顯示)
+  metadata     Json?    // Phase info and other metadata
   
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

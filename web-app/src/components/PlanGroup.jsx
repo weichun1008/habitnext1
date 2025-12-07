@@ -67,17 +67,65 @@ const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTas
                     </div>
                 </div>
 
-                {/* Tasks List */}
+                {/* Tasks List - Grouped by Phase */}
                 {isExpanded && (
                     <div className="p-3 bg-gray-50/50">
-                        {tasks.map(task => (
-                            <TaskCard
-                                key={task.id}
-                                task={task}
-                                onClick={() => onTaskClick(task)}
-                                onUpdate={onUpdate}
-                            />
-                        ))}
+                        {(() => {
+                            // Group tasks by phase
+                            const phases = {};
+                            tasks.forEach(task => {
+                                const phaseName = task.metadata?.phaseName || '一般任務';
+                                if (!phases[phaseName]) {
+                                    phases[phaseName] = {
+                                        name: phaseName,
+                                        order: task.metadata?.phaseOrder ?? 999,
+                                        startDate: task.metadata?.phaseStartDate,
+                                        days: task.metadata?.phaseDays,
+                                        tasks: []
+                                    };
+                                }
+                                phases[phaseName].tasks.push(task);
+                            });
+
+                            // Sort phases by order
+                            const sortedPhases = Object.values(phases).sort((a, b) => a.order - b.order);
+                            const today = new Date().toISOString().split('T')[0];
+
+                            return sortedPhases.map((phase, idx) => {
+                                // Check if this phase is active (current date is within phase period)
+                                const isActive = !phase.startDate || phase.startDate <= today;
+                                const isFuture = phase.startDate && phase.startDate > today;
+
+                                return (
+                                    <div key={phase.name} className={`mb-3 ${isFuture ? 'opacity-50' : ''}`}>
+                                        {/* Phase Header - only show if there are multiple phases */}
+                                        {sortedPhases.length > 1 && (
+                                            <div className="flex items-center gap-2 mb-2 px-1">
+                                                <div className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${isActive ? 'bg-emerald-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                                                    {idx + 1}
+                                                </div>
+                                                <span className="text-xs font-bold text-gray-700">{phase.name}</span>
+                                                {phase.days && (
+                                                    <span className="text-[10px] text-gray-400">({phase.days}天)</span>
+                                                )}
+                                                {isFuture && (
+                                                    <span className="text-[10px] text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded">尚未開始</span>
+                                                )}
+                                            </div>
+                                        )}
+                                        {/* Tasks in this phase */}
+                                        {phase.tasks.map(task => (
+                                            <TaskCard
+                                                key={task.id}
+                                                task={task}
+                                                onClick={() => onTaskClick(task)}
+                                                onUpdate={onUpdate}
+                                            />
+                                        ))}
+                                    </div>
+                                );
+                            });
+                        })()}
                     </div>
                 )}
             </div>
