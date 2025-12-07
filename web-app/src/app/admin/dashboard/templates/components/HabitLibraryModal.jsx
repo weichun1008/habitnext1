@@ -98,7 +98,8 @@ export default function HabitLibraryModal({ isOpen, onClose, onSelect, phaseOrde
 
             return {
                 id: `lib_${habitId}_${diffKey}_${Date.now()}`,
-                title: diffConfig.label || `${habit?.name} (${DIFFICULTY_OPTIONS.find(d => d.key === diffKey)?.label})`,
+                // Use difficulty label if it's descriptive, otherwise use habit name
+                title: diffConfig.label || `${habit?.name || '習慣'} - ${DIFFICULTY_OPTIONS.find(d => d.key === diffKey)?.label || ''}`,
                 details: habit?.description || '',
                 type: diffConfig.type || 'binary',
                 category: habit?.icon || 'star',
@@ -182,8 +183,8 @@ export default function HabitLibraryModal({ isOpen, onClose, onSelect, phaseOrde
                                     <div
                                         key={habit.id}
                                         className={`p-3 rounded-xl border transition-all ${isSelected
-                                                ? 'bg-emerald-500/10 border-emerald-500'
-                                                : 'bg-white/5 border-white/10 hover:border-white/20'
+                                            ? 'bg-emerald-500/10 border-emerald-500'
+                                            : 'bg-white/5 border-white/10 hover:border-white/20'
                                             }`}
                                     >
                                         <div className="flex items-start gap-3">
@@ -216,8 +217,8 @@ export default function HabitLibraryModal({ isOpen, onClose, onSelect, phaseOrde
                                                                 }
                                                             }}
                                                             className={`text-xs px-2 py-0.5 rounded transition-all ${selectedDiff === diff.key
-                                                                    ? `bg-${diff.color}-500 text-white`
-                                                                    : `bg-${diff.color}-500/10 text-${diff.color}-500 hover:bg-${diff.color}-500/20`
+                                                                ? `bg-${diff.color}-500 text-white`
+                                                                : `bg-${diff.color}-500/10 text-${diff.color}-500 hover:bg-${diff.color}-500/20`
                                                                 }`}
                                                         >
                                                             {diff.label}
