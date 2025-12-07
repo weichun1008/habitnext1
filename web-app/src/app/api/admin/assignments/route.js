@@ -105,6 +105,20 @@ export async function POST(request) {
         const todayStr = getTodayStr();
 
         const taskCreatePromises = templateTasks.map(taskData => {
+            // Calculate task end date based on phase duration (Phase Priority Rule)
+            const taskStartDate = new Date(taskData.phaseStartDate || todayStr);
+            const phaseDays = taskData.phaseDays || 7;
+            const taskEndDate = new Date(taskStartDate);
+            taskEndDate.setDate(taskEndDate.getDate() + phaseDays - 1);
+            const endDateStr = taskEndDate.toISOString().split('T')[0];
+
+            // Override recurrence end settings with phase-based end date
+            const recurrence = {
+                ...(taskData.recurrence || {}),
+                endType: 'date',
+                endDate: endDateStr
+            };
+
             return prisma.task.create({
                 data: {
                     userId,
@@ -113,7 +127,7 @@ export async function POST(request) {
                     type: taskData.type || 'binary',
                     category: taskData.category || 'star',
                     frequency: taskData.frequency || 'daily',
-                    recurrence: taskData.recurrence || { type: 'daily', interval: 1, endType: 'never', weekDays: [], monthType: 'date', periodTarget: 1, dailyLimit: true },
+                    recurrence: recurrence,
                     reminder: taskData.reminder || { enabled: false, offset: 0 },
                     subtasks: taskData.subtasks || [],
                     dailyTarget: taskData.dailyTarget || 1,
@@ -129,7 +143,8 @@ export async function POST(request) {
                         phaseName: taskData.phaseName,
                         phaseOrder: taskData.phaseOrder,
                         phaseDays: taskData.phaseDays,
-                        phaseStartDate: taskData.phaseStartDate
+                        phaseStartDate: taskData.phaseStartDate,
+                        phaseEndDate: endDateStr
                     }
                 }
             });

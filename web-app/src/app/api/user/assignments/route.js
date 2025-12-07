@@ -112,34 +112,51 @@ export async function POST(request) {
             // Create Tasks for User
             if (tasksData.length > 0) {
                 await tx.task.createMany({
-                    data: tasksData.map(t => ({
-                        userId,
-                        title: t.title,
-                        details: t.details || '',
-                        type: t.type || 'binary',
-                        frequency: t.frequency || 'daily',
-                        time: '09:00',
-                        category: t.category || 'star',
-                        dailyTarget: t.dailyTarget || 1,
-                        unit: t.unit || '次',
-                        stepValue: t.stepValue || 1,
-                        subtasks: t.subtasks || [],
-                        recurrence: t.recurrence || {},
-                        reminder: {},
-                        createdAt: new Date(),
-                        date: t.phaseStartDate || getTodayStr(),
-                        assignmentId: assignment.id,
-                        expertName: template.expert?.name || 'Unknown',
-                        isLocked: false,
-                        // Phase info stored in metadata JSON field or custom fields
-                        metadata: {
-                            phaseId: t.phaseId,
-                            phaseName: t.phaseName,
-                            phaseOrder: t.phaseOrder,
-                            phaseDays: t.phaseDays,
-                            phaseStartDate: t.phaseStartDate
-                        }
-                    }))
+                    data: tasksData.map(t => {
+                        // Calculate task end date based on phase duration (Phase Priority Rule)
+                        const taskStartDate = new Date(t.phaseStartDate || getTodayStr());
+                        const phaseDays = t.phaseDays || 7;
+                        const taskEndDate = new Date(taskStartDate);
+                        taskEndDate.setDate(taskEndDate.getDate() + phaseDays - 1);
+                        const endDateStr = taskEndDate.toISOString().split('T')[0];
+
+                        // Override recurrence end settings with phase-based end date
+                        const recurrence = {
+                            ...(t.recurrence || {}),
+                            endType: 'date',
+                            endDate: endDateStr
+                        };
+
+                        return {
+                            userId,
+                            title: t.title,
+                            details: t.details || '',
+                            type: t.type || 'binary',
+                            frequency: t.frequency || 'daily',
+                            time: '09:00',
+                            category: t.category || 'star',
+                            dailyTarget: t.dailyTarget || 1,
+                            unit: t.unit || '次',
+                            stepValue: t.stepValue || 1,
+                            subtasks: t.subtasks || [],
+                            recurrence: recurrence,
+                            reminder: {},
+                            createdAt: new Date(),
+                            date: t.phaseStartDate || getTodayStr(),
+                            assignmentId: assignment.id,
+                            expertName: template.expert?.name || 'Unknown',
+                            isLocked: false,
+                            // Phase info stored in metadata JSON field
+                            metadata: {
+                                phaseId: t.phaseId,
+                                phaseName: t.phaseName,
+                                phaseOrder: t.phaseOrder,
+                                phaseDays: t.phaseDays,
+                                phaseStartDate: t.phaseStartDate,
+                                phaseEndDate: endDateStr
+                            }
+                        };
+                    })
                 });
             }
 
