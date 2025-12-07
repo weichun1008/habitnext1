@@ -255,6 +255,7 @@ metadata: {
 
 ## 13. 狀態
 - [x] 文件定義
-- [ ] 更新習慣庫 UI（互斥選擇器）
-- [ ] 更新 TaskFormModal
-- [ ] 更新模板任務編輯器
+- [x] 更新習慣庫 UI（互斥選擇器）
+- [x] 更新 TaskFormModal（templateMode 支援）
+- [x] 更新模板任務編輯器
+- [x] 實作階段優先原則（Phase Priority）
