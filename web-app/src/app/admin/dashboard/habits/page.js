@@ -269,8 +269,8 @@ export default function HabitsPage() {
                             <div
                                 key={habit.id}
                                 className={`flex items-center justify-between p-4 rounded-xl border transition-all ${habit.isActive
-                                        ? 'bg-white/5 border-white/10 hover:border-emerald-500/30'
-                                        : 'bg-gray-800/50 border-gray-700 opacity-60'
+                                    ? 'bg-white/5 border-white/10 hover:border-emerald-500/30'
+                                    : 'bg-gray-800/50 border-gray-700 opacity-60'
                                     }`}
                             >
                                 <div className="flex items-center gap-4">
@@ -291,8 +291,8 @@ export default function HabitsPage() {
                                     <button
                                         onClick={() => toggleActive(habit)}
                                         className={`p-2 rounded-lg transition-colors ${habit.isActive
-                                                ? 'text-gray-400 hover:text-amber-500 hover:bg-amber-500/10'
-                                                : 'text-amber-500 hover:text-emerald-500 hover:bg-emerald-500/10'
+                                            ? 'text-gray-400 hover:text-amber-500 hover:bg-amber-500/10'
+                                            : 'text-amber-500 hover:text-emerald-500 hover:bg-emerald-500/10'
                                             }`}
                                         title={habit.isActive ? '封存' : '啟用'}
                                     >
@@ -389,8 +389,8 @@ export default function HabitsPage() {
                                             key={tab.key}
                                             onClick={() => setActiveDiffTab(tab.key)}
                                             className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeDiffTab === tab.key
-                                                    ? `text-${tab.color}-500 border-${tab.color}-500`
-                                                    : 'text-gray-400 border-transparent hover:text-gray-300'
+                                                ? `text-${tab.color}-500 border-${tab.color}-500`
+                                                : 'text-gray-400 border-transparent hover:text-gray-300'
                                                 } ${formData.difficulties[tab.key]?.enabled
                                                     ? ''
                                                     : 'opacity-50'
@@ -487,6 +487,36 @@ export default function HabitsPage() {
                                                 </select>
                                             </div>
 
+                                            {formData.difficulties[activeDiffTab]?.recurrence?.type === 'weekly' && (
+                                                <div>
+                                                    <label className="admin-label">指定星期</label>
+                                                    <div className="flex gap-2 flex-wrap">
+                                                        {['日', '一', '二', '三', '四', '五', '六'].map((day, idx) => (
+                                                            <button
+                                                                key={idx}
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    const currentDays = formData.difficulties[activeDiffTab]?.recurrence?.weekDays || [];
+                                                                    const newDays = currentDays.includes(idx)
+                                                                        ? currentDays.filter(d => d !== idx)
+                                                                        : [...currentDays, idx];
+                                                                    updateDifficulty(activeDiffTab, 'recurrence', {
+                                                                        ...formData.difficulties[activeDiffTab]?.recurrence,
+                                                                        weekDays: newDays
+                                                                    });
+                                                                }}
+                                                                className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${formData.difficulties[activeDiffTab]?.recurrence?.weekDays?.includes(idx)
+                                                                        ? 'bg-emerald-500 text-white'
+                                                                        : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                                                                    }`}
+                                                            >
+                                                                {day}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
                                             {(formData.difficulties[activeDiffTab]?.recurrence?.type === 'weekly' ||
                                                 formData.difficulties[activeDiffTab]?.recurrence?.type === 'monthly') && (
                                                     <div>
@@ -504,6 +534,53 @@ export default function HabitsPage() {
                                                         />
                                                     </div>
                                                 )}
+
+                                            {/* End Condition */}
+                                            <div>
+                                                <label className="admin-label">終止條件</label>
+                                                <div className="space-y-2">
+                                                    <label className="flex items-center gap-3 p-2 bg-gray-700/50 rounded-lg cursor-pointer">
+                                                        <input
+                                                            type="radio"
+                                                            name={`endType-${activeDiffTab}`}
+                                                            checked={formData.difficulties[activeDiffTab]?.recurrence?.endType === 'never'}
+                                                            onChange={() => updateDifficulty(activeDiffTab, 'recurrence', {
+                                                                ...formData.difficulties[activeDiffTab]?.recurrence,
+                                                                endType: 'never'
+                                                            })}
+                                                            className="w-4 h-4"
+                                                        />
+                                                        <span className="text-sm text-gray-300">永不終止</span>
+                                                    </label>
+                                                    <label className="flex items-center gap-3 p-2 bg-gray-700/50 rounded-lg cursor-pointer">
+                                                        <input
+                                                            type="radio"
+                                                            name={`endType-${activeDiffTab}`}
+                                                            checked={formData.difficulties[activeDiffTab]?.recurrence?.endType === 'count'}
+                                                            onChange={() => updateDifficulty(activeDiffTab, 'recurrence', {
+                                                                ...formData.difficulties[activeDiffTab]?.recurrence,
+                                                                endType: 'count',
+                                                                endCount: formData.difficulties[activeDiffTab]?.recurrence?.endCount || 10
+                                                            })}
+                                                            className="w-4 h-4"
+                                                        />
+                                                        <span className="text-sm text-gray-300">重複</span>
+                                                        <input
+                                                            type="number"
+                                                            className="admin-input w-20 py-1"
+                                                            min={1}
+                                                            value={formData.difficulties[activeDiffTab]?.recurrence?.endCount || 10}
+                                                            onChange={e => updateDifficulty(activeDiffTab, 'recurrence', {
+                                                                ...formData.difficulties[activeDiffTab]?.recurrence,
+                                                                endType: 'count',
+                                                                endCount: parseInt(e.target.value) || 1
+                                                            })}
+                                                            disabled={formData.difficulties[activeDiffTab]?.recurrence?.endType !== 'count'}
+                                                        />
+                                                        <span className="text-sm text-gray-300">次後終止</span>
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </>
                                     )}
                                 </div>
