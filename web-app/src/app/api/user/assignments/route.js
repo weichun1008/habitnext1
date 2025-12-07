@@ -50,7 +50,28 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Template not found' }, { status: 404 });
         }
 
-        const tasksData = template.tasks || [];
+        // Handle both legacy (flat array) and new 3-layer structure (Plan > Phase > Task)
+        let tasksData = [];
+        const rawTasks = template.tasks;
+
+        if (Array.isArray(rawTasks)) {
+            // Legacy format: flat array of tasks
+            tasksData = rawTasks;
+        } else if (rawTasks && rawTasks.version === '2.0' && Array.isArray(rawTasks.phases)) {
+            // New 3-layer format: extract tasks from all phases
+            rawTasks.phases.forEach(phase => {
+                if (Array.isArray(phase.tasks)) {
+                    phase.tasks.forEach(task => {
+                        tasksData.push({
+                            ...task,
+                            phaseName: phase.name,
+                            phaseDays: phase.days
+                        });
+                    });
+                }
+            });
+        }
+
         console.log('[API] Template Tasks to copy:', tasksData.length);
 
         // Create Assignment
@@ -67,21 +88,16 @@ export async function POST(request) {
             console.log('[API] Assignment Created:', assignment.id);
 
             // Create Tasks for User
-            // Note: For self-joined templates, we set isLocked to false (editable)
-            // unless we decide otherwise. The prompt implies expert-assigned ones are strict.
-            // Let's default to false for self-joined, true for admin-assigned (handled in admin API).
             if (tasksData.length > 0) {
                 await tx.task.createMany({
                     data: tasksData.map(t => ({
                         userId,
                         title: t.title,
-                        type: t.type,
-                        frequency: t.frequency,
-                        time: '09:00', // Default time
+                        type: t.type || 'binary',
+                        frequency: t.frequency || 'daily',
+                        time: '09:00',
                         category: t.category || 'star',
                         dailyTarget: t.dailyTarget || 1,
-                        unit: t.unit || '次',
-                        stepValue: t.stepValue || 1,
                         unit: t.unit || '次',
                         stepValue: t.stepValue || 1,
                         subtasks: t.subtasks || [],
@@ -90,8 +106,8 @@ export async function POST(request) {
                         createdAt: new Date(),
                         date: getTodayStr(),
                         assignmentId: assignment.id,
-                        expertName: template.expert.name, // For display
-                        isLocked: false // User joined templates are editable by default
+                        expertName: template.expert?.name || 'Unknown',
+                        isLocked: false
                     }))
                 });
             }

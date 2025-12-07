@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { getTodayStr } from '@/lib/utils';
 
 // GET: Fetch all assignments
@@ -65,8 +65,26 @@ export async function POST(request) {
             }
         });
 
-        // Create tasks for user based on template
-        const templateTasks = template.tasks || [];
+        // Handle both legacy (flat array) and new 3-layer structure (Plan > Phase > Task)
+        let templateTasks = [];
+        const rawTasks = template.tasks;
+
+        if (Array.isArray(rawTasks)) {
+            templateTasks = rawTasks;
+        } else if (rawTasks && rawTasks.version === '2.0' && Array.isArray(rawTasks.phases)) {
+            rawTasks.phases.forEach(phase => {
+                if (Array.isArray(phase.tasks)) {
+                    phase.tasks.forEach(task => {
+                        templateTasks.push({
+                            ...task,
+                            phaseName: phase.name,
+                            phaseDays: phase.days
+                        });
+                    });
+                }
+            });
+        }
+
         const todayStr = getTodayStr();
 
         const taskCreatePromises = templateTasks.map(taskData => {
@@ -81,9 +99,9 @@ export async function POST(request) {
                     recurrence: taskData.recurrence || { type: 'daily', interval: 1, endType: 'never', weekDays: [], monthType: 'date', periodTarget: 1, dailyLimit: true },
                     reminder: taskData.reminder || { enabled: false, offset: 0 },
                     subtasks: taskData.subtasks || [],
-                    dailyTarget: taskData.dailyTarget,
-                    unit: taskData.unit,
-                    stepValue: taskData.stepValue,
+                    dailyTarget: taskData.dailyTarget || 1,
+                    unit: taskData.unit || '次',
+                    stepValue: taskData.stepValue || 1,
                     date: todayStr,
                     time: taskData.time || '09:00',
                     assignmentId: assignment.id,
