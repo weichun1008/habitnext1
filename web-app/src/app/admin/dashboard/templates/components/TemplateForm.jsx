@@ -7,13 +7,6 @@ import TaskFormModal from '@/components/TaskFormModal';
 import HabitLibraryModal from './HabitLibraryModal';
 import { generateId } from '@/lib/utils';
 
-const CATEGORIES = [
-    { value: 'health', label: '健康', color: '#10b981' },
-    { value: 'fitness', label: '運動', color: '#f59e0b' },
-    { value: 'nutrition', label: '營養', color: '#3b82f6' },
-    { value: 'mental', label: '心理', color: '#8b5cf6' },
-];
-
 const TASK_TYPES = [
     { value: 'binary', label: '一般', icon: CheckSquare },
     { value: 'quantitative', label: '計量', icon: Hash },
@@ -31,19 +24,25 @@ const createDefaultPhase = (index = 0) => ({
 export default function TemplateForm({ initialData, mode = 'create' }) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+
+    // Plan categories from API
+    const [planCategories, setPlanCategories] = useState([]);
+
+    const defaultPhase = createDefaultPhase(0);
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        category: 'health',
+        category: '',
         isPublic: false,
         startDateType: 'user_choice', // 'user_choice' or 'fixed_date'
         fixedStartDate: '', // Only used when startDateType === 'fixed_date'
-        phases: [createDefaultPhase(0)] // New: array of phases
+        phases: [defaultPhase] // New: array of phases
     });
 
     // Phase editing state
     const [editingPhaseId, setEditingPhaseId] = useState(null);
-    const [expandedPhases, setExpandedPhases] = useState({});
+    // Auto-expand first phase on new template
+    const [expandedPhases, setExpandedPhases] = useState({ [defaultPhase.id]: mode === 'create' });
 
     // Task Modal State
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
@@ -55,6 +54,26 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
     const [libraryTargetPhaseOrder, setLibraryTargetPhaseOrder] = useState(0);
 
     const [isApproved, setIsApproved] = useState(false);
+
+    // Fetch plan categories
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await fetch('/api/admin/plan-categories');
+                if (res.ok) {
+                    const data = await res.json();
+                    setPlanCategories(data);
+                    // Set default category to first one if formData.category is empty
+                    if (!formData.category && data.length > 0) {
+                        setFormData(prev => ({ ...prev, category: data[0].name }));
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch plan categories:', error);
+            }
+        };
+        fetchCategories();
+    }, []);
 
     useEffect(() => {
         // Safe localStorage access
@@ -86,7 +105,7 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
             setFormData({
                 name: initialData.name || '',
                 description: initialData.description || '',
-                category: initialData.category || 'health',
+                category: initialData.category || '',
                 isPublic: initialData.isPublic || false,
                 startDateType: initialData.startDateType || 'user_choice',
                 fixedStartDate: initialData.fixedStartDate || '',
@@ -311,10 +330,18 @@ export default function TemplateForm({ initialData, mode = 'create' }) {
                                 value={formData.category}
                                 onChange={e => setFormData({ ...formData, category: e.target.value })}
                             >
-                                {CATEGORIES.map(cat => (
-                                    <option key={cat.value} value={cat.value}>{cat.label}</option>
+                                {planCategories.length === 0 && (
+                                    <option value="">請先建立分類</option>
+                                )}
+                                {planCategories.map(cat => (
+                                    <option key={cat.id} value={cat.name}>{cat.icon ? `${cat.icon} ` : ''}{cat.name}</option>
                                 ))}
                             </select>
+                            {planCategories.length === 0 && (
+                                <p className="text-xs text-amber-400 mt-1">
+                                    尚無計畫分類，請先至分類管理新增
+                                </p>
+                            )}
                         </div>
 
                         <div className="admin-form-group">

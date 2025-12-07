@@ -150,6 +150,17 @@ model HabitCategory {
   updatedAt DateTime @updatedAt
 }
 
+// 計畫分類（獨立於習慣分類）
+model PlanCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  color     String?  // Hex color for UI
+  icon      String?  // Emoji or icon key
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model OfficialHabit {
   id          String   @id @default(cuid())
   name        String   // 習慣集合名稱，如「每日喝水」
