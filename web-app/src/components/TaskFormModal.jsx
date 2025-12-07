@@ -495,7 +495,8 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                     </div>
                 )}
             </div>
-        </div>
+        </div>,
+        modalRoot
     );
 };
 

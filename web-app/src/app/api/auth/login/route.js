@@ -1,41 +1,46 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request) {
     try {
-        const { nickname, phone } = await request.json();
+        const { phone, password } = await request.json();
 
-        if (!nickname || !phone) {
-            return NextResponse.json({ error: 'Nickname and phone are required' }, { status: 400 });
+        if (!phone || !password) {
+            return NextResponse.json({ error: 'Phone and password are required' }, { status: 400 });
         }
 
-        // Find or create user
-        let user = await prisma.user.findUnique({
+        // Find user
+        const user = await prisma.user.findUnique({
             where: { phone },
-            include: { tasks: { include: { history: true } } } // Include tasks and history on login
+            include: { tasks: { include: { history: true } } }
         });
 
         if (!user) {
-            user = await prisma.user.create({
-                data: {
-                    nickname,
-                    phone,
-                    // We could create default tasks here if we wanted
-                },
-                include: { tasks: { include: { history: true } } }
-            });
-        } else {
-            // Update nickname if changed? Optional.
-            if (user.nickname !== nickname) {
-                user = await prisma.user.update({
-                    where: { id: user.id },
-                    data: { nickname },
-                    include: { tasks: { include: { history: true } } }
-                });
-            }
+            return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
         }
 
-        return NextResponse.json(user);
+        // Verify password
+        // Note: For existing legacy users without password, this might fail or we need migration strategy?
+        // Since we didn't migrate users, legacy users have null password.
+        // We can block them or allow them to set password?
+        // Spec implies new registration flow. Legacy users might effectively be locked out until they register again or reset? 
+        // For this task, we enforce password check.
+
+        if (!user.password) {
+            return NextResponse.json({ error: 'Please register first' }, { status: 401 });
+        }
+
+        const isValid = await bcrypt.compare(password, user.password);
+
+        if (!isValid) {
+            return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+        }
+
+        // Return user info
+        const { password: _, ...safeUser } = user;
+        return NextResponse.json(safeUser);
+
     } catch (error) {
         console.error('Login error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

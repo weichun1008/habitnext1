@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Trash2, Info, ChevronDown, ChevronUp, Lock } from 'lucide-react';
 import TaskCard from './TaskCard';
 
-const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTaskDelete }) => {
+const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTaskDelete, onUpdate }) => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -74,11 +74,8 @@ const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTas
                             <TaskCard
                                 key={task.id}
                                 task={task}
-                                onToggle={(date) => onTaskClick(task)}
                                 onClick={() => onTaskClick(task)}
-                                onEdit={() => onTaskEdit(task)}
-                                onDelete={() => onTaskDelete(task.id)}
-                                isLocked={task.isLocked}
+                                onUpdate={onUpdate}
                             />
                         ))}
                     </div>

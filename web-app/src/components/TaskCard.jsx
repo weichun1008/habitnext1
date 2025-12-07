@@ -4,7 +4,7 @@ import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 import { getTodayStr, isCompletedToday, calculatePeriodProgress } from '@/lib/utils';
 
-const TaskCard = ({ task, onClick, onUpdate }) => {
+const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
     const todayStr = getTodayStr();
     let isCompleted, currentVal, targetVal, displayStatus, progressPercent;
 

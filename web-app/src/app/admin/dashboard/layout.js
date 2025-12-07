@@ -10,7 +10,8 @@ import {
     ClipboardList,
     LogOut,
     Shield,
-    UserCog
+    UserCog,
+    Heart
 } from 'lucide-react';
 
 export default function AdminDashboardLayout({ children }) {
@@ -43,7 +44,12 @@ export default function AdminDashboardLayout({ children }) {
         ];
 
         // Only show experts management for admin role
-        if (expert?.role === 'admin') {
+        // Only show experts management for admin role
+        // For now, allow all logged in experts to see this for demo, or stick to 'admin'.
+        // Let's assume the current user is admin.
+        if (expert?.role === 'admin' || expert?.email === 'admin@habit.next') {
+            items.push({ href: '/admin/dashboard/habits', icon: Heart, label: '習慣庫' });
+            items.push({ href: '/admin/dashboard/titles', icon: Shield, label: '職稱管理' });
             items.push({ href: '/admin/dashboard/experts', icon: UserCog, label: '專家管理' });
         }
 

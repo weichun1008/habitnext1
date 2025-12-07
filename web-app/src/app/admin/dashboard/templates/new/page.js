@@ -3,6 +3,12 @@
 import React from 'react';
 import TemplateForm from '../components/TemplateForm';
 
+import ErrorBoundary from '@/components/ErrorBoundary';
+
 export default function NewTemplatePage() {
-    return <TemplateForm mode="create" />;
+    return (
+        <ErrorBoundary>
+            <TemplateForm mode="create" />
+        </ErrorBoundary>
+    );
 }

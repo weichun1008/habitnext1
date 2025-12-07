@@ -41,6 +41,19 @@ export async function POST(request) {
             return NextResponse.json({ error: '請填寫完整資料' }, { status: 400 });
         }
 
+        // Verify Expert Status
+        const expert = await prisma.expert.findUnique({
+            where: { id: expertId }
+        });
+
+        if (!expert) {
+            return NextResponse.json({ error: '專家不存在' }, { status: 404 });
+        }
+
+        if (isPublic && !expert.isApproved) {
+            return NextResponse.json({ error: '您的帳號尚未開通公開權限，僅能建立私人模板' }, { status: 403 });
+        }
+
         const template = await prisma.template.create({
             data: {
                 expertId,

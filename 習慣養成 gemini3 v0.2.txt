@@ -1,0 +1,1311 @@
+﻿import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Plus, Calendar, Check, X, 
+  Activity, Droplet, Moon, 
+  Flame, Target, Pill, Footprints,
+  Home, BookOpen, MessageSquare, ShoppingBag, Bell, User,
+  ChevronLeft, ChevronRight, List, Edit2, Trash2,
+  Repeat, Clock, Minus, Save, ArrowLeft, ChevronDown, ChevronUp,
+  Utensils, Dumbbell, Zap, Star, Smile, Book, Award, Aperture, Sun, Heart, AirVent,
+  TrendingUp, AlertCircle, Sparkles, Grid
+} from 'lucide-react';
+
+
+// --- Utility Functions ---
+const generateId = () => Math.random().toString(36).substr(2, 9);
+const getTodayStr = () => new Date().toISOString().split('T')[0];
+
+
+const getNthWeekday = (dateStr) => {
+  const date = new Date(dateStr);
+  const day = date.getDay(); // 0-6
+  const d = date.getDate();
+  const weekNum = Math.ceil(d / 7);
+  const days = ['日', '一', '二', '三', '四', '五', '六'];
+  
+  const nextWeek = new Date(date);
+  nextWeek.setDate(d + 7);
+  const isLast = nextWeek.getMonth() !== date.getMonth();
+
+
+  return {
+    weekNum: weekNum,
+    weekday: days[day],
+    isLast: isLast,
+    desc: `每月第 ${weekNum} 個星期${days[day]}`,
+    lastDesc: `每月最後一個星期${days[day]}`
+  };
+};
+
+
+const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay(); // 0 (Sun) - 6 (Sat)
+
+
+// Helper to get start/end of week/month for period goals
+const getWeekRange = (dateStr) => {
+  const curr = new Date(dateStr);
+  const first = curr.getDate() - curr.getDay() + 1; // Monday as first day? Let's assume Sunday for simplicity or adjust
+  // Simple view: Sunday to Saturday
+  const day = curr.getDay();
+  const diff = curr.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is sunday
+  // Actually, let's stick to standard getDay() where 0 is Sunday.
+  // Let's assume week starts on Monday for health apps usually.
+  // But for simple calc:
+  const firstDay = new Date(curr.setDate(curr.getDate() - curr.getDay())); // Sunday
+  const lastDay = new Date(curr.setDate(curr.getDate() + 6));
+  return { start: firstDay.toISOString().split('T')[0], end: lastDay.toISOString().split('T')[0] };
+}
+
+
+const getMonthRange = (dateStr) => {
+    const curr = new Date(dateStr);
+    const firstDay = new Date(curr.getFullYear(), curr.getMonth(), 1).toISOString().split('T')[0];
+    const lastDay = new Date(curr.getFullYear(), curr.getMonth() + 1, 0).toISOString().split('T')[0];
+    return { start: firstDay, end: lastDay };
+}
+
+
+// Check if a task is completed today (for daily tasks)
+const isCompletedToday = (task) => {
+    const today = getTodayStr();
+    if (task.type === 'quantitative') {
+        return (task.dailyProgress[today]?.value || 0) >= task.dailyTarget;
+    }
+    return !!task.history?.[today] || task.completed;
+};
+
+
+// Calculate Period Progress (Weekly/Monthly Count)
+const calculatePeriodProgress = (task) => {
+    const today = getTodayStr();
+    const range = task.frequency === 'weekly' ? getWeekRange(today) : getMonthRange(today);
+    
+    let count = 0;
+    // Iterate through history keys
+    if (task.history) {
+        Object.keys(task.history).forEach(date => {
+            if (date >= range.start && date <= range.end && task.history[date]) {
+                count++;
+            }
+        });
+    }
+    return count;
+};
+
+
+// --- Constants ---
+const CATEGORY_CONFIG = {
+  droplet: { type: 'icon', value: Droplet, color: 'text-blue-500', bg: 'bg-blue-50', label: '飲水' },
+  footprints: { type: 'icon', value: Footprints, color: 'text-pink-500', bg: 'bg-pink-50', label: '步數' },
+  dumbbell: { type: 'icon', value: Dumbbell, color: 'text-orange-500', bg: 'bg-orange-50', label: '運動' },
+  moon: { type: 'icon', value: Moon, color: 'text-indigo-500', bg: 'bg-indigo-50', label: '睡眠' },
+  sun: { type: 'icon', value: Sun, color: 'text-yellow-500', bg: 'bg-yellow-50', label: '陽光' },
+  pill: { type: 'icon', value: Pill, color: 'text-purple-500', bg: 'bg-purple-50', label: '保健' },
+  aperture: { type: 'icon', value: Aperture, color: 'text-fuchsia-500', bg: 'bg-fuchsia-50', label: '紀錄' },
+  
+  apple: { type: 'emoji', value: '🍎', color: 'text-red-500', bg: 'bg-red-50', label: '飲食' },
+  zap: { type: 'emoji', value: '⚡️', color: 'text-yellow-500', bg: 'bg-yellow-50', label: '專注' },
+  yoga: { type: 'emoji', value: '🧘', color: 'text-green-500', bg: 'bg-green-50', label: '冥想' },
+  book: { type: 'icon', value: Book, color: 'text-amber-500', bg: 'bg-amber-50', label: '閱讀' },
+  money: { type: 'emoji', value: '💰', color: 'text-lime-500', bg: 'bg-lime-50', label: '理財' },
+  journal: { type: 'emoji', value: '✍️', color: 'text-sky-500', bg: 'bg-sky-50', label: '日記' },
+  star: { type: 'icon', value: Star, color: 'text-gray-500', bg: 'bg-gray-50', label: '其他' },
+};
+
+
+const OFFICIAL_TASKS = [
+    { 
+      id: 'template_water', type: 'quantitative', category: 'droplet',
+      title: '飲水 2000 cc', dailyTarget: 2000, unit: 'cc', stepValue: 200, frequency: 'daily',
+      details: '科學建議每日飲水 2000cc，有助於新陳代謝。', 
+      science: '飲水不足會影響腎臟功能及消化系統。',
+      tool: '定時提醒 App (可選)', recommend: '200 cc / 次'
+    },
+    { 
+      id: 'template_steps', type: 'quantitative', category: 'footprints',
+      title: '健走 8000 步', dailyTarget: 8000, unit: '步', stepValue: 1000, frequency: 'daily',
+      details: '世界衛生組織建議，每日達 8000 步可維持基本活動量。', 
+      science: '規律步行能降低心血管疾病風險。',
+      tool: '手機計步器', recommend: '飯後散步 20 分鐘'
+    },
+    { 
+      id: 'template_weekly_review', type: 'mission', category: 'journal',
+      title: '每週健康回顧', frequency: 'weekly',
+      details: '檢視本週的飲食與運動狀況，調整下週計畫。',
+      science: '定期回顧能提升目標達成率 40%。',
+      tool: '筆記本', recommend: '週日晚上'
+    },
+];
+
+
+// --- Mock Data ---
+const initialTasks = [
+    { 
+      id: 't1', frequency: 'daily', type: 'quantitative', category: 'footprints',
+      title: '走 8000 步', dailyTarget: 8000, unit: '步', stepValue: 1000,
+      details: '目標是每日 8000 步，飯後散步是好幫手。', 
+      dailyProgress: { [getTodayStr()]: { value: 4500, completed: false } },
+      recurrence: { type: 'daily', interval: 1 },
+      time: '08:00',
+      reminder: { enabled: true, offset: 0 }, // 0 mins before
+      history: { '2025-11-26': true, '2025-11-27': true }
+    },
+    { 
+      id: 't2', frequency: 'daily', type: 'quantitative', category: 'droplet',
+      title: '喝水 1800 cc', dailyTarget: 1800, unit: 'cc', stepValue: 200,
+      details: '分批小口喝水，定時提醒自己。', 
+      dailyProgress: { [getTodayStr()]: { value: 1200, completed: false } },
+      recurrence: { type: 'daily', interval: 1 },
+      time: '09:00',
+      reminder: { enabled: true, offset: 60 }, // 1 hr before (example)
+      history: { '2025-11-26': false }
+    },
+    { 
+      id: 't3', frequency: 'daily', type: 'checklist', category: 'pill',
+      title: '服用保健食品', 
+      details: '請在早餐或午餐後服用。',
+      subtasks: [
+        { id: 's1', title: '魚油', completed: true },
+        { id: 's2', title: '維生素 B', completed: false },
+      ],
+      completed: false,
+      recurrence: { type: 'daily', interval: 1 },
+      history: {}
+    },
+    // Flexible Weekly Goal
+    { 
+      id: 't_flex_1', frequency: 'weekly', type: 'binary', category: 'dumbbell',
+      title: '重訓 3 次', 
+      details: '每週目標：完成 3 次重訓。',
+      subtasks: [],
+      recurrence: { type: 'weekly', mode: 'period_count', periodTarget: 3 },
+      history: { '2025-11-25': true, '2025-11-27': true }
+    },
+    { 
+      id: 't4', frequency: 'weekly', type: 'mission', category: 'aperture',
+      title: '上傳本週體態照片', completed: false, date: '2025-11-30',
+      details: '請在週末前上傳正面、側面、背面。', subtasks: [],
+      recurrence: { type: 'weekly', interval: 1 },
+      history: {}
+    },
+];
+
+
+// --- Helper Components ---
+
+
+const IconRenderer = ({ category, size = 18, className = '' }) => {
+  const config = CATEGORY_CONFIG[category] || CATEGORY_CONFIG['star'];
+  if (config.type === 'icon') {
+    const Icon = config.value;
+    return <Icon size={size} className={`${config.color} ${className}`} />;
+  }
+  return (
+    <span className={`text-${size / 4}xl ${className}`} style={{ fontSize: `${size}px` }}>
+      {config.value}
+    </span>
+  );
+};
+
+
+// 1. App Header
+const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges }) => {
+  const weekDays = ['一', '二', '三', '四', '五', '六', '日'];
+  
+  return (
+    <div className="bg-white sticky top-0 z-30 shadow-sm">
+      <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => onViewChange('daily')}>
+          <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden border border-gray-100">
+             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Avatar" className="w-full h-full" />
+          </div>
+          <span className="font-bold text-gray-800 text-sm md:text-base">火焰阿淳 🔥</span>
+        </div>
+        
+        {currentView === 'daily' ? (
+          <div className="flex items-center gap-2">
+             <Calendar size={18} className="text-gray-600" />
+             <span className="font-bold text-gray-800 text-sm md:text-base">11/28 (五)</span>
+          </div>
+        ) : (
+           <span className="font-bold text-emerald-600">
+             {currentView === 'manage' ? '任務管理' : currentView === 'calendar' ? '習慣總覽' : '成就中心'}
+           </span>
+        )}
+
+
+        <div className="flex gap-2">
+           {currentView === 'daily' && (
+              <>
+                 <button onClick={onOpenBadges} className="w-8 h-8 bg-gray-100 text-yellow-600 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors">
+                   <Award size={20} />
+                 </button>
+                 <button onClick={() => onOpenAddFlow()} className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center hover:bg-emerald-100 transition-colors">
+                   <Plus size={20} />
+                 </button>
+              </>
+           )}
+           {(currentView !== 'daily') && (
+             <button onClick={() => onViewChange('daily')} className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center hover:bg-emerald-100 transition-colors">
+               <Calendar size={20} />
+             </button>
+           )}
+           {(currentView === 'manage' || currentView === 'calendar') && (
+             <button onClick={() => onOpenAddFlow()} className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center text-white hover:bg-gray-700 transition-colors">
+               <Plus size={20} />
+             </button>
+           )}
+        </div>
+      </div>
+
+
+      {/* Week Strip */}
+      {currentView === 'daily' && (
+        <div className="flex justify-between items-center px-2 md:px-6 pb-0 overflow-x-auto no-scrollbar">
+          {weekDays.map((day, index) => {
+            const isSelected = index === 4; 
+            return (
+              <div key={index} className={`flex flex-col items-center justify-center py-2 px-3 md:px-6 cursor-pointer relative min-w-[3rem] ${isSelected ? 'text-emerald-600 font-bold' : 'text-gray-400 font-medium'}`}>
+                <span className="text-sm">{day}</span>
+                {isSelected && <div className="absolute bottom-0 w-full h-[3px] bg-emerald-500 rounded-t-full"></div>}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+// 2. Task Card
+const TaskCard = ({ task, onClick, onUpdate }) => {
+  const todayStr = getTodayStr();
+  let isCompleted, currentVal, targetVal, displayStatus, progressPercent;
+
+
+  // Logic for Flexible Period Goals
+  if (task.recurrence?.mode === 'period_count') {
+      const count = calculatePeriodProgress(task);
+      const target = task.recurrence.periodTarget || 1;
+      isCompleted = count >= target;
+      currentVal = count;
+      targetVal = target;
+      progressPercent = target > 0 ? Math.min(100, (count / target) * 100) : 0;
+      displayStatus = `${count}/${target} 次`;
+  } 
+  // Logic for Daily/Specific Day Tasks
+  else {
+      isCompleted = isCompletedToday(task);
+      if (task.type === 'quantitative') {
+          currentVal = task.dailyProgress[todayStr]?.value || 0;
+          targetVal = task.dailyTarget;
+          progressPercent = targetVal > 0 ? Math.min(100, (currentVal / targetVal) * 100) : 0;
+          displayStatus = `${currentVal}/${targetVal} ${task.unit}`;
+      } else {
+          progressPercent = isCompleted ? 100 : 0;
+          displayStatus = null;
+      }
+  }
+
+
+  const config = CATEGORY_CONFIG[task.category] || CATEGORY_CONFIG['star'];
+  const isQuant = task.type === 'quantitative';
+  const isPeriod = task.recurrence?.mode === 'period_count';
+
+
+  return (
+    <div onClick={onClick} className={`bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${isCompleted ? 'border-emerald-200 bg-emerald-50/30' : 'border-gray-100'}`}>
+      
+      {/* Background Progress for Quant or Period Tasks */}
+      {(isQuant || isPeriod) && (
+        <div 
+          className={`absolute bottom-0 left-0 h-1 transition-all duration-700 ${isCompleted ? 'bg-gradient-to-r from-yellow-400 to-emerald-500' : 'bg-emerald-400'}`} 
+          style={{ width: `${progressPercent}%` }} 
+        />
+      )}
+
+
+      <div className="flex justify-between items-start mb-2">
+        <div className="flex items-center gap-3">
+          <div className={`${config.bg} p-2 rounded-xl`}>
+             <IconRenderer category={task.category} size={18} className={config.type === 'emoji' ? 'text-2xl' : ''} />
+          </div>
+          <div>
+             <h3 className={`font-bold text-sm ${isCompleted && !isQuant && !isPeriod ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+               {task.title}
+             </h3>
+             <p className="text-xs text-gray-400 line-clamp-1">
+               {isPeriod ? (task.frequency === 'weekly' ? '本週目標' : '本月目標') : (task.details || '無詳細說明')}
+             </p>
+          </div>
+        </div>
+        
+        <div className="flex flex-col items-end gap-1">
+           {(isQuant || isPeriod) ? (
+             <span className={`text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap transition-colors ${isCompleted ? 'bg-yellow-100 text-yellow-700' : 'bg-emerald-50 text-emerald-600'}`}>
+               {isCompleted ? '🎉 達成' : displayStatus}
+             </span>
+           ) : (
+             <button 
+               onClick={(e) => { e.stopPropagation(); onUpdate(task, 'toggle'); }}
+               className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-gray-200 hover:border-emerald-400'}`}
+             >
+               {isCompleted && <Check size={14} className="text-white" strokeWidth={3} />}
+             </button>
+           )}
+        </div>
+      </div>
+      
+      {/* Quick Add for Quant Tasks */}
+      {isQuant && !isPeriod && (
+        <div className="flex justify-end gap-2 mt-2">
+           <button onClick={(e) => { e.stopPropagation(); onUpdate(task, 'add', -(task.stepValue || 1)); }} className="w-8 h-6 flex items-center justify-center text-xs font-bold text-gray-500 hover:bg-gray-100 rounded-full border border-gray-200 transition-colors"><Minus size={12} /></button>
+           <button onClick={(e) => { e.stopPropagation(); onUpdate(task, 'add', (task.stepValue || 1)); }} className="w-12 h-6 flex items-center justify-center text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-full border border-emerald-100 transition-colors">+{task.stepValue || 1}</button>
+           <span className="text-xs text-gray-400 pt-1.5">{task.unit}</span>
+        </div>
+      )}
+
+
+      {/* Quick Add for Period Tasks */}
+      {isPeriod && !isCompleted && (
+         <div className="flex justify-end mt-2">
+            <button 
+                onClick={(e) => { e.stopPropagation(); onUpdate(task, 'period_add'); }}
+                className="text-xs flex items-center gap-1 bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold hover:bg-emerald-100 transition-colors"
+            >
+                <Plus size={12}/> 紀錄一次
+            </button>
+         </div>
+      )}
+    </div>
+  );
+};
+
+
+// 3. Task Form Modal
+const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, defaultDate }) => {
+  const [formData, setFormData] = useState({
+    title: '', details: '', type: 'binary', category: 'star', frequency: 'daily',
+    date: defaultDate || getTodayStr(), time: '09:00',
+    dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
+    recurrence: { type: 'daily', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3 },
+    reminder: { enabled: false, offset: 0 } 
+  });
+  
+  const [customEmoji, setCustomEmoji] = useState('');
+  const [activeTab, setActiveTab] = useState('basic');
+  const iconContainerRef = useRef(null);
+
+
+  // Helper for monthly recurrence labels
+  const dateInfo = getNthWeekday(formData.date);
+
+
+  useEffect(() => {
+    if (isOpen) {
+      if (initialData) {
+        setFormData({
+            ...initialData,
+            time: initialData.time || '09:00',
+            recurrence: { 
+              type: 'daily', mode: 'specific_days', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3,
+              ...(initialData.recurrence || {}) 
+            },
+            reminder: { enabled: false, offset: 0, ...(initialData.reminder || {}) },
+            stepValue: initialData.stepValue || 1,
+            subtasks: initialData.subtasks || []
+        });
+      } else {
+        setFormData({
+            title: '', details: '', type: 'binary', category: 'star', frequency: 'daily',
+            date: defaultDate || getTodayStr(), time: '09:00',
+            dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
+            recurrence: { type: 'daily', mode: 'specific_days', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3 },
+            reminder: { enabled: false, offset: 0 }
+        });
+      }
+      setActiveTab('basic');
+    }
+  }, [isOpen, initialData, defaultDate]);
+
+
+  const scrollIcons = (direction) => {
+    if (iconContainerRef.current) {
+      iconContainerRef.current.scrollBy({ left: direction === 'left' ? -150 : 150, behavior: 'smooth' });
+    }
+  };
+
+
+  if (!isOpen) return null;
+
+
+  const handleSubtaskChange = (idx, field, value) => {
+    const newSub = [...formData.subtasks];
+    newSub[idx][field] = value;
+    setFormData({ ...formData, subtasks: newSub });
+  };
+
+
+  const addSubtask = () => {
+    setFormData({ 
+        ...formData, 
+        type: 'checklist', 
+        subtasks: [...formData.subtasks, { id: generateId(), title: '', completed: false }] 
+    });
+  };
+
+
+  const removeSubtask = (idx) => {
+    setFormData({ ...formData, subtasks: formData.subtasks.filter((_, i) => i !== idx) });
+  };
+  
+  const handleAddCustomEmoji = () => {
+      if (customEmoji && customEmoji.length <= 2) {
+          const newKey = `custom_${generateId()}`;
+          CATEGORY_CONFIG[newKey] = { type: 'emoji', value: customEmoji, color: 'text-gray-900', bg: 'bg-yellow-100', label: '自訂' };
+          setFormData({...formData, category: newKey});
+          setCustomEmoji('');
+      }
+  }
+
+
+  const toggleWeekDay = (dayIndex) => {
+    const currentDays = formData.recurrence.weekDays || [];
+    if (currentDays.includes(dayIndex)) {
+      setFormData({...formData, recurrence: { ...formData.recurrence, weekDays: currentDays.filter(d => d !== dayIndex) }});
+    } else {
+      setFormData({...formData, recurrence: { ...formData.recurrence, weekDays: [...currentDays, dayIndex].sort() }});
+    }
+  };
+
+
+  const selectedConfig = CATEGORY_CONFIG[formData.category] || CATEGORY_CONFIG['star'];
+
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">
+      <div className="bg-white w-full md:max-w-md h-[90vh] md:h-auto md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up">
+        
+        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white rounded-t-2xl">
+           <div className="flex items-center gap-2">
+             <button onClick={onClose}><X size={24} className="text-gray-500" /></button>
+             <h3 className="font-bold text-lg text-gray-800">{initialData ? '編輯任務' : '新增任務'}</h3>
+           </div>
+           <button onClick={() => onSave(formData)} className="text-emerald-600 font-bold text-sm px-4 py-2 bg-emerald-50 rounded-full hover:bg-emerald-100">
+             儲存
+           </button>
+        </div>
+
+
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            
+            {/* Title & Icon */}
+            <div className="flex items-center gap-3">
+              <div className={`${selectedConfig.bg} p-2 rounded-xl flex-shrink-0`}>
+                <IconRenderer category={formData.category} size={24} className={selectedConfig.type === 'emoji' ? 'text-3xl' : ''} />
+              </div>
+               <input 
+                  className="w-full text-2xl font-bold text-gray-800 placeholder-gray-300 focus:outline-none"
+                  placeholder="任務名稱 (例如: 喝水)"
+                  value={formData.title}
+                  onChange={e => setFormData({...formData, title: e.target.value})}
+               />
+            </div>
+
+
+             {/* Icon Selector */}
+             <div className="relative group">
+                <label className="text-xs text-gray-400 block mb-2 font-bold uppercase">選擇圖示</label>
+                <div className="flex items-center">
+                   <button onClick={() => scrollIcons('left')} className="hidden md:block p-1 text-gray-400 hover:text-gray-600 bg-white shadow-sm rounded-full absolute left-0 z-10"><ChevronLeft size={16}/></button>
+                   <div ref={iconContainerRef} className="flex gap-3 overflow-x-auto no-scrollbar py-1 px-1 w-full scroll-smooth">
+                      <div className="flex-shrink-0 min-w-[4.5rem] p-2 rounded-lg bg-gray-50 flex flex-col items-center justify-center border-2 border-dashed border-gray-300">
+                          <input 
+                             className="w-8 h-8 text-xl text-center bg-transparent focus:outline-none"
+                             placeholder="😀" maxLength={2} value={customEmoji}
+                             onChange={e => setCustomEmoji(e.target.value)}
+                             onKeyDown={(e) => { if(e.key === 'Enter') { e.preventDefault(); handleAddCustomEmoji(); }}}
+                          />
+                      </div>
+                      {Object.entries(CATEGORY_CONFIG).map(([key, config]) => {
+                          const isSelected = formData.category === key;
+                          const IconComp = config.type === 'icon' ? config.value : null;
+                          return (
+                             <div key={key} onClick={() => setFormData({...formData, category: key})} className={`flex flex-col items-center gap-1 cursor-pointer min-w-[3.5rem] p-2 rounded-lg transition-all flex-shrink-0 ${isSelected ? 'bg-emerald-50 border-2 border-emerald-500' : 'bg-gray-100 hover:bg-gray-200'}`}>
+                                <div className="w-8 h-8 flex items-center justify-center">
+                                   {config.type === 'icon' ? <IconComp size={20} className={config.color} /> : <span className="text-2xl">{config.value}</span>}
+                                </div>
+                                <span className="text-[10px] text-gray-500 font-medium">{config.label}</span>
+                             </div>
+                          )
+                       })}
+                   </div>
+                   <button onClick={() => scrollIcons('right')} className="hidden md:block p-1 text-gray-400 hover:text-gray-600 bg-white shadow-sm rounded-full absolute right-0 z-10"><ChevronRight size={16}/></button>
+                </div>
+             </div>
+
+
+            {/* Type & Goal */}
+            <div className="pt-2">
+               <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
+                  {[
+                    {id: 'binary', label: '一般 (達成/未達成)'}, 
+                    {id: 'quantitative', label: '計量 (步數/cc)'},
+                    {id: 'checklist', label: '清單 (子任務)'}
+                  ].map(type => (
+                      <button key={type.id} onClick={() => setFormData({...formData, type: type.id})} className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${formData.type === type.id ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
+                         {type.label}
+                      </button>
+                  ))}
+               </div>
+
+
+               {formData.type === 'quantitative' && (
+                   <div className="flex flex-col gap-3 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                      <div className="flex gap-3">
+                        <div className="flex-1">
+                           <label className="text-xs text-blue-600 block mb-1 font-bold">目標數值</label>
+                           <input type="number" className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm" value={formData.dailyTarget} onChange={e => setFormData({...formData, dailyTarget: parseInt(e.target.value)})} />
+                        </div>
+                        <div className="w-24">
+                           <label className="text-xs text-blue-600 block mb-1 font-bold">單位</label>
+                           <input type="text" placeholder="cc" className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm" value={formData.unit} onChange={e => setFormData({...formData, unit: e.target.value})} />
+                        </div>
+                      </div>
+                      <div>
+                         <label className="text-xs text-blue-600 block mb-1 font-bold">每次增量 (例如 +200)</label>
+                         <input type="number" className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-sm" value={formData.stepValue} onChange={e => setFormData({...formData, stepValue: parseInt(e.target.value)})} />
+                      </div>
+                   </div>
+               )}
+            </div>
+
+
+            {/* Subtasks */}
+            {(formData.type === 'checklist' || formData.subtasks.length > 0) && (
+               <div className="space-y-3">
+                  <label className="text-xs text-gray-400 font-bold uppercase">子任務清單</label>
+                  {formData.subtasks.map((sub, idx) => (
+                     <div key={sub.id} className="flex items-center gap-2">
+                        <input type="checkbox" disabled className="w-4 h-4 rounded border-gray-300" />
+                        <input 
+                           className="flex-1 bg-gray-50 border-b border-transparent focus:border-emerald-500 focus:bg-white outline-none px-2 py-1 text-sm transition-colors"
+                           value={sub.title} placeholder="輸入項目..." autoFocus={idx === formData.subtasks.length - 1}
+                           onChange={e => handleSubtaskChange(idx, 'title', e.target.value)}
+                           onKeyDown={(e) => { if(e.key === 'Enter') { e.preventDefault(); addSubtask(); }}}
+                        />
+                        <button onClick={() => removeSubtask(idx)} className="text-gray-400 hover:text-red-500"><X size={16} /></button>
+                     </div>
+                  ))}
+                  <button onClick={addSubtask} className="flex items-center gap-2 text-sm text-emerald-600 font-bold hover:text-emerald-700 mt-2">
+                     <Plus size={16} /> 新增子任務
+                  </button>
+               </div>
+            )}
+
+
+            {/* Advanced Settings Toggle */}
+            <div className="border-t border-gray-100 pt-4">
+               <button 
+                 onClick={() => setActiveTab(activeTab === 'advance' ? 'basic' : 'advance')}
+                 className="flex items-center justify-between w-full text-sm font-bold text-gray-600 mb-3"
+               >
+                 <span className="flex items-center gap-2"><Clock size={16} /> 日期、重複與提醒設定</span>
+                 {activeTab === 'advance' ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}
+               </button>
+               
+               {activeTab === 'advance' && (
+                 <div className="space-y-4 animate-fade-in-down">
+                    
+                    {/* SECTION 1: Date & Time */}
+                    <div className="bg-gray-50 p-4 rounded-xl">
+                       <label className="text-xs text-gray-500 block mb-2 font-bold flex items-center gap-1"><Calendar size={12}/> 時間與頻率</label>
+                       
+                       <div className="flex gap-3 mb-4">
+                           <div className="flex-1">
+                               <label className="text-[10px] text-gray-400 block mb-1">開始日期</label>
+                               <input 
+                                  type="date" 
+                                  className="w-full bg-white border border-gray-200 rounded px-3 py-2 text-sm" 
+                                  value={formData.date} 
+                                  onChange={e => setFormData({...formData, date: e.target.value})} 
+                               />
+                           </div>
+                           <div className="flex-1">
+                               <label className="text-[10px] text-gray-400 block mb-1">時間</label>
+                               <input 
+                                  type="time" 
+                                  className="w-full bg-white border border-gray-200 rounded px-3 py-2 text-sm" 
+                                  value={formData.time} 
+                                  onChange={e => setFormData({...formData, time: e.target.value})} 
+                               />
+                           </div>
+                       </div>
+
+
+                       <div className="border-t border-gray-200 my-3"></div>
+
+
+                       <label className="text-[10px] text-gray-400 block mb-1">重複頻率</label>
+                       <div className="flex gap-2 mb-3">
+                          {['once', 'daily', 'weekly', 'monthly'].map(freq => (
+                             <button
+                                key={freq}
+                                onClick={() => setFormData({...formData, recurrence: { ...formData.recurrence, type: freq }})}
+                                className={`flex-1 py-1.5 text-xs font-bold rounded border ${formData.recurrence.type === freq ? 'bg-emerald-100 text-emerald-700 border-emerald-300' : 'bg-white text-gray-500 border-gray-200'}`}
+                             >
+                                {freq === 'once' ? '不重複' : freq === 'daily' ? '每天' : freq === 'weekly' ? '每週' : '每月'}
+                             </button>
+                          ))}
+                       </div>
+
+
+                       {/* Weekly Options (Specific Days vs Period Count) */}
+                       {formData.recurrence.type === 'weekly' && (
+                          <div className="bg-white p-3 rounded border border-gray-200 mb-3">
+                             <div className="flex gap-4 mb-3 border-b border-gray-100 pb-2">
+                                <label className="text-xs flex items-center gap-1 cursor-pointer">
+                                    <input 
+                                        type="radio" name="weekMode" 
+                                        checked={formData.recurrence.mode !== 'period_count'}
+                                        onChange={() => setFormData({...formData, recurrence: { ...formData.recurrence, mode: 'specific_days' }})}
+                                    /> 固定星期
+                                </label>
+                                <label className="text-xs flex items-center gap-1 cursor-pointer">
+                                    <input 
+                                        type="radio" name="weekMode" 
+                                        checked={formData.recurrence.mode === 'period_count'}
+                                        onChange={() => setFormData({...formData, recurrence: { ...formData.recurrence, mode: 'period_count' }})}
+                                    /> 彈性頻率 (週期目標)
+                                </label>
+                             </div>
+
+
+                             {formData.recurrence.mode !== 'period_count' ? (
+                                 <div>
+                                    <label className="text-[10px] text-gray-400 block mb-1">重複於：</label>
+                                    <div className="flex justify-between">
+                                        {['日', '一', '二', '三', '四', '五', '六'].map((d, i) => (
+                                        <button 
+                                            key={i}
+                                            onClick={() => toggleWeekDay(i)}
+                                            className={`w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center border transition-all ${(formData.recurrence.weekDays || []).includes(i) ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white text-gray-400 border-gray-200'}`}
+                                        >
+                                            {d}
+                                        </button>
+                                        ))}
+                                    </div>
+                                 </div>
+                             ) : (
+                                 <div className="flex items-center gap-2">
+                                     <span className="text-sm text-gray-600">每週完成</span>
+                                     <input 
+                                        type="number" className="w-16 border border-gray-300 rounded px-2 py-1 text-center"
+                                        value={formData.recurrence.periodTarget}
+                                        onChange={e => setFormData({...formData, recurrence: {...formData.recurrence, periodTarget: parseInt(e.target.value)}})}
+                                     />
+                                     <span className="text-sm text-gray-600">次</span>
+                                 </div>
+                             )}
+                          </div>
+                       )}
+
+
+                       {/* Monthly Options */}
+                       {formData.recurrence.type === 'monthly' && (
+                          <div className="bg-white p-3 rounded border border-gray-200 mb-3">
+                             <div className="flex gap-4 mb-3 border-b border-gray-100 pb-2">
+                                <label className="text-xs flex items-center gap-1 cursor-pointer">
+                                    <input 
+                                        type="radio" name="monthMode" 
+                                        checked={formData.recurrence.mode !== 'period_count'}
+                                        onChange={() => setFormData({...formData, recurrence: { ...formData.recurrence, mode: 'specific_days' }})}
+                                    /> 固定日期
+                                </label>
+                                <label className="text-xs flex items-center gap-1 cursor-pointer">
+                                    <input 
+                                        type="radio" name="monthMode" 
+                                        checked={formData.recurrence.mode === 'period_count'}
+                                        onChange={() => setFormData({...formData, recurrence: { ...formData.recurrence, mode: 'period_count' }})}
+                                    /> 彈性頻率
+                                </label>
+                             </div>
+
+
+                             {formData.recurrence.mode !== 'period_count' ? (
+                                <div className="flex flex-col gap-2">
+                                    <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                                        <input 
+                                        type="radio" name="monthType" 
+                                        checked={formData.recurrence.monthType === 'date'}
+                                        onChange={() => setFormData({...formData, recurrence: {...formData.recurrence, monthType: 'date'}})}
+                                        />
+                                        每月 {new Date(formData.date).getDate()} 日
+                                    </label>
+                                    <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                                        <input 
+                                        type="radio" name="monthType" 
+                                        checked={formData.recurrence.monthType === 'day'}
+                                        onChange={() => setFormData({...formData, recurrence: {...formData.recurrence, monthType: 'day'}})}
+                                        />
+                                        {dateInfo.desc}
+                                    </label>
+                                </div>
+                             ) : (
+                                <div className="flex items-center gap-2">
+                                     <span className="text-sm text-gray-600">每月完成</span>
+                                     <input 
+                                        type="number" className="w-16 border border-gray-300 rounded px-2 py-1 text-center"
+                                        value={formData.recurrence.periodTarget}
+                                        onChange={e => setFormData({...formData, recurrence: {...formData.recurrence, periodTarget: parseInt(e.target.value)}})}
+                                     />
+                                     <span className="text-sm text-gray-600">次</span>
+                                 </div>
+                             )}
+                          </div>
+                       )}
+
+
+                       {formData.recurrence.type !== 'once' && (
+                          <div className="pt-2">
+                             <div className="flex gap-2 items-center mb-2">
+                                <span className="text-xs text-gray-500">停止條件:</span>
+                                <select 
+                                   className="bg-white border border-gray-200 text-xs rounded px-2 py-1 outline-none"
+                                   value={formData.recurrence.endType}
+                                   onChange={e => setFormData({...formData, recurrence: { ...formData.recurrence, endType: e.target.value }})}
+                                >
+                                   <option value="never">永不停止</option>
+                                   <option value="date">直到日期</option>
+                                </select>
+                             </div>
+                             {formData.recurrence.endType === 'date' && (
+                                <input type="date" className="w-full bg-white border border-gray-200 rounded px-3 py-2 text-sm" value={formData.recurrence.endDate} onChange={e => setFormData({...formData, recurrence: { ...formData.recurrence, endDate: e.target.value }})} />
+                             )}
+                          </div>
+                       )}
+                    </div>
+
+
+                    {/* SECTION 2: Reminder (Independent) */}
+                    <div className="bg-gray-50 p-4 rounded-xl">
+                        <div className="flex justify-between items-center mb-2">
+                            <label className="text-xs text-gray-500 font-bold flex items-center gap-1"><Bell size={12}/> 提醒通知</label>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" className="sr-only peer" checked={formData.reminder.enabled} onChange={e => setFormData({...formData, reminder: {...formData.reminder, enabled: e.target.checked}})} />
+                                <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                            </label>
+                        </div>
+                        
+                        {formData.reminder.enabled && (
+                            <div className="space-y-2">
+                                <select 
+                                    className="w-full bg-white border border-gray-200 text-sm rounded-lg px-3 py-2 outline-none"
+                                    value={formData.reminder.offset}
+                                    onChange={e => setFormData({...formData, reminder: { ...formData.reminder, offset: parseInt(e.target.value) }})}
+                                >
+                                    <option value="0">準時 ({formData.time})</option>
+                                    <option value="10">10 分鐘前</option>
+                                    <option value="30">30 分鐘前</option>
+                                    <option value="60">1 小時前</option>
+                                    <option value="1440">1 天前</option>
+                                </select>
+                                <p className="text-[10px] text-gray-400 flex items-center gap-1">
+                                    <Check size={10}/> 若任務提早完成，系統將自動取消提醒
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
+
+                 </div>
+               )}
+            </div>
+
+
+            {/* Details */}
+            <div>
+               <label className="text-xs text-gray-400 block mb-1 font-bold uppercase">備註說明</label>
+               <textarea 
+                  className="w-full bg-gray-50 border-none rounded-xl p-3 text-sm text-gray-600 focus:ring-1 focus:ring-emerald-500 resize-none"
+                  placeholder="寫點什麼..." rows={3}
+                  value={formData.details}
+                  onChange={e => setFormData({...formData, details: e.target.value})}
+               />
+            </div>
+
+
+        </div>
+        
+        {/* Footer */}
+        {initialData && (
+           <div className="p-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-between items-center">
+              <span className="text-xs text-gray-400">ID: {initialData.id}</span>
+              <button onClick={() => onDelete(initialData.id)} className="text-red-500 flex items-center gap-1 text-sm font-bold hover:bg-red-50 px-3 py-1 rounded-lg transition-colors">
+                 <Trash2 size={16} /> 刪除
+              </button>
+           </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+
+// 4. Task Library Modal
+const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm }) => {
+    if (!isOpen) return null;
+
+
+    return (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">
+           <div className="bg-white w-full md:max-w-xl h-[90vh] md:h-auto md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up">
+                <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                   <h3 className="font-bold text-lg text-gray-800 flex items-center gap-2"><Target size={20} className="text-emerald-500" /> 官方任務清單庫</h3>
+                   <button onClick={onClose}><X size={24} className="text-gray-500 hover:text-gray-800" /></button>
+                </div>
+                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                    <button onClick={onOpenCustomForm} className="w-full bg-gray-800 text-white text-base font-bold py-3 rounded-xl shadow-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 mb-6">
+                       <Edit2 size={20} /> 手動建立新任務
+                    </button>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">推薦模板</p>
+                    <div className="space-y-3">
+                      {OFFICIAL_TASKS.map(task => {
+                          const config = CATEGORY_CONFIG[task.category] || CATEGORY_CONFIG['star'];
+                          return (
+                              <div key={task.id} className="bg-white border border-gray-100 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                                  <div className="flex justify-between items-start">
+                                      <div className="flex items-center gap-3">
+                                          <div className={`${config.bg} p-2 rounded-xl flex-shrink-0`}>
+                                            <IconRenderer category={task.category} size={18} className={config.type === 'emoji' ? 'text-2xl' : ''} />
+                                          </div>
+                                          <div>
+                                              <h4 className="font-bold text-gray-800">{task.title}</h4>
+                                              <p className="text-xs text-gray-400 line-clamp-2 mt-0.5">{task.details}</p>
+                                          </div>
+                                      </div>
+                                      <button onClick={() => onSelectTask(task)} className="flex items-center gap-1 text-sm text-white bg-emerald-500 px-3 py-1.5 rounded-full font-bold hover:bg-emerald-600 transition-colors flex-shrink-0">
+                                          <Plus size={16} /> 新增
+                                      </button>
+                                  </div>
+                                  <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
+                                      <p className="text-xs text-gray-600"><span className="font-bold text-emerald-600">💡科學依據:</span> {task.science}</p>
+                                      <p className="text-xs text-gray-600"><span className="font-bold text-gray-600">🛠️工具:</span> {task.tool} ({task.recommend})</p>
+                                  </div>
+                              </div>
+                          );
+                      })}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+// 5. Dashboard Summary Card (New: Health Score)
+const DashboardSummaryCard = ({ tasks, onOpenDetail }) => {
+  const dailyTasks = tasks.filter(t => t.frequency === 'daily' && !t.recurrence?.mode?.includes('period'));
+  
+  const totalTasks = dailyTasks.length;
+  let score = 0;
+  
+  dailyTasks.forEach(t => {
+      if(t.type === 'quantitative') {
+          const curr = t.dailyProgress[getTodayStr()]?.value || 0;
+          const target = t.dailyTarget || 1;
+          const ratio = Math.min(1, curr / target);
+          score += (100 / totalTasks) * ratio;
+      } else {
+          score += (isCompletedToday(t) ? (100 / totalTasks) : 0);
+      }
+  });
+  
+  const finalScore = totalTasks > 0 ? Math.round(score) : 0;
+
+
+  // Calculate Period Goal Status (Weekly)
+  const periodTasks = tasks.filter(t => t.recurrence?.mode === 'period_count' && t.frequency === 'weekly');
+  const periodTotal = periodTasks.length;
+  const periodDone = periodTasks.filter(t => calculatePeriodProgress(t) >= t.recurrence.periodTarget).length;
+
+
+  return (
+    <div className="grid grid-cols-2 gap-3 mb-6">
+        {/* Main Score Block */}
+        <div 
+            onClick={onOpenDetail}
+            className="col-span-2 bg-gradient-to-br from-emerald-600 to-teal-800 rounded-3xl p-5 text-white shadow-lg relative overflow-hidden cursor-pointer flex justify-between items-center"
+        >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full transform translate-x-10 -translate-y-10"></div>
+            <div>
+                <p className="text-emerald-100 font-bold text-sm mb-1 flex items-center gap-1"><Sparkles size={14}/> 今日健康分數</p>
+                <div className="flex items-baseline gap-1">
+                    <h2 className="text-5xl font-black">{finalScore}</h2>
+                    <span className="text-sm font-medium opacity-70">分</span>
+                </div>
+            </div>
+            
+            {/* Visual Ring (CSS only) */}
+            <div className="relative w-20 h-20 flex items-center justify-center">
+                <svg className="transform -rotate-90 w-full h-full">
+                    <circle cx="40" cy="40" r="36" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-white/20" />
+                    <circle cx="40" cy="40" r="36" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-white transition-all duration-1000 ease-out" strokeDasharray={`${2 * Math.PI * 36}`} strokeDashoffset={`${2 * Math.PI * 36 * (1 - finalScore / 100)}`} strokeLinecap="round" />
+                </svg>
+            </div>
+        </div>
+
+
+        {/* Period Goal Stats */}
+        <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center">
+            <div className="flex items-center gap-2 mb-2">
+                <Target size={16} className="text-amber-500" />
+                <span className="text-xs font-bold text-gray-500">本週目標</span>
+            </div>
+            <div className="flex items-end gap-1">
+                <span className="text-2xl font-black text-gray-800">{periodDone}</span>
+                <span className="text-xs text-gray-400 mb-1">/ {periodTotal} 達成</span>
+            </div>
+            <div className="w-full bg-gray-100 h-1.5 rounded-full mt-2">
+                <div className="bg-amber-500 h-1.5 rounded-full" style={{width: `${periodTotal > 0 ? (periodDone/periodTotal)*100 : 0}%`}}></div>
+            </div>
+        </div>
+
+
+        {/* Streak */}
+        <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center">
+            <div className="flex items-center gap-2 mb-2">
+                <Flame size={16} className="text-red-500" />
+                <span className="text-xs font-bold text-gray-500">連續紀錄</span>
+            </div>
+            <div className="flex items-end gap-1">
+                <span className="text-2xl font-black text-gray-800">5</span>
+                <span className="text-xs text-gray-400 mb-1">天</span>
+            </div>
+            <p className="text-[10px] text-gray-400 mt-1">保持下去！</p>
+        </div>
+    </div>
+  );
+};
+
+
+// 6. Calendar View (New)
+const CalendarView = ({ tasks, onDateSelect }) => {
+  const today = new Date();
+  const [currentDate, setCurrentDate] = useState(today);
+  
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  
+  const daysInMonth = getDaysInMonth(year, month);
+  const firstDay = getFirstDayOfMonth(year, month);
+  
+  const handlePrevMonth = () => setCurrentDate(new Date(year, month - 1, 1));
+  const handleNextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
+
+
+  const renderDays = () => {
+    const days = [];
+    for (let i = 0; i < firstDay; i++) {
+      days.push(<div key={`empty-${i}`} className="h-24 md:h-32 bg-gray-50/50 border-r border-b border-gray-100"></div>);
+    }
+    
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const isToday = dateStr === getTodayStr();
+      
+      let activeCount = 0;
+      // Mock count
+      if (d % 3 === 0) activeCount = 3;
+      else if (d % 2 === 0) activeCount = 5;
+      else activeCount = 2;
+
+
+      days.push(
+        <div 
+          key={d} 
+          onClick={() => onDateSelect(dateStr)}
+          className={`h-24 md:h-32 border-r border-b border-gray-100 p-2 cursor-pointer transition-colors hover:bg-gray-50 relative ${isToday ? 'bg-blue-50/30' : ''}`}
+        >
+          <div className={`text-sm font-bold w-6 h-6 flex items-center justify-center rounded-full ${isToday ? 'bg-blue-600 text-white' : 'text-gray-700'}`}>
+            {d}
+          </div>
+          
+          <div className="mt-2 space-y-1">
+             <div className="flex gap-1 flex-wrap">
+               {[...Array(Math.min(activeCount, 4))].map((_, i) => (
+                 <div key={i} className={`w-1.5 h-1.5 rounded-full ${i % 2 === 0 ? 'bg-emerald-400' : 'bg-blue-400'}`}></div>
+               ))}
+               {activeCount > 4 && <span className="text-[8px] text-gray-400">+</span>}
+             </div>
+             {activeCount > 0 && (
+                <div className="text-[10px] text-gray-500 bg-gray-100 rounded px-1 mt-1 w-fit">
+                   {activeCount} 個任務
+                </div>
+             )}
+          </div>
+          
+          <div className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity">
+             <Plus size={14} className="text-gray-400" />
+          </div>
+        </div>
+      );
+    }
+    return days;
+  };
+
+
+  return (
+    <div className="p-4 md:p-8 max-w-5xl mx-auto pb-24">
+       <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-black text-gray-800 flex items-center gap-2">
+             <Grid className="text-emerald-600" /> 習慣總覽
+          </h2>
+          <div className="flex items-center gap-4 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-200">
+             <button onClick={handlePrevMonth} className="p-1 hover:bg-gray-100 rounded-full"><ChevronLeft size={20}/></button>
+             <span className="font-bold text-gray-700 w-32 text-center">{year}年 {month + 1}月</span>
+             <button onClick={handleNextMonth} className="p-1 hover:bg-gray-100 rounded-full"><ChevronRight size={20}/></button>
+          </div>
+       </div>
+       
+       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="grid grid-cols-7 border-b border-gray-200 bg-gray-50">
+             {['日', '一', '二', '三', '四', '五', '六'].map(d => (
+                <div key={d} className="py-3 text-center text-xs font-bold text-gray-500">{d}</div>
+             ))}
+          </div>
+          <div className="grid grid-cols-7">
+             {renderDays()}
+          </div>
+       </div>
+    </div>
+  );
+};
+
+
+// 7. Main App
+export default function CofitDailyHealthTracker() {
+  const [tasks, setTasks] = useState(initialTasks);
+  const [currentView, setCurrentView] = useState('daily');
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(getTodayStr());
+
+
+  const handleUpdateProgress = (task, action, value) => {
+    setTasks(prev => prev.map(t => {
+      if (t.id !== task.id) return t;
+      const todayStr = getTodayStr();
+      
+      // Period Goals Logic (Directly update history)
+      if (task.recurrence?.mode === 'period_count' && action === 'period_add') {
+          // Simply mark today as 'done' or add to a counter if needed. 
+          // For simple frequency count, we just need an entry.
+          // If we want to allow multiple times a day to count towards weekly goal:
+          // We need a more complex history structure (date -> count). 
+          // For now, let's assume 1 check-in per day contributes to the goal.
+          return {
+              ...t,
+              history: { ...t.history, [todayStr]: true }
+          };
+      }
+
+
+      if (t.type === 'quantitative') {
+        const current = t.dailyProgress[todayStr]?.value || 0;
+        const newVal = Math.max(0, current + (value || 0));
+        const completedStatus = newVal >= t.dailyTarget;
+        return {
+          ...t,
+          dailyProgress: { ...t.dailyProgress, [todayStr]: { value: newVal, completed: completedStatus } },
+          history: { ...(t.history || {}), [todayStr]: completedStatus }
+        };
+      } else {
+        const newCompleted = !t.completed;
+        return { 
+          ...t, 
+          completed: newCompleted,
+          history: { ...(t.history || {}), [todayStr]: newCompleted }
+        };
+      }
+    }));
+  };
+
+
+  const handleSaveTask = (taskData) => {
+    const todayStr = getTodayStr();
+    const baseTask = {
+        ...taskData,
+        dailyTarget: taskData.dailyTarget || 1, 
+        unit: taskData.unit || '次',
+        stepValue: taskData.stepValue || 1,
+        dailyProgress: taskData.type === 'quantitative' ? (taskData.dailyProgress || { [todayStr]: { value: 0, completed: false } }) : {},
+        completed: taskData.type !== 'quantitative' ? false : taskData.completed,
+        history: taskData.history || {}
+    };
+
+
+    if (editingTask) {
+        setTasks(prev => prev.map(t => t.id === editingTask.id ? { ...baseTask, id: t.id } : t));
+    } else {
+        setTasks(prev => [...prev, { ...baseTask, id: generateId() }]);
+    }
+    setIsFormModalOpen(false);
+    setEditingTask(null);
+  };
+
+
+  const handleDeleteTask = (taskId) => {
+     if(window.confirm('確定要刪除此任務嗎？')) { 
+        setTasks(prev => prev.filter(t => t.id !== taskId));
+        setIsFormModalOpen(false);
+        setEditingTask(null);
+     }
+  };
+  
+  const handleCalendarDateSelect = (dateStr) => {
+      setSelectedDate(dateStr);
+      if(window.confirm(`要在 ${dateStr} 新增任務嗎？`)) {
+          setEditingTask(null);
+          setIsFormModalOpen(true);
+      }
+  };
+
+
+  // Group Tasks
+  // Filter 1: Daily Tasks (Fixed Time)
+  const dailyTasks = tasks.filter(t => t.frequency === 'daily' && t.recurrence?.mode !== 'period_count');
+  // Filter 2: Period Goals (Flexible)
+  const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
+
+
+  return (
+    <div className="bg-gray-50 min-h-screen font-sans flex flex-col md:flex-row">
+      
+      {/* Sidebar (Desktop) */}
+      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 h-screen sticky top-0">
+        <div className="p-6">
+           <h1 className="text-2xl font-black text-emerald-600 flex items-center gap-2">
+             <div className="w-8 h-8 bg-emerald-500 rounded-lg text-white flex items-center justify-center">C</div>
+             Cofit
+           </h1>
+        </div>
+        <nav className="flex-1 px-4 space-y-2">
+          {[{id: 'daily', label: '日記', icon: <BookOpen size={20}/>}, {id: 'calendar', label: '總覽', icon: <Grid size={20}/>}, {id: 'manage', label: '計畫管理', icon: <List size={20}/>}, {id: 'badges', label: '成就中心', icon: <Award size={20}/>}].map((item) => (
+             <div key={item.id} onClick={() => setCurrentView(item.id)} className={`p-3 rounded-xl flex items-center gap-3 font-bold cursor-pointer transition-colors ${currentView === item.id ? 'bg-emerald-50 text-emerald-600' : 'text-gray-500 hover:bg-gray-100'}`}>
+                {item.icon} {item.label}
+             </div>
+          ))}
+        </nav>
+      </aside>
+
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col min-w-0 relative">
+        <AppHeader 
+           currentView={currentView}
+           onViewChange={setCurrentView}
+           onOpenAddFlow={() => { setIsLibraryModalOpen(true); setIsFormModalOpen(false); setEditingTask(null); setSelectedDate(getTodayStr()); }}
+           onOpenBadges={() => setCurrentView('badges')}
+        />
+
+
+        <div className="flex-1 overflow-y-auto pb-24 md:pb-8">
+           {currentView === 'daily' && (
+               <div className="p-4 md:p-8 max-w-4xl mx-auto">
+                   <DashboardSummaryCard tasks={tasks} onOpenDetail={() => console.log('Open detail')} />
+
+
+                   {/* Section 1: Today's Schedule (Fixed) */}
+                   <div className="mb-8">
+                      <h3 className="text-gray-800 font-bold text-lg mb-4 flex items-center gap-2">
+                         <span className="w-1 h-5 bg-emerald-500 rounded-full"></span> 今日行程
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                         {dailyTasks.map(task => (
+                           <TaskCard key={task.id} task={task} onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }} onUpdate={handleUpdateProgress} />
+                         ))}
+                         {dailyTasks.length === 0 && <p className="text-gray-400 text-sm col-span-full">今日無固定行程。</p>}
+                      </div>
+                   </div>
+
+
+                   {/* Section 2: Period Goals (Flexible) */}
+                   {flexibleTasks.length > 0 && (
+                     <div className="mb-8">
+                        <h3 className="text-gray-800 font-bold text-lg mb-4 flex items-center gap-2">
+                           <span className="w-1 h-5 bg-amber-500 rounded-full"></span> 週期目標 (彈性)
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                           {flexibleTasks.map(task => (
+                             <TaskCard key={task.id} task={task} onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }} onUpdate={handleUpdateProgress} />
+                           ))}
+                        </div>
+                     </div>
+                   )}
+               </div>
+           )}
+           
+           {currentView === 'calendar' && (
+              <CalendarView tasks={tasks} onDateSelect={handleCalendarDateSelect} />
+           )}
+           
+           {currentView === 'manage' && (
+              <div className="p-4 md:p-8 max-w-4xl mx-auto">
+                 <h2 className="text-2xl font-black text-gray-800 mb-6">計畫總覽</h2>
+                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden divide-y divide-gray-100">
+                    {tasks.map(task => (
+                       <div key={task.id} onClick={() => { setEditingTask(task); setIsFormModalOpen(true); }} className="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50">
+                          <div className="flex items-center gap-4">
+                             <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${(CATEGORY_CONFIG[task.category] || CATEGORY_CONFIG['star']).bg}`}>
+                                <IconRenderer category={task.category} size={20} />
+                             </div>
+                             <div>
+                                <h4 className="font-bold text-gray-800">{task.title}</h4>
+                                <span className="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">
+                                    {task.recurrence?.mode === 'period_count' 
+                                        ? `${task.frequency === 'weekly' ? '每週' : '每月'} ${task.recurrence.periodTarget} 次` 
+                                        : (task.frequency === 'daily' ? '每天' : '特定日')}
+                                </span>
+                             </div>
+                          </div>
+                          <ChevronRight size={18} className="text-gray-300" />
+                       </div>
+                    ))}
+                 </div>
+              </div>
+           )}
+           
+           {/* Achievement View (Simplified) */}
+           {currentView === 'badges' && (
+              <div className="p-4 md:p-8 max-w-4xl mx-auto text-center py-20">
+                 <Award size={64} className="mx-auto text-yellow-400 mb-4" />
+                 <h2 className="text-2xl font-bold text-gray-800">成就中心</h2>
+                 <p className="text-gray-500">持續完成任務，解鎖更多徽章！</p>
+              </div>
+           )}
+        </div>
+      </main>
+
+
+      {/* Bottom Nav */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 pb-safe pt-2 px-2 z-40 flex justify-between items-end h-[80px] pb-4">
+        {[{id: 'manage', icon: <List/>, label: '計畫'}, {id: 'calendar', icon: <Grid/>, label: '總覽'}, {id: 'daily', icon: <BookOpen/>, label: '日記'}, {id: 'badges', icon: <Award/>, label: '成就'}, {id: 'user', icon: <User/>, label: '我的'}].map(item => (
+           <div key={item.id} onClick={() => setCurrentView(item.id)} className={`flex-1 flex flex-col items-center justify-center gap-1 cursor-pointer ${currentView === item.id ? 'text-emerald-600' : 'text-gray-400'}`}>
+              {item.icon} <span className="text-[10px] font-bold">{item.label}</span>
+           </div>
+        ))}
+      </div>
+
+
+      {/* Modals */}
+      <TaskFormModal isOpen={isFormModalOpen} onClose={() => setIsFormModalOpen(false)} initialData={editingTask} onSave={handleSaveTask} onDelete={handleDeleteTask} defaultDate={selectedDate} />
+      <TaskLibraryModal isOpen={isLibraryModalOpen} onClose={() => setIsLibraryModalOpen(false)} onSelectTask={(tpl) => { setTasks(prev => [...prev, { ...tpl, id: generateId(), dailyProgress: tpl.type === 'quantitative' ? {[getTodayStr()]: {value:0, completed:false}} : {}, completed: false, history: {}, subtasks: [], recurrence: { type: tpl.frequency, interval: 1 } }]); setIsLibraryModalOpen(false); }} onOpenCustomForm={() => { setIsLibraryModalOpen(false); setEditingTask(null); setIsFormModalOpen(true); }} />
+
+
+    </div>
+  );
+}

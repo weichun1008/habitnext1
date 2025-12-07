@@ -16,6 +16,8 @@ model User {
   id          String       @id @default(cuid())
   nickname    String
   phone       String       @unique
+  countryCode String?      // e.g., +886
+  password    String?      // Hashed password
   email       String?
   isActive    Boolean      @default(true)
   createdAt   DateTime     @default(now())
@@ -27,14 +29,28 @@ model User {
 // 專家與模板系統
 // ============================================
 
+
+model ExpertTitle {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  isActive  Boolean  @default(true) // For archiving without deleting
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  experts   Expert[]
+}
+
 model Expert {
   id          String       @id @default(cuid())
   name        String
-  title       String       // 職稱：醫師、營養師等
-  pin         String       // 登入 PIN 碼
+  title       String?      // Legacy field, keep for migration or fallback
+  titleId     String?
+  expertTitle ExpertTitle? @relation(fields: [titleId], references: [id])
+  email       String       @unique // Login ID
+  password    String       // Hashed password
   avatar      String?
   role        String       @default("expert")  // admin, expert, viewer
   isActive    Boolean      @default(true)
+  isApproved  Boolean      @default(false)     // Admin approval required for public features
   createdBy   String?      // 建立此帳號的管理員 ID
   createdAt   DateTime     @default(now())
   templates   Template[]
@@ -118,3 +134,23 @@ model TaskHistory {
   @@unique([taskId, date])
 }
 
+// ============================================
+// 官方習慣庫
+// ============================================
+
+model OfficialHabit {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  category    String   // health, fitness, nutrition, mental
+  difficulty  String   // EASY, MEDIUM, HARD
+  icon        String?  // Icon key or emoji
+  
+  // Default task configuration
+  taskType    String   @default("binary") // binary, quantitative, checklist
+  defaultConfig Json?  // { unit, stepValue, dailyTarget, frequency, recurrence, ... }
+  
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

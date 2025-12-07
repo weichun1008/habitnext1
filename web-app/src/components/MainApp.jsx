@@ -507,9 +507,10 @@ const MainApp = () => {
                                             assignment={group}
                                             tasks={group.tasks}
                                             onDelete={handleDeleteAssignment}
-                                            onTaskClick={handleTaskClick} // Actually toggle check but reusing handler name
+                                            onTaskClick={handleTaskClick}
                                             onTaskEdit={handleTaskClick}
                                             onTaskDelete={handleDeleteTask}
+                                            onUpdate={handleUpdateProgress}
                                         />
                                     ))}
 
@@ -518,10 +519,8 @@ const MainApp = () => {
                                         <TaskCard
                                             key={task.id}
                                             task={task}
-                                            onToggle={() => handleUpdateProgress(task, 'toggle')} // Ensure correct toggle logic
                                             onClick={() => handleTaskClick(task)}
-                                            onEdit={() => handleTaskClick(task)}
-                                            onDelete={() => handleDeleteTask(task.id)}
+                                            onUpdate={handleUpdateProgress}
                                         />
                                     ))}
                                 </div>

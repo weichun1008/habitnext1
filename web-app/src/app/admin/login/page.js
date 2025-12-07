@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Shield, User, Lock } from 'lucide-react';
+import { Shield, Mail, Lock } from 'lucide-react';
+import Link from 'next/link';
 
 export default function AdminLoginPage() {
     const router = useRouter();
-    const [name, setName] = useState('');
-    const [pin, setPin] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -17,10 +18,10 @@ export default function AdminLoginPage() {
         setError('');
 
         try {
-            const res = await fetch('/api/admin/auth', {
+            const res = await fetch('/api/admin/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, pin })
+                body: JSON.stringify({ email, password })
             });
 
             if (res.ok) {
@@ -57,36 +58,36 @@ export default function AdminLoginPage() {
                 </div>
 
                 <h1 className="admin-login-title">專家後台登入</h1>
-                <p className="admin-login-subtitle">請輸入您的姓名和 PIN 碼</p>
+                <p className="admin-login-subtitle">請輸入 Email 與密碼</p>
 
                 <form onSubmit={handleLogin}>
                     <div className="admin-form-group">
-                        <label className="admin-label">姓名</label>
+                        <label className="admin-label">Email</label>
                         <div style={{ position: 'relative' }}>
-                            <User size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#666' }} />
+                            <Mail size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#666' }} />
                             <input
-                                type="text"
+                                type="email"
                                 className="admin-input"
                                 style={{ paddingLeft: '44px' }}
-                                placeholder="輸入您的姓名"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                placeholder="name@example.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
                         </div>
                     </div>
 
                     <div className="admin-form-group">
-                        <label className="admin-label">PIN 碼</label>
+                        <label className="admin-label">密碼</label>
                         <div style={{ position: 'relative' }}>
                             <Lock size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#666' }} />
                             <input
                                 type="password"
                                 className="admin-input"
                                 style={{ paddingLeft: '44px' }}
-                                placeholder="輸入 4-6 位數 PIN 碼"
-                                value={pin}
-                                onChange={(e) => setPin(e.target.value)}
+                                placeholder="輸入密碼"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 required
                             />
                         </div>
@@ -114,16 +115,13 @@ export default function AdminLoginPage() {
                     >
                         {loading ? '登入中...' : '登入後台'}
                     </button>
-                </form>
 
-                <p style={{
-                    textAlign: 'center',
-                    marginTop: '24px',
-                    fontSize: '0.75rem',
-                    color: '#666'
-                }}>
-                    此後台僅供授權專家使用
-                </p>
+                    <div style={{ textAlign: 'center', marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #eee' }}>
+                        <Link href="/admin/register" style={{ fontSize: '0.9rem', color: '#666', textDecoration: 'none' }}>
+                            還沒有帳號？ <span style={{ color: '#10b981', fontWeight: 'bold' }}>立即申請</span>
+                        </Link>
+                    </div>
+                </form>
             </div>
         </div>
     );
