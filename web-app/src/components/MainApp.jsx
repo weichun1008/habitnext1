@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User } from 'lucide-react';
+import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, LogOut } from 'lucide-react';
 import AppHeader from './AppHeader';
 import TaskCard from './TaskCard';
 import TaskFormModal from './TaskFormModal';
 import TaskLibraryModal from './TaskLibraryModal';
 import DashboardSummaryCard from './DashboardSummaryCard';
-import DashboardDetailView from './DashboardDetailView';
+import HabitCalendar from './HabitCalendar';
 import TaskDetailModal from './TaskDetailModal';
 import LoginModal from './LoginModal';
 import { generateId, getTodayStr, isTaskDueToday } from '@/lib/utils';
@@ -132,6 +132,14 @@ const MainApp = () => {
             fetchTasks(userData.id);
             fetchAssignments(userData.id);
         }
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('habit_user');
+        setUser(null);
+        setTasks([]);
+        setAssignments([]);
+        setIsLoginModalOpen(true);
     };
 
     const handleUpdateProgress = async (task, action, value, subtaskId, dateStr = getTodayStr()) => {
@@ -362,6 +370,7 @@ const MainApp = () => {
                     onOpenBadges={() => setCurrentView('badges')}
                     onOpenExplore={() => setIsTemplateExplorerOpen(true)}
                     user={user}
+                    onLogout={handleLogout}
                     className="md:hidden" // Hide on desktop
                 />
 
@@ -426,13 +435,22 @@ const MainApp = () => {
                         </button>
                     </nav>
 
-                    <div className="p-4 border-t border-gray-100">
+                    <div className="p-4 border-t border-gray-100 space-y-2">
+                        <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-400 to-purple-400 flex items-center justify-center text-white font-bold text-sm">
+                                {user?.nickname?.[0] || user?.name?.[0] || 'U'}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="font-medium text-gray-800 truncate">{user?.nickname || user?.name || '使用者'}</p>
+                                <p className="text-xs text-gray-500 truncate">{user?.phone || user?.email || ''}</p>
+                            </div>
+                        </div>
                         <button
-                            onClick={() => { /* handle user profile/settings */ }}
-                            className="w-full flex items-center gap-3 p-3 rounded-xl text-left text-gray-600 hover:bg-gray-100 transition-colors"
+                            onClick={handleLogout}
+                            className="w-full flex items-center gap-3 p-3 rounded-xl text-left text-red-500 hover:bg-red-50 transition-colors"
                         >
-                            <User size={20} />
-                            {user?.name || '使用者'}
+                            <LogOut size={20} />
+                            登出
                         </button>
                     </div>
                 </aside>
@@ -478,7 +496,11 @@ const MainApp = () => {
                         )}
 
                         {currentView === 'dashboard_detail' && (
-                            <DashboardDetailView tasks={tasks} />
+                            <HabitCalendar
+                                tasks={tasks}
+                                onUpdate={handleUpdateProgress}
+                                onTaskClick={(task) => { setViewingTask(task); setIsDetailModalOpen(true); }}
+                            />
                         )}
 
                         {currentView === 'manage' && (

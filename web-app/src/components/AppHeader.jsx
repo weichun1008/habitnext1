@@ -1,21 +1,32 @@
 import React from 'react';
-import { Calendar, Award, Plus, X, BookOpen } from 'lucide-react';
+import { Calendar, Award, Plus, X, BookOpen, LogOut } from 'lucide-react';
 
-const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onOpenExplore, user, className }) => {
+const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onOpenExplore, user, onLogout, className }) => {
     const weekDays = ['一', '二', '三', '四', '五', '六', '日'];
 
     return (
         <div className={`bg-white sticky top-0 z-30 shadow-sm ${className || ''}`}>
             <div className="flex items-center justify-between px-4 py-3">
-                <div className="flex items-center gap-2 cursor-pointer" onClick={() => onViewChange('daily')}>
-                    <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden border border-gray-100 flex items-center justify-center">
-                        {user?.nickname ? (
-                            <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.nickname}`} alt="Avatar" className="w-full h-full" />
-                        ) : (
-                            <span className="text-xs text-gray-500 font-bold">{user?.name?.[0] || 'U'}</span>
-                        )}
+                <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => onViewChange('daily')}>
+                        <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden border border-gray-100 flex items-center justify-center">
+                            {user?.nickname ? (
+                                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.nickname}`} alt="Avatar" className="w-full h-full" />
+                            ) : (
+                                <span className="text-xs text-gray-500 font-bold">{user?.name?.[0] || 'U'}</span>
+                            )}
+                        </div>
+                        <span className="font-bold text-gray-800 text-sm md:text-base">{user?.nickname || user?.name || '訪客'}</span>
                     </div>
-                    <span className="font-bold text-gray-800 text-sm md:text-base">{user?.nickname || user?.name || '訪客'}</span>
+                    {onLogout && (
+                        <button
+                            onClick={onLogout}
+                            className="w-8 h-8 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg flex items-center justify-center transition-colors"
+                            title="登出"
+                        >
+                            <LogOut size={18} />
+                        </button>
+                    )}
                 </div>
 
                 {currentView === 'daily' ? (
