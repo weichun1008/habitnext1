@@ -14,6 +14,7 @@ import { generateId, getTodayStr, isTaskDueToday } from '@/lib/utils';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 import PlanGroup from './PlanGroup';
 import TemplateExplorer from './TemplateExplorer';
+import ProfileModal from './ProfileModal';
 
 const MainApp = () => {
     const [user, setUser] = useState(null);
@@ -27,6 +28,7 @@ const MainApp = () => {
     const [isTemplateExplorerOpen, setIsTemplateExplorerOpen] = useState(false);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
     console.log('MainApp Render:', { user, isTemplateExplorerOpen }); // Debug Log
 
@@ -371,6 +373,7 @@ const MainApp = () => {
                     onOpenExplore={() => setIsTemplateExplorerOpen(true)}
                     user={user}
                     onLogout={handleLogout}
+                    onOpenProfile={() => setIsProfileModalOpen(true)}
                     className="md:hidden" // Hide on desktop
                 />
 
@@ -436,7 +439,10 @@ const MainApp = () => {
                     </nav>
 
                     <div className="p-4 border-t border-gray-100 space-y-2">
-                        <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50">
+                        <button
+                            onClick={() => setIsProfileModalOpen(true)}
+                            className="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+                        >
                             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-400 to-purple-400 flex items-center justify-center text-white font-bold text-sm">
                                 {user?.nickname?.[0] || user?.name?.[0] || 'U'}
                             </div>
@@ -444,7 +450,7 @@ const MainApp = () => {
                                 <p className="font-medium text-gray-800 truncate">{user?.nickname || user?.name || '使用者'}</p>
                                 <p className="text-xs text-gray-500 truncate">{user?.phone || user?.email || ''}</p>
                             </div>
-                        </div>
+                        </button>
                         <button
                             onClick={handleLogout}
                             className="w-full flex items-center gap-3 p-3 rounded-xl text-left text-red-500 hover:bg-red-50 transition-colors"
@@ -599,6 +605,16 @@ const MainApp = () => {
             <LoginModal
                 isOpen={isLoginModalOpen}
                 onLogin={handleLogin}
+            />
+
+            <ProfileModal
+                isOpen={isProfileModalOpen}
+                onClose={() => setIsProfileModalOpen(false)}
+                user={user}
+                onUpdate={(updatedUser) => {
+                    setUser(updatedUser);
+                    localStorage.setItem('habit_user', JSON.stringify(updatedUser));
+                }}
             />
         </>
     );
