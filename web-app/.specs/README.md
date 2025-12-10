@@ -67,6 +67,10 @@ Prisma Schema 或資料結構
 | 003 | template_phase_system | 三層模板系統 |
 | 004 | habit_library | 習慣庫系統 |
 | 005 | recurrence_system | 重複週期系統 |
+| 006 | user_profile | 用戶個人資料 |
+| 007 | habit_calendar | 習慣日曆 |
+| 008 | client_habit_library | 客戶端習慣庫 |
+| - | MANUAL_TEST_CASES | 手動測試案例 |
 
 ---
 
