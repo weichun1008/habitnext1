@@ -20,11 +20,37 @@ describe('AnchorPicker', () => {
     expect(screen.queryByText(/你的習慣/)).not.toBeInTheDocument();
   });
 
-  it('always renders "生活時刻" section with the 15 curated moments', () => {
+  it('always renders "生活時刻" section with curated moments grouped by time of day', () => {
     render(<AnchorPicker value={null} onChange={() => {}} yourTasks={[]} />);
     expect(screen.getByText('生活時刻')).toBeInTheDocument();
+    // subsection headers exist
+    expect(screen.getByText('早晨')).toBeInTheDocument();
+    expect(screen.getByText('晚上')).toBeInTheDocument();
+    // specific items still present
     expect(screen.getByText('起床後')).toBeInTheDocument();
     expect(screen.getByText('睡前躺上床後')).toBeInTheDocument();
+  });
+
+  it('filters out quantitative habits from "你的習慣" (they are targets not anchors)', () => {
+    const mixedTasks = [
+      { id: 't1', title: '喝水 2000cc', isLocked: false, type: 'quantitative' },
+      { id: 't2', title: '冥想 10 分鐘', isLocked: false, type: 'quantitative' },
+      { id: 't3', title: '寫感恩日記',   isLocked: false, type: 'binary' },
+    ];
+    render(<AnchorPicker value={null} onChange={() => {}} yourTasks={mixedTasks} />);
+    expect(screen.getByText('寫感恩日記')).toBeInTheDocument();
+    expect(screen.queryByText('喝水 2000cc')).not.toBeInTheDocument();
+    expect(screen.queryByText('冥想 10 分鐘')).not.toBeInTheDocument();
+  });
+
+  it('filters out checklist habits from "你的習慣" (they are multi-step routines)', () => {
+    const tasks = [
+      { id: 't1', title: '晨間儀式', isLocked: false, type: 'checklist' },
+      { id: 't2', title: '寫日記',   isLocked: false, type: 'binary' },
+    ];
+    render(<AnchorPicker value={null} onChange={() => {}} yourTasks={tasks} />);
+    expect(screen.getByText('寫日記')).toBeInTheDocument();
+    expect(screen.queryByText('晨間儀式')).not.toBeInTheDocument();
   });
 
   it('calls onChange with the label when a curated moment is clicked', () => {
