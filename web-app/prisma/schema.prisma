@@ -98,6 +98,7 @@ model Task {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title        String
   details      String?
+  cue          String?  // 錨點，例「起床後」(BJ Fogg ABC anchor)
   type         String   // binary, quantitative, checklist
   category     String
   frequency    String   // daily, weekly, monthly (Display Group)
