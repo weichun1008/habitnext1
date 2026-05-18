@@ -1,0 +1,8 @@
+{
+  "_comment": "Maps existing HabitCategory.name strings to one of the 9 standard names in genesis-io.json. _unmapped is the fallback for any name not listed. Identity mappings are explicit so the intent is documented. Re-run scripts/audit-categories.js if the dev DB schema changes; new categories may need to be added.",
+  "_unmapped": "心靈",
+  "環境": "環境",
+  "運動": "運動",
+  "營養": "飲食",
+  "心理": "心靈"
+}
