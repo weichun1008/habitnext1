@@ -3,10 +3,11 @@ import { createPortal } from 'react-dom';
 import { X, ChevronLeft, ChevronRight, Clock, ChevronUp, ChevronDown, Trash2, Plus, Calendar, Check, Bell } from 'lucide-react';
 import IconRenderer from './IconRenderer';
 import LockedTaskAlert from './LockedTaskAlert';
+import AnchorPicker from './explore/AnchorPicker';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 import { generateId, getTodayStr, getNthWeekday } from '@/lib/utils';
 
-const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, defaultDate, templateMode = false }) => {
+const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, defaultDate, templateMode = false, yourTasks = [] }) => {
     const [mounted, setMounted] = useState(false);
     const [showLockedAlert, setShowLockedAlert] = useState(false);
 
@@ -16,7 +17,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
     }, []);
 
     const [formData, setFormData] = useState({
-        title: '', details: '', type: 'binary', category: 'star', frequency: 'daily',
+        title: '', details: '', cue: '', type: 'binary', category: 'star', frequency: 'daily',
         date: defaultDate || getTodayStr(), time: '09:00',
         dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
         recurrence: { type: 'daily', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3, dailyLimit: true },
@@ -39,6 +40,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                 }
                 setFormData({
                     ...initialData,
+                    cue: initialData.cue || '',
                     time: initialData.time || '09:00',
                     recurrence: {
                         type: 'daily', mode: 'specific_days', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3, dailyLimit: true,
@@ -50,7 +52,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                 });
             } else {
                 setFormData({
-                    title: '', details: '', type: 'binary', category: 'star', frequency: 'daily',
+                    title: '', details: '', cue: '', type: 'binary', category: 'star', frequency: 'daily',
                     date: defaultDate || getTodayStr(), time: '09:00',
                     dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
                     recurrence: { type: 'daily', mode: 'specific_days', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3, dailyLimit: true },
@@ -498,6 +500,31 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                             value={formData.details}
                             onChange={e => setFormData({ ...formData, details: e.target.value })}
                         />
+                    </div>
+
+                    {/* Anchor (cue) */}
+                    <div className="mt-4">
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                            錨點 <span className="text-xs font-medium text-gray-400">(選填，做習慣前的提示)</span>
+                        </label>
+                        <AnchorPicker
+                            value={formData.cue || null}
+                            onChange={(cue) => setFormData(f => ({ ...f, cue: cue || '' }))}
+                            yourTasks={yourTasks}
+                            excludeTaskId={initialData?.id}
+                        />
+                        {formData.cue && (
+                            <p className="text-xs text-gray-500 mt-2">
+                                目前錨點：<span className="font-medium text-gray-700">{formData.cue}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData(f => ({ ...f, cue: '' }))}
+                                    className="ml-2 text-xs text-emerald-600 hover:underline"
+                                >
+                                    清除
+                                </button>
+                            </p>
+                        )}
                     </div>
 
                 </div>
