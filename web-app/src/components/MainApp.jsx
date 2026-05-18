@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, LogOut } from 'lucide-react';
+import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, LogOut, Compass } from 'lucide-react';
 import AppHeader from './AppHeader';
 import TaskCard from './TaskCard';
 import TaskFormModal from './TaskFormModal';
@@ -393,6 +393,17 @@ const MainApp = () => {
                         >
                             <BookOpen size={20} />
                             探索計畫
+                        </button>
+
+                        <button
+                            onClick={() => {
+                                setEditingTask(null);
+                                setIsLibraryModalOpen(true);
+                            }}
+                            className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-4 rounded-2xl font-bold shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2 mb-4"
+                        >
+                            <Compass size={20} />
+                            探索習慣
                         </button>
 
                         <button
