@@ -41,7 +41,7 @@ export async function GET(request) {
         // Also return categories for filtering
         return NextResponse.json({
             habits: sortedHabits,
-            categories: categories.map(c => ({ id: c.id, name: c.name, color: c.color, order: c.order }))
+            categories: categories.map(c => ({ id: c.id, name: c.name, color: c.color, order: c.order, icon: c.icon }))
         });
 
     } catch (error) {

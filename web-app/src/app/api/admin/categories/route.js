@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { name, color } = body;
+        const { name, color, icon } = body;
 
         if (!name?.trim()) {
             return NextResponse.json({ error: '請輸入分類名稱' }, { status: 400 });
@@ -34,7 +34,8 @@ export async function POST(request) {
             data: {
                 name: name.trim(),
                 color: color || '#10B981', // Default emerald
-                order: (maxOrder?.order ?? 0) + 1
+                order: (maxOrder?.order ?? 0) + 1,
+                icon: icon || null
             }
         });
 

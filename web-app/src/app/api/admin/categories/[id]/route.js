@@ -6,12 +6,13 @@ export async function PUT(request, { params }) {
     try {
         const { id } = await params;
         const body = await request.json();
-        const { name, color, order } = body;
+        const { name, color, order, icon } = body;
 
         const updateData = {};
         if (name !== undefined) updateData.name = name.trim();
         if (color !== undefined) updateData.color = color;
         if (order !== undefined) updateData.order = order;
+        if (icon !== undefined) updateData.icon = icon;
 
         const category = await prisma.habitCategory.update({
             where: { id },
