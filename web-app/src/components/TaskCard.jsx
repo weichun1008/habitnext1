@@ -62,14 +62,15 @@ const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
                         <IconRenderer category={task.category} size={18} className={config.type === 'emoji' ? 'text-2xl' : ''} />
                     </div>
                     <div>
+                        {task.cue && (
+                            <p className="text-[11px] font-medium text-emerald-600 mb-0.5 flex items-center gap-1 leading-tight">
+                                <span>{task.cue}</span>
+                                <span className="text-gray-300">→</span>
+                            </p>
+                        )}
                         <h3 className={`font-bold text-sm ${isCompleted && !isQuant && !isPeriod ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
                             {task.title}
                         </h3>
-                        {task.cue && (
-                            <span className="inline-block text-[10px] font-medium text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full mt-0.5 mb-0.5">
-                                錨點：{task.cue}
-                            </span>
-                        )}
                         <p className="text-xs text-gray-400 line-clamp-1">
                             {isPeriod ? (task.frequency === 'weekly' ? '本週目標' : '本月目標') : (task.details || '無詳細說明')}
                         </p>

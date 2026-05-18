@@ -35,6 +35,9 @@ export async function PUT(request, { params }) {
         return NextResponse.json(habit);
     } catch (error) {
         console.error('Update habit error:', error);
+        if (error.code === 'P2002') {
+            return NextResponse.json({ error: '此習慣名稱已存在' }, { status: 409 });
+        }
         return NextResponse.json({ error: '更新習慣失敗' }, { status: 500 });
     }
 }

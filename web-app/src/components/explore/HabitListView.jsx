@@ -1,7 +1,7 @@
 "use client";
 
-import React from 'react';
-import { Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import IconRenderer from '../IconRenderer';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 
@@ -64,6 +64,8 @@ export default function HabitListView({
   onSelectHabit,
   emptyText,
 }) {
+  const [expandedId, setExpandedId] = useState(null);
+
   if (habits.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500">
@@ -72,64 +74,90 @@ export default function HabitListView({
     );
   }
 
+  const toggleExpand = (habitId) => {
+    setExpandedId(prev => prev === habitId ? null : habitId);
+  };
+
   return (
     <div className="space-y-3">
       {habits.map(habit => {
         const enabledDiffs = getEnabledDifficulties(habit);
         const currentDiff = selectedDifficulty[habit.id] || getDefaultDifficulty(habit);
         const config = CATEGORY_CONFIG[habit.category] || CATEGORY_CONFIG['star'];
+        const isExpanded = expandedId === habit.id;
 
         return (
-          <div key={habit.id} className="bg-white border border-gray-100 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-start">
-              <div className="flex items-center gap-3 flex-1">
+          <div
+            key={habit.id}
+            className={`bg-white border rounded-xl shadow-sm transition-all ${
+              isExpanded ? 'border-emerald-200 shadow-md' : 'border-gray-100 hover:shadow-md'
+            }`}
+          >
+            {/* Header — click to expand/collapse */}
+            <button
+              type="button"
+              onClick={() => toggleExpand(habit.id)}
+              className="w-full text-left p-4 flex items-start justify-between gap-3"
+            >
+              <div className="flex items-center gap-3 flex-1 min-w-0">
                 <div className={`${config.bg} p-2 rounded-xl flex-shrink-0`}>
                   <IconRenderer category={habit.category} size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="font-bold text-gray-800">{habit.name}</h4>
-                  {habit.description && (
-                    <p className="text-xs text-gray-400 line-clamp-2 mt-0.5">{habit.description}</p>
+                  {habit.description && !isExpanded && (
+                    <p className="text-xs text-gray-400 line-clamp-1 mt-0.5">{habit.description}</p>
                   )}
                 </div>
               </div>
-              <button
-                onClick={() => onSelectHabit(habit, currentDiff)}
-                className="flex items-center gap-1 text-sm text-white bg-emerald-500 px-3 py-1.5 rounded-full font-bold hover:bg-emerald-600 transition-colors flex-shrink-0 ml-2"
-              >
-                <Plus size={16} /> 新增
-              </button>
-            </div>
+              <div className="flex-shrink-0 text-gray-400">
+                {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+              </div>
+            </button>
 
-            {enabledDiffs.length > 1 && (
-              <div className="mt-3 pt-3 border-t border-gray-100">
-                <p className="text-xs text-gray-500 mb-2">選擇難度：</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {enabledDiffs.map(diff => {
-                    const isSelected = currentDiff === diff.key;
-                    const diffConfig = habit.difficulties[diff.key];
-                    const summary = summarizeDifficulty(diffConfig);
-                    return (
-                      <button
-                        key={diff.key}
-                        onClick={() => setSelectedDifficulty(prev => ({ ...prev, [habit.id]: diff.key }))}
-                        className="flex flex-col items-center gap-0.5 px-2 py-2 rounded-lg transition-colors"
-                        style={isSelected ? {
-                          backgroundColor: diff.color === 'emerald' ? '#10b981' : diff.color === 'amber' ? '#f59e0b' : '#ef4444',
-                          color: 'white'
-                        } : {
-                          backgroundColor: diff.color === 'emerald' ? '#ECFDF5' : diff.color === 'amber' ? '#FEF3C7' : '#FEE2E2',
-                          color: diff.color === 'emerald' ? '#047857' : diff.color === 'amber' ? '#B45309' : '#B91C1C',
-                        }}
-                      >
-                        <span className="text-xs font-bold">{diffConfig?.label || diff.label}</span>
-                        {summary && (
-                          <span className="text-[10px] leading-tight opacity-90 text-center">{summary}</span>
-                        )}
-                      </button>
-                    );
-                  })}
+            {/* Expanded body — full description, 3-tier comparison, add button */}
+            {isExpanded && (
+              <div className="px-4 pb-4 border-t border-gray-100 pt-3 space-y-3">
+                {habit.description && (
+                  <p className="text-sm text-gray-600 leading-relaxed">{habit.description}</p>
+                )}
+
+                <div>
+                  <p className="text-xs text-gray-500 mb-2">選擇難度：</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {enabledDiffs.map(diff => {
+                      const isSelected = currentDiff === diff.key;
+                      const diffConfig = habit.difficulties[diff.key];
+                      const summary = summarizeDifficulty(diffConfig);
+                      return (
+                        <button
+                          key={diff.key}
+                          onClick={() => setSelectedDifficulty(prev => ({ ...prev, [habit.id]: diff.key }))}
+                          className="flex flex-col items-center gap-0.5 px-2 py-2.5 rounded-lg transition-colors"
+                          style={isSelected ? {
+                            backgroundColor: diff.color === 'emerald' ? '#10b981' : diff.color === 'amber' ? '#f59e0b' : '#ef4444',
+                            color: 'white'
+                          } : {
+                            backgroundColor: diff.color === 'emerald' ? '#ECFDF5' : diff.color === 'amber' ? '#FEF3C7' : '#FEE2E2',
+                            color: diff.color === 'emerald' ? '#047857' : diff.color === 'amber' ? '#B45309' : '#B91C1C',
+                          }}
+                        >
+                          <span className="text-xs font-bold">{diffConfig?.label || diff.label}</span>
+                          {summary && (
+                            <span className="text-[10px] leading-tight opacity-90 text-center">{summary}</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
+
+                <button
+                  onClick={() => onSelectHabit(habit, currentDiff)}
+                  className="w-full flex items-center justify-center gap-1 text-sm text-white bg-emerald-500 px-3 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-colors"
+                >
+                  <Plus size={16} /> 加入此習慣
+                </button>
               </div>
             )}
           </div>

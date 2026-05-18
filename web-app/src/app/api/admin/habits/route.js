@@ -56,6 +56,9 @@ export async function POST(request) {
         return NextResponse.json(habit);
     } catch (error) {
         console.error('Create habit error:', error);
+        if (error.code === 'P2002') {
+            return NextResponse.json({ error: '此習慣名稱已存在' }, { status: 409 });
+        }
         return NextResponse.json({ error: '建立習慣失敗' }, { status: 500 });
     }
 }
