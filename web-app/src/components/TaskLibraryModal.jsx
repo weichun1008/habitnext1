@@ -90,7 +90,7 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, you
         const { habit, diffKey } = pendingHabit;
         const config = habit.difficulties[diffKey];
         const task = {
-            title: config.label || habit.name,
+            title: habit.name,
             details: habit.description || '',
             cue: cue || null,
             type: config.type || 'binary',
