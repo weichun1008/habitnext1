@@ -1,0 +1,11 @@
+[
+  { "name": "基因與腸道", "order": 1, "icon": "Dna",          "color": "#6366F1" },
+  { "name": "環境",       "order": 2, "icon": "Leaf",         "color": "#10B981" },
+  { "name": "飲食",       "order": 3, "icon": "Utensils",     "color": "#F97316" },
+  { "name": "運動",       "order": 4, "icon": "Dumbbell",     "color": "#EF4444" },
+  { "name": "壓力與睡眠", "order": 5, "icon": "Moon",         "color": "#8B5CF6" },
+  { "name": "社交互動",   "order": 6, "icon": "Users",        "color": "#F43F5E" },
+  { "name": "心靈",       "order": 7, "icon": "Sparkles",     "color": "#0EA5E9" },
+  { "name": "認知與智慧", "order": 8, "icon": "BrainCircuit", "color": "#3B82F6" },
+  { "name": "職涯與平衡", "order": 9, "icon": "Briefcase",    "color": "#64748B" }
+]
