@@ -42,9 +42,9 @@
     "icon": null,
     "isActive": true,
     "difficulties": {
-      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,3,5], "weekMode": "flexible", "periodTarget": 3 } },
-      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,2,3,4,5], "weekMode": "flexible", "periodTarget": 5 } },
-      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } }
+      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "monthly", "interval": 12, "endType": "never", "periodTarget": 1 } },
+      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "monthly", "interval": 6, "endType": "never", "periodTarget": 1 } },
+      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "monthly", "interval": 3, "endType": "never", "periodTarget": 1 } }
     }
   },
   {
@@ -54,9 +54,9 @@
     "icon": null,
     "isActive": true,
     "difficulties": {
-      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,3,5], "weekMode": "flexible", "periodTarget": 3 } },
-      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,2,3,4,5], "weekMode": "flexible", "periodTarget": 5 } },
-      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } }
+      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "monthly", "interval": 12, "endType": "never", "periodTarget": 1 } },
+      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "monthly", "interval": 6, "endType": "never", "periodTarget": 1 } },
+      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "monthly", "interval": 3, "endType": "never", "periodTarget": 1 } }
     }
   },
   {
@@ -174,9 +174,9 @@
     "icon": null,
     "isActive": true,
     "difficulties": {
-      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,3,5], "weekMode": "flexible", "periodTarget": 3 } },
-      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,2,3,4,5], "weekMode": "flexible", "periodTarget": 5 } },
-      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } }
+      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 1 } },
+      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 2 } },
+      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 3 } }
     }
   },
   {
@@ -318,9 +318,9 @@
     "icon": null,
     "isActive": true,
     "difficulties": {
-      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,3,5], "weekMode": "flexible", "periodTarget": 3 } },
-      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,2,3,4,5], "weekMode": "flexible", "periodTarget": 5 } },
-      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } }
+      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 1 } },
+      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 2 } },
+      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 3 } }
     }
   },
   {
@@ -402,9 +402,9 @@
     "icon": null,
     "isActive": true,
     "difficulties": {
-      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,3,5], "weekMode": "flexible", "periodTarget": 3 } },
-      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,2,3,4,5], "weekMode": "flexible", "periodTarget": 5 } },
-      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } }
+      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 2 } },
+      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 3 } },
+      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 5 } }
     }
   },
   {
@@ -438,9 +438,9 @@
     "icon": null,
     "isActive": true,
     "difficulties": {
-      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,3,5], "weekMode": "flexible", "periodTarget": 3 } },
-      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,2,3,4,5], "weekMode": "flexible", "periodTarget": 5 } },
-      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } }
+      "beginner":     { "enabled": true, "label": "入門", "type": "quantitative", "dailyTarget": 20, "unit": "秒", "stepValue": 5, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } },
+      "intermediate": { "enabled": true, "label": "進階", "type": "quantitative", "dailyTarget": 45, "unit": "秒", "stepValue": 5, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } },
+      "challenge":    { "enabled": true, "label": "挑戰", "type": "quantitative", "dailyTarget": 60, "unit": "秒", "stepValue": 5, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } }
     }
   },
   {
@@ -510,7 +510,7 @@
     "icon": null,
     "isActive": true,
     "difficulties": {
-      "beginner":     { "enabled": true, "label": "入門", "type": "quantitative", "dailyTarget": 6, "unit": "小時", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } },
+      "beginner":     { "enabled": true, "label": "入門", "type": "quantitative", "dailyTarget": 7, "unit": "小時", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } },
       "intermediate": { "enabled": true, "label": "進階", "type": "quantitative", "dailyTarget": 7, "unit": "小時", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } },
       "challenge":    { "enabled": true, "label": "挑戰", "type": "quantitative", "dailyTarget": 8, "unit": "小時", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } }
     }
@@ -618,9 +618,9 @@
     "icon": null,
     "isActive": true,
     "difficulties": {
-      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,3,5], "weekMode": "flexible", "periodTarget": 3 } },
-      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,2,3,4,5], "weekMode": "flexible", "periodTarget": 5 } },
-      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } }
+      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 1 } },
+      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 2 } },
+      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 3 } }
     }
   },
   {
@@ -817,7 +817,7 @@
   },
   {
     "name": "每天對著鏡子自我肯定",
-    "description": "正向自我宣言可重塑內在敘事，逐漸建立穩定的自我價值感。",
+    "description": "研究顯示自我肯定對某些情境有助益；對低自尊者可能反效果。可作為自我覺察練習，效果因人而異。",
     "category": "心靈",
     "icon": null,
     "isActive": true,
@@ -1062,9 +1062,9 @@
     "icon": null,
     "isActive": true,
     "difficulties": {
-      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,3,5], "weekMode": "flexible", "periodTarget": 3 } },
-      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [1,2,3,4,5], "weekMode": "flexible", "periodTarget": 5 } },
-      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 } }
+      "beginner":     { "enabled": true, "label": "入門", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 1 } },
+      "intermediate": { "enabled": true, "label": "進階", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 2 } },
+      "challenge":    { "enabled": true, "label": "挑戰", "type": "binary", "dailyTarget": 1, "unit": "次", "stepValue": 1, "subtasks": [], "recurrence": { "type": "weekly", "interval": 1, "endType": "never", "weekDays": [], "weekMode": "flexible", "periodTarget": 3 } }
     }
   },
   {
