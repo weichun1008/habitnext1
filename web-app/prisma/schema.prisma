@@ -164,7 +164,7 @@ model PlanCategory {
 
 model OfficialHabit {
   id          String   @id @default(cuid())
-  name        String   // 習慣集合名稱，如「每日喝水」
+  name        String   @unique  // 習慣集合名稱，如「每日喝水」（unique for idempotent seed upsert）
   description String?
   category    String   // Reference to category name
   icon        String?  // Icon key or emoji
