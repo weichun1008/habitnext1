@@ -596,6 +596,7 @@ const MainApp = () => {
                 onDelete={handleDeleteTask}
                 initialData={editingTask}
                 defaultDate={selectedDate}
+                yourTasks={tasks}
             />
 
             <TaskDetailModal
@@ -611,6 +612,7 @@ const MainApp = () => {
                 onClose={() => setIsLibraryModalOpen(false)}
                 onSelectTask={(task) => { handleSaveTask({ ...task, id: generateId() }); setIsLibraryModalOpen(false); }}
                 onOpenCustomForm={() => { setIsLibraryModalOpen(false); setIsFormModalOpen(true); }}
+                yourTasks={tasks}
             />
 
             <LoginModal
