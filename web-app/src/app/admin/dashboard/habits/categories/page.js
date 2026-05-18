@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, X, Save, ArrowLeft, GripVertical } from 'lucide-react';
 import Link from 'next/link';
+import { SEEDED_ICON_NAMES } from '@/components/explore/LUCIDE_ICONS';
+import CategoryIcon from '@/components/explore/CategoryIcon';
 
 const COLORS = [
     { value: '#10B981', label: '翠綠' },
@@ -19,7 +21,7 @@ export default function CategoriesPage() {
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingCategory, setEditingCategory] = useState(null);
-    const [formData, setFormData] = useState({ name: '', color: '#10B981' });
+    const [formData, setFormData] = useState({ name: '', color: '#10B981', icon: '' });
 
     useEffect(() => {
         fetchCategories();
@@ -42,13 +44,13 @@ export default function CategoriesPage() {
 
     const openAddModal = () => {
         setEditingCategory(null);
-        setFormData({ name: '', color: '#10B981' });
+        setFormData({ name: '', color: '#10B981', icon: '' });
         setIsModalOpen(true);
     };
 
     const openEditModal = (cat) => {
         setEditingCategory(cat);
-        setFormData({ name: cat.name, color: cat.color || '#10B981' });
+        setFormData({ name: cat.name, color: cat.color || '#10B981', icon: cat.icon || '' });
         setIsModalOpen(true);
     };
 
@@ -66,7 +68,11 @@ export default function CategoriesPage() {
             const res = await fetch(url, {
                 method: editingCategory ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({
+                    name: formData.name,
+                    color: formData.color,
+                    icon: formData.icon || null,
+                })
             });
 
             if (res.ok) {
@@ -136,10 +142,17 @@ export default function CategoriesPage() {
                             >
                                 <div className="flex items-center gap-4">
                                     <div
-                                        className="w-8 h-8 rounded-lg"
+                                        className="w-8 h-8 rounded-lg flex items-center justify-center"
                                         style={{ backgroundColor: cat.color || '#10B981' }}
-                                    />
+                                    >
+                                        {cat.icon && (
+                                            <CategoryIcon name={cat.icon} size={18} style={{ color: '#fff' }} />
+                                        )}
+                                    </div>
                                     <span className="font-medium text-white">{cat.name}</span>
+                                    {cat.icon && (
+                                        <span className="text-xs text-gray-500">{cat.icon}</span>
+                                    )}
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <button
@@ -204,6 +217,33 @@ export default function CategoriesPage() {
                                         />
                                     ))}
                                 </div>
+                            </div>
+
+                            <div>
+                                <label className="admin-label">圖示 (Lucide)</label>
+                                <div className="grid grid-cols-5 gap-2">
+                                    {SEEDED_ICON_NAMES.map(name => (
+                                        <button
+                                            type="button"
+                                            key={name}
+                                            onClick={() => setFormData(f => ({ ...f, icon: name }))}
+                                            className={`flex items-center justify-center p-2 rounded-lg border transition-colors ${formData.icon === name
+                                                    ? 'border-emerald-500 bg-emerald-500/10 text-white'
+                                                    : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/30'
+                                                }`}
+                                            title={name}
+                                        >
+                                            <CategoryIcon name={name} size={20} />
+                                        </button>
+                                    ))}
+                                </div>
+                                <input
+                                    type="text"
+                                    className="admin-input mt-2"
+                                    placeholder="或手動輸入 Lucide 圖示名"
+                                    value={formData.icon}
+                                    onChange={(e) => setFormData(f => ({ ...f, icon: e.target.value }))}
+                                />
                             </div>
                         </div>
 
