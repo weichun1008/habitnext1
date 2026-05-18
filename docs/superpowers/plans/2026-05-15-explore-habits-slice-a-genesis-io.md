@@ -63,22 +63,26 @@ model HabitCategory {
 }
 ```
 
-- [ ] **Step 2: Generate migration**
+- [ ] **Step 2: Push schema to DB**
 
-Run from `web-app/`:
+This project uses `prisma db push` (not `migrate dev`) — see `package.json` build script. No `prisma/migrations/` folder is maintained. Run from `web-app/`:
+
 ```bash
-npx prisma migrate dev --name add_habit_category_icon
+npx prisma db push
 ```
-Expected: new file `prisma/migrations/<timestamp>_add_habit_category_icon/migration.sql` containing `ALTER TABLE "HabitCategory" ADD COLUMN "icon" TEXT;`
+Expected output: `Your database is now in sync with your Prisma schema.` and a confirmation that the `icon` column was added. Since `icon` is nullable, no data loss prompt should appear.
 
-- [ ] **Step 3: Verify Prisma client regenerated**
+- [ ] **Step 3: Regenerate Prisma client**
 
-`prisma migrate dev` auto-regenerates the client. Confirm by inspecting `node_modules/@prisma/client/index.d.ts` or simply running `npx prisma generate`.
+```bash
+npx prisma generate
+```
+Expected: `Generated Prisma Client (v5.x.x) to ./node_modules/@prisma/client`.
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add prisma/schema.prisma prisma/migrations/
+git add prisma/schema.prisma
 git commit -m "feat(db): add HabitCategory.icon for Lucide icon name"
 ```
 
