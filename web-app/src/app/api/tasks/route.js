@@ -38,6 +38,7 @@ export async function POST(request) {
                 userId,
                 title: taskData.title,
                 details: taskData.details,
+                cue: taskData.cue?.trim() || null,
                 type: taskData.type,
                 category: taskData.category,
                 frequency: taskData.frequency,

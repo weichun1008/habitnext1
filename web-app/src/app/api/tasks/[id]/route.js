@@ -14,6 +14,7 @@ export async function PUT(request, { params }) {
             data: {
                 title: taskData.title,
                 details: taskData.details,
+                cue: taskData.cue?.trim() || null,
                 type: taskData.type,
                 category: taskData.category,
                 frequency: taskData.frequency,
