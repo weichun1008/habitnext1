@@ -62,6 +62,11 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
                             <IconRenderer category={task.category} size={40} className={config.type === 'emoji' ? 'text-5xl' : ''} />
                         </div>
                         <h2 className="text-2xl font-black text-gray-800 text-center mb-2">{task.title}</h2>
+                        {task.cue && (
+                            <span className="inline-block text-xs font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full mb-2">
+                                錨點：{task.cue}
+                            </span>
+                        )}
                         <p className="text-gray-500 text-center text-sm px-4">{task.details || '這個習慣沒有詳細說明，但持續做就對了！'}</p>
                     </div>
 

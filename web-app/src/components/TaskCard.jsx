@@ -65,6 +65,11 @@ const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
                         <h3 className={`font-bold text-sm ${isCompleted && !isQuant && !isPeriod ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
                             {task.title}
                         </h3>
+                        {task.cue && (
+                            <span className="inline-block text-[10px] font-medium text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full mt-0.5 mb-0.5">
+                                錨點：{task.cue}
+                            </span>
+                        )}
                         <p className="text-xs text-gray-400 line-clamp-1">
                             {isPeriod ? (task.frequency === 'weekly' ? '本週目標' : '本月目標') : (task.details || '無詳細說明')}
                         </p>
