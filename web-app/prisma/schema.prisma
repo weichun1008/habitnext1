@@ -133,8 +133,9 @@ model TaskHistory {
   task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
   date      String   // YYYY-MM-DD
   completed Boolean  @default(false)
-  value     Int      @default(0) // For quantitative or period count
-  
+  value     Int      @default(0) // For quantitative or period count; also count of true subtaskCompletions
+  subtaskCompletions Json?   // { [subtaskId]: boolean } — per-date checklist state
+
   @@unique([taskId, date])
 }
 
