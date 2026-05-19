@@ -1,0 +1,1013 @@
+[
+  {
+    "name": "雛菊型小課程",
+    "description": "你像雛菊一樣穩定、日常、自然且平衡。大多數時候沒有特別明顯的不適，但這不代表不需要照顧自己。對你來說，真正影響狀態的，往往不是單一症狀，而是睡眠、壓力、飲食、活動量與私密處照護等日常累積。",
+    "category": "daisy",
+    "isPublic": true,
+    "startDateType": "user_choice",
+    "tasks": {
+      "version": "2.0",
+      "phases": [
+        {
+          "id": "L1",
+          "name": "L1 入門 — 微習慣起步",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "早上喝兩大口水（200cc）",
+              "details": "起床後補水，喚醒代謝與循環。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            },
+            {
+              "title": "上完廁所後伸展 10 分鐘",
+              "details": "晨間伸展提升一天活動度與循環。",
+              "type": "binary",
+              "category": "運動",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            },
+            {
+              "title": "第一餐吃完後吃保健品",
+              "details": "餐後配合食物吸收率更高。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "吃完早餐後",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            }
+          ]
+        },
+        {
+          "id": "L2",
+          "name": "L2 進階 — 主動行動",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "每餐前先喝一杯水",
+              "details": "餐前補水有助消化與飽足感。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "before_breakfast", "label": "早餐前", "addedAt": "2026-05-19" },
+                { "id": "before_lunch", "label": "午餐前", "addedAt": "2026-05-19" },
+                { "id": "before_dinner", "label": "晚餐前", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐前",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            },
+            {
+              "title": "飯後不立刻坐下，先站著或慢慢走動 10 分鐘",
+              "details": "飯後輕度活動有助血糖穩定。",
+              "type": "binary",
+              "category": "運動",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐後",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            },
+            {
+              "title": "把鎂單獨移到睡前",
+              "details": "鎂在睡前單獨補充有助放鬆與睡眠。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            }
+          ]
+        },
+        {
+          "id": "L3",
+          "name": "L3 整合 — 累積生活節奏",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "下午喝水 500cc",
+              "details": "下午補水避免代謝下滑與疲勞。",
+              "type": "quantitative",
+              "category": "飲食",
+              "dailyTarget": 500,
+              "unit": "cc",
+              "stepValue": 100,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐後",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            },
+            {
+              "title": "每天累積一段 10 分鐘的輕度走動",
+              "details": "輕度活動累積有助維持代謝。",
+              "type": "binary",
+              "category": "運動",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐後",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            },
+            {
+              "title": "把益生菌移到早上空腹時吃",
+              "details": "空腹補益生菌存活率較高。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            }
+          ]
+        },
+        {
+          "id": "L4",
+          "name": "L4 完整 — 全方位整合",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "分三個時間點補水：早上、下午、晚上各 500cc",
+              "details": "分段補水穩定全日水合狀態。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "morning", "label": "早上", "addedAt": "2026-05-19" },
+                { "id": "afternoon", "label": "下午", "addedAt": "2026-05-19" },
+                { "id": "evening", "label": "晚上", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            },
+            {
+              "title": "建立每天固定的 30 分鐘身體活動時間",
+              "details": "固定活動時間養成長期習慣。",
+              "type": "quantitative",
+              "category": "運動",
+              "dailyTarget": 30,
+              "unit": "分鐘",
+              "stepValue": 5,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "下班離開工作場所後",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            },
+            {
+              "title": "起床空腹（蔓越莓益生菌）、飯後（薑黃＋葉酸鐵）、睡前（鎂）",
+              "details": "三時段分配最大化保健品吸收。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "fasting", "label": "空腹", "addedAt": "2026-05-19" },
+                { "id": "after_meal", "label": "飯後", "addedAt": "2026-05-19" },
+                { "id": "before_bed", "label": "睡前", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個穩定照顧自己的人"
+            }
+          ]
+        }
+      ],
+      "menstrualPhase": {
+        "tasks": [
+          {
+            "title": "飯後散步 10 分鐘",
+            "details": "輕度活動緩解經期不適。",
+            "type": "binary",
+            "category": "運動",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "午餐後",
+            "defaultIdentity": "我是個穩定照顧自己的人"
+          },
+          {
+            "title": "多喝溫水（避免冰飲）",
+            "details": "溫水有助暖身與循環。",
+            "type": "binary",
+            "category": "飲食",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "午餐後",
+            "defaultIdentity": "我是個穩定照顧自己的人"
+          },
+          {
+            "title": "早睡 30 分鐘",
+            "details": "經期多休息有助恢復。",
+            "type": "binary",
+            "category": "壓力與睡眠",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "睡前躺上床後",
+            "defaultIdentity": "我是個穩定照顧自己的人"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "玫瑰型小課程",
+    "description": "你像玫瑰一樣有盛開與含苞的節奏，也帶著敏感與起伏。你的身體對週期變化比較敏銳，尤其在經前或黃體期，情緒、食慾、水腫、疲倦等感受可能會更明顯。對你來說，照顧重點不是一成不變，而是跟著週期提前調整。",
+    "category": "rose",
+    "isPublic": true,
+    "startDateType": "user_choice",
+    "tasks": {
+      "version": "2.0",
+      "phases": [
+        {
+          "id": "L1",
+          "name": "L1 入門 — 微習慣起步",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "每餐都要有一份蛋白質",
+              "details": "蛋白質穩定血糖與情緒。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "breakfast", "label": "早餐", "addedAt": "2026-05-19" },
+                { "id": "lunch", "label": "午餐", "addedAt": "2026-05-19" },
+                { "id": "dinner", "label": "晚餐", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "睡前做 2 分鐘深呼吸（4-7-8）",
+              "details": "深呼吸啟動副交感放鬆。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "第一餐吃完後吃保健品",
+              "details": "餐後配合食物吸收率更高。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "吃完早餐後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            }
+          ]
+        },
+        {
+          "id": "L2",
+          "name": "L2 進階 — 主動行動",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "每餐先吃蛋白質和蔬菜，再吃主食",
+              "details": "進食順序平緩血糖反應。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "breakfast", "label": "早餐", "addedAt": "2026-05-19" },
+                { "id": "lunch", "label": "午餐", "addedAt": "2026-05-19" },
+                { "id": "dinner", "label": "晚餐", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "睡前 30 分鐘放下手機，做一件讓自己真正放鬆的事",
+              "details": "減少藍光提升入睡品質。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "把鎂單獨移到睡前",
+              "details": "鎂在睡前單獨補充有助放鬆與睡眠。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            }
+          ]
+        },
+        {
+          "id": "L3",
+          "name": "L3 整合 — 累積生活節奏",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "減少高糖高鹽的加工食品，用原型食物替代",
+              "details": "原型食物降低水腫與情緒波動。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐前",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "每天找一個 5 分鐘什麼都不做的時間",
+              "details": "短暫留白恢復神經系統。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午間休息時",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "把益生菌移到早上空腹時吃",
+              "details": "空腹補益生菌存活率較高。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            }
+          ]
+        },
+        {
+          "id": "L4",
+          "name": "L4 完整 — 全方位整合",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "建立穩定的飲食模式，每餐都有蛋白質、蔬菜、原型主食",
+              "details": "穩定飲食結構支持週期平衡。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "breakfast", "label": "早餐", "addedAt": "2026-05-19" },
+                { "id": "lunch", "label": "午餐", "addedAt": "2026-05-19" },
+                { "id": "dinner", "label": "晚餐", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "建立穩定的壓力釋放習慣，找到最適合自己的放鬆方式",
+              "details": "長期壓力管理穩定荷爾蒙。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "下班離開工作場所後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "起床空腹（蔓越莓益生菌）、飯後（薑黃＋葉酸鐵）、睡前（鎂）",
+              "details": "三時段分配最大化保健品吸收。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "fasting", "label": "空腹", "addedAt": "2026-05-19" },
+                { "id": "after_meal", "label": "飯後", "addedAt": "2026-05-19" },
+                { "id": "before_bed", "label": "睡前", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            }
+          ]
+        }
+      ],
+      "menstrualPhase": {
+        "tasks": [
+          {
+            "title": "做 5 分鐘溫和伸展（貓牛式或兒童式）",
+            "details": "溫和伸展緩解經期緊繃。",
+            "type": "binary",
+            "category": "運動",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "睡前躺上床後",
+            "defaultIdentity": "我是個照顧週期身體的人"
+          },
+          {
+            "title": "避免高鹽食物（水腫管理）",
+            "details": "降鹽分減少經期水腫。",
+            "type": "binary",
+            "category": "飲食",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "午餐前",
+            "defaultIdentity": "我是個照顧週期身體的人"
+          },
+          {
+            "title": "不安排高壓會議（情緒緩衝）",
+            "details": "減少壓力源穩定情緒。",
+            "type": "binary",
+            "category": "壓力與睡眠",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "開電腦／開始工作前",
+            "defaultIdentity": "我是個照顧週期身體的人"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "蘭花型小課程",
+    "description": "你像蘭花一樣對環境變化比較敏感，需要穩定以及規律來支撐。當作息混亂、壓力來襲、睡眠不足，或生活型態長期不固定時，月經節律就可能受到影響。你的核心不是單一症狀，而是整體生理節律需要重新被檢視並安定下來。",
+    "category": "orchid",
+    "isPublic": true,
+    "startDateType": "user_choice",
+    "tasks": {
+      "version": "2.0",
+      "phases": [
+        {
+          "id": "L1",
+          "name": "L1 入門 — 微習慣起步",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "選定一個固定的吃午餐時間",
+              "details": "固定餐時間穩定生理時鐘。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐前",
+              "defaultIdentity": "我是個重視生活節律的人"
+            },
+            {
+              "title": "設定一個固定的「準備睡覺」提醒（比目標睡眠時間提前 30 分鐘）",
+              "details": "睡前預備有助節律穩定。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個重視生活節律的人"
+            },
+            {
+              "title": "第一餐吃完後吃保健品",
+              "details": "餐後配合食物吸收率更高。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "吃完早餐後",
+              "defaultIdentity": "我是個重視生活節律的人"
+            }
+          ]
+        },
+        {
+          "id": "L2",
+          "name": "L2 進階 — 主動行動",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "午餐定時之外，早餐也不要跳過",
+              "details": "規律早餐穩定整日代謝。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "breakfast", "label": "早餐", "addedAt": "2026-05-19" },
+                { "id": "lunch", "label": "午餐", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐前",
+              "defaultIdentity": "我是個重視生活節律的人"
+            },
+            {
+              "title": "睡前進行 5 分鐘睡前伸展（肩頸放鬆或腿部拉伸）",
+              "details": "睡前伸展放鬆肌肉與神經。",
+              "type": "binary",
+              "category": "運動",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個重視生活節律的人"
+            },
+            {
+              "title": "把鎂單獨移到睡前",
+              "details": "鎂在睡前單獨補充有助放鬆與睡眠。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個重視生活節律的人"
+            }
+          ]
+        },
+        {
+          "id": "L3",
+          "name": "L3 整合 — 累積生活節奏",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "三餐定時，避免因為忙碌或壓力跳過正餐後暴食",
+              "details": "規律三餐避免代償暴食。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "breakfast", "label": "早餐", "addedAt": "2026-05-19" },
+                { "id": "lunch", "label": "午餐", "addedAt": "2026-05-19" },
+                { "id": "dinner", "label": "晚餐", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐前",
+              "defaultIdentity": "我是個重視生活節律的人"
+            },
+            {
+              "title": "就寢時間固定，起床時間也設成固定",
+              "details": "固定起床時間穩定生理時鐘。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個重視生活節律的人"
+            },
+            {
+              "title": "把益生菌移到早上空腹時吃",
+              "details": "空腹補益生菌存活率較高。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個重視生活節律的人"
+            }
+          ]
+        },
+        {
+          "id": "L4",
+          "name": "L4 完整 — 全方位整合",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "穩定三餐節奏，確保每餐有足夠的蛋白質支撐身體的調節",
+              "details": "蛋白質支撐荷爾蒙合成。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "breakfast", "label": "早餐", "addedAt": "2026-05-19" },
+                { "id": "lunch", "label": "午餐", "addedAt": "2026-05-19" },
+                { "id": "dinner", "label": "晚餐", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐後",
+              "defaultIdentity": "我是個重視生活節律的人"
+            },
+            {
+              "title": "即使週末也維持大致相同的就寢和起床時間（前後不超過 1 小時）",
+              "details": "週末不打亂生理時鐘。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個重視生活節律的人"
+            },
+            {
+              "title": "起床空腹（蔓越莓益生菌）、飯後（薑黃＋葉酸鐵）、睡前（鎂）",
+              "details": "三時段分配最大化保健品吸收。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "fasting", "label": "空腹", "addedAt": "2026-05-19" },
+                { "id": "after_meal", "label": "飯後", "addedAt": "2026-05-19" },
+                { "id": "before_bed", "label": "睡前", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個重視生活節律的人"
+            }
+          ]
+        }
+      ],
+      "menstrualPhase": {
+        "tasks": [
+          {
+            "title": "熱敷小腹 10 分鐘",
+            "details": "熱敷緩解經期不適。",
+            "type": "binary",
+            "category": "壓力與睡眠",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "睡前躺上床後",
+            "defaultIdentity": "我是個重視生活節律的人"
+          },
+          {
+            "title": "提早 30 分鐘睡覺",
+            "details": "經期多休息支援恢復。",
+            "type": "binary",
+            "category": "壓力與睡眠",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "睡前躺上床後",
+            "defaultIdentity": "我是個重視生活節律的人"
+          },
+          {
+            "title": "喝一杯熱薑茶（暖宮）",
+            "details": "暖性飲品促進循環。",
+            "type": "binary",
+            "category": "飲食",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "午餐後",
+            "defaultIdentity": "我是個重視生活節律的人"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "向日葵型小課程",
+    "description": "你像向日葵一樣會隨著能量消長與代謝節律而轉動。當血糖波動大、容易餓、飯後想睡、體重增加或腹部脂肪上升時，可能代表身體在代謝調節上需要更多支持。這類型也可能與女性荷爾蒙平衡及 PCOS/PMOS（多囊性卵巢症候群）傾向有關。",
+    "category": "sunflower",
+    "isPublic": true,
+    "startDateType": "user_choice",
+    "tasks": {
+      "version": "2.0",
+      "phases": [
+        {
+          "id": "L1",
+          "name": "L1 入門 — 微習慣起步",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "每餐先吃蛋白質和蔬菜，再吃主食",
+              "details": "進食順序平緩餐後血糖。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "breakfast", "label": "早餐", "addedAt": "2026-05-19" },
+                { "id": "lunch", "label": "午餐", "addedAt": "2026-05-19" },
+                { "id": "dinner", "label": "晚餐", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "飯後不立刻坐下，先站著或慢慢走動 10 分鐘",
+              "details": "飯後輕度活動降低血糖峰值。",
+              "type": "binary",
+              "category": "運動",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "第一餐吃完後吃保健品",
+              "details": "餐後配合食物吸收率更高。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "吃完早餐後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            }
+          ]
+        },
+        {
+          "id": "L2",
+          "name": "L2 進階 — 主動行動",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "把含糖飲料換成白開水或無糖飲品",
+              "details": "減糖降低胰島素負擔。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐前",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "每餐飯後走路 10 分鐘",
+              "details": "規律餐後走路提升胰島素敏感度。",
+              "type": "checklist",
+              "category": "運動",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "after_breakfast", "label": "早餐後", "addedAt": "2026-05-19" },
+                { "id": "after_lunch", "label": "午餐後", "addedAt": "2026-05-19" },
+                { "id": "after_dinner", "label": "晚餐後", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "把鎂單獨移到睡前",
+              "details": "鎂在睡前單獨補充有助放鬆與睡眠。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            }
+          ]
+        },
+        {
+          "id": "L3",
+          "name": "L3 整合 — 累積生活節奏",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "其中一餐的主食開始換成全穀類（糙米、燕麥、地瓜選一種）",
+              "details": "全穀類延緩血糖上升。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐前",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "每天找一段 20 分鐘的連續走路時間",
+              "details": "連續走路提升心肺與代謝。",
+              "type": "quantitative",
+              "category": "運動",
+              "dailyTarget": 20,
+              "unit": "分鐘",
+              "stepValue": 5,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "下班離開工作場所後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "把益生菌移到早上空腹時吃",
+              "details": "空腹補益生菌存活率較高。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            }
+          ]
+        },
+        {
+          "id": "L4",
+          "name": "L4 完整 — 全方位整合",
+          "days": 7,
+          "tasks": [
+            {
+              "title": "今天不吃精緻甜食（蛋糕、糖果、餅乾、含糖飲料）",
+              "details": "減精緻糖維持血糖平穩。",
+              "type": "binary",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "午餐後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "每天累積 7000 步",
+              "details": "步數累積支持整體代謝。",
+              "type": "quantitative",
+              "category": "運動",
+              "dailyTarget": 7000,
+              "unit": "步",
+              "stepValue": 500,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "下班離開工作場所後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "起床空腹（蔓越莓益生菌）、飯後（薑黃＋葉酸鐵）、睡前（鎂）",
+              "details": "三時段分配最大化保健品吸收。",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 1,
+              "unit": "餐",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "fasting", "label": "空腹", "addedAt": "2026-05-19" },
+                { "id": "after_meal", "label": "飯後", "addedAt": "2026-05-19" },
+                { "id": "before_bed", "label": "睡前", "addedAt": "2026-05-19" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            }
+          ]
+        }
+      ],
+      "menstrualPhase": {
+        "tasks": [
+          {
+            "title": "想吃甜食先吃堅果等 10 分鐘",
+            "details": "延緩甜食穩定血糖波動。",
+            "type": "binary",
+            "category": "飲食",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "午間休息時",
+            "defaultIdentity": "我是個照顧代謝健康的人"
+          },
+          {
+            "title": "補充 Omega-3 食物（鯖魚、奇亞籽、核桃）",
+            "details": "Omega-3 降低經期發炎反應。",
+            "type": "binary",
+            "category": "飲食",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "午餐後",
+            "defaultIdentity": "我是個照顧代謝健康的人"
+          },
+          {
+            "title": "少量多餐穩定血糖",
+            "details": "少量多餐減少血糖大幅波動。",
+            "type": "binary",
+            "category": "飲食",
+            "dailyTarget": 1,
+            "unit": "次",
+            "stepValue": 1,
+            "subtasks": [],
+            "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+            "defaultCue": "午餐前",
+            "defaultIdentity": "我是個照顧代謝健康的人"
+          }
+        ]
+      }
+    }
+  }
+]
