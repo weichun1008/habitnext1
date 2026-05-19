@@ -3,6 +3,7 @@ import { X, Edit2, Check, Calendar, Target, Flame, Trophy, ChevronRight, Chevron
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 import { getTodayStr, isCompletedOnDate, calculateStats } from '@/lib/utils';
+import { visibleSubtasks } from '@/lib/subtasks';
 
 const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
     const [currentDate, setCurrentDate] = useState(getTodayStr());
@@ -13,8 +14,13 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
     const isCompleted = isCompletedOnDate(task, currentDate);
 
     // Subtask Progress
-    const totalSubtasks = task.subtasks?.length || 0;
-    const completedSubtasks = task.subtasks?.filter(s => s.completed).length || 0;
+    const _subsForDate = visibleSubtasks(task, currentDate);
+    const _historyForDate = task.history?.[currentDate];
+    const _completionsForDate = (_historyForDate && typeof _historyForDate === 'object')
+        ? (_historyForDate.subtaskCompletions || {})
+        : {};
+    const totalSubtasks = _subsForDate.length;
+    const completedSubtasks = _subsForDate.filter(s => _completionsForDate[s.id] === true).length;
     const subtaskProgress = totalSubtasks > 0 ? Math.round((completedSubtasks / totalSubtasks) * 100) : 0;
 
     // Real Stats
@@ -100,28 +106,36 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
                     </div>
 
                     {/* Subtasks (Interactive) */}
-                    {task.subtasks && task.subtasks.length > 0 && (
-                        <div className="mb-8">
-                            <div className="flex justify-between items-center mb-3">
-                                <h3 className="font-bold text-gray-800 flex items-center gap-2"><List size={18} className="text-blue-500" /> 子任務</h3>
-                                <span className="text-xs font-bold text-gray-400">{completedSubtasks}/{totalSubtasks}</span>
+                    {_subsForDate.length > 0 && (() => {
+                        const todayStr = new Date().toISOString().slice(0, 10);
+                        const isPastDate = currentDate < todayStr;
+                        return (
+                            <div className="mb-8">
+                                <div className="flex justify-between items-center mb-3">
+                                    <h3 className="font-bold text-gray-800 flex items-center gap-2"><List size={18} className="text-blue-500" /> 子任務</h3>
+                                    <span className="text-xs font-bold text-gray-400">{completedSubtasks}/{totalSubtasks}</span>
+                                </div>
+                                <div className="space-y-2">
+                                    {_subsForDate.map(sub => {
+                                        const isChecked = _completionsForDate[sub.id] === true;
+                                        const isReadonly = isPastDate;
+                                        return (
+                                            <div
+                                                key={sub.id}
+                                                onClick={isReadonly ? undefined : () => onUpdate(task, 'toggle_subtask', null, sub.id, currentDate)}
+                                                className={`flex items-center gap-3 p-3 rounded-xl border border-gray-100 transition-colors ${isReadonly ? 'bg-gray-50 cursor-not-allowed' : 'bg-white hover:bg-gray-50 cursor-pointer'}`}
+                                            >
+                                                <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isChecked ? 'bg-emerald-500 border-emerald-500' : 'border-gray-300'}`}>
+                                                    {isChecked && <Check size={12} className="text-white" strokeWidth={3} />}
+                                                </div>
+                                                <span className={`text-sm ${isChecked ? 'text-gray-400 line-through' : (isReadonly ? 'text-gray-400' : 'text-gray-700')}`}>{sub.label}</span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                {task.subtasks.map((sub, idx) => (
-                                    <div
-                                        key={sub.id}
-                                        onClick={() => onUpdate(task, 'toggle_subtask', null, sub.id, currentDate)}
-                                        className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 cursor-pointer transition-colors"
-                                    >
-                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${sub.completed ? 'bg-emerald-500 border-emerald-500' : 'border-gray-300'}`}>
-                                            {sub.completed && <Check size={12} className="text-white" strokeWidth={3} />}
-                                        </div>
-                                        <span className={`text-sm ${sub.completed ? 'text-gray-400 line-through' : 'text-gray-700'}`}>{sub.title}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                        );
+                    })()}
 
                     {/* Stats Preview */}
                     <div className="grid grid-cols-2 gap-3">
