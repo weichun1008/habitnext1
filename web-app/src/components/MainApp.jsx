@@ -11,6 +11,7 @@ import HabitCalendar from './HabitCalendar';
 import TaskDetailModal from './TaskDetailModal';
 import LoginModal from './LoginModal';
 import { generateId, getTodayStr, isTaskDueToday } from '@/lib/utils';
+import { USER_TYPE_PROFILES } from '@/lib/typeKeys';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 import { visibleSubtasks, computeChecklistValue } from '@/lib/subtasks';
 import PlanGroup from './PlanGroup';
@@ -521,6 +522,20 @@ const MainApp = () => {
 
                         {currentView === 'daily' && (
                             <div className="animate-fade-in-up">
+                                {user?.typeKey && USER_TYPE_PROFILES[user.typeKey] && (
+                                    <div className="bg-gradient-to-br from-rose-50 to-amber-50 border border-rose-100 rounded-2xl p-4 mb-4">
+                                        <p className="text-xs text-rose-600 font-bold uppercase tracking-wider">為你準備的小課程</p>
+                                        <h3 className="text-lg font-black text-gray-800 mt-1">{USER_TYPE_PROFILES[user.typeKey].label}小課程</h3>
+                                        <p className="text-xs text-gray-500 mt-1">根據你的問卷結果量身打造（即將上線）</p>
+                                        <button
+                                            type="button"
+                                            disabled
+                                            className="mt-3 px-4 py-2 rounded-xl bg-rose-200 text-rose-700 text-sm font-bold cursor-not-allowed opacity-70"
+                                        >
+                                            即將上線
+                                        </button>
+                                    </div>
+                                )}
                                 <DashboardSummaryCard tasks={tasks} onOpenDetail={() => setCurrentView('dashboard_detail')} />
 
                                 <div className="space-y-6">
