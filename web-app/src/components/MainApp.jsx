@@ -639,6 +639,7 @@ const MainApp = () => {
                 initialData={editingTask}
                 defaultDate={selectedDate}
                 yourTasks={tasks}
+                userTypeKey={user?.typeKey || null}
             />
 
             <TaskDetailModal
@@ -655,6 +656,7 @@ const MainApp = () => {
                 onSelectTask={(task) => { handleSaveTask({ ...task, id: generateId() }); setIsLibraryModalOpen(false); }}
                 onOpenCustomForm={() => { setIsLibraryModalOpen(false); setIsFormModalOpen(true); }}
                 yourTasks={tasks}
+                userTypeKey={user?.typeKey || null}
             />
 
             <LoginModal
