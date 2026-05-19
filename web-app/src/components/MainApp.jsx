@@ -568,17 +568,17 @@ const MainApp = () => {
                                         {isMenstrualMode ? '結束生理期' : '我正在生理期'}
                                     </button>
                                 </div>
-                                {user?.typeKey && USER_TYPE_PROFILES[user.typeKey] && (
+                                {user?.typeKey && USER_TYPE_PROFILES[user.typeKey] && !(assignments || []).some(a => a.status === 'active') && (
                                     <div className="bg-gradient-to-br from-rose-50 to-amber-50 border border-rose-100 rounded-2xl p-4 mb-4">
                                         <p className="text-xs text-rose-600 font-bold uppercase tracking-wider">為你準備的小課程</p>
                                         <h3 className="text-lg font-black text-gray-800 mt-1">{USER_TYPE_PROFILES[user.typeKey].label}小課程</h3>
-                                        <p className="text-xs text-gray-500 mt-1">根據你的問卷結果量身打造（即將上線）</p>
+                                        <p className="text-xs text-gray-500 mt-1">根據你的問卷結果量身打造</p>
                                         <button
                                             type="button"
-                                            disabled
-                                            className="mt-3 px-4 py-2 rounded-xl bg-rose-200 text-rose-700 text-sm font-bold cursor-not-allowed opacity-70"
+                                            onClick={() => setIsTemplateExplorerOpen(true)}
+                                            className="mt-3 px-4 py-2 rounded-xl bg-rose-500 text-white text-sm font-bold hover:bg-rose-600 transition-colors"
                                         >
-                                            即將上線
+                                            查看小課程 →
                                         </button>
                                     </div>
                                 )}
