@@ -77,22 +77,15 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
     const modalRoot = document.body;
     if (!modalRoot) return null;
 
-    const handleSubtaskChange = (idx, field, value) => {
-        const newSub = [...formData.subtasks];
-        newSub[idx][field] = value;
-        setFormData({ ...formData, subtasks: newSub });
-    };
-
     const addSubtask = () => {
         setFormData({
             ...formData,
             type: 'checklist',
-            subtasks: [...formData.subtasks, { id: generateId(), title: '', completed: false }]
+            subtasks: [
+                ...formData.subtasks,
+                { id: generateId(), label: '', addedAt: new Date().toISOString().slice(0, 10) }
+            ]
         });
-    };
-
-    const removeSubtask = (idx) => {
-        setFormData({ ...formData, subtasks: formData.subtasks.filter((_, i) => i !== idx) });
     };
 
     const handleAddCustomEmoji = () => {
@@ -223,25 +216,55 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                         )}
                     </div>
 
-                    {/* Subtasks */}
+                    {/* Subtask editor — supports rename, add, soft/hard delete */}
                     {(formData.type === 'checklist' || formData.subtasks.length > 0) && (
-                        <div className="space-y-3">
-                            <label className="text-xs text-gray-400 font-bold uppercase">子任務清單</label>
-                            {formData.subtasks.map((sub, idx) => (
-                                <div key={sub.id} className="flex items-center gap-2">
-                                    <input type="checkbox" disabled className="w-4 h-4 rounded border-gray-300" />
-                                    <input
-                                        className="flex-1 bg-gray-50 border-b border-transparent focus:border-emerald-500 focus:bg-white outline-none px-2 py-1 text-sm transition-colors"
-                                        value={sub.title} placeholder="輸入項目..." autoFocus={idx === formData.subtasks.length - 1}
-                                        onChange={e => handleSubtaskChange(idx, 'title', e.target.value)}
-                                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addSubtask(); } }}
+                        <div className="mb-4">
+                            <div className="flex items-center justify-between mb-2">
+                                <label className="block text-sm font-medium text-gray-700">子任務 ({formData.subtasks.length})</label>
+                            </div>
+                            <div className="space-y-2">
+                                {formData.subtasks.map((sub, idx) => (
+                                    <SubtaskEditorRow
+                                        key={sub.id}
+                                        subtask={sub}
+                                        hasHistory={Boolean(initialData?.history && Object.values(initialData.history).some(h => h && typeof h === 'object' && h.subtaskCompletions && sub.id in h.subtaskCompletions))}
+                                        onRename={(newLabel) =>
+                                            setFormData(f => ({
+                                                ...f,
+                                                subtasks: f.subtasks.map((s, i) => i === idx ? { ...s, label: newLabel } : s),
+                                            }))
+                                        }
+                                        onHide={() =>
+                                            setFormData(f => ({
+                                                ...f,
+                                                subtasks: f.subtasks.map((s, i) =>
+                                                    i === idx ? { ...s, removedAt: new Date().toISOString().slice(0, 10) } : s
+                                                ),
+                                            }))
+                                        }
+                                        onPermanentDelete={async () => {
+                                            if (initialData?.id) {
+                                                const res = await fetch(`/api/tasks/${initialData.id}/subtasks/${sub.id}?mode=permanent`, { method: 'DELETE' });
+                                                if (!res.ok) {
+                                                    alert('刪除失敗');
+                                                    return;
+                                                }
+                                            }
+                                            setFormData(f => ({
+                                                ...f,
+                                                subtasks: f.subtasks.filter((_, i) => i !== idx),
+                                            }));
+                                        }}
                                     />
-                                    <button onClick={() => removeSubtask(idx)} className="text-gray-400 hover:text-red-500"><X size={16} /></button>
-                                </div>
-                            ))}
-                            <button onClick={addSubtask} className="flex items-center gap-2 text-sm text-emerald-600 font-bold hover:text-emerald-700 mt-2">
-                                <Plus size={16} /> 新增子任務
-                            </button>
+                                ))}
+                                <button
+                                    type="button"
+                                    onClick={addSubtask}
+                                    className="w-full px-3 py-2 rounded-xl text-sm font-medium text-center bg-gray-50 border border-dashed border-gray-300 text-gray-600 hover:bg-gray-100"
+                                >
+                                    + 加入子任務
+                                </button>
+                            </div>
                         </div>
                     )}
 
@@ -543,5 +566,83 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
         modalRoot
     );
 };
+
+function SubtaskEditorRow({ subtask, hasHistory, onRename, onHide, onPermanentDelete }) {
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [mode, setMode] = useState('hide');
+
+    const handleConfirm = () => {
+        if (mode === 'hide') {
+            onHide();
+        } else {
+            onPermanentDelete();
+        }
+        setConfirmOpen(false);
+    };
+
+    const isHidden = Boolean(subtask.removedAt);
+
+    return (
+        <div className={`p-3 rounded-xl border ${isHidden ? 'bg-gray-50 border-gray-200 opacity-60' : 'bg-white border-gray-200'}`}>
+            <div className="flex items-center gap-2">
+                <input
+                    type="text"
+                    value={subtask.label || ''}
+                    onChange={(e) => onRename(e.target.value)}
+                    disabled={isHidden}
+                    className="flex-1 px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:bg-gray-100"
+                    placeholder="子任務名稱"
+                />
+                {!isHidden && (
+                    <button
+                        type="button"
+                        onClick={() => setConfirmOpen(prev => !prev)}
+                        className="px-2 py-1.5 text-gray-400 hover:text-red-500"
+                        aria-label="刪除子任務"
+                    >
+                        ×
+                    </button>
+                )}
+                {isHidden && (
+                    <span className="text-xs text-gray-400">已停用 ({subtask.removedAt})</span>
+                )}
+            </div>
+
+            {confirmOpen && (
+                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg space-y-2">
+                    <p className="text-sm font-bold text-gray-800">刪除「{subtask.label || '未命名'}」？</p>
+                    <label className="flex items-start gap-2 cursor-pointer">
+                        <input type="radio" checked={mode === 'hide'} onChange={() => setMode('hide')} className="mt-0.5" />
+                        <div>
+                            <p className="text-sm text-gray-700">從今天起不再出現</p>
+                            <p className="text-xs text-gray-500">過去的完成紀錄保留</p>
+                        </div>
+                    </label>
+                    <label className={`flex items-start gap-2 ${hasHistory ? 'cursor-pointer' : 'opacity-50'}`}>
+                        <input
+                            type="radio"
+                            checked={mode === 'permanent'}
+                            onChange={() => hasHistory && setMode('permanent')}
+                            disabled={!hasHistory}
+                            className="mt-0.5"
+                        />
+                        <div>
+                            <p className="text-sm text-gray-700">永久刪除，包含所有過去紀錄</p>
+                            <p className="text-xs text-gray-500">{hasHistory ? '清乾淨，過去的勾選紀錄一起消失' : '無歷史紀錄，不需要這選項'}</p>
+                        </div>
+                    </label>
+                    <div className="flex justify-end gap-2 pt-1">
+                        <button type="button" onClick={() => setConfirmOpen(false)} className="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded">
+                            取消
+                        </button>
+                        <button type="button" onClick={handleConfirm} className="px-3 py-1.5 text-sm bg-red-500 text-white font-medium rounded hover:bg-red-600">
+                            確認刪除
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
 
 export default TaskFormModal;
