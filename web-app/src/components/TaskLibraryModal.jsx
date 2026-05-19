@@ -7,17 +7,19 @@ import DomainGrid from './explore/DomainGrid';
 import HabitListView from './explore/HabitListView';
 import CategoryIcon from './explore/CategoryIcon';
 import AnchorPicker from './explore/AnchorPicker';
+import IdentityPicker from './explore/IdentityPicker';
 
-const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, yourTasks = [] }) => {
+const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, userTypeKey = null, yourTasks = [] }) => {
     const [habits, setHabits] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
-    const [view, setView] = useState('domain');           // 'domain' | 'list' | 'search' | 'anchor'
+    const [view, setView] = useState('domain');           // 'domain' | 'list' | 'search' | 'anchor' | 'identity'
     const [selectedDomain, setSelectedDomain] = useState(null);
     const [selectedDifficulty, setSelectedDifficulty] = useState({});
     const [pendingHabit, setPendingHabit] = useState(null);    // { habit, diffKey } when entering anchor view
     const [pendingCue, setPendingCue] = useState(null);        // chosen anchor string (null = skip)
+    const [identityChoice, setIdentityChoice] = useState(null);
 
     useEffect(() => {
         if (isOpen) {
@@ -27,6 +29,7 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, you
             setSearch('');
             setPendingHabit(null);
             setPendingCue(null);
+            setIdentityChoice(null);
         }
     }, [isOpen]);
 
@@ -53,10 +56,15 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, you
     };
 
     const handleBack = () => {
+        if (view === 'identity') {
+            setView('anchor');
+            return;
+        }
         if (view === 'anchor') {
             setView('list');
             setPendingHabit(null);
             setPendingCue(null);
+            setIdentityChoice(null);
             return;
         }
         setView('domain');
@@ -85,7 +93,7 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, you
         setView('anchor');
     };
 
-    const emitPendingTask = (cue) => {
+    const emitPendingTask = (cue, identity) => {
         if (!pendingHabit) return;
         const { habit, diffKey } = pendingHabit;
         const config = habit.difficulties[diffKey];
@@ -93,6 +101,7 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, you
             title: habit.name,
             details: habit.description || '',
             cue: cue || null,
+            identity: identity || null,
             type: config.type || 'binary',
             category: habit.category || 'star',
             frequency: config.recurrence?.type || 'daily',
@@ -103,6 +112,8 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, you
             subtasks: config.subtasks || [],
         };
         onSelectTask(task);
+        setPendingCue(null);
+        setIdentityChoice(null);
     };
 
     const visibleHabits = (() => {
@@ -127,7 +138,9 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, you
             ? '搜尋結果'
             : view === 'anchor'
                 ? '選擇錨點'
-                : '選擇習慣';
+                : view === 'identity'
+                    ? '選擇身份'
+                    : '選擇習慣';
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">
@@ -152,7 +165,7 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, you
                 </div>
 
                 {/* Search */}
-                {view !== 'anchor' && (
+                {view !== 'anchor' && view !== 'identity' && (
                     <div className="p-4 border-b border-gray-100">
                         <div className="relative">
                             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -168,7 +181,7 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, you
                 )}
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {view !== 'anchor' && (
+                    {view !== 'anchor' && view !== 'identity' && (
                         <button
                             onClick={onOpenCustomForm}
                             className="w-full bg-gray-800 text-white text-base font-bold py-3 rounded-xl shadow-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2"
@@ -201,13 +214,20 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, you
                             />
                             <div className="flex gap-2 pt-2 border-t border-gray-100">
                                 <button
-                                    onClick={() => emitPendingTask(null)}
+                                    onClick={() => {
+                                        setPendingCue(null);
+                                        setIdentityChoice(null);
+                                        setView('identity');
+                                    }}
                                     className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition-colors"
                                 >
                                     跳過此步驟
                                 </button>
                                 <button
-                                    onClick={() => emitPendingTask(pendingCue)}
+                                    onClick={() => {
+                                        setIdentityChoice(null);
+                                        setView('identity');
+                                    }}
                                     disabled={!pendingCue}
                                     className={`flex-1 py-3 rounded-xl font-bold text-sm transition-colors ${
                                         pendingCue
@@ -216,6 +236,38 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, you
                                     }`}
                                 >
                                     {pendingCue ? `確認（錨點：${pendingCue}）` : '請先選一個錨點'}
+                                </button>
+                            </div>
+                        </>
+                    ) : view === 'identity' ? (
+                        <>
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                                為什麼做這個習慣？(可跳過)
+                            </p>
+                            <IdentityPicker
+                                value={identityChoice}
+                                onChange={setIdentityChoice}
+                                userTypeKey={userTypeKey}
+                            />
+                            <div className="flex gap-3 pt-3 border-t border-gray-100">
+                                <button
+                                    type="button"
+                                    onClick={() => emitPendingTask(pendingCue, null)}
+                                    className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors"
+                                >
+                                    跳過
+                                </button>
+                                <button
+                                    type="button"
+                                    disabled={!identityChoice}
+                                    onClick={() => emitPendingTask(pendingCue, identityChoice)}
+                                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-colors ${
+                                        identityChoice
+                                            ? 'bg-emerald-500 text-white hover:bg-emerald-600'
+                                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                    }`}
+                                >
+                                    確認
                                 </button>
                             </div>
                         </>
