@@ -31,6 +31,8 @@ const MainApp = () => {
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+    const [isMenstrualMode, setIsMenstrualMode] = useState(false);
+    const [menstrualStart, setMenstrualStart] = useState(null);
 
     console.log('MainApp Render:', { user, isTemplateExplorerOpen }); // Debug Log
 
@@ -102,11 +104,37 @@ const MainApp = () => {
             if (res.ok) {
                 const data = await res.json();
                 setAssignments(data);
+                const anyActive = (data || []).find(a => a.isMenstrual);
+                setIsMenstrualMode(Boolean(anyActive));
+                setMenstrualStart(anyActive?.menstrualStart || null);
             }
         } catch (err) {
             console.error('Fetch assignments failed', err);
         }
     };
+
+    const handleToggleMenstrual = async (next) => {
+        if (!user?.id) return;
+        setIsMenstrualMode(next);
+        if (next) setMenstrualStart(new Date().toISOString());
+        else setMenstrualStart(null);
+        try {
+            await fetch('/api/user/menstrual', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id, isMenstrual: next }),
+            });
+        } catch (e) {
+            console.error('Menstrual toggle failed', e);
+        }
+    };
+
+    const menstrualExpired = (() => {
+        if (!isMenstrualMode || !menstrualStart) return false;
+        const startDate = new Date(menstrualStart);
+        const days = (Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+        return days > 5;
+    })();
 
     const handleLogin = (userData) => {
         setUser(userData);
@@ -522,6 +550,24 @@ const MainApp = () => {
 
                         {currentView === 'daily' && (
                             <div className="animate-fade-in-up">
+                                <div className="flex items-center justify-between gap-2 mb-3 px-1">
+                                    <span className="text-sm text-gray-600">
+                                        {isMenstrualMode
+                                            ? (menstrualExpired ? '生理期模式（超過 5 天）' : '生理期模式進行中')
+                                            : '生理期模式'}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleToggleMenstrual(!isMenstrualMode)}
+                                        className={`text-xs font-bold px-3 py-1.5 rounded-full transition-colors ${
+                                            isMenstrualMode
+                                                ? 'bg-rose-100 text-rose-700 hover:bg-rose-200'
+                                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        }`}
+                                    >
+                                        {isMenstrualMode ? '結束生理期' : '我正在生理期'}
+                                    </button>
+                                </div>
                                 {user?.typeKey && USER_TYPE_PROFILES[user.typeKey] && (
                                     <div className="bg-gradient-to-br from-rose-50 to-amber-50 border border-rose-100 rounded-2xl p-4 mb-4">
                                         <p className="text-xs text-rose-600 font-bold uppercase tracking-wider">為你準備的小課程</p>
