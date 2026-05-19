@@ -3,6 +3,7 @@ import { Check, Minus, Plus } from 'lucide-react';
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 import { getTodayStr, isCompletedToday, calculatePeriodProgress } from '@/lib/utils';
+import { visibleSubtasks } from '@/lib/subtasks';
 
 const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
     const todayStr = getTodayStr();
@@ -39,9 +40,17 @@ const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
 
     // Subtask Progress Display
     let subtaskDisplay = null;
-    if (isChecklist && task.subtasks?.length > 0) {
-        const completedCount = task.subtasks.filter(s => s.completed).length;
-        subtaskDisplay = `${completedCount}/${task.subtasks.length}`;
+    if (isChecklist) {
+        const dateStr = todayStr;
+        const visible = visibleSubtasks(task, dateStr);
+        const historyForDate = task.history?.[dateStr];
+        const completions = (historyForDate && typeof historyForDate === 'object')
+            ? (historyForDate.subtaskCompletions || {})
+            : {};
+        const completedCount = visible.filter(s => completions[s.id] === true).length;
+        if (visible.length > 0) {
+            subtaskDisplay = `${completedCount}/${visible.length}`;
+        }
     }
 
     return (
