@@ -19,6 +19,7 @@ model User {
   countryCode String?      // e.g., +886
   password    String?      // Hashed password
   email       String?
+  typeKey     String?      // ★ 新增 — 'daisy' | 'rose' | 'orchid' | 'sunflower' (set by quiz module)
   isActive    Boolean      @default(true)
   createdAt   DateTime     @default(now())
   tasks       Task[]
@@ -99,6 +100,7 @@ model Task {
   title        String
   details      String?
   cue          String?  // 錨點，例「起床後」(BJ Fogg ABC anchor)
+  identity     String?  // ★ 新增 — 身分宣告「我是個照顧週期身體的人」
   type         String   // binary, quantitative, checklist
   category     String
   frequency    String   // daily, weekly, monthly (Display Group)
