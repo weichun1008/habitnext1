@@ -12,6 +12,7 @@ import TaskDetailModal from './TaskDetailModal';
 import LoginModal from './LoginModal';
 import { generateId, getTodayStr, isTaskDueToday } from '@/lib/utils';
 import { CATEGORY_CONFIG } from '@/lib/constants';
+import { visibleSubtasks, computeChecklistValue } from '@/lib/subtasks';
 import PlanGroup from './PlanGroup';
 import TemplateExplorer from './TemplateExplorer';
 import ProfileModal from './ProfileModal';
@@ -156,8 +157,33 @@ const MainApp = () => {
 
             // Subtask Logic
             if (action === 'toggle_subtask' && subtaskId) {
-                const newSubtasks = t.subtasks.map(s => s.id === subtaskId ? { ...s, completed: !s.completed } : s);
-                updatedTask = { ...t, subtasks: newSubtasks };
+                // Per-date subtask state lives in TaskHistory.subtaskCompletions
+                const prevHistoryForDate = t.history?.[dateStr] || {};
+                const prevCompletions = prevHistoryForDate.subtaskCompletions || {};
+                const newCompletions = { ...prevCompletions, [subtaskId]: !prevCompletions[subtaskId] };
+                const newValue = computeChecklistValue(newCompletions);
+                const visibleCount = visibleSubtasks(t, dateStr).length;
+                // Task.dailyTarget is set at create time (per chosen difficulty); fallback to total visible if missing
+                const target = t.dailyTarget || visibleCount;
+                const newCompleted = newValue >= target;
+
+                const newHistory = {
+                    ...t.history,
+                    [dateStr]: {
+                        ...prevHistoryForDate,
+                        subtaskCompletions: newCompletions,
+                        value: newValue,
+                        completed: newCompleted,
+                    },
+                };
+                updatedTask = { ...t, history: newHistory };
+                historyUpdate = {
+                    taskId: t.id,
+                    date: dateStr,
+                    subtaskCompletions: newCompletions,
+                    value: newValue,
+                    completed: newCompleted,
+                };
                 return updatedTask;
             }
 
