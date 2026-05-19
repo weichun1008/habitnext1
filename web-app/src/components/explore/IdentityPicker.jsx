@@ -62,7 +62,7 @@ export default function IdentityPicker({ value, onChange, userTypeKey = null }) 
       {recommended && (
         <div>
           <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-            為你挑選的身分（{USER_TYPE_PROFILES[userTypeKey]?.label}）
+            為你推薦的身分（{USER_TYPE_PROFILES[userTypeKey]?.label}）
           </p>
           <IdentityButton
             label={recommended}

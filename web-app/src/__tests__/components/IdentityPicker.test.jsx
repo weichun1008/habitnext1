@@ -5,14 +5,16 @@ import { USER_TYPE_PROFILES, GENERIC_IDENTITIES } from '../../lib/typeKeys';
 
 describe('IdentityPicker', () => {
   it('renders the typeKey-derived recommendation with star marker when typeKey is set', () => {
-    render(<IdentityPicker value={null} onChange={() => {}} userTypeKey="rose" />);
+    const { container } = render(<IdentityPicker value={null} onChange={() => {}} userTypeKey="rose" />);
     expect(screen.getByText(USER_TYPE_PROFILES.rose.identity)).toBeInTheDocument();
-    expect(screen.getByText(/推薦/)).toBeInTheDocument();
+    // The Sparkles "推薦" badge has its own emerald/amber tint and `font-bold`
+    // span; locate it explicitly so the heading copy can keep "為你推薦的身分".
+    expect(container.querySelector('.text-amber-700')).toHaveTextContent('推薦');
   });
 
   it('hides the recommendation chip when typeKey is null', () => {
-    render(<IdentityPicker value={null} onChange={() => {}} userTypeKey={null} />);
-    expect(screen.queryByText(/推薦/)).not.toBeInTheDocument();
+    const { container } = render(<IdentityPicker value={null} onChange={() => {}} userTypeKey={null} />);
+    expect(container.querySelector('.text-amber-700')).toBeNull();
     GENERIC_IDENTITIES.forEach(s => expect(screen.getByText(s)).toBeInTheDocument());
   });
 
