@@ -67,6 +67,11 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
                         <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mb-4 ${config.bg}`}>
                             <IconRenderer category={task.category} size={40} className={config.type === 'emoji' ? 'text-5xl' : ''} />
                         </div>
+                        {task.identity && (
+                            <p className="text-xs font-medium text-gray-500 mb-1">
+                                {task.identity}
+                            </p>
+                        )}
                         {task.cue && (
                             <p className="text-sm font-medium text-emerald-600 mb-1 flex items-center gap-1">
                                 <span>{task.cue}</span>

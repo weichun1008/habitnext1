@@ -71,6 +71,11 @@ const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
                         <IconRenderer category={task.category} size={18} className={config.type === 'emoji' ? 'text-2xl' : ''} />
                     </div>
                     <div>
+                        {task.identity && (
+                            <p className="text-[10px] font-medium text-gray-400 mb-0.5 leading-tight">
+                                {task.identity}
+                            </p>
+                        )}
                         {task.cue && (
                             <p className="text-[11px] font-medium text-emerald-600 mb-0.5 flex items-center gap-1 leading-tight">
                                 <span>{task.cue}</span>
