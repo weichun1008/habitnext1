@@ -131,6 +131,8 @@ export async function POST(request) {
                             userId,
                             title: t.title,
                             details: t.details || '',
+                            cue: t.defaultCue || t.cue || null,
+                            identity: t.defaultIdentity || t.identity || null,
                             type: t.type || 'binary',
                             frequency: t.frequency || 'daily',
                             time: '09:00',
