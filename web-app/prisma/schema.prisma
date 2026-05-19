@@ -85,6 +85,8 @@ model Assignment {
   status     String    @default("active") // active, completed, paused
   startDate  DateTime  @default(now())
   endDate    DateTime?
+  isMenstrual    Boolean   @default(false)  // ★ 新增
+  menstrualStart DateTime?                   // ★ 新增
   notes      String?   // 專家備註
   createdAt  DateTime  @default(now())
 }
