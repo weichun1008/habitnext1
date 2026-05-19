@@ -32,7 +32,7 @@ export async function PUT(request, { params }) {
         // 2. Handle History Update (if provided)
         // historyUpdate format: { date: '2023-01-01', completed: true, value: 10 }
         if (historyUpdate) {
-            const { date, completed, value } = historyUpdate;
+            const { date, completed, value, subtaskCompletions } = historyUpdate;
 
             // Upsert history record
             await prisma.taskHistory.upsert({
@@ -44,13 +44,15 @@ export async function PUT(request, { params }) {
                 },
                 update: {
                     completed,
-                    value
+                    value,
+                    subtaskCompletions: subtaskCompletions ?? null
                 },
                 create: {
                     taskId: id,
                     date,
                     completed,
-                    value
+                    value,
+                    subtaskCompletions: subtaskCompletions ?? null
                 }
             });
         }
