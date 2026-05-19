@@ -65,8 +65,16 @@ const MainApp = () => {
 
                     if (t.history) {
                         t.history.forEach(h => {
-                            const val = t.type === 'quantitative' || t.recurrence?.mode === 'period_count' ? h.value : h.completed;
-                            historyMap[h.date] = val;
+                            if (t.type === 'checklist') {
+                                historyMap[h.date] = {
+                                    value: h.value,
+                                    completed: h.completed,
+                                    subtaskCompletions: h.subtaskCompletions || {},
+                                };
+                            } else {
+                                const val = t.type === 'quantitative' || t.recurrence?.mode === 'period_count' ? h.value : h.completed;
+                                historyMap[h.date] = val;
+                            }
 
                             if (t.type === 'quantitative') {
                                 dailyProgressMap[h.date] = {
@@ -115,8 +123,16 @@ const MainApp = () => {
 
                 if (t.history) {
                     t.history.forEach(h => {
-                        const val = t.type === 'quantitative' || t.recurrence?.mode === 'period_count' ? h.value : h.completed;
-                        historyMap[h.date] = val;
+                        if (t.type === 'checklist') {
+                            historyMap[h.date] = {
+                                value: h.value,
+                                completed: h.completed,
+                                subtaskCompletions: h.subtaskCompletions || {},
+                            };
+                        } else {
+                            const val = t.type === 'quantitative' || t.recurrence?.mode === 'period_count' ? h.value : h.completed;
+                            historyMap[h.date] = val;
+                        }
 
                         if (t.type === 'quantitative') {
                             dailyProgressMap[h.date] = {
