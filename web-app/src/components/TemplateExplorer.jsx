@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Search, User, Check, Loader, Calendar } from 'lucide-react';
 
-const TemplateExplorer = ({ isOpen, onClose, userId, onJoin }) => {
+const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null }) => {
     const [templates, setTemplates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [joiningId, setJoiningId] = useState(null);
@@ -94,6 +94,11 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin }) => {
         }
     };
 
+    const visibleTemplates = (() => {
+        if (!userTypeKey) return templates;
+        return templates.filter(t => t.category === userTypeKey);
+    })();
+
     if (!isOpen) return null;
 
     return (
@@ -120,9 +125,11 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin }) => {
                         <div className="text-center py-12 text-gray-500">
                             目前沒有公開的習慣計畫
                         </div>
+                    ) : visibleTemplates.length === 0 && userTypeKey ? (
+                        <p className="text-sm text-gray-500 text-center py-6">尚未有適合你類型的小課程</p>
                     ) : (
                         <div className="grid grid-cols-1 gap-4">
-                            {templates.map(template => (
+                            {visibleTemplates.map(template => (
                                 <div key={template.id} className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                                     <div className="flex justify-between items-start mb-3">
                                         <div>
