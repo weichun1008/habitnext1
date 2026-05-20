@@ -1,0 +1,654 @@
+[
+  {
+    "name": "壓力型睡眠處方",
+    "description": "😵‍💫 壓力型：大腦過度活躍、交感神經過度亢奮，明明很累卻睡不著；睡前思緒停不下來、容易焦慮、多夢淺眠。本處方 14 天循序漸進建立數位宵禁，啟動副交感神經回到放鬆模式。",
+    "category": "sleep_stress",
+    "isPublic": true,
+    "startDateType": "user_choice",
+    "tasks": {
+      "version": "2.0",
+      "phases": [
+        {
+          "id": "phase1",
+          "name": "Phase 1 (Day 1-3) — Step 1 入門",
+          "days": 3,
+          "tasks": [
+            {
+              "title": "睡前 15 分鐘不滑社群",
+              "details": "從最小步開始，支持睡前放鬆，降低交感神經刺激。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧大腦放鬆的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "L082：早晚各一包；孕婦、哺乳婦不能吃",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 2,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "l082_morning", "label": "L082 早餐後 1 包", "addedAt": "2026-05-20" },
+                { "id": "l082_evening", "label": "L082 晚餐後 1 包", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧大腦放鬆的人"
+            }
+          ]
+        },
+        {
+          "id": "phase2",
+          "name": "Phase 2 (Day 4-7) — Step 2-3 漸進",
+          "days": 4,
+          "tasks": [
+            {
+              "title": "手機移出床邊，睡前 30 分鐘停止高刺激內容",
+              "details": "拉開物理距離，降低睡前刺激源，支持副交感啟動。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧大腦放鬆的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "L082：早晚各一包；孕婦、哺乳婦不能吃",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 2,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "l082_morning", "label": "L082 早餐後 1 包", "addedAt": "2026-05-20" },
+                { "id": "l082_evening", "label": "L082 晚餐後 1 包", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧大腦放鬆的人"
+            }
+          ]
+        },
+        {
+          "id": "phase3",
+          "name": "Phase 3 (Day 8-10) — Step Final 完整",
+          "days": 3,
+          "tasks": [
+            {
+              "title": "睡前 60 分鐘停止高刺激螢幕",
+              "details": "完整數位宵禁，給大腦充足降溫時間。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧大腦放鬆的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "L082：早晚各一包；孕婦、哺乳婦不能吃",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 2,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "l082_morning", "label": "L082 早餐後 1 包", "addedAt": "2026-05-20" },
+                { "id": "l082_evening", "label": "L082 晚餐後 1 包", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧大腦放鬆的人"
+            }
+          ]
+        },
+        {
+          "id": "phase4",
+          "name": "Phase 4 (Day 11-14) — Maintain 維持",
+          "days": 4,
+          "tasks": [
+            {
+              "title": "持續睡前 60 分鐘數位宵禁 + 觀察體感",
+              "details": "穩定維持並紀錄體感變化，讓行為內化成習慣。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧大腦放鬆的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "L082：早晚各一包；孕婦、哺乳婦不能吃",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 2,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "l082_morning", "label": "L082 早餐後 1 包", "addedAt": "2026-05-20" },
+                { "id": "l082_evening", "label": "L082 晚餐後 1 包", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧大腦放鬆的人"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "節律型睡眠處方",
+    "description": "🌙 節律型：生理時鐘延遲或混亂，不是睡不著，而是睡錯時間；晚睡晚起、週末補眠、作息不固定。本處方 14 天循序固定起床時間（最強 zeitgeber）。",
+    "category": "sleep_rhythm",
+    "isPublic": true,
+    "startDateType": "user_choice",
+    "tasks": {
+      "version": "2.0",
+      "phases": [
+        {
+          "id": "phase1",
+          "name": "Phase 1 (Day 1-3) — Step 1 入門",
+          "days": 3,
+          "tasks": [
+            {
+              "title": "記錄目前實際起床時間",
+              "details": "先建立基準線，看清楚目前的節律狀態。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個尊重生理節律的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "極黑生薑黃午餐後、B 群早上、晚安包睡前；晚安包孕婦不能吃",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 3,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "ginger_lunch", "label": "極黑生薑黃 午餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 1 顆", "addedAt": "2026-05-20" },
+                { "id": "sleeppack_bedtime", "label": "晚安包 睡前 1 包", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個尊重生理節律的人"
+            }
+          ]
+        },
+        {
+          "id": "phase2",
+          "name": "Phase 2 (Day 4-7) — Step 2-3 漸進",
+          "days": 4,
+          "tasks": [
+            {
+              "title": "每天提前 15-30 分鐘調整 + 起床後立即離開床鋪",
+              "details": "漸進前移起床時間，並用離床動作鞏固節律訊號。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個尊重生理節律的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "極黑生薑黃午餐後、B 群早上、晚安包睡前；晚安包孕婦不能吃",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 3,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "ginger_lunch", "label": "極黑生薑黃 午餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 1 顆", "addedAt": "2026-05-20" },
+                { "id": "sleeppack_bedtime", "label": "晚安包 睡前 1 包", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個尊重生理節律的人"
+            }
+          ]
+        },
+        {
+          "id": "phase3",
+          "name": "Phase 3 (Day 8-10) — Step Final 完整",
+          "days": 3,
+          "tasks": [
+            {
+              "title": "固定起床時間（誤差 ≤ 30 分鐘）",
+              "details": "鎖定每日起床錨點，建立穩定節律。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個尊重生理節律的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "極黑生薑黃午餐後、B 群早上、晚安包睡前；晚安包孕婦不能吃",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 3,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "ginger_lunch", "label": "極黑生薑黃 午餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 1 顆", "addedAt": "2026-05-20" },
+                { "id": "sleeppack_bedtime", "label": "晚安包 睡前 1 包", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個尊重生理節律的人"
+            }
+          ]
+        },
+        {
+          "id": "phase4",
+          "name": "Phase 4 (Day 11-14) — Maintain 維持",
+          "days": 4,
+          "tasks": [
+            {
+              "title": "持續固定起床 + 觀察體感",
+              "details": "維持節律錨點並紀錄精神狀態變化。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個尊重生理節律的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "極黑生薑黃午餐後、B 群早上、晚安包睡前；晚安包孕婦不能吃",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 3,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "ginger_lunch", "label": "極黑生薑黃 午餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 1 顆", "addedAt": "2026-05-20" },
+                { "id": "sleeppack_bedtime", "label": "晚安包 睡前 1 包", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個尊重生理節律的人"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "代謝失衡型睡眠處方",
+    "description": "⏰ 代謝失衡型：夜間血糖波動、低血糖反應、胰島素阻抗導致半夜醒、睡眠不穩、醒來疲累。本處方 14 天建立穩糖晚餐結構（蛋白質 + 蔬菜 + 原型澱粉）。",
+    "category": "sleep_metabolic",
+    "isPublic": true,
+    "startDateType": "user_choice",
+    "tasks": {
+      "version": "2.0",
+      "phases": [
+        {
+          "id": "phase1",
+          "name": "Phase 1 (Day 1-3) — Step 1 入門",
+          "days": 3,
+          "tasks": [
+            {
+              "title": "晚餐先加入 1 份蛋白質（蛋、豆腐、雞肉、魚）",
+              "details": "從蛋白質起步，建立穩糖晚餐結構的第一塊基石。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "晚餐前",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "苦瓜胜肽（孕婦忌食）/ 肉鹼 / B 群 / 甲殼素（孕婦、哺乳婦禁食）/ 鎂",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 5,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "bittermelon_before_meal", "label": "苦瓜胜肽 每餐前 1 顆", "addedAt": "2026-05-20" },
+                { "id": "carnitine_morning", "label": "肉鹼 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "chitosan_dinner", "label": "甲殼素 晚餐前 1 顆", "addedAt": "2026-05-20" },
+                { "id": "magnesium_bedtime", "label": "鎂 睡前 1 顆", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            }
+          ]
+        },
+        {
+          "id": "phase2",
+          "name": "Phase 2 (Day 4-7) — Step 2-3 漸進",
+          "days": 4,
+          "tasks": [
+            {
+              "title": "加入 1-2 份蔬菜 + 一部分白飯換原型澱粉",
+              "details": "增加纖維與低 GI 來源，支持夜間血糖穩定。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "晚餐前",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "苦瓜胜肽（孕婦忌食）/ 肉鹼 / B 群 / 甲殼素（孕婦、哺乳婦禁食）/ 鎂",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 5,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "bittermelon_before_meal", "label": "苦瓜胜肽 每餐前 1 顆", "addedAt": "2026-05-20" },
+                { "id": "carnitine_morning", "label": "肉鹼 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "chitosan_dinner", "label": "甲殼素 晚餐前 1 顆", "addedAt": "2026-05-20" },
+                { "id": "magnesium_bedtime", "label": "鎂 睡前 1 顆", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            }
+          ]
+        },
+        {
+          "id": "phase3",
+          "name": "Phase 3 (Day 8-10) — Step Final 完整",
+          "days": 3,
+          "tasks": [
+            {
+              "title": "完整穩糖晚餐結構（蛋白質 + 蔬菜 + 原型澱粉）",
+              "details": "三要素到位，建立完整穩糖晚餐結構。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "晚餐前",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "苦瓜胜肽（孕婦忌食）/ 肉鹼 / B 群 / 甲殼素（孕婦、哺乳婦禁食）/ 鎂",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 5,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "bittermelon_before_meal", "label": "苦瓜胜肽 每餐前 1 顆", "addedAt": "2026-05-20" },
+                { "id": "carnitine_morning", "label": "肉鹼 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "chitosan_dinner", "label": "甲殼素 晚餐前 1 顆", "addedAt": "2026-05-20" },
+                { "id": "magnesium_bedtime", "label": "鎂 睡前 1 顆", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            }
+          ]
+        },
+        {
+          "id": "phase4",
+          "name": "Phase 4 (Day 11-14) — Maintain 維持",
+          "days": 4,
+          "tasks": [
+            {
+              "title": "持續穩糖晚餐 + 觀察體感",
+              "details": "維持穩糖晚餐並紀錄半夜醒來與早晨狀態變化。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "晚餐前",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "苦瓜胜肽（孕婦忌食）/ 肉鹼 / B 群 / 甲殼素（孕婦、哺乳婦禁食）/ 鎂",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 5,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "bittermelon_before_meal", "label": "苦瓜胜肽 每餐前 1 顆", "addedAt": "2026-05-20" },
+                { "id": "carnitine_morning", "label": "肉鹼 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "chitosan_dinner", "label": "甲殼素 晚餐前 1 顆", "addedAt": "2026-05-20" },
+                { "id": "magnesium_bedtime", "label": "鎂 睡前 1 顆", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧代謝健康的人"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "荷爾蒙波動型睡眠處方",
+    "description": "🔄 荷爾蒙波動型：荷爾蒙波動影響體溫調節、情緒與睡眠深度；常見於經前、更年期、產後。本處方 14 天透過睡前環境調整降低熱醒與不適。",
+    "category": "sleep_hormone",
+    "isPublic": true,
+    "startDateType": "user_choice",
+    "tasks": {
+      "version": "2.0",
+      "phases": [
+        {
+          "id": "phase1",
+          "name": "Phase 1 (Day 1-3) — Step 1 入門",
+          "days": 3,
+          "tasks": [
+            {
+              "title": "調整睡衣材質（避免過厚 / 不透氣）",
+              "details": "從穿著開始優化散熱，支持週期身體舒適入睡。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "活性葉酸鐵 / B 群 / 極黑生薑黃 / 魚油（孕婦、哺乳婦禁食）/ 鎂",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 5,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "folate_iron_morning", "label": "活性葉酸鐵 早上餐前 1 小時 1 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "ginger_lunch", "label": "極黑生薑黃 午餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "fishoil_dinner", "label": "魚油 晚餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "magnesium_bedtime", "label": "鎂 睡前 1 顆", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            }
+          ]
+        },
+        {
+          "id": "phase2",
+          "name": "Phase 2 (Day 4-7) — Step 2-3 漸進",
+          "days": 4,
+          "tasks": [
+            {
+              "title": "調整棉被厚度或寢具材質 + 優化通風",
+              "details": "進一步管理睡眠環境溫度與通風，降低熱醒機率。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "活性葉酸鐵 / B 群 / 極黑生薑黃 / 魚油（孕婦、哺乳婦禁食）/ 鎂",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 5,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "folate_iron_morning", "label": "活性葉酸鐵 早上餐前 1 小時 1 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "ginger_lunch", "label": "極黑生薑黃 午餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "fishoil_dinner", "label": "魚油 晚餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "magnesium_bedtime", "label": "鎂 睡前 1 顆", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            }
+          ]
+        },
+        {
+          "id": "phase3",
+          "name": "Phase 3 (Day 8-10) — Step Final 完整",
+          "days": 3,
+          "tasks": [
+            {
+              "title": "完整睡前環境調整（室溫 + 衣物 + 寢具）",
+              "details": "三要素同步到位，建立完整的睡眠環境管理。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "活性葉酸鐵 / B 群 / 極黑生薑黃 / 魚油（孕婦、哺乳婦禁食）/ 鎂",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 5,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "folate_iron_morning", "label": "活性葉酸鐵 早上餐前 1 小時 1 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "ginger_lunch", "label": "極黑生薑黃 午餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "fishoil_dinner", "label": "魚油 晚餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "magnesium_bedtime", "label": "鎂 睡前 1 顆", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            }
+          ]
+        },
+        {
+          "id": "phase4",
+          "name": "Phase 4 (Day 11-14) — Maintain 維持",
+          "days": 4,
+          "tasks": [
+            {
+              "title": "持續環境管理 + 觀察體感",
+              "details": "穩定維持睡前環境並紀錄熱醒與情緒變化。",
+              "type": "binary",
+              "category": "壓力與睡眠",
+              "dailyTarget": 1,
+              "unit": "次",
+              "stepValue": 1,
+              "subtasks": [],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "睡前躺上床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            },
+            {
+              "title": "服用今日保健品",
+              "details": "活性葉酸鐵 / B 群 / 極黑生薑黃 / 魚油（孕婦、哺乳婦禁食）/ 鎂",
+              "type": "checklist",
+              "category": "飲食",
+              "dailyTarget": 5,
+              "unit": "種",
+              "stepValue": 1,
+              "subtasks": [
+                { "id": "folate_iron_morning", "label": "活性葉酸鐵 早上餐前 1 小時 1 顆", "addedAt": "2026-05-20" },
+                { "id": "bgroup_morning", "label": "B 群 早上 2 顆", "addedAt": "2026-05-20" },
+                { "id": "ginger_lunch", "label": "極黑生薑黃 午餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "fishoil_dinner", "label": "魚油 晚餐後 2 顆", "addedAt": "2026-05-20" },
+                { "id": "magnesium_bedtime", "label": "鎂 睡前 1 顆", "addedAt": "2026-05-20" }
+              ],
+              "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 },
+              "defaultCue": "起床後",
+              "defaultIdentity": "我是個照顧週期身體的人"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
