@@ -79,14 +79,37 @@ model User {
 
 ```js
 const SLEEP_TYPE_PROFILES = {
-  stress:    { label: '壓力型',       categorySlug: 'sleep_stress',    iconName: 'Brain' },
-  rhythm:    { label: '節律型',       categorySlug: 'sleep_rhythm',    iconName: 'Sunrise' },
-  metabolic: { label: '代謝失衡型',   categorySlug: 'sleep_metabolic', iconName: 'Apple' },
-  hormone:   { label: '荷爾蒙波動型', categorySlug: 'sleep_hormone',   iconName: 'Thermometer' },
+  stress: {
+    label: '壓力型',
+    categorySlug: 'sleep_stress',
+    iconName: 'Brain',
+    identity: '我是個照顧大腦放鬆的人',
+  },
+  rhythm: {
+    label: '節律型',
+    categorySlug: 'sleep_rhythm',
+    iconName: 'Sunrise',
+    identity: '我是個尊重生理節律的人',
+  },
+  metabolic: {
+    label: '代謝失衡型',
+    categorySlug: 'sleep_metabolic',
+    iconName: 'Apple',
+    identity: '我是個照顧代謝健康的人',  // 跟向日葵型相通
+  },
+  hormone: {
+    label: '荷爾蒙波動型',
+    categorySlug: 'sleep_hormone',
+    iconName: 'Thermometer',
+    identity: '我是個照顧週期身體的人',  // 跟玫瑰型相通
+  },
 };
 
-// 所有 4 個 sleep type 共用同一個 identity（強化 program 主題）
-const SLEEP_IDENTITY = '我是個照顧睡眠品質的人';
+function deriveSleepDefaultIdentity(sleepTypeKey) {
+  if (!sleepTypeKey) return null;
+  const profile = SLEEP_TYPE_PROFILES[sleepTypeKey];
+  return profile ? profile.identity : null;
+}
 
 function deriveSleepTypeFromCategory(category) {
   if (!category || typeof category !== 'string') return null;
@@ -97,8 +120,8 @@ function deriveSleepTypeFromCategory(category) {
 
 module.exports = {
   SLEEP_TYPE_PROFILES,
-  SLEEP_IDENTITY,
   deriveSleepTypeFromCategory,
+  deriveSleepDefaultIdentity,
 };
 ```
 
@@ -134,7 +157,7 @@ Phase.days = `[3, 4, 3, 4]`，加總 14。
 
 主任務每 phase **替換** (非累加) — 跟 Slice G 一致。
 
-每個 task 帶 `defaultCue` + `defaultIdentity = '我是個照顧睡眠品質的人'`。
+每個 task 帶 `defaultCue` + `defaultIdentity`（依該 type 的 `SLEEP_TYPE_PROFILES[sleepTypeKey].identity` 設定 — 4 type 各不同）。
 
 ### 主任務 4 階梯（依 type）
 
@@ -274,14 +297,14 @@ const hasJoinedSleepTemplate = (() => {
 6. typeKey=null + sleepTypeKey='stress' 使用者 dashboard 顯示「為你準備的睡眠處方：壓力型」CTA，看不到花朵 CTA
 7. typeKey='rose' + sleepTypeKey='stress' 使用者 dashboard 兩個 CTA 並列
 8. typeKey='rose' + sleepTypeKey='stress' 使用者 TemplateExplorer 過濾後顯示：玫瑰型小課程 + 壓力型睡眠處方 + 其他公開 Template（健康計劃30天）；不顯示其他 3 花朵或 3 睡眠 type
-9. 加入「壓力型睡眠處方」→ 14 day 跨 4 phase 自動建立 8 個 task (4 phase × 2 task)、phase rollover 對的（Day 4 看到 Phase 2 task）、`Task.cue` + `Task.identity = '我是個照顧睡眠品質的人'` 都帶上
+9. 加入「壓力型睡眠處方」→ 14 day 跨 4 phase 自動建立 8 個 task (4 phase × 2 task)、phase rollover 對的（Day 4 看到 Phase 2 task）、`Task.cue` + `Task.identity = '我是個照顧大腦放鬆的人'`（per-type）都帶上
 10. 加入 sleep program 後花朵 CTA 不消失（仍為 typeKey 顯示 CTA — 假設未加入花朵 program）
 
 ## 11. 與其他 slice 關係
 
 - **Slice A.5 / F** 既有 OfficialHabit (105 個) 與 checklist 機制：用於保健品多時段 subtasks 結構
 - **Slice B** 既有 cue：sleep task 帶 defaultCue
-- **Slice E** 既有 identity：sleep task 帶 defaultIdentity = '我是個照顧睡眠品質的人'
+- **Slice E** 既有 identity：sleep task 帶 per-type `defaultIdentity`（每個 sleep type 不同，從 `sleepTypeKeys.js` 取）
 - **Slice G Chunk 3 (T16)** 既有 `/api/user/assignments` 已 patch 為支援 defaultCue/defaultIdentity 繼承到 Task — sleep template 直接受惠
 - **Slice G Chunk 3 (T17-T19)** 既有 4 花朵 Templates + seed script pattern：直接複用模式
 - **無 admin 後台改動 / 無 API 既有 contract breaking**
