@@ -20,6 +20,7 @@ model User {
   password    String?      // Hashed password
   email       String?
   typeKey     String?      // ★ 新增 — 'daisy' | 'rose' | 'orchid' | 'sunflower' (set by quiz module)
+  sleepTypeKey String?     // ★ 新增 — 'stress' | 'rhythm' | 'metabolic' | 'hormone'
   isActive    Boolean      @default(true)
   createdAt   DateTime     @default(now())
   tasks       Task[]
