@@ -691,6 +691,7 @@ const MainApp = () => {
                     fetchAssignments(user.id);
                 }}
                 userTypeKey={user?.typeKey || null}
+                userSleepTypeKey={user?.sleepTypeKey || null}
             />
 
             <TaskFormModal

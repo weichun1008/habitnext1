@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { X, Search, User, Check, Loader, Calendar } from 'lucide-react';
 
-const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null }) => {
+const FLOWER_TYPES = new Set(['daisy', 'rose', 'orchid', 'sunflower']);
+const SLEEP_CATEGORIES = new Set(['sleep_stress', 'sleep_rhythm', 'sleep_metabolic', 'sleep_hormone']);
+
+const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null, userSleepTypeKey = null }) => {
     const [templates, setTemplates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [joiningId, setJoiningId] = useState(null);
@@ -94,10 +97,15 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null 
         }
     };
 
-    const visibleTemplates = (() => {
-        if (!userTypeKey) return templates;
-        return templates.filter(t => t.category === userTypeKey);
-    })();
+    const visibleTemplates = templates.filter(t => {
+        if (FLOWER_TYPES.has(t.category)) {
+            return t.category === userTypeKey;
+        }
+        if (SLEEP_CATEGORIES.has(t.category)) {
+            return userSleepTypeKey && t.category === `sleep_${userSleepTypeKey}`;
+        }
+        return true;
+    });
 
     if (!isOpen) return null;
 
@@ -125,8 +133,8 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null 
                         <div className="text-center py-12 text-gray-500">
                             目前沒有公開的習慣計畫
                         </div>
-                    ) : visibleTemplates.length === 0 && userTypeKey ? (
-                        <p className="text-sm text-gray-500 text-center py-6">尚未有適合你類型的小課程</p>
+                    ) : visibleTemplates.length === 0 && (userTypeKey || userSleepTypeKey) ? (
+                        <p className="text-sm text-gray-500 text-center py-6">尚未有適合你類型的計畫</p>
                     ) : (
                         <div className="grid grid-cols-1 gap-4">
                             {visibleTemplates.map(template => (
