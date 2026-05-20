@@ -408,7 +408,8 @@ const MainApp = () => {
 
     const hasJoinedSleepTemplate = (() => {
         if (!user?.sleepTypeKey) return false;
-        const target = `sleep_${user.sleepTypeKey}`;
+        const target = SLEEP_TYPE_PROFILES[user.sleepTypeKey]?.categorySlug;
+        if (!target) return false;
         return (assignments || []).some(a =>
             a.status === 'active' &&
             a.template?.category === target
