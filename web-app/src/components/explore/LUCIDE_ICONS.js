@@ -13,6 +13,11 @@ import {
   BrainCircuit,
   Briefcase,
   Tag,
+  // ★ Slice H additions for sleep types
+  Brain,
+  Sunrise,
+  Apple,
+  Thermometer,
 } from 'lucide-react';
 
 export const LUCIDE_ICON_MAP = {
@@ -26,6 +31,10 @@ export const LUCIDE_ICON_MAP = {
   BrainCircuit,
   Briefcase,
   Tag,
+  Brain,
+  Sunrise,
+  Apple,
+  Thermometer,
 };
 
 export const FALLBACK_ICON = Tag;
