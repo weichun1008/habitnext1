@@ -12,6 +12,7 @@ import TaskDetailModal from './TaskDetailModal';
 import LoginModal from './LoginModal';
 import { generateId, getTodayStr, isTaskDueToday } from '@/lib/utils';
 import { USER_TYPE_PROFILES } from '@/lib/typeKeys';
+import { SLEEP_TYPE_PROFILES } from '@/lib/sleepTypeKeys';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 import { visibleSubtasks, computeChecklistValue } from '@/lib/subtasks';
 import PlanGroup from './PlanGroup';
@@ -397,6 +398,23 @@ const MainApp = () => {
     const dailyTasks = tasks.filter(t => isTaskDueToday(t));
     const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
 
+    const hasJoinedFlowerTemplate = (() => {
+        if (!user?.typeKey) return false;
+        return (assignments || []).some(a =>
+            a.status === 'active' &&
+            a.template?.category === user.typeKey
+        );
+    })();
+
+    const hasJoinedSleepTemplate = (() => {
+        if (!user?.sleepTypeKey) return false;
+        const target = `sleep_${user.sleepTypeKey}`;
+        return (assignments || []).some(a =>
+            a.status === 'active' &&
+            a.template?.category === target
+        );
+    })();
+
     const handleTaskClick = (task) => {
         if (task.isLocked) {
             // Cannot edit locked tasks directly
@@ -568,7 +586,7 @@ const MainApp = () => {
                                         {isMenstrualMode ? '結束生理期' : '我正在生理期'}
                                     </button>
                                 </div>
-                                {user?.typeKey && USER_TYPE_PROFILES[user.typeKey] && !(assignments || []).some(a => a.status === 'active') && (
+                                {user?.typeKey && USER_TYPE_PROFILES[user.typeKey] && !hasJoinedFlowerTemplate && (
                                     <div className="bg-gradient-to-br from-rose-50 to-amber-50 border border-rose-100 rounded-2xl p-4 mb-4">
                                         <p className="text-xs text-rose-600 font-bold uppercase tracking-wider">為你準備的小課程</p>
                                         <h3 className="text-lg font-black text-gray-800 mt-1">{USER_TYPE_PROFILES[user.typeKey].label}小課程</h3>
@@ -579,6 +597,20 @@ const MainApp = () => {
                                             className="mt-3 px-4 py-2 rounded-xl bg-rose-500 text-white text-sm font-bold hover:bg-rose-600 transition-colors"
                                         >
                                             查看小課程 →
+                                        </button>
+                                    </div>
+                                )}
+                                {user?.sleepTypeKey && SLEEP_TYPE_PROFILES[user.sleepTypeKey] && !hasJoinedSleepTemplate && (
+                                    <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl p-4 mb-4">
+                                        <p className="text-xs text-indigo-600 font-bold uppercase tracking-wider">為你準備的睡眠處方</p>
+                                        <h3 className="text-lg font-black text-gray-800 mt-1">{SLEEP_TYPE_PROFILES[user.sleepTypeKey].label}睡眠處方</h3>
+                                        <p className="text-xs text-gray-500 mt-1">14 天循序漸進,從 baby step 開始建立睡眠節奏</p>
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsTemplateExplorerOpen(true)}
+                                            className="mt-3 px-4 py-2 rounded-xl bg-indigo-500 text-white text-sm font-bold hover:bg-indigo-600 transition-colors"
+                                        >
+                                            查看睡眠處方 →
                                         </button>
                                     </div>
                                 )}
