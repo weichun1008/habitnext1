@@ -5,6 +5,9 @@
 const {
     isRecommendedFor,
     sortByRecommendation,
+    TEMPLATE_SECTIONS,
+    sectionIdFor,
+    groupTemplatesBySection,
 } = require('../../lib/templateRecommendation');
 
 const flower = (cat) => ({ id: cat, name: `${cat} plan`, category: cat });
@@ -75,5 +78,80 @@ describe('sortByRecommendation', () => {
         const before = templates.map(t => t.id);
         sortByRecommendation(templates, 'rose', null);
         expect(templates.map(t => t.id)).toEqual(before);
+    });
+});
+
+describe('TEMPLATE_SECTIONS', () => {
+    test('has flower, sleep, other in that order', () => {
+        expect(TEMPLATE_SECTIONS.map(s => s.id)).toEqual(['flower', 'sleep', 'other']);
+    });
+
+    test('flower + sleep sections have quizPendingCopy; other does not', () => {
+        const flower = TEMPLATE_SECTIONS.find(s => s.id === 'flower');
+        const sleep = TEMPLATE_SECTIONS.find(s => s.id === 'sleep');
+        const otherSection = TEMPLATE_SECTIONS.find(s => s.id === 'other');
+        expect(flower.quizPendingCopy).toBeTruthy();
+        expect(sleep.quizPendingCopy).toBeTruthy();
+        expect(otherSection.quizPendingCopy).toBeNull();
+    });
+});
+
+describe('sectionIdFor', () => {
+    test('maps flower categories to "flower"', () => {
+        ['daisy', 'rose', 'orchid', 'sunflower'].forEach(c => {
+            expect(sectionIdFor({ category: c })).toBe('flower');
+        });
+    });
+
+    test('maps sleep_ categories to "sleep"', () => {
+        ['sleep_stress', 'sleep_rhythm', 'sleep_metabolic', 'sleep_hormone'].forEach(c => {
+            expect(sectionIdFor({ category: c })).toBe('sleep');
+        });
+    });
+
+    test('maps anything else to "other"', () => {
+        expect(sectionIdFor({ category: 'health' })).toBe('other');
+        expect(sectionIdFor({ category: 'fitness' })).toBe('other');
+        expect(sectionIdFor({ category: null })).toBe('other');
+        expect(sectionIdFor(null)).toBe('other');
+    });
+});
+
+describe('groupTemplatesBySection', () => {
+    test('partitions templates into 3 buckets', () => {
+        const templates = [
+            flower('daisy'), flower('rose'),
+            sleep('sleep_stress'),
+            other('g1', 'health'), other('g2', 'fitness'),
+        ];
+        const grouped = groupTemplatesBySection(templates, null, null);
+        expect(grouped.flower).toHaveLength(2);
+        expect(grouped.sleep).toHaveLength(1);
+        expect(grouped.other).toHaveLength(2);
+    });
+
+    test('recommendation floats to top WITHIN its own section, others untouched', () => {
+        const templates = [
+            flower('daisy'), flower('rose'), flower('orchid'), flower('sunflower'),
+            sleep('sleep_stress'), sleep('sleep_rhythm'),
+            other('g', 'health'),
+        ];
+        const grouped = groupTemplatesBySection(templates, 'orchid', 'rhythm');
+        expect(grouped.flower[0].id).toBe('orchid');
+        expect(grouped.sleep[0].id).toBe('sleep_rhythm');
+        expect(grouped.other.map(t => t.id)).toEqual(['g']);
+    });
+
+    test('empty input returns three empty buckets', () => {
+        const grouped = groupTemplatesBySection([], null, null);
+        expect(grouped).toEqual({ flower: [], sleep: [], other: [] });
+    });
+
+    test('all-flower input leaves sleep + other empty', () => {
+        const templates = [flower('daisy'), flower('rose')];
+        const grouped = groupTemplatesBySection(templates, null, null);
+        expect(grouped.flower).toHaveLength(2);
+        expect(grouped.sleep).toEqual([]);
+        expect(grouped.other).toEqual([]);
     });
 });

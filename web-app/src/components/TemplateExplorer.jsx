@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { X, Search, User, Check, Loader, Calendar, Sparkles } from 'lucide-react';
-import { isRecommendedFor, sortByRecommendation } from '@/lib/templateRecommendation';
+import { X, Search, User, Check, Loader, Calendar, Sparkles, Hourglass } from 'lucide-react';
+import {
+    isRecommendedFor,
+    TEMPLATE_SECTIONS,
+    groupTemplatesBySection,
+} from '@/lib/templateRecommendation';
 
 const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null, userSleepTypeKey = null }) => {
     const [templates, setTemplates] = useState([]);
@@ -95,10 +99,17 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
         }
     };
 
-    // Show ALL public templates. If the user has taken a quiz, the matching
-    // template floats to the top with a 「為你推薦」 badge — but non-matching
-    // flowers / sleep plans remain visible so the user can browse and switch.
-    const visibleTemplates = sortByRecommendation(templates, userTypeKey, userSleepTypeKey);
+    // Show ALL public templates, grouped into 3 sections (花朵 / 睡眠 / 其他).
+    // Within each section, the template matching the user's quiz result floats
+    // to the top with a 「為你推薦」 badge.
+    const grouped = groupTemplatesBySection(templates, userTypeKey, userSleepTypeKey);
+
+    // Quiz-pending info card visibility per section
+    const quizPendingShow = {
+        flower: !userTypeKey,
+        sleep: !userSleepTypeKey,
+        other: false,
+    };
 
     if (!isOpen) return null;
 
@@ -127,60 +138,94 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                             目前沒有公開的習慣計畫
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 gap-4">
-                            {visibleTemplates.map(template => {
-                                const recommended = isRecommendedFor(template, userTypeKey, userSleepTypeKey);
+                        <div className="space-y-8">
+                            {TEMPLATE_SECTIONS.map(section => {
+                                const items = grouped[section.id] || [];
+                                const showQuizPending = quizPendingShow[section.id] && section.quizPendingCopy;
+                                // Skip the "其他" section entirely when empty; flower/sleep sections
+                                // stay visible even when empty so the quiz-pending card can show.
+                                if (items.length === 0 && !showQuizPending) return null;
                                 return (
-                                <div
-                                    key={template.id}
-                                    className={`bg-white p-5 rounded-xl border shadow-sm hover:shadow-md transition-shadow ${recommended ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-100'}`}
-                                >
-                                    <div className="flex justify-between items-start mb-3">
-                                        <div>
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <h3 className="font-bold text-gray-800 text-lg">{template.name}</h3>
-                                                {recommended && (
-                                                    <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-xs font-bold">
-                                                        <Sparkles size={12} />
-                                                        為你推薦
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-                                                <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
-                                                    {template.expert?.title || '專家'}
-                                                </span>
-                                                <span>by {template.expert?.name}</span>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={() => handleJoinClick(template)}
-                                            disabled={joiningId === template.id}
-                                            className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors disabled:opacity-50 flex items-center gap-2"
-                                        >
-                                            {joiningId === template.id ? (
-                                                <>加入中...</>
-                                            ) : (
-                                                <>加入計畫</>
+                                    <section key={section.id}>
+                                        {/* Section header */}
+                                        <div className="mb-3">
+                                            <h3 className="text-base font-bold text-gray-800">{section.label}</h3>
+                                            {section.description && (
+                                                <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                                                    {section.description}
+                                                </p>
                                             )}
-                                        </button>
-                                    </div>
-
-                                    <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                                        {template.description || '這個計畫可以幫助你建立良好的生活習慣。'}
-                                    </p>
-
-                                    <div className="flex items-center gap-4 text-xs text-gray-400 border-t border-gray-100 pt-3">
-                                        <div className="flex items-center gap-1">
-                                            <User size={14} />
-                                            <span>{template._count?.assignments || 0} 人已加入</span>
                                         </div>
-                                        <div className="flex items-center gap-1">
-                                            <Check size={14} />
-                                            <span>{template._count?.tasks || 0} 個任務</span>
+
+                                        {/* Quiz-pending info card */}
+                                        {showQuizPending && (
+                                            <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 mb-3 flex items-start gap-3">
+                                                <Hourglass size={18} className="text-gray-400 flex-shrink-0 mt-0.5" />
+                                                <div className="text-xs text-gray-600 leading-relaxed">
+                                                    {section.quizPendingCopy}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Templates in this section */}
+                                        <div className="grid grid-cols-1 gap-4">
+                                            {items.map(template => {
+                                                const recommended = isRecommendedFor(template, userTypeKey, userSleepTypeKey);
+                                                return (
+                                                    <div
+                                                        key={template.id}
+                                                        className={`bg-white p-5 rounded-xl border shadow-sm hover:shadow-md transition-shadow ${recommended ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-100'}`}
+                                                    >
+                                                        <div className="flex justify-between items-start mb-3 gap-3">
+                                                            <div className="min-w-0">
+                                                                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                                                    <h3 className="font-bold text-gray-800 text-lg">{template.name}</h3>
+                                                                    {recommended && (
+                                                                        <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-xs font-bold">
+                                                                            <Sparkles size={12} />
+                                                                            為你推薦
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-xs text-gray-500 mb-2 flex-wrap">
+                                                                    <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
+                                                                        {template.expert?.title || '專家'}
+                                                                    </span>
+                                                                    <span>by {template.expert?.name}</span>
+                                                                </div>
+                                                            </div>
+                                                            <button
+                                                                onClick={() => handleJoinClick(template)}
+                                                                disabled={joiningId === template.id}
+                                                                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors disabled:opacity-50 flex items-center gap-2 flex-shrink-0"
+                                                            >
+                                                                {joiningId === template.id ? (
+                                                                    <>加入中...</>
+                                                                ) : (
+                                                                    <>加入計畫</>
+                                                                )}
+                                                            </button>
+                                                        </div>
+
+                                                        <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                                                            {template.description || '這個計畫可以幫助你建立良好的生活習慣。'}
+                                                        </p>
+
+                                                        <div className="flex items-center gap-4 text-xs text-gray-400 border-t border-gray-100 pt-3">
+                                                            <div className="flex items-center gap-1">
+                                                                <User size={14} />
+                                                                <span>{template._count?.assignments || 0} 人已加入</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-1">
+                                                                <Check size={14} />
+                                                                <span>{template._count?.tasks || 0} 個任務</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
-                                    </div>
-                                </div>
+                                    </section>
                                 );
                             })}
                         </div>
