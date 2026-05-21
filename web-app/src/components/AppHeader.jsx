@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Award, Plus, X, BookOpen, LogOut } from 'lucide-react';
+import { Calendar, Award, Plus, X, BookOpen, LogOut, BarChart3 } from 'lucide-react';
 
 const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onOpenExplore, user, onLogout, onOpenProfile, className }) => {
     const weekDays = ['一', '二', '三', '四', '五', '六', '日'];
@@ -39,7 +39,10 @@ const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onO
                     </div>
                 ) : (
                     <span className="font-bold text-emerald-600">
-                        {currentView === 'manage' ? '任務管理' : currentView === 'dashboard_detail' ? '洞察報告' : '成就中心'}
+                        {currentView === 'manage' ? '任務管理'
+                            : currentView === 'dashboard_detail' ? '洞察報告'
+                            : currentView === 'stats' ? '統計'
+                            : '成就中心'}
                     </span>
                 )}
 
@@ -51,6 +54,9 @@ const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onO
                             </button>
                             <button onClick={() => onViewChange('dashboard_detail')} className="w-8 h-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-100 transition-colors">
                                 <Calendar size={20} />
+                            </button>
+                            <button onClick={() => onViewChange('stats')} className="w-8 h-8 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center hover:bg-purple-100 transition-colors">
+                                <BarChart3 size={20} />
                             </button>
                             <button onClick={onOpenBadges} className="w-8 h-8 bg-gray-100 text-yellow-600 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors">
                                 <Award size={20} />

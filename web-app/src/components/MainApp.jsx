@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, LogOut, Compass } from 'lucide-react';
+import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, LogOut, Compass, BarChart3 } from 'lucide-react';
 import AppHeader from './AppHeader';
 import TaskCard from './TaskCard';
 import TaskFormModal from './TaskFormModal';
@@ -18,6 +18,7 @@ import { visibleSubtasks, computeChecklistValue } from '@/lib/subtasks';
 import PlanGroup from './PlanGroup';
 import TemplateExplorer from './TemplateExplorer';
 import ProfileModal from './ProfileModal';
+import StatsView from './StatsView';
 
 const MainApp = () => {
     const [user, setUser] = useState(null);
@@ -531,6 +532,13 @@ const MainApp = () => {
                             日曆
                         </button>
                         <button
+                            onClick={() => setCurrentView('stats')}
+                            className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'stats' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
+                        >
+                            <BarChart3 size={20} />
+                            統計
+                        </button>
+                        <button
                             onClick={() => setCurrentView('badges')}
                             className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'badges' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
                         >
@@ -700,6 +708,10 @@ const MainApp = () => {
                                     ))}
                                 </div>
                             </div>
+                        )}
+
+                        {currentView === 'stats' && (
+                            <StatsView userId={user?.id} />
                         )}
 
                         {currentView === 'badges' && (
