@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { X, Search, User, Check, Loader, Calendar, Sparkles, Hourglass } from 'lucide-react';
+import { X, Search, User, Check, Loader, Calendar, Sparkles, Hourglass, ChevronRight } from 'lucide-react';
 import {
     isRecommendedFor,
     TEMPLATE_SECTIONS,
     groupTemplatesBySection,
 } from '@/lib/templateRecommendation';
+import TemplateDetailPanel from './TemplateDetailPanel';
 
 const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null, userSleepTypeKey = null }) => {
     const [templates, setTemplates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [joiningId, setJoiningId] = useState(null);
+
+    // Detail panel state (Slice J)
+    const [detailTemplate, setDetailTemplate] = useState(null);
 
     // Start date selection state
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -115,7 +119,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white w-full max-w-2xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            <div className="bg-white w-full max-w-2xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden relative">
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white">
                     <div>
@@ -174,7 +178,16 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                 return (
                                                     <div
                                                         key={template.id}
-                                                        className={`bg-white p-5 rounded-xl border shadow-sm hover:shadow-md transition-shadow ${recommended ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-100'}`}
+                                                        role="button"
+                                                        tabIndex={0}
+                                                        onClick={() => setDetailTemplate(template)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                                e.preventDefault();
+                                                                setDetailTemplate(template);
+                                                            }
+                                                        }}
+                                                        className={`bg-white p-5 rounded-xl border shadow-sm hover:shadow-md transition-shadow cursor-pointer ${recommended ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-100'}`}
                                                     >
                                                         <div className="flex justify-between items-start mb-3 gap-3">
                                                             <div className="min-w-0">
@@ -195,7 +208,12 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                                 </div>
                                                             </div>
                                                             <button
-                                                                onClick={() => handleJoinClick(template)}
+                                                                onClick={(e) => {
+                                                                    // Don't open detail when the user actually wants the
+                                                                    // 「快速加入」 shortcut on the card.
+                                                                    e.stopPropagation();
+                                                                    handleJoinClick(template);
+                                                                }}
                                                                 disabled={joiningId === template.id}
                                                                 className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors disabled:opacity-50 flex items-center gap-2 flex-shrink-0"
                                                             >
@@ -220,6 +238,10 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                                 <Check size={14} />
                                                                 <span>{template._count?.tasks || 0} 個任務</span>
                                                             </div>
+                                                            <div className="ml-auto flex items-center gap-1 text-emerald-600">
+                                                                <span>查看詳情</span>
+                                                                <ChevronRight size={14} />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 );
@@ -231,6 +253,17 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                         </div>
                     )}
                 </div>
+
+                {/* Detail panel slides in from the right when a card is tapped */}
+                {detailTemplate && (
+                    <TemplateDetailPanel
+                        template={detailTemplate}
+                        isRecommended={isRecommendedFor(detailTemplate, userTypeKey, userSleepTypeKey)}
+                        joining={joiningId === detailTemplate.id}
+                        onBack={() => setDetailTemplate(null)}
+                        onJoin={(t) => handleJoinClick(t)}
+                    />
+                )}
             </div>
 
             {/* Start Date Selection Modal */}
