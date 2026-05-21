@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Edit2, Trash2, Archive, RotateCcw, X, Save, Settings, FolderOpen, Link } from 'lucide-react';
+import IconRenderer from '@/components/IconRenderer';
+import { CATEGORY_CONFIG, domainToIconKey } from '@/lib/constants';
 
 const TASK_TYPES = [
     { value: 'binary', label: '一般' },
@@ -36,7 +38,7 @@ const defaultFormData = {
     name: '',
     description: '',
     category: '',
-    icon: '🏃',
+    icon: 'star',
     difficulties: {
         beginner: { ...defaultDifficultyConfig },
         intermediate: { ...defaultDifficultyConfig },
@@ -110,7 +112,7 @@ export default function HabitsPage() {
             name: habit.name || '',
             description: habit.description || '',
             category: habit.category || '',
-            icon: habit.icon || '🏃',
+            icon: habit.icon || domainToIconKey(habit.category),
             difficulties: {
                 beginner: { ...defaultDifficultyConfig, ...difficulties.beginner },
                 intermediate: { ...defaultDifficultyConfig, ...difficulties.intermediate },
@@ -274,8 +276,8 @@ export default function HabitsPage() {
                                     }`}
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 flex items-center justify-center text-2xl">
-                                        {habit.icon || '🏃'}
+                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 flex items-center justify-center">
+                                        <IconRenderer category={habit.icon || domainToIconKey(habit.category)} size={24} />
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-white">{habit.name}</h3>
@@ -360,13 +362,15 @@ export default function HabitsPage() {
                                 </div>
                                 <div>
                                     <label className="admin-label">圖示</label>
-                                    <input
-                                        type="text"
+                                    <select
                                         className="admin-input"
-                                        placeholder="emoji"
                                         value={formData.icon}
                                         onChange={e => setFormData({ ...formData, icon: e.target.value })}
-                                    />
+                                    >
+                                        {Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => (
+                                            <option key={key} value={key}>{cfg.label} ({key})</option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <div className="col-span-2">
                                     <label className="admin-label">說明</label>

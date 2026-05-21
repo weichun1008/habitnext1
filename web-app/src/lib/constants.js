@@ -1,5 +1,5 @@
 import {
-    Droplet, Footprints, Dumbbell, Moon, Sun, Pill, Aperture, Book, Star
+    Droplet, Footprints, Dumbbell, Moon, Sun, Pill, Aperture, Book, Star, Users, Briefcase
 } from 'lucide-react';
 
 export const CATEGORY_CONFIG = {
@@ -11,6 +11,8 @@ export const CATEGORY_CONFIG = {
     sun: { type: 'icon', value: Sun, color: 'text-yellow-500', bg: 'bg-yellow-50', label: '陽光' },
     pill: { type: 'icon', value: Pill, color: 'text-purple-500', bg: 'bg-purple-50', label: '保健' },
     aperture: { type: 'icon', value: Aperture, color: 'text-fuchsia-500', bg: 'bg-fuchsia-50', label: '紀錄' },
+    users: { type: 'icon', value: Users, color: 'text-rose-500', bg: 'bg-rose-50', label: '社交' },
+    briefcase: { type: 'icon', value: Briefcase, color: 'text-slate-500', bg: 'bg-slate-50', label: '職涯' },
 
     // Emojis
     apple: { type: 'emoji', value: '🍎', color: 'text-red-500', bg: 'bg-red-50', label: '飲食' },
@@ -21,6 +23,25 @@ export const CATEGORY_CONFIG = {
     journal: { type: 'emoji', value: '✍️', color: 'text-sky-500', bg: 'bg-sky-50', label: '日記' },
     star: { type: 'icon', value: Star, color: 'text-gray-500', bg: 'bg-gray-50', label: '其他' },
 };
+
+// Map from the 9 GENESIS+IO HabitCategory names to a CATEGORY_CONFIG key.
+// Used to give OfficialHabits a default visual icon in admin UI / pickers.
+// See: prisma/seed/genesis-io.json for the canonical 9 domain names.
+export const DOMAIN_TO_ICON_KEY = {
+    '基因與腸道':  'pill',
+    '環境':       'sun',
+    '飲食':       'apple',
+    '運動':       'dumbbell',
+    '壓力與睡眠': 'moon',
+    '社交互動':   'users',
+    '心靈':       'yoga',
+    '認知與智慧': 'book',
+    '職涯與平衡': 'briefcase',
+};
+
+export function domainToIconKey(domainName) {
+    return DOMAIN_TO_ICON_KEY[domainName] || 'star';
+}
 
 export const OFFICIAL_TASKS = [
     {
