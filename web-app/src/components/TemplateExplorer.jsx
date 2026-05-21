@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X, Search, User, Check, Loader, Calendar } from 'lucide-react';
-
-const FLOWER_TYPES = new Set(['daisy', 'rose', 'orchid', 'sunflower']);
-const SLEEP_CATEGORIES = new Set(['sleep_stress', 'sleep_rhythm', 'sleep_metabolic', 'sleep_hormone']);
+import { X, Search, User, Check, Loader, Calendar, Sparkles } from 'lucide-react';
+import { isRecommendedFor, sortByRecommendation } from '@/lib/templateRecommendation';
 
 const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null, userSleepTypeKey = null }) => {
     const [templates, setTemplates] = useState([]);
@@ -97,15 +95,10 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
         }
     };
 
-    const visibleTemplates = templates.filter(t => {
-        if (FLOWER_TYPES.has(t.category)) {
-            return t.category === userTypeKey;
-        }
-        if (SLEEP_CATEGORIES.has(t.category)) {
-            return userSleepTypeKey && t.category === `sleep_${userSleepTypeKey}`;
-        }
-        return true;
-    });
+    // Show ALL public templates. If the user has taken a quiz, the matching
+    // template floats to the top with a 「為你推薦」 badge — but non-matching
+    // flowers / sleep plans remain visible so the user can browse and switch.
+    const visibleTemplates = sortByRecommendation(templates, userTypeKey, userSleepTypeKey);
 
     if (!isOpen) return null;
 
@@ -133,15 +126,26 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                         <div className="text-center py-12 text-gray-500">
                             目前沒有公開的習慣計畫
                         </div>
-                    ) : visibleTemplates.length === 0 && (userTypeKey || userSleepTypeKey) ? (
-                        <p className="text-sm text-gray-500 text-center py-6">尚未有適合你類型的計畫</p>
                     ) : (
                         <div className="grid grid-cols-1 gap-4">
-                            {visibleTemplates.map(template => (
-                                <div key={template.id} className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                            {visibleTemplates.map(template => {
+                                const recommended = isRecommendedFor(template, userTypeKey, userSleepTypeKey);
+                                return (
+                                <div
+                                    key={template.id}
+                                    className={`bg-white p-5 rounded-xl border shadow-sm hover:shadow-md transition-shadow ${recommended ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-100'}`}
+                                >
                                     <div className="flex justify-between items-start mb-3">
                                         <div>
-                                            <h3 className="font-bold text-gray-800 text-lg mb-1">{template.name}</h3>
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <h3 className="font-bold text-gray-800 text-lg">{template.name}</h3>
+                                                {recommended && (
+                                                    <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-xs font-bold">
+                                                        <Sparkles size={12} />
+                                                        為你推薦
+                                                    </span>
+                                                )}
+                                            </div>
                                             <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
                                                 <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
                                                     {template.expert?.title || '專家'}
@@ -177,7 +181,8 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                         </div>
                                     </div>
                                 </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     )}
                 </div>
