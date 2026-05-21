@@ -71,7 +71,7 @@ const WeekView = ({ currentDate, tasks, todayStr, onUpdate, onTaskClick }) => {
     return (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             {/* Header Row - Day Names */}
-            <div className="grid grid-cols-[60px_repeat(7,1fr)] border-b border-gray-100">
+            <div className="grid grid-cols-[44px_repeat(7,minmax(0,1fr))] border-b border-gray-100">
                 <div className="p-2 bg-gray-50"></div>
                 {weekDays.map(({ dateStr, dayOfMonth, dayOfWeek }) => {
                     const isToday = dateStr === todayStr;
@@ -96,7 +96,7 @@ const WeekView = ({ currentDate, tasks, todayStr, onUpdate, onTaskClick }) => {
             </div>
 
             {/* All-day Section */}
-            <div className="grid grid-cols-[60px_repeat(7,1fr)] border-b border-gray-200">
+            <div className="grid grid-cols-[44px_repeat(7,minmax(0,1fr))] border-b border-gray-200">
                 <div className="p-2 text-xs font-medium text-gray-400 bg-gray-50 flex items-center justify-center">
                     全日
                 </div>
@@ -133,7 +133,7 @@ const WeekView = ({ currentDate, tasks, todayStr, onUpdate, onTaskClick }) => {
             {/* Time Grid */}
             <div className="max-h-[500px] overflow-y-auto">
                 {TIME_SLOTS.map(({ hour, label }) => (
-                    <div key={hour} className="grid grid-cols-[60px_repeat(7,1fr)] border-b border-gray-50">
+                    <div key={hour} className="grid grid-cols-[44px_repeat(7,minmax(0,1fr))] border-b border-gray-50">
                         <div className="p-2 text-xs text-gray-400 text-right pr-3 bg-gray-50">
                             {label}
                         </div>
