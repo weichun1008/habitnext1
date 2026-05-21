@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import StreakHero from './stats/StreakHero';
 import CompletionRateCards from './stats/CompletionRateCards';
 import DomainBreakdownChart from './stats/DomainBreakdownChart';
@@ -24,7 +25,25 @@ const isEmpty = (stats) => {
     return noStreak && emptyHeatmap;
 };
 
-const StatsView = ({ userId }) => {
+// Inline header with explicit 返回 button. Both desktop sidebar and the
+// AppHeader Calendar icon also navigate, but users reported those weren't
+// intuitive — this gives a clear in-page back affordance.
+const Header = ({ onBack }) => (
+    <div className="flex items-center gap-3 mb-1 px-1">
+        {onBack && (
+            <button
+                onClick={onBack}
+                className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors text-gray-500"
+                aria-label="返回"
+            >
+                <ArrowLeft size={20} />
+            </button>
+        )}
+        <h2 className="text-xl font-bold text-gray-800">統計</h2>
+    </div>
+);
+
+const StatsView = ({ userId, onBack }) => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -50,27 +69,42 @@ const StatsView = ({ userId }) => {
         return () => { cancelled = true; };
     }, [userId]);
 
+    // All three return branches share the same outer container (max-w-md
+    // mobile-app width, padding) so empty / loading / error states don't
+    // break the layout.
     if (loading) {
-        return <div className="p-6 text-center text-gray-400">載入中…</div>;
+        return (
+            <div className="p-4 space-y-4 max-w-md mx-auto">
+                <Header onBack={onBack} />
+                <div className="text-center text-gray-400 py-12">載入中…</div>
+            </div>
+        );
     }
     if (error) {
         return (
-            <div className="p-6 text-center text-gray-500">
-                <p>統計暫時無法載入：{error}</p>
+            <div className="p-4 space-y-4 max-w-md mx-auto">
+                <Header onBack={onBack} />
+                <div className="text-center text-gray-500 py-12">
+                    <p>統計暫時無法載入：{error}</p>
+                </div>
             </div>
         );
     }
     if (isEmpty(stats)) {
         return (
-            <div className="p-10 text-center text-gray-500">
-                <p className="text-base">打完第一個卡再回來看 📊</p>
-                <p className="text-xs text-gray-400 mt-2">統計需要至少一天的紀錄才有故事</p>
+            <div className="p-4 space-y-4 max-w-md mx-auto">
+                <Header onBack={onBack} />
+                <div className="text-center text-gray-500 py-12">
+                    <p className="text-base">打完第一個卡再回來看 📊</p>
+                    <p className="text-xs text-gray-400 mt-2">統計需要至少一天的紀錄才有故事</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="p-4 space-y-4 max-w-3xl mx-auto">
+        <div className="p-4 space-y-4 max-w-md mx-auto">
+            <Header onBack={onBack} />
             <StreakHero overall={stats.overall} />
             <CompletionRateCards rate={stats.completionRate} />
             <DomainBreakdownChart breakdown={stats.domainBreakdown} />
