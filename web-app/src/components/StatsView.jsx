@@ -74,7 +74,7 @@ const StatsView = ({ userId, onBack }) => {
     // break the layout.
     if (loading) {
         return (
-            <div className="p-4 space-y-4 md:max-w-md md:mx-auto">
+            <div className="p-4 space-y-4 w-full">
                 <Header onBack={onBack} />
                 <div className="text-center text-gray-400 py-12">載入中…</div>
             </div>
@@ -82,7 +82,7 @@ const StatsView = ({ userId, onBack }) => {
     }
     if (error) {
         return (
-            <div className="p-4 space-y-4 md:max-w-md md:mx-auto">
+            <div className="p-4 space-y-4 w-full">
                 <Header onBack={onBack} />
                 <div className="text-center text-gray-500 py-12">
                     <p>統計暫時無法載入：{error}</p>
@@ -92,7 +92,7 @@ const StatsView = ({ userId, onBack }) => {
     }
     if (isEmpty(stats)) {
         return (
-            <div className="p-4 space-y-4 md:max-w-md md:mx-auto">
+            <div className="p-4 space-y-4 w-full">
                 <Header onBack={onBack} />
                 <div className="text-center text-gray-500 py-12">
                     <p className="text-base">打完第一個卡再回來看 📊</p>
@@ -103,7 +103,7 @@ const StatsView = ({ userId, onBack }) => {
     }
 
     return (
-        <div className="p-4 space-y-4 md:max-w-md md:mx-auto">
+        <div className="p-4 space-y-4 w-full">
             <Header onBack={onBack} />
             <StreakHero overall={stats.overall} />
             <CompletionRateCards rate={stats.completionRate} />

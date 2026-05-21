@@ -22,9 +22,15 @@ import ProfileModal from './ProfileModal';
 
 // StatsView is dynamically imported to keep recharts (~96kb gzip) off the
 // `/` route's First Load JS — it only loads when the user opens the stats tab.
+// Loading placeholder matches StatsView's container shape so users don't see
+// a width / padding jump when the chunk finishes loading.
 const StatsView = dynamic(() => import('./StatsView'), {
     ssr: false,
-    loading: () => <div className="p-6 text-center text-gray-400">載入中…</div>,
+    loading: () => (
+        <div className="p-4 space-y-4 w-full">
+            <div className="text-center text-gray-400 py-12">載入中…</div>
+        </div>
+    ),
 });
 
 const MainApp = () => {
@@ -583,7 +589,7 @@ const MainApp = () => {
                     <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-24 no-scrollbar">
 
                         {currentView === 'daily' && (
-                            <div className="animate-fade-in-up md:max-w-md md:mx-auto">
+                            <div className="animate-fade-in-up">
                                 <div className="flex items-center justify-between gap-2 mb-3 px-1">
                                     <span className="text-sm text-gray-600">
                                         {isMenstrualMode
@@ -672,7 +678,7 @@ const MainApp = () => {
                         )}
 
                         {currentView === 'manage' && (
-                            <div className="p-4 md:max-w-md md:mx-auto">
+                            <div className="p-4">
                                 <h2 className="text-2xl font-black text-gray-800 mb-6">計畫總覽</h2>
                                 {/* Tasks List */}
                                 <div className="space-y-4 pb-24 md:pb-0">
