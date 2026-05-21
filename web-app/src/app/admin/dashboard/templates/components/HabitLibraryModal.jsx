@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { X, Search, Plus, Check, ChevronDown } from 'lucide-react';
+import IconRenderer from '@/components/IconRenderer';
+import { domainToIconKey } from '@/lib/constants';
 
 const DIFFICULTY_OPTIONS = [
     { key: 'beginner', label: '入門', color: 'emerald' },
@@ -102,7 +104,7 @@ export default function HabitLibraryModal({ isOpen, onClose, onSelect, phaseOrde
                 title: diffConfig.label || `${habit?.name || '習慣'} - ${DIFFICULTY_OPTIONS.find(d => d.key === diffKey)?.label || ''}`,
                 details: habit?.description || '',
                 type: diffConfig.type || 'binary',
-                category: habit?.icon || 'star',
+                category: habit?.icon || domainToIconKey(habit?.category),
                 frequency: diffConfig.recurrence?.type || 'daily',
                 recurrence: diffConfig.recurrence || { type: 'daily', interval: 1, endType: 'never' },
                 reminder: { enabled: false, offset: 0 },
@@ -189,10 +191,10 @@ export default function HabitLibraryModal({ isOpen, onClose, onSelect, phaseOrde
                                     >
                                         <div className="flex items-start gap-3">
                                             <div
-                                                className="text-2xl cursor-pointer"
+                                                className="cursor-pointer flex items-center justify-center w-8 h-8"
                                                 onClick={() => toggleHabit(habit)}
                                             >
-                                                {habit.icon || '🎯'}
+                                                <IconRenderer category={habit.icon || domainToIconKey(habit.category)} size={22} />
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <div
