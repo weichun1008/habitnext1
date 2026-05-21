@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, LogOut, Compass, BarChart3 } from 'lucide-react';
 import AppHeader from './AppHeader';
 import TaskCard from './TaskCard';
@@ -18,7 +19,13 @@ import { visibleSubtasks, computeChecklistValue } from '@/lib/subtasks';
 import PlanGroup from './PlanGroup';
 import TemplateExplorer from './TemplateExplorer';
 import ProfileModal from './ProfileModal';
-import StatsView from './StatsView';
+
+// StatsView is dynamically imported to keep recharts (~96kb gzip) off the
+// `/` route's First Load JS — it only loads when the user opens the stats tab.
+const StatsView = dynamic(() => import('./StatsView'), {
+    ssr: false,
+    loading: () => <div className="p-6 text-center text-gray-400">載入中…</div>,
+});
 
 const MainApp = () => {
     const [user, setUser] = useState(null);
