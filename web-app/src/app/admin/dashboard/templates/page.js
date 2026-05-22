@@ -1,16 +1,37 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Globe, Lock } from 'lucide-react';
+import { Plus, Edit2, Trash2, Globe, Lock, ListChecks, Users, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-const CATEGORIES = [
-    { value: 'health', label: '健康', color: '#10b981' },
-    { value: 'fitness', label: '運動', color: '#f59e0b' },
-    { value: 'nutrition', label: '營養', color: '#3b82f6' },
-    { value: 'mental', label: '心理', color: '#8b5cf6' },
-];
+// Friendly labels for every category slug actually in use.
+// Falls back to the raw slug for anything unmapped (e.g. legacy values).
+const CATEGORY_LABELS = {
+    // Generic
+    health: '健康',
+    fitness: '運動',
+    nutrition: '營養',
+    mental: '心理',
+    // Flower (women's course)
+    daisy: '雛菊型',
+    rose: '玫瑰型',
+    orchid: '蘭花型',
+    sunflower: '向日葵型',
+    // Sleep
+    sleep_stress: '睡眠 · 壓力',
+    sleep_rhythm: '睡眠 · 節律',
+    sleep_metabolic: '睡眠 · 代謝',
+    sleep_hormone: '睡眠 · 荷爾蒙',
+};
+
+// Color tag per category family for the badge dot.
+const CATEGORY_COLOR = (slug) => {
+    if (!slug) return '#6b7280';
+    if (slug.startsWith('sleep_')) return '#818cf8'; // indigo
+    if (['daisy', 'rose', 'orchid', 'sunflower'].includes(slug)) return '#f472b6'; // pink
+    return '#10b981'; // emerald
+};
 
 // Templates use two shapes: legacy v1.0 stores tasks as a flat array,
 // v2.0 stores { version, phases: [{ tasks: [...] }] }. Sum across phases
@@ -83,34 +104,64 @@ export default function TemplatesPage() {
                 </div>
             ) : (
                 <div className="admin-template-grid">
-                    {templates.map(template => (
-                        <div key={template.id} className="admin-template-card" onClick={() => router.push(`/admin/dashboard/templates/${template.id}`)}>
-                            <div className="admin-template-header">
-                                <span className="admin-template-name">{template.name}</span>
-                                <span className={`admin-badge ${template.isPublic ? 'admin-badge-success' : 'admin-badge-info'}`}>
-                                    {template.isPublic ? <><Globe size={10} /> 公開</> : <><Lock size={10} /> 私人</>}
-                                </span>
+                    {templates.map(template => {
+                        const catLabel = CATEGORY_LABELS[template.category] || template.category;
+                        const catColor = CATEGORY_COLOR(template.category);
+                        const taskCount = countTasks(template.tasks);
+                        const assignCount = template._count?.assignments || 0;
+                        const expertName = template.expert?.name || '未知';
+
+                        return (
+                            <div key={template.id} className="admin-template-card" onClick={() => router.push(`/admin/dashboard/templates/${template.id}`)}>
+                                {/* Top row: category chip + public/private */}
+                                <div className="flex items-center justify-between mb-3">
+                                    <span
+                                        className="admin-template-category-chip"
+                                        style={{ backgroundColor: `${catColor}1f`, color: catColor, borderColor: `${catColor}55` }}
+                                    >
+                                        <span className="admin-template-category-dot" style={{ backgroundColor: catColor }} />
+                                        {catLabel}
+                                    </span>
+                                    <span className={`admin-badge ${template.isPublic ? 'admin-badge-success' : 'admin-badge-info'}`}>
+                                        {template.isPublic ? <><Globe size={10} /> 公開</> : <><Lock size={10} /> 私人</>}
+                                    </span>
+                                </div>
+
+                                {/* Title + description */}
+                                <h3 className="admin-template-name">{template.name}</h3>
+                                <p className="admin-template-desc">{template.description || '無描述'}</p>
+
+                                {/* Stats row */}
+                                <div className="admin-template-stats">
+                                    <div className="admin-template-stat" title="任務數">
+                                        <ListChecks size={14} />
+                                        <span>{taskCount}</span>
+                                        <span className="admin-template-stat-label">任務</span>
+                                    </div>
+                                    <div className="admin-template-stat" title="指派次數">
+                                        <Users size={14} />
+                                        <span>{assignCount}</span>
+                                        <span className="admin-template-stat-label">指派</span>
+                                    </div>
+                                </div>
+
+                                {/* Owner */}
+                                <div className="admin-template-owner">
+                                    <User size={12} />
+                                    <span>{expertName}</span>
+                                </div>
+
+                                <div className="mt-4 flex gap-2" onClick={e => e.stopPropagation()}>
+                                    <Link href={`/admin/dashboard/templates/${template.id}`} className="admin-btn admin-btn-secondary flex-1 justify-center no-underline">
+                                        <Edit2 size={14} /> 編輯
+                                    </Link>
+                                    <button className="admin-btn admin-btn-danger px-3 py-2" onClick={() => handleDelete(template.id)}>
+                                        <Trash2 size={14} />
+                                    </button>
+                                </div>
                             </div>
-                            <p className="admin-template-desc">{template.description || '無描述'}</p>
-                            <div className="admin-template-meta">
-                                <span>{CATEGORIES.find(c => c.value === template.category)?.label || template.category}</span>
-                                <span>•</span>
-                                <span>{countTasks(template.tasks)} 個任務</span>
-                                <span>•</span>
-                                <span>{template._count?.assignments || 0} 次指派</span>
-                                <span>•</span>
-                                <span>by {template.expert?.name || '未知'}</span>
-                            </div>
-                            <div className="mt-4 flex gap-2" onClick={e => e.stopPropagation()}>
-                                <Link href={`/admin/dashboard/templates/${template.id}`} className="admin-btn admin-btn-secondary flex-1 justify-center no-underline">
-                                    <Edit2 size={14} /> 編輯
-                                </Link>
-                                <button className="admin-btn admin-btn-danger px-3 py-2" onClick={() => handleDelete(template.id)}>
-                                    <Trash2 size={14} />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
         </div>
