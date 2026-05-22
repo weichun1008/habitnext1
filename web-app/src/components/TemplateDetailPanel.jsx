@@ -70,6 +70,7 @@ const TemplateDetailPanel = ({
     onBack,
     onJoin,
     joining = false,
+    category = null,  // { name, color, icon } — resolved from PlanCategory by caller; falsy = hide chip
 }) => {
     // Slide-in animation: start translated, then transition to 0 on mount.
     const [shown, setShown] = useState(false);
@@ -121,6 +122,23 @@ const TemplateDetailPanel = ({
 
             {/* Scrollable content */}
             <div className="flex-1 overflow-y-auto p-4 pb-24">
+                {/* Category chip — color + emoji read from PlanCategory via parent */}
+                {category && (
+                    <div className="mb-3">
+                        <span
+                            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border"
+                            style={{
+                                backgroundColor: `${category.color}1f`,
+                                color: category.color,
+                                borderColor: `${category.color}55`,
+                            }}
+                        >
+                            {category.icon && <span className="text-sm leading-none">{category.icon}</span>}
+                            {category.name}
+                        </span>
+                    </div>
+                )}
+
                 {/* Expert pill */}
                 {template.expert && (
                     <div className="flex items-center gap-2 text-xs text-gray-500 mb-4 flex-wrap">

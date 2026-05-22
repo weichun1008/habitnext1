@@ -300,6 +300,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                         template={detailTemplate}
                         isRecommended={isRecommendedFor(detailTemplate, userTypeKey, userSleepTypeKey)}
                         joining={joiningId === detailTemplate.id}
+                        category={categoryMap[detailTemplate.category] || fallbackForSlug(detailTemplate.category)}
                         onBack={() => setDetailTemplate(null)}
                         onJoin={(t) => handleJoinClick(t)}
                     />
