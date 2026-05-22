@@ -12,6 +12,12 @@
   scrollbar-width: none;
 }
 
+html, body {
+  /* Prevent any rogue descendant from horizontally scrolling the page —
+     phone-canvas should always equal viewport width. */
+  overflow-x: hidden;
+}
+
 body {
   background-color: #f9fafb;
   /* bg-gray-50 */
