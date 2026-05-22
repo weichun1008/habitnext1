@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { X, Search, User, Check, Loader, Calendar, Sparkles, Hourglass, ChevronRight } from 'lucide-react';
 import {
     isRecommendedFor,
@@ -7,8 +7,19 @@ import {
 } from '@/lib/templateRecommendation';
 import TemplateDetailPanel from './TemplateDetailPanel';
 
+// Fallback colors when a template.category slug isn't in PlanCategory yet
+// (legacy data, or admin deleted a non-system row). Family-tinted so it
+// still looks coherent.
+const fallbackForSlug = (slug) => {
+    if (!slug) return { name: '—', color: '#6b7280', icon: '' };
+    if (slug.startsWith('sleep_')) return { name: slug, color: '#818cf8', icon: '' };
+    if (['daisy', 'rose', 'orchid', 'sunflower'].includes(slug)) return { name: slug, color: '#f472b6', icon: '' };
+    return { name: slug, color: '#10b981', icon: '' };
+};
+
 const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null, userSleepTypeKey = null }) => {
     const [templates, setTemplates] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [joiningId, setJoiningId] = useState(null);
 
@@ -23,29 +34,45 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
 
     useEffect(() => {
         if (isOpen) {
-            fetchTemplates();
+            fetchAll();
         }
     }, [isOpen]);
 
-    const fetchTemplates = async () => {
+    const fetchAll = async () => {
         setLoading(true);
         try {
+            // Fetch templates + categories in parallel so each card chip can
+            // render the admin-editable color / icon / display name directly.
             const timestamp = Date.now();
-            console.log('[Client] Fetching templates with timestamp:', timestamp);
-            const res = await fetch(`/api/templates/public?t=${timestamp}`, { cache: 'no-store' });
-            if (res.ok) {
-                const data = await res.json();
-                console.log('[Client] Received templates:', data);
+            const [tplRes, catRes] = await Promise.all([
+                fetch(`/api/templates/public?t=${timestamp}`, { cache: 'no-store' }),
+                fetch('/api/plan-categories', { cache: 'no-store' }),
+            ]);
+            if (tplRes.ok) {
+                const data = await tplRes.json();
                 setTemplates(data);
             } else {
-                console.error('[Client] Fetch failed:', res.status);
+                console.error('[Client] Templates fetch failed:', tplRes.status);
+            }
+            if (catRes.ok) {
+                const data = await catRes.json();
+                setCategories(Array.isArray(data) ? data : []);
             }
         } catch (error) {
-            console.error('Fetch templates error:', error);
+            console.error('Fetch error:', error);
         } finally {
             setLoading(false);
         }
     };
+
+    // slug → { name, color, icon } lookup
+    const categoryMap = useMemo(() => {
+        const map = {};
+        for (const c of categories) {
+            if (c.slug) map[c.slug] = { name: c.name, color: c.color || '#10b981', icon: c.icon || '' };
+        }
+        return map;
+    }, [categories]);
 
     const getStartDate = () => {
         const today = new Date();
@@ -176,6 +203,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                             <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory px-6 pb-2 no-scrollbar scroll-px-6">
                                                 {items.map(template => {
                                                     const recommended = isRecommendedFor(template, userTypeKey, userSleepTypeKey);
+                                                    const cat = categoryMap[template.category] || fallbackForSlug(template.category);
                                                     return (
                                                         <div
                                                             key={template.id}
@@ -189,9 +217,21 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                                 }
                                                             }}
                                                             className={`flex-shrink-0 snap-start w-[78%] sm:w-[58%] md:w-[44%] bg-white p-4 rounded-xl border shadow-sm hover:shadow-md transition-shadow cursor-pointer flex flex-col ${recommended ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-100'}`}
+                                                            style={!recommended ? { borderTopColor: cat.color, borderTopWidth: 3 } : undefined}
                                                         >
-                                                            <div className="flex items-start justify-between gap-2 mb-2">
-                                                                <h3 className="font-bold text-gray-800 text-base leading-snug line-clamp-2 min-w-0 flex-1">{template.name}</h3>
+                                                            {/* Category chip — color + icon read live from PlanCategory */}
+                                                            <div className="flex items-center justify-between gap-2 mb-2">
+                                                                <span
+                                                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border"
+                                                                    style={{
+                                                                        backgroundColor: `${cat.color}1f`,
+                                                                        color: cat.color,
+                                                                        borderColor: `${cat.color}55`,
+                                                                    }}
+                                                                >
+                                                                    {cat.icon && <span className="text-xs leading-none">{cat.icon}</span>}
+                                                                    <span className="truncate max-w-[90px]">{cat.name}</span>
+                                                                </span>
                                                                 {recommended && (
                                                                     <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-[10px] font-bold flex-shrink-0">
                                                                         <Sparkles size={10} />
@@ -199,6 +239,8 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                                     </span>
                                                                 )}
                                                             </div>
+
+                                                            <h3 className="font-bold text-gray-800 text-base leading-snug line-clamp-2 mb-2">{template.name}</h3>
 
                                                             <div className="flex items-center gap-2 text-xs text-gray-500 mb-2 flex-wrap">
                                                                 <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
