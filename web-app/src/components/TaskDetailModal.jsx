@@ -36,7 +36,9 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">
-            <div className="bg-white w-full md:max-w-md h-[90vh] md:h-auto md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up">
+            {/* h-[90dvh] uses dynamic viewport height — accounts for iOS Safari's
+                shrinking URL bar so the modal top doesn't get clipped behind it. */}
+            <div className="bg-white w-full md:max-w-md h-[90dvh] md:h-auto md:max-h-[90dvh] md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up">
 
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white rounded-t-2xl">

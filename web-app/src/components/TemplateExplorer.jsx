@@ -119,7 +119,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white w-full max-w-2xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden relative">
+            <div className="bg-white w-full max-w-2xl h-[80dvh] rounded-2xl shadow-2xl flex flex-col overflow-hidden relative">
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white">
                     <div>

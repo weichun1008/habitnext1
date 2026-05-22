@@ -33,7 +33,10 @@ const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onO
                 </div>
 
                 {currentView === 'daily' ? (
-                    <div className="flex items-center gap-2">
+                    // Date label hidden on mobile — the week strip below already
+                    // shows the current day, and this section was eating ~100px
+                    // of horizontal space, pushing the rightmost icon off-screen.
+                    <div className="hidden sm:flex items-center gap-2">
                         <Calendar size={18} className="text-gray-600" />
                         <span className="font-bold text-gray-800 text-sm md:text-base">11/28 (五)</span>
                     </div>

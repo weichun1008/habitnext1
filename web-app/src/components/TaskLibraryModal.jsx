@@ -144,7 +144,7 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, use
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">
-            <div className="bg-white w-full md:max-w-xl h-[90vh] md:h-auto md:max-h-[85vh] md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up">
+            <div className="bg-white w-full md:max-w-xl h-[90dvh] md:h-auto md:max-h-[85dvh] md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up">
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         {view !== 'domain' && (
