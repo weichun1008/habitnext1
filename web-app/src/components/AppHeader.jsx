@@ -86,11 +86,11 @@ const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onO
 
             {/* Week Strip */}
             {currentView === 'daily' && (
-                <div className="flex justify-between items-center px-2 md:px-6 pb-0 overflow-x-auto no-scrollbar">
+                <div className="flex items-center px-1 md:px-6 pb-0">
                     {weekDays.map((day, index) => {
                         const isSelected = index === 4;
                         return (
-                            <div key={index} className={`flex flex-col items-center justify-center py-2 px-3 md:px-6 cursor-pointer relative min-w-[3rem] ${isSelected ? 'text-emerald-600 font-bold' : 'text-gray-400 font-medium'}`}>
+                            <div key={index} className={`flex-1 flex flex-col items-center justify-center py-2 px-1 md:px-6 cursor-pointer relative ${isSelected ? 'text-emerald-600 font-bold' : 'text-gray-400 font-medium'}`}>
                                 <span className="text-sm">{day}</span>
                                 {isSelected && <div className="absolute bottom-0 w-full h-[3px] bg-emerald-500 rounded-t-full"></div>}
                             </div>

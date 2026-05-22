@@ -65,12 +65,12 @@ const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
             )}
 
             {/* Title & Status */}
-            <div className="flex justify-between items-start mb-2">
-                <div className="flex items-center gap-3">
-                    <div className={`${config.bg} p-2 rounded-xl`}>
+            <div className="flex justify-between items-start mb-2 gap-2">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <div className={`${config.bg} p-2 rounded-xl flex-shrink-0`}>
                         <IconRenderer category={task.category} size={18} className={config.type === 'emoji' ? 'text-2xl' : ''} />
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                         {task.identity && (
                             <p className="text-[10px] font-medium text-gray-400 mb-0.5 leading-tight">
                                 {task.identity}
@@ -91,7 +91,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
                     </div>
                 </div>
 
-                <div className="flex flex-col items-end gap-1">
+                <div className="flex flex-col items-end gap-1 flex-shrink-0">
                     {(isQuant || isPeriod) ? (
                         <span className={`text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap transition-colors ${isCompleted ? 'bg-yellow-100 text-yellow-700' : 'bg-emerald-50 text-emerald-600'}`}>
                             {isCompleted ? (

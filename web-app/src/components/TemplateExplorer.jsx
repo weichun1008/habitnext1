@@ -171,42 +171,61 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                             </div>
                                         )}
 
-                                        {/* Templates in this section */}
-                                        <div className="grid grid-cols-1 gap-4">
-                                            {items.map(template => {
-                                                const recommended = isRecommendedFor(template, userTypeKey, userSleepTypeKey);
-                                                return (
-                                                    <div
-                                                        key={template.id}
-                                                        role="button"
-                                                        tabIndex={0}
-                                                        onClick={() => setDetailTemplate(template)}
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === 'Enter' || e.key === ' ') {
-                                                                e.preventDefault();
-                                                                setDetailTemplate(template);
-                                                            }
-                                                        }}
-                                                        className={`bg-white p-5 rounded-xl border shadow-sm hover:shadow-md transition-shadow cursor-pointer ${recommended ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-100'}`}
-                                                    >
-                                                        <div className="flex justify-between items-start mb-3 gap-3">
-                                                            <div className="min-w-0">
-                                                                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                                                    <h3 className="font-bold text-gray-800 text-lg">{template.name}</h3>
-                                                                    {recommended && (
-                                                                        <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-xs font-bold">
-                                                                            <Sparkles size={12} />
-                                                                            為你推薦
-                                                                        </span>
-                                                                    )}
-                                                                </div>
-                                                                <div className="flex items-center gap-2 text-xs text-gray-500 mb-2 flex-wrap">
-                                                                    <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
-                                                                        {template.expert?.title || '專家'}
+                                        {/* Templates in this section — horizontal carousel */}
+                                        <div className="relative -mx-6">
+                                            <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory px-6 pb-2 no-scrollbar scroll-px-6">
+                                                {items.map(template => {
+                                                    const recommended = isRecommendedFor(template, userTypeKey, userSleepTypeKey);
+                                                    return (
+                                                        <div
+                                                            key={template.id}
+                                                            role="button"
+                                                            tabIndex={0}
+                                                            onClick={() => setDetailTemplate(template)}
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                                    e.preventDefault();
+                                                                    setDetailTemplate(template);
+                                                                }
+                                                            }}
+                                                            className={`flex-shrink-0 snap-start w-[78%] sm:w-[58%] md:w-[44%] bg-white p-4 rounded-xl border shadow-sm hover:shadow-md transition-shadow cursor-pointer flex flex-col ${recommended ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-100'}`}
+                                                        >
+                                                            <div className="flex items-start justify-between gap-2 mb-2">
+                                                                <h3 className="font-bold text-gray-800 text-base leading-snug line-clamp-2 min-w-0 flex-1">{template.name}</h3>
+                                                                {recommended && (
+                                                                    <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-[10px] font-bold flex-shrink-0">
+                                                                        <Sparkles size={10} />
+                                                                        為你推薦
                                                                     </span>
-                                                                    <span>by {template.expert?.name}</span>
+                                                                )}
+                                                            </div>
+
+                                                            <div className="flex items-center gap-2 text-xs text-gray-500 mb-2 flex-wrap">
+                                                                <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
+                                                                    {template.expert?.title || '專家'}
+                                                                </span>
+                                                                <span className="truncate">by {template.expert?.name}</span>
+                                                            </div>
+
+                                                            <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-3 flex-1">
+                                                                {template.description || '這個計畫可以幫助你建立良好的生活習慣。'}
+                                                            </p>
+
+                                                            <div className="flex items-center gap-3 text-[11px] text-gray-400 border-t border-gray-100 pt-2 mb-3">
+                                                                <div className="flex items-center gap-1">
+                                                                    <User size={12} />
+                                                                    <span>{template._count?.assignments || 0}</span>
+                                                                </div>
+                                                                <div className="flex items-center gap-1">
+                                                                    <Check size={12} />
+                                                                    <span>{template._count?.tasks || 0}</span>
+                                                                </div>
+                                                                <div className="ml-auto flex items-center gap-0.5 text-emerald-600">
+                                                                    <span>詳情</span>
+                                                                    <ChevronRight size={12} />
                                                                 </div>
                                                             </div>
+
                                                             <button
                                                                 onClick={(e) => {
                                                                     // Don't open detail when the user actually wants the
@@ -215,37 +234,16 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                                     handleJoinClick(template);
                                                                 }}
                                                                 disabled={joiningId === template.id}
-                                                                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors disabled:opacity-50 flex items-center gap-2 flex-shrink-0"
+                                                                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-2 rounded-lg text-sm font-bold transition-colors disabled:opacity-50"
                                                             >
-                                                                {joiningId === template.id ? (
-                                                                    <>加入中...</>
-                                                                ) : (
-                                                                    <>加入計畫</>
-                                                                )}
+                                                                {joiningId === template.id ? '加入中...' : '加入計畫'}
                                                             </button>
                                                         </div>
-
-                                                        <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                                                            {template.description || '這個計畫可以幫助你建立良好的生活習慣。'}
-                                                        </p>
-
-                                                        <div className="flex items-center gap-4 text-xs text-gray-400 border-t border-gray-100 pt-3">
-                                                            <div className="flex items-center gap-1">
-                                                                <User size={14} />
-                                                                <span>{template._count?.assignments || 0} 人已加入</span>
-                                                            </div>
-                                                            <div className="flex items-center gap-1">
-                                                                <Check size={14} />
-                                                                <span>{template._count?.tasks || 0} 個任務</span>
-                                                            </div>
-                                                            <div className="ml-auto flex items-center gap-1 text-emerald-600">
-                                                                <span>查看詳情</span>
-                                                                <ChevronRight size={14} />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
+                                                    );
+                                                })}
+                                            </div>
+                                            {/* Subtle right-edge fade hints scrollability */}
+                                            <div className="pointer-events-none absolute right-0 top-0 bottom-2 w-6 bg-gradient-to-l from-gray-50 to-transparent" />
                                         </div>
                                     </section>
                                 );
