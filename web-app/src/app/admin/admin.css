@@ -448,6 +448,12 @@
     flex-shrink: 0;
 }
 
+.admin-template-category-icon {
+    font-size: 0.9rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
 /* Stats row — task count + assignment count as bordered chips */
 .admin-template-stats {
     display: flex;

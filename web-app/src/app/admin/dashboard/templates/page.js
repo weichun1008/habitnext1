@@ -1,37 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Plus, Edit2, Trash2, Globe, Lock, ListChecks, Users, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
-// Friendly labels for every category slug actually in use.
-// Falls back to the raw slug for anything unmapped (e.g. legacy values).
-const CATEGORY_LABELS = {
-    // Generic
-    health: '健康',
-    fitness: '運動',
-    nutrition: '營養',
-    mental: '心理',
-    // Flower (women's course)
-    daisy: '雛菊型',
-    rose: '玫瑰型',
-    orchid: '蘭花型',
-    sunflower: '向日葵型',
-    // Sleep
-    sleep_stress: '睡眠 · 壓力',
-    sleep_rhythm: '睡眠 · 節律',
-    sleep_metabolic: '睡眠 · 代謝',
-    sleep_hormone: '睡眠 · 荷爾蒙',
-};
-
-// Color tag per category family for the badge dot.
-const CATEGORY_COLOR = (slug) => {
-    if (!slug) return '#6b7280';
-    if (slug.startsWith('sleep_')) return '#818cf8'; // indigo
-    if (['daisy', 'rose', 'orchid', 'sunflower'].includes(slug)) return '#f472b6'; // pink
-    return '#10b981'; // emerald
-};
 
 // Templates use two shapes: legacy v1.0 stores tasks as a flat array,
 // v2.0 stores { version, phases: [{ tasks: [...] }] }. Sum across phases
@@ -45,29 +17,54 @@ const countTasks = (tasks) => {
     return 0;
 };
 
+// Fallback when a Template.category slug isn't found in PlanCategory.
+// Color is still family-themed so legacy / orphan slugs aren't grey/ugly.
+const fallbackForSlug = (slug) => {
+    if (!slug) return { name: '—', color: '#6b7280', icon: '' };
+    if (slug.startsWith('sleep_')) return { name: slug, color: '#818cf8', icon: '' };
+    if (['daisy', 'rose', 'orchid', 'sunflower'].includes(slug)) return { name: slug, color: '#f472b6', icon: '' };
+    return { name: slug, color: '#10b981', icon: '' };
+};
+
 export default function TemplatesPage() {
     const [templates, setTemplates] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
-        fetchTemplates();
+        fetchAll();
     }, []);
 
-    const fetchTemplates = async () => {
+    const fetchAll = async () => {
+        setLoading(true);
         try {
-            // Show ALL templates in admin, including system-seeded ones
-            // (花朵 / 睡眠 templates belong to system expert accounts but
-            // still need to be visible and editable from this page).
-            const res = await fetch('/api/admin/templates');
-            const data = await res.json();
-            setTemplates(Array.isArray(data) ? data : []);
+            // Fetch templates + plan categories in parallel so the category
+            // chip on each card can read live label/color/icon from the
+            // admin-editable PlanCategory rows (edit color → reload → see change).
+            const [tplRes, catRes] = await Promise.all([
+                fetch('/api/admin/templates'),
+                fetch('/api/admin/plan-categories'),
+            ]);
+            const tplData = await tplRes.json();
+            const catData = await catRes.json();
+            setTemplates(Array.isArray(tplData) ? tplData : []);
+            setCategories(Array.isArray(catData) ? catData : []);
         } catch (error) {
-            console.error('Failed to fetch templates:', error);
+            console.error('Failed to fetch templates / categories:', error);
         } finally {
             setLoading(false);
         }
     };
+
+    // slug → { name, color, icon } lookup, rebuilt only when categories change.
+    const categoryMap = useMemo(() => {
+        const map = {};
+        for (const c of categories) {
+            if (c.slug) map[c.slug] = { name: c.name, color: c.color || '#10b981', icon: c.icon || '' };
+        }
+        return map;
+    }, [categories]);
 
     const handleDelete = async (id) => {
         if (!confirm('確定要刪除此模板嗎？已指派的任務不會被刪除。')) return;
@@ -75,7 +72,7 @@ export default function TemplatesPage() {
         try {
             const res = await fetch(`/api/admin/templates/${id}`, { method: 'DELETE' });
             if (res.ok) {
-                fetchTemplates();
+                fetchAll();
             }
         } catch (error) {
             console.error('Delete template error:', error);
@@ -105,8 +102,7 @@ export default function TemplatesPage() {
             ) : (
                 <div className="admin-template-grid">
                     {templates.map(template => {
-                        const catLabel = CATEGORY_LABELS[template.category] || template.category;
-                        const catColor = CATEGORY_COLOR(template.category);
+                        const cat = categoryMap[template.category] || fallbackForSlug(template.category);
                         const taskCount = countTasks(template.tasks);
                         const assignCount = template._count?.assignments || 0;
                         const expertName = template.expert?.name || '未知';
@@ -117,10 +113,14 @@ export default function TemplatesPage() {
                                 <div className="flex items-center justify-between mb-3">
                                     <span
                                         className="admin-template-category-chip"
-                                        style={{ backgroundColor: `${catColor}1f`, color: catColor, borderColor: `${catColor}55` }}
+                                        style={{ backgroundColor: `${cat.color}1f`, color: cat.color, borderColor: `${cat.color}55` }}
                                     >
-                                        <span className="admin-template-category-dot" style={{ backgroundColor: catColor }} />
-                                        {catLabel}
+                                        {cat.icon ? (
+                                            <span className="admin-template-category-icon">{cat.icon}</span>
+                                        ) : (
+                                            <span className="admin-template-category-dot" style={{ backgroundColor: cat.color }} />
+                                        )}
+                                        {cat.name}
                                     </span>
                                     <span className={`admin-badge ${template.isPublic ? 'admin-badge-success' : 'admin-badge-info'}`}>
                                         {template.isPublic ? <><Globe size={10} /> 公開</> : <><Lock size={10} /> 私人</>}
