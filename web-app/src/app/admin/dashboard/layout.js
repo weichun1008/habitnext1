@@ -11,7 +11,9 @@ import {
     LogOut,
     Shield,
     UserCog,
-    Heart
+    Heart,
+    Tag,
+    Briefcase
 } from 'lucide-react';
 
 export default function AdminDashboardLayout({ children }) {
@@ -35,23 +37,30 @@ export default function AdminDashboardLayout({ children }) {
         router.push('/admin/login');
     };
 
+    // Sidebar order follows the mental flow:
+    //   建材 (atomic habits) → 分類 (taxonomy) → 成品 (templates)
+    //     → 使用者 (users + assignments) → 權限 (experts + titles)
     const getNavItems = () => {
         const items = [
             { href: '/admin/dashboard', icon: LayoutDashboard, label: '總覽' },
-            { href: '/admin/dashboard/templates', icon: FileText, label: '模板管理' },
-            { href: '/admin/dashboard/users', icon: Users, label: '用戶管理' },
-            { href: '/admin/dashboard/assignments', icon: ClipboardList, label: '指派記錄' },
         ];
 
-        // Only show experts management for admin role
-        // Only show experts management for admin role
-        // For now, allow all logged in experts to see this for demo, or stick to 'admin'.
-        // Let's assume the current user is admin.
-        if (expert?.role === 'admin' || expert?.email === 'admin@habit.next') {
+        // Content layer (admin-only currently — habits/categories were admin-gated)
+        const isAdmin = expert?.role === 'admin' || expert?.email === 'admin@habit.next';
+        if (isAdmin) {
             items.push({ href: '/admin/dashboard/habits', icon: Heart, label: '習慣庫' });
-            items.push({ href: '/admin/dashboard/templates/categories', icon: FileText, label: '計畫分類' });
-            items.push({ href: '/admin/dashboard/titles', icon: Shield, label: '職稱管理' });
+            items.push({ href: '/admin/dashboard/templates/categories', icon: Tag, label: '計畫分類' });
+        }
+        items.push({ href: '/admin/dashboard/templates', icon: FileText, label: '計畫模板管理' });
+
+        // User layer
+        items.push({ href: '/admin/dashboard/users', icon: Users, label: '用戶管理' });
+        items.push({ href: '/admin/dashboard/assignments', icon: ClipboardList, label: '指派記錄' });
+
+        // Permission layer (admin-only)
+        if (isAdmin) {
             items.push({ href: '/admin/dashboard/experts', icon: UserCog, label: '專家管理' });
+            items.push({ href: '/admin/dashboard/titles', icon: Briefcase, label: '職稱管理' });
         }
 
         return items;

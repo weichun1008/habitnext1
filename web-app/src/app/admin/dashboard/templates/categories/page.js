@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, Plus, Edit2, Trash2, Save, X } from 'lucide-react';
+import { ChevronLeft, Plus, Edit2, Trash2, Save, X, Lock } from 'lucide-react';
 
 const COLOR_OPTIONS = [
     '#10B981', '#F59E0B', '#3B82F6', '#8B5CF6', '#EF4444',
@@ -125,7 +125,7 @@ export default function PlanCategoriesPage() {
                 </Link>
                 <div>
                     <h1 className="admin-page-title">計畫分類管理</h1>
-                    <p className="text-sm text-gray-500">管理計畫模板的分類標籤</p>
+                    <p className="text-sm text-gray-500">管理計畫模板的分類標籤。系統分類（🔒）由程式碼定義，僅可調整顏色 / 圖示 / 排序。</p>
                 </div>
             </div>
 
@@ -201,7 +201,9 @@ export default function PlanCategoriesPage() {
                             <tr>
                                 <th>圖示</th>
                                 <th>名稱</th>
+                                <th>Slug</th>
                                 <th>顏色</th>
+                                <th>類型</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -219,13 +221,21 @@ export default function PlanCategoriesPage() {
                                                 />
                                             </td>
                                             <td>
-                                                <input
-                                                    type="text"
-                                                    className="admin-input"
-                                                    value={formData.name}
-                                                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                                />
+                                                {cat.isSystem ? (
+                                                    <span className="text-white font-medium flex items-center gap-2">
+                                                        {cat.name}
+                                                        <Lock size={12} className="text-gray-500" title="系統分類不可改名" />
+                                                    </span>
+                                                ) : (
+                                                    <input
+                                                        type="text"
+                                                        className="admin-input"
+                                                        value={formData.name}
+                                                        onChange={e => setFormData({ ...formData, name: e.target.value })}
+                                                    />
+                                                )}
                                             </td>
+                                            <td className="text-gray-400 text-xs font-mono">{cat.slug || '—'}</td>
                                             <td>
                                                 <div className="flex gap-1 flex-wrap">
                                                     {COLOR_OPTIONS.map(color => (
@@ -237,6 +247,15 @@ export default function PlanCategoriesPage() {
                                                         />
                                                     ))}
                                                 </div>
+                                            </td>
+                                            <td>
+                                                {cat.isSystem ? (
+                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/15 text-indigo-300">
+                                                        <Lock size={10} /> 系統
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-gray-500 text-xs">使用者</span>
+                                                )}
                                             </td>
                                             <td>
                                                 <div className="flex gap-2">
@@ -259,6 +278,7 @@ export default function PlanCategoriesPage() {
                                         <>
                                             <td className="text-2xl">{cat.icon || '📁'}</td>
                                             <td className="text-white font-medium">{cat.name}</td>
+                                            <td className="text-gray-400 text-xs font-mono">{cat.slug || '—'}</td>
                                             <td>
                                                 <div
                                                     className="w-6 h-6 rounded"
@@ -266,19 +286,31 @@ export default function PlanCategoriesPage() {
                                                 />
                                             </td>
                                             <td>
+                                                {cat.isSystem ? (
+                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/15 text-indigo-300">
+                                                        <Lock size={10} /> 系統
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-gray-500 text-xs">使用者</span>
+                                                )}
+                                            </td>
+                                            <td>
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => startEdit(cat)}
                                                         className="p-2 text-blue-400 hover:bg-blue-400/10 rounded"
+                                                        title={cat.isSystem ? '系統分類：僅可調整圖示 / 顏色 / 排序' : '編輯'}
                                                     >
                                                         <Edit2 size={16} />
                                                     </button>
-                                                    <button
-                                                        onClick={() => handleDelete(cat.id)}
-                                                        className="p-2 text-red-400 hover:bg-red-400/10 rounded"
-                                                    >
-                                                        <Trash2 size={16} />
-                                                    </button>
+                                                    {!cat.isSystem && (
+                                                        <button
+                                                            onClick={() => handleDelete(cat.id)}
+                                                            className="p-2 text-red-400 hover:bg-red-400/10 rounded"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </td>
                                         </>

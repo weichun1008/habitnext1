@@ -86,8 +86,8 @@ export default function TemplatesPage() {
         <div className="admin-animate-in">
             <div className="admin-header">
                 <div>
-                    <h1 className="admin-title">模板管理</h1>
-                    <p className="admin-subtitle">建立和管理您的專屬習慣模板</p>
+                    <h1 className="admin-title">計畫模板管理</h1>
+                    <p className="admin-subtitle">建立和管理使用者可訂閱的計畫模板</p>
                 </div>
                 <Link href="/admin/dashboard/templates/new" className="admin-btn admin-btn-primary no-underline">
                     <Plus size={18} /> 新增模板

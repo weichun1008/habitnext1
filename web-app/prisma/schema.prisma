@@ -159,12 +159,21 @@ model HabitCategory {
 }
 
 // 計畫分類（獨立於習慣分類）
+// Two flavours coexist:
+//   - User-defined: admin creates from the 計畫分類 page (健康生活, 運動健身, ...)
+//   - System (isSystem=true): seeded for the typing dimensions baked into lib/
+//     code (花朵 daisy/rose/orchid/sunflower + 睡眠 sleep_stress/rhythm/metabolic/hormone).
+//     Admin can edit color/icon/order but NOT slug/name — those are
+//     enum-locked by lib/typeKeys.js + lib/sleepTypeKeys.js.
+// Template.category stores the slug; lookups by slug @unique.
 model PlanCategory {
   id        String   @id @default(cuid())
-  name      String   @unique
-  color     String?  // Hex color for UI
-  icon      String?  // Emoji or icon key
+  slug      String?  @unique           // stable key — e.g. 'daisy', 'sleep_stress', '健康生活'. Nullable so we can backfill existing rows.
+  name      String                     // display label — e.g. 雛菊型, 睡眠 · 壓力
+  color     String?                    // Hex color for UI
+  icon      String?                    // Emoji or icon key
   order     Int      @default(0)
+  isSystem  Boolean  @default(false)   // true for lib-enumerated slugs; locked from rename/delete
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
