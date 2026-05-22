@@ -1,112 +1,176 @@
 # HabitNext — Product Map
 
-> 給 PM / 設計師 / 未來合作者讀的一頁產品地圖。給工程細節請看 [`superpowers/specs/`](superpowers/specs/)。
+> 給 PM / 設計師 / 內容團隊 / 需求單位讀的產品地圖。
+> 工程細節看 [`ARCHITECTURE.md`](ARCHITECTURE.md)，每個 slice 的設計理由看 [`superpowers/specs/`](superpowers/specs/)。
 
-## 是什麼
-
-HabitNext 是一個基於**行為科學**的習慣養成 web app。跟一般打卡 app 不同的地方：
-
-- **錨點 (Anchor)**：每個習慣綁定一個既有的日常時刻（起床後、午餐後、刷牙後…）— BJ Fogg 微習慣模型
-- **分難度 (Difficulty)**：入門 / 進階 / 挑戰 — 使用者可自我評估與進化
-- **9 大健康面向 (GENESIS+IO)**：基因與腸道、環境、飲食、運動、壓力與睡眠、社交互動、心靈、認知與智慧、職涯與平衡 — 整全健康
-- **每餐型 checklist 每日重置**：「每餐都要有蛋白質」這類習慣每天獨立追蹤，不會把昨天的勾選帶到今天
-
-## 目標使用者
-
-行為改變專業人士（教練、營養師、心理師）和重視「不是只打卡、要真的改變身分」的個人使用者。
+最後更新：2026-05-22 · Live: [habitnext1.vercel.app](https://habitnext1.vercel.app)
 
 ---
 
-## 已完成的功能
+## 1. 是什麼
 
-### Slice A — 9 大健康面向探索入口
-[Spec](superpowers/specs/2026-05-15-explore-habits-slice-a-genesis-io-design.md) · 上線 2026-05-15
+HabitNext 是基於**行為科學**的習慣養成 web app。和一般打卡 app 三個關鍵差異：
 
-從 sidebar 點「探索習慣」進入 → 看到 3×3 的 9 個分類卡片（每個有 Lucide icon + 配色） → 點某個 domain → 看到該分類下的推薦習慣。Modal 設計為 2-view + search 視圖切換。
+| 概念 | 來源 | App 內表現 |
+|---|---|---|
+| **錨點 + 行為** | BJ Fogg Tiny Habits | 每個 task 綁一個觸發時刻（午餐後、刷牙後…），顯示為 `午餐後 → 喝 250cc 水` |
+| **身分認同** | James Clear Atomic Habits | 每個 task 綁一個身分宣告（「我是個照顧大腦放鬆的人」），顯示在 task 上方 |
+| **9 大健康面向** | GENESIS+IO 模型 | 探索習慣從 9 個分類入口開始，避免「全部習慣」一長串 |
 
-**為什麼這樣設計**：使用者不知道從哪開始時，9 個健康面向是清晰的起點。比起一個又長又雜的「全部習慣」列表，分類入口讓人能依當下最在意的面向探索。
-
-### Slice A.5 — 90 個推薦習慣 seed
-[Spec](superpowers/specs/2026-05-18-slice-a5-recommended-habits-seed-design.md) · 上線 2026-05-18
-
-9 個分類各 10 個推薦習慣，每個含 1-2 句行為原理描述與 3 個難度設定。例：「每天喝足 2500cc 水」的入門 1500cc / 進階 2000cc / 挑戰 2500cc。
-
-**為什麼這樣設計**：探索入口若是空的就沒意義。內建 90 個習慣讓使用者立刻有得選；難度階梯讓「我能做到」與「進步空間」並存。
-
-**沒有點心 slot**：刻意不鼓勵「再多吃一餐」。
-
-### Slice B — 錨點 × 行為配對
-[Spec](superpowers/specs/2026-05-18-slice-b-anchor-pairing-design.md) · 上線 2026-05-18
-
-選好習慣後多一步「選錨點」：
-- **你的習慣**：使用者既有的 active task 可當錨點（只列 binary 類型，因為「飲水 2000cc」這類累積目標當錨點意義不大）
-- **生活時刻**：內建 30 個，分早晨/中午/晚上/工作/通勤/任意時刻六組
-- **自訂錨點**：30 字內輸入框
-
-加入後 TaskCard 顯示 `午餐後 → 喝 250cc 水`，強化 BJ Fogg「After X, I will Y」結構。
-
-**為什麼這樣設計**：沒有錨點的習慣容易忘記做，因為沒有日常觸發。把 trigger 顯眼地擺在 task 名稱上方，是行為科學上很有效的「微提示」。
-
-### Slice F — 每日重置 Checklist + Google Calendar 風格編輯
-[Spec](superpowers/specs/2026-05-18-slice-f-recurring-checklist-design.md) · 上線 2026-05-18
-
-針對「每餐都要有蛋白質」「每餐前先喝一杯水」這類**每天必做 N 次**的習慣：
-- Subtasks 結構升級為時間軸版本化：`{id, label, addedAt, removedAt?}`
-- Completion state 從 master 物件搬到 `TaskHistory` per-date — **每天自動重置**
-- 編輯 subtask 時可選「**從今天起不再出現**（過去保留）」或「**永久刪除（含歷史紀錄）**」，像 Google Calendar 編輯週期事件那樣
-
-連同 4 個既有 meal habit 一起升級到 checklist 結構。
-
-**為什麼這樣設計**：原本的 checklist 有 bug — 今天勾「早餐」會永遠勾住。對「每餐做某事」的習慣這完全行不通。修完之後也順帶提供斷食族（16:8、OMAD）的優雅支援：選低難度即可達標，不用刪 subtask。
-
-### 其他改進
-- 探索 Modal 的 habit card 點開可看完整 description + 三難度詳情（detail preview）
-- Sidebar 三層 CTA：探索計畫（templates）/ 探索習慣（NEW）/ 建立習慣（manual）
-- TaskCard cue 顯示在 title 上方而非下方，更清晰
-- Admin 新增同名 habit 從 generic 500 改回友善 409
+加上**雙維分型問卷**讓使用者收到量身打造的計畫：
+- **花朵型**（女性週期身體）：雛菊 / 玫瑰 / 蘭花 / 向日葵
+- **睡眠型**：壓力 / 節律 / 代謝失衡 / 荷爾蒙波動
 
 ---
 
-## 還沒做的（路線圖）
+## 2. 目標使用者
 
-### Slice C — AI 雙軌 Brainstorm
-[PRD v1 F2]
+主要受眾：
+- **重視「不只打卡、要真正改變身分」的個人使用者**
+- **行為改變專業人士**（教練、營養師、心理師）做為帶客戶的工具
 
-使用者輸入一個目標（例：改善睡眠品質） → Gemini API 生 10 個 anchor 候選 × 10 個 behavior 候選 → 配對 UI 讓使用者自由組合。需要後端 server-side API 整合 + prompt engineering + rate limit / cost 管理。
-
-### Slice D — 焦點地圖（Impact × Ability）
-[PRD v1 F3]
-
-對多個候選 behavior 進行 2D 評估（影響力 × 執行難度），視覺化成四象限，找出「黃金行為」優先養成。需要 Slice C 先產出 behavior 候選池。
-
-### Slice E — 身分認同（Identity）
-[PRD v1 F4 + F7]
-
-每個習慣綁定一個身分宣告（「我是個照顧自己身體的人」），TaskCard 顯示。同時 AI 根據使用者所有 habits 動態生成「身分稱號 + 宣言」放在 dashboard。**這是 James Clear 原子習慣的核心，也是 app 跟一般打卡工具最大差異化的點。**
-
-### Slice F+ (技術債清單)
-- `OfficialHabit.icon` 從 emoji 換 Lucide
-- 兩個 routine 類 checklist（晨間脊椎伸展操、建立固定的睡前儀式）的 subtasks 留空，使用者得自填
-- 通知 / 提醒系統（根據錨點觸發推播）
-- 統計頁、Streak 視覺化
+訂閱 / 收費模型目前未實作（roadmap 議題）。
 
 ---
 
-## 設計原則
+## 3. 完整功能地圖（按使用者旅程）
 
-1. **行為科學優先於 gamification**：徽章、勳章、解鎖在沒站穩 anchor / identity 之前先不做
-2. **不鼓勵不健康行為**：點心不在 meal pattern 預設，因為「再多吃一餐」不是健康目標
-3. **斷食友善**：所有 meal 類習慣自然支援 IF / OMAD — 選低難度即可
-4. **完整深度 > 草草上線**：每個 slice 全做完 schema + UI + seed + 測試，不留半成品
-5. **YAGNI**：每個 slice 明確列「不做」項，避免 scope creep
+### 探索與加入
+- **探索計畫（Template）**：開啟可滑動 carousel，按家族（花朵/睡眠/其他）分區。每張卡顯示分類 chip（emoji + 顏色），點卡片進入 detail panel 看 4 階段任務預覽 → 加入計畫
+- **探索習慣（Habit）**：從 9 個 GENESIS+IO 健康面向入口進入，每個 domain 下有推薦習慣（105 個內建），每個可選 3 個難度（入門 / 進階 / 挑戰）
+- **加入新習慣**：選 habit → 選錨點（既有 task / 30 個生活時刻 / 自訂）→ 選身分（4 種推薦 + 4 種通用 + 自訂） → 寫入 task
+- **訂閱計畫模板**：選計畫 → 選開始日期（今天 / 明天 / 自訂） → 系統 pre-bake 14 天 task
+
+### 日常使用
+- **每日行程 (daily view)**：當天的 task 卡片列表（含 cue + identity + title）。Binary 直接勾、Quantitative 用 ± 累計、Period（週/月目標）累積到目標
+- **互動式週列**：點任一天 → 預覽該天 task；未來日鎖住（🔒 + 虛線 indigo 邊框）、過去日唯讀
+- **生理期模式 toggle**：開啟後 task 列表會帶入花朵型計畫的「生理期專用 phase」（自動 5 天後關閉）
+- **每餐型 checklist 每日重置**：「每餐都要有蛋白質」這類 multi-step 每天獨立追蹤
+
+### 統計與洞察
+- **統計頁 (Stats)**：5 個 widget — 完成率卡 / 9 域分布 / 連續紀錄 hero / Task 連續排行 / 週熱力圖
+- **月曆 (Dashboard Detail)**：HabitCalendar 看每天的完成情況
+
+### 帳號
+- 手機 + 密碼登入
+- 個人資料可改 nickname、avatar seed、typeKey、sleepTypeKey（後者由問卷設定，暫無實作問卷頁）
 
 ---
 
-## 技術差異點（給工程合作者）
+## 4. 完成功能歷史（按時間 / Slice）
 
-- **Slice 化開發**：每個功能走 spec → plan → execute → review，4 個已完成 slice 的紀錄都在 `superpowers/`
-- **Dev = Prod 共用 DB**：每次腳本跑都會動到 production，注意安全
-- **無 migration 歷史**：用 `prisma db push`，schema = 真相來源
-- **TDD 用在 pure helpers**：UI 用 React Testing Library，DB 操作靠 idempotent seed script
+每個 slice 有完整的 [`spec`](superpowers/specs/) + [`plan`](superpowers/plans/) 文件。
 
-詳情看 [README](../README.md) 與各 slice 的 spec / plan。
+| Slice | 內容 | 上線 |
+|---|---|---|
+| **A** | 9 大健康面向探索入口 + Modal | 2026-05-15 |
+| **A.5** | 90 個推薦習慣 seed（後續擴充到 105） | 2026-05-18 |
+| **B** | 錨點 × 行為配對：選錨點 → 選身分 → 寫進 task | 2026-05-18 |
+| **F** | 每日重置 Checklist（subtask 版本化 + Google-Calendar 風格編輯） | 2026-05-18 |
+| **E** | 身分認同 — TaskCard 顯示 identity；通用 + 推薦兩層；4 種類型個別預設 | 2026-05-19 |
+| **G** | 女性小課程 — 4 個 14 天花朵 template（雛菊/玫瑰/蘭花/向日葵），含生理期 phase | 2026-05-19 |
+| **H** | 14 天睡眠處方 — 4 個睡眠 template（壓力/節律/代謝失衡/荷爾蒙），dual-typing CTA | 2026-05-20 |
+| **I** | Stats + Streak 頁 — 5 widget + dynamic-import 省 100kB | 2026-05-21 |
+| **J** | Template Detail Panel — 點 carousel 卡 → 滑入詳細頁看 4 phase 任務 | 2026-05-21 |
+
+### 2026-05-22 整理日（無 slice 編號）
+
+| 主題 | 改動 |
+|---|---|
+| **行動裝置佈局** | 多項手機 viewport 問題修正：`page.js` wrapper 拿掉、`overflow-x: hidden` 安全網、iOS Safari URL bar 用 `dvh`、AppHeader 5 icon 全可見、TaskCard `min-w-0` |
+| **TemplateExplorer carousel** | 從 vertical list 改成 horizontal snap-scroll（每行 1.2~3 張卡，看下一張 peek） |
+| **PlanCategory 統一** | 把 lib 端的 8 個 slug（花朵 4 + 睡眠 4）與 admin 端的 PlanCategory table 合併 → 加 `slug @unique` + `isSystem Boolean`。Admin 可改顏色 / icon / order，但系統列鎖住 name |
+| **計畫模板管理 UI 大改** | Admin 卡片用 PlanCategory 顏色 + emoji；rename「模板管理」→「計畫模板管理」；Sidebar 重排（建材 → 成品 → 使用者 → 權限）|
+| **三端顏色一致** | Admin 列表 / User carousel / Detail Panel 三邊 chip 都讀同一個 PlanCategory，admin 改顏色立刻生效 |
+| **日期瀏覽** | AppHeader 週列從裝飾變互動：點未來看計畫預覽（鎖住）、點過去看歷史完成、自動切換 section 標題 |
+
+---
+
+## 5. 路線圖（還沒做的）
+
+### 短期 — 本月內可做
+- **睡眠分型問卷頁**：把 `User.sleepTypeKey` 從 admin 手動設定改成使用者填問卷自動分型
+- **花朵型問卷頁**：同上，`User.typeKey`
+- **計畫分類 drag-to-reorder**：admin 直接拖拉 PlanCategory 的 order 欄位
+- **內容方意見回鍋**：
+  - 女性小課程：[`docs/notes/2026-05-19-women-course-content-feedback.md`](notes/2026-05-19-women-course-content-feedback.md)
+  - 睡眠處方：[`docs/notes/2026-05-20-sleep-course-content-feedback.md`](notes/2026-05-20-sleep-course-content-feedback.md)
+- **計畫詳細頁也顯示 cue / identity per task**（目前只顯示 task title）
+
+### 中期 — 需 spec 才能動工
+- **C — AI 雙軌 Brainstorm**：使用者輸入目標 → Gemini 生 10 個 anchor × 10 個 behavior 候選 → 配對 UI
+- **D — 焦點地圖（Impact × Ability）**：對多 behavior 做 2D 評估，找黃金行為
+- **通知系統**：依錨點 / 時段觸發 push 提醒
+- **付費 / 訂閱模型**
+
+### 長期 / 想法
+- 教練端 dashboard（admin 角色看自己客戶的進度）
+- 與穿戴裝置 / 健康 App 資料整合（Apple Health / Google Fit）
+- AI 對話式 reflection（每週問 3 題判斷 phase 進度）
+
+---
+
+## 6. 設計原則（不變的）
+
+1. **行為科學優先於 gamification** — 徽章、解鎖在 anchor / identity 沒站穩前先不做
+2. **不鼓勵不健康行為** — 點心不在 meal pattern 預設；不推「再多吃一餐」
+3. **斷食友善** — meal 類習慣自然支援 IF / OMAD（選低難度就達標，不用刪 subtask）
+4. **強型別承諾** — 花朵 / 睡眠 typing 跟 lib 程式碼鎖住，admin 不能改 slug（避免推薦邏輯被誤改）
+5. **完整深度 > 草草上線** — 每個 slice 全做 schema + UI + seed + 測試 + 部署
+6. **YAGNI** — 每個 spec 明確列「不做」項，避免 scope creep
+7. **手機優先** — 主要受眾在手機上使用；桌面是 sidebar + 中央 phone-canvas frame
+
+---
+
+## 7. 內容團隊接點
+
+### 計畫模板（Template）
+- **DB**：`Template` table（9 筆，全 public）
+- **管理 UI**：`/admin/dashboard/templates` — 任何 expert 都看得到全部，可編輯 task 內容、phase 結構
+- **新增**：admin 用 `+ 新增模板`；複雜情況也可寫 seed JSON + script（如 `seed-sleep-templates.js`）
+- **結構**：v2.0 用 `{ version, phases: [{ id, name, days, tasks: [{ title, details, cue, identity, ... }] }] }`
+
+### 計畫分類（PlanCategory）
+- **DB**：`PlanCategory` table，13 筆（5 user-defined + 8 system）
+- **管理 UI**：`/admin/dashboard/templates/categories`
+- **規則**：
+  - User-defined（健康生活 / 運動健身 / ...）：可自由改名、刪除、加新
+  - System（🔒 標記）：是花朵 + 睡眠 8 個 slug，**只可改顏色 / icon / 排序**，不能改名也不能刪
+- **效用**：每個 PlanCategory 的 `color` 與 `icon` 直接決定 admin 卡片、User carousel、Detail Panel 上 chip 的視覺
+
+### 推薦習慣（OfficialHabit）
+- **DB**：`OfficialHabit` table，105 筆
+- **管理 UI**：`/admin/dashboard/habits`
+- **結構**：每個 habit 有 3 個難度層級 `{ beginner, intermediate, challenge }`，每層帶獨立 `dailyTarget` / `unit` / `subtasks` / `recurrence`
+- **9 個分類**：來自 `HabitCategory` table（不可改名 — 對應 GENESIS+IO 模型）
+
+### 內容方意見流程
+1. 收 Excel / 文件 → 工程方寫成 `docs/notes/YYYY-MM-DD-<topic>-feedback.md`
+2. 跟內容方來回收斂 typo + 結構問題
+3. 確認後改 seed JSON / 直接在 admin 改
+4. 觀察使用者完成率回饋
+
+---
+
+## 8. 給需求單位的常見問答
+
+| 問題 | 答案 |
+|---|---|
+| 我們有多少使用者？ | 看 Vercel Postgres `User` table；本日 9 個（包含測試帳號）|
+| 我能直接從後台改計畫內容嗎？ | 可以。`/admin/dashboard/templates` 點任一個 → 編輯。但是花朵 / 睡眠的 category 不能改名 |
+| 改了 PlanCategory 顏色，使用者要重新整理才看得到嗎？ | 開新一次計畫探索 modal 就會 fetch 新值。不需要重新登入 |
+| 內建習慣可以新增嗎？ | 可以。`/admin/dashboard/habits` 直接 UI 加。Habit 不能屬於系統分類以外的 9 個 domain |
+| 為什麼睡眠 / 花朵分型不能在後台改？ | 程式碼 lib 那邊的 enum 是 source of truth（避免 admin 改了一個字 → 推薦邏輯壞掉）。要新增分型要走 spec → plan |
+| 一個計畫最多幾天？ | 沒硬性上限，但目前花朵 / 睡眠處方都是 14 天 × 4 phase |
+| 使用者可以看未來的計畫嗎？ | 可以。daily view 點未來日 → 預覽（鎖住，不能提前打勾）|
+
+---
+
+## 9. 文件導覽
+
+- **這份文件** — 產品全景
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — 技術全景（給工程師 / 想深入的 PM）
+- [`superpowers/specs/`](superpowers/specs/) — 每個 slice 的設計 spec（為什麼這樣做、不做什麼、驗收條件）
+- [`superpowers/plans/`](superpowers/plans/) — 每個 slice 的實作 plan（步驟細節 + 測試 + commit）
+- [`notes/`](notes/) — 內容方意見回饋
+- [README](../README.md) — 開發者快速上手
