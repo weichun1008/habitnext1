@@ -12,6 +12,18 @@ const CATEGORIES = [
     { value: 'mental', label: '心理', color: '#8b5cf6' },
 ];
 
+// Templates use two shapes: legacy v1.0 stores tasks as a flat array,
+// v2.0 stores { version, phases: [{ tasks: [...] }] }. Sum across phases
+// so the admin card shows the correct count for both.
+const countTasks = (tasks) => {
+    if (!tasks) return 0;
+    if (Array.isArray(tasks)) return tasks.length;
+    if (Array.isArray(tasks.phases)) {
+        return tasks.phases.reduce((sum, ph) => sum + (Array.isArray(ph.tasks) ? ph.tasks.length : 0), 0);
+    }
+    return 0;
+};
+
 export default function TemplatesPage() {
     const [templates, setTemplates] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -23,8 +35,10 @@ export default function TemplatesPage() {
 
     const fetchTemplates = async () => {
         try {
-            const expertData = JSON.parse(localStorage.getItem('admin_expert') || '{}');
-            const res = await fetch(`/api/admin/templates?expertId=${expertData.id}`);
+            // Show ALL templates in admin, including system-seeded ones
+            // (花朵 / 睡眠 templates belong to system expert accounts but
+            // still need to be visible and editable from this page).
+            const res = await fetch('/api/admin/templates');
             const data = await res.json();
             setTemplates(Array.isArray(data) ? data : []);
         } catch (error) {
@@ -81,9 +95,11 @@ export default function TemplatesPage() {
                             <div className="admin-template-meta">
                                 <span>{CATEGORIES.find(c => c.value === template.category)?.label || template.category}</span>
                                 <span>•</span>
-                                <span>{template.tasks?.length || 0} 個任務</span>
+                                <span>{countTasks(template.tasks)} 個任務</span>
                                 <span>•</span>
                                 <span>{template._count?.assignments || 0} 次指派</span>
+                                <span>•</span>
+                                <span>by {template.expert?.name || '未知'}</span>
                             </div>
                             <div className="mt-4 flex gap-2" onClick={e => e.stopPropagation()}>
                                 <Link href={`/admin/dashboard/templates/${template.id}`} className="admin-btn admin-btn-secondary flex-1 justify-center no-underline">
