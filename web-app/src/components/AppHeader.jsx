@@ -1,8 +1,60 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Calendar, Award, Plus, X, BookOpen, LogOut, BarChart3 } from 'lucide-react';
+import { getTodayStr } from '@/lib/utils';
 
-const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onOpenExplore, user, onLogout, onOpenProfile, className }) => {
-    const weekDays = ['一', '二', '三', '四', '五', '六', '日'];
+const WEEK_DAY_LABELS = ['一', '二', '三', '四', '五', '六', '日']; // Mon..Sun
+
+// Build a 7-cell array describing this calendar week (Mon..Sun) anchored
+// on today's actual date — used by the interactive week strip on the
+// daily view.
+const computeThisWeek = (todayDate) => {
+    // JS getDay: Sun=0, Mon=1, ..., Sat=6. We display Mon..Sun, so map
+    // today to its index in our display order: Mon→0, Tue→1, ..., Sun→6.
+    const jsDay = todayDate.getDay();
+    const mondayOffset = (jsDay + 6) % 7;
+    const monday = new Date(todayDate);
+    monday.setHours(0, 0, 0, 0);
+    monday.setDate(todayDate.getDate() - mondayOffset);
+
+    const todayStr = getTodayStr();
+    return WEEK_DAY_LABELS.map((label, i) => {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        const dateStr = d.toISOString().split('T')[0];
+        return {
+            label,
+            dateStr,
+            dayNum: d.getDate(),
+            isToday: dateStr === todayStr,
+        };
+    });
+};
+
+const AppHeader = ({
+    onViewChange,
+    currentView,
+    onOpenAddFlow,
+    onOpenBadges,
+    onOpenExplore,
+    user,
+    onLogout,
+    onOpenProfile,
+    className,
+    // Date navigation — pass from MainApp so daily view can browse past/future
+    selectedDate,
+    onSelectDate,
+}) => {
+    const weekCells = useMemo(() => computeThisWeek(new Date()), []);
+    const todayStr = getTodayStr();
+    const headerDateLabel = useMemo(() => {
+        if (!selectedDate) return '';
+        const d = new Date(selectedDate);
+        if (isNaN(d.getTime())) return '';
+        const m = d.getMonth() + 1;
+        const day = d.getDate();
+        const wd = WEEK_DAY_LABELS[(d.getDay() + 6) % 7];
+        return `${m}/${day} (${wd})`;
+    }, [selectedDate]);
 
     return (
         <div className={`bg-white sticky top-0 z-30 shadow-sm ${className || ''}`}>
@@ -34,11 +86,10 @@ const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onO
 
                 {currentView === 'daily' ? (
                     // Date label hidden on mobile — the week strip below already
-                    // shows the current day, and this section was eating ~100px
-                    // of horizontal space, pushing the rightmost icon off-screen.
+                    // shows the current day. Reflects the actual selectedDate.
                     <div className="hidden sm:flex items-center gap-2">
                         <Calendar size={18} className="text-gray-600" />
-                        <span className="font-bold text-gray-800 text-sm md:text-base">11/28 (五)</span>
+                        <span className="font-bold text-gray-800 text-sm md:text-base">{headerDateLabel}</span>
                     </div>
                 ) : (
                     <span className="font-bold text-emerald-600">
@@ -87,16 +138,33 @@ const AppHeader = ({ onViewChange, currentView, onOpenAddFlow, onOpenBadges, onO
                 </div>
             </div>
 
-            {/* Week Strip */}
+            {/* Interactive Week Strip — tap any day to view its tasks.
+                Future days show preview-only tasks; past days show historical
+                completion state. Today is marked with a small dot. */}
             {currentView === 'daily' && (
                 <div className="flex items-center px-1 md:px-6 pb-0">
-                    {weekDays.map((day, index) => {
-                        const isSelected = index === 4;
+                    {weekCells.map((cell) => {
+                        const isSelected = selectedDate === cell.dateStr;
                         return (
-                            <div key={index} className={`flex-1 flex flex-col items-center justify-center py-2 px-1 md:px-6 cursor-pointer relative ${isSelected ? 'text-emerald-600 font-bold' : 'text-gray-400 font-medium'}`}>
-                                <span className="text-sm">{day}</span>
-                                {isSelected && <div className="absolute bottom-0 w-full h-[3px] bg-emerald-500 rounded-t-full"></div>}
-                            </div>
+                            <button
+                                type="button"
+                                key={cell.dateStr}
+                                onClick={() => onSelectDate?.(cell.dateStr)}
+                                className={`flex-1 flex flex-col items-center justify-center py-2 px-1 md:px-6 cursor-pointer relative transition-colors ${
+                                    isSelected
+                                        ? 'text-emerald-600 font-bold'
+                                        : cell.isToday
+                                            ? 'text-gray-700 font-medium hover:text-emerald-500'
+                                            : 'text-gray-400 font-medium hover:text-gray-600'
+                                }`}
+                            >
+                                <span className="text-[11px] leading-none">{cell.label}</span>
+                                <span className="text-sm leading-tight mt-0.5">{cell.dayNum}</span>
+                                {cell.isToday && !isSelected && (
+                                    <span className="absolute top-0.5 right-1/2 translate-x-3 w-1 h-1 bg-emerald-500 rounded-full" />
+                                )}
+                                {isSelected && <div className="absolute bottom-0 w-full h-[3px] bg-emerald-500 rounded-t-full" />}
+                            </button>
                         );
                     })}
                 </div>

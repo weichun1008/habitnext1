@@ -1,15 +1,30 @@
 import React from 'react';
-import { Check, Minus, Plus } from 'lucide-react';
+import { Check, Minus, Plus, Lock } from 'lucide-react';
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG } from '@/lib/constants';
-import { getTodayStr, isCompletedToday, calculatePeriodProgress } from '@/lib/utils';
+import {
+    getTodayStr,
+    isCompletedOnDate,
+    isCompletedToday,
+    calculatePeriodProgress,
+    isFutureDate,
+    isPastDate,
+} from '@/lib/utils';
 import { visibleSubtasks } from '@/lib/subtasks';
 
-const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
+// `viewingDate` (yyyy-mm-dd) lets the card render any day's state — used by
+// the daily view's interactive week strip. Defaults to today so existing
+// callers that don't pass it (other views) behave unchanged.
+const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
     const todayStr = getTodayStr();
+    const dateStr = viewingDate || todayStr;
+    const isFuture = isFutureDate(dateStr, todayStr);
+    const isPast = isPastDate(dateStr, todayStr);
+
     let isCompleted, currentVal, targetVal, displayStatus, progressPercent;
 
-    // Logic for Flexible Period Goals
+    // Logic for Flexible Period Goals — period progress is window-based
+    // (this week / this month), so it doesn't shift by viewing date.
     if (task.recurrence?.mode === 'period_count') {
         const count = calculatePeriodProgress(task);
         const target = task.recurrence.periodTarget || 1;
@@ -19,11 +34,11 @@ const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
         progressPercent = target > 0 ? Math.min(100, (count / target) * 100) : 0;
         displayStatus = `${count}/${target} 次`;
     }
-    // Logic for Daily/Specific Day Tasks
+    // Logic for Daily/Specific Day Tasks — date-driven.
     else {
-        isCompleted = isCompletedToday(task);
+        isCompleted = isCompletedOnDate(task, dateStr);
         if (task.type === 'quantitative') {
-            currentVal = task.dailyProgress?.[todayStr]?.value || 0;
+            currentVal = task.dailyProgress?.[dateStr]?.value || 0;
             targetVal = task.dailyTarget || 1;
             progressPercent = targetVal > 0 ? Math.min(100, (currentVal / targetVal) * 100) : 0;
             displayStatus = `${currentVal}/${targetVal} ${task.unit}`;
@@ -38,10 +53,9 @@ const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
     const isPeriod = task.recurrence?.mode === 'period_count';
     const isChecklist = task.type === 'checklist';
 
-    // Subtask Progress Display
+    // Subtask Progress Display — also follows viewingDate.
     let subtaskDisplay = null;
     if (isChecklist) {
-        const dateStr = todayStr;
         const visible = visibleSubtasks(task, dateStr);
         const historyForDate = task.history?.[dateStr];
         const completions = (historyForDate && typeof historyForDate === 'object')
@@ -53,8 +67,29 @@ const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
         }
     }
 
+    // Future-date guard: completion / quantity inputs are locked until that
+    // day arrives. Past-date is read-only too (no edits) but we still show
+    // the historical completion state via styling above.
+    const isLocked = isFuture || isPast;
+
+    const handleUpdate = (action, ...args) => {
+        if (isLocked) return;
+        onUpdate(task, action, ...args);
+    };
+
+    // Card border accent: emerald when complete, indigo dashed for future,
+    // gray for past read-only, neutral otherwise.
+    const borderCls = isCompleted
+        ? 'border-emerald-200 bg-emerald-50/30'
+        : isFuture
+            ? 'border-indigo-200 bg-indigo-50/20 border-dashed'
+            : 'border-gray-100';
+
     return (
-        <div onClick={onClick} className={`bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${isCompleted ? 'border-emerald-200 bg-emerald-50/30' : 'border-gray-100'}`}>
+        <div
+            onClick={onClick}
+            className={`bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${borderCls} ${isPast && !isCompleted ? 'opacity-75' : ''}`}
+        >
 
             {/* Background Progress for Quant or Period Tasks */}
             {(isQuant || isPeriod) && (
@@ -103,35 +138,53 @@ const TaskCard = ({ task, onClick, onUpdate = () => { } }) => {
                             {isChecklist && subtaskDisplay && (
                                 <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-md">{subtaskDisplay}</span>
                             )}
-                            <button
-                                onClick={(e) => { e.stopPropagation(); onUpdate(task, 'toggle'); }}
-                                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-gray-200 hover:border-emerald-400'}`}
-                            >
-                                {isCompleted && <Check size={14} className="text-white" strokeWidth={3} />}
-                            </button>
+                            {isFuture ? (
+                                <span
+                                    title="未來的任務 — 到那天才能完成"
+                                    className="w-6 h-6 rounded-full border-2 border-dashed border-indigo-300 bg-white flex items-center justify-center"
+                                >
+                                    <Lock size={11} className="text-indigo-400" />
+                                </span>
+                            ) : (
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); handleUpdate('toggle'); }}
+                                    disabled={isLocked}
+                                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-gray-200 hover:border-emerald-400'} ${isLocked ? 'opacity-60 cursor-not-allowed' : ''}`}
+                                >
+                                    {isCompleted && <Check size={14} className="text-white" strokeWidth={3} />}
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
             </div>
 
-            {/* Quick Add for Quant Tasks */}
-            {isQuant && !isPeriod && (
+            {/* Quick Add for Quant Tasks — hidden on past/future to prevent edits */}
+            {isQuant && !isPeriod && !isLocked && (
                 <div className="flex justify-end gap-2 mt-2">
-                    <button onClick={(e) => { e.stopPropagation(); onUpdate(task, 'add', -(task.stepValue || 1)); }} className="w-8 h-6 flex items-center justify-center text-xs font-bold text-gray-500 hover:bg-gray-100 rounded-full border border-gray-200 transition-colors"><Minus size={12} /></button>
-                    <button onClick={(e) => { e.stopPropagation(); onUpdate(task, 'add', (task.stepValue || 1)); }} className="w-12 h-6 flex items-center justify-center text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-full border border-emerald-100 transition-colors">+{task.stepValue || 1}</button>
+                    <button onClick={(e) => { e.stopPropagation(); handleUpdate('add', -(task.stepValue || 1)); }} className="w-8 h-6 flex items-center justify-center text-xs font-bold text-gray-500 hover:bg-gray-100 rounded-full border border-gray-200 transition-colors"><Minus size={12} /></button>
+                    <button onClick={(e) => { e.stopPropagation(); handleUpdate('add', (task.stepValue || 1)); }} className="w-12 h-6 flex items-center justify-center text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-full border border-emerald-100 transition-colors">+{task.stepValue || 1}</button>
                     <span className="text-xs text-gray-400 pt-1.5">{task.unit}</span>
                 </div>
             )}
 
-            {/* Quick Add for Period Tasks */}
+            {/* Quick Add for Period Tasks — period tasks aren't date-locked since
+                the window concept (this week / this month) is what matters. */}
             {isPeriod && (task.recurrence?.dailyLimit === false || !isCompletedToday(task)) && (
                 <div className="flex justify-end mt-2">
                     <button
-                        onClick={(e) => { e.stopPropagation(); onUpdate(task, 'period_add'); }}
+                        onClick={(e) => { e.stopPropagation(); handleUpdate('period_add'); }}
                         className="text-xs flex items-center gap-1 bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold hover:bg-emerald-100 transition-colors"
                     >
                         <Plus size={12} /> 紀錄一次
                     </button>
+                </div>
+            )}
+
+            {/* Subtle future-day badge */}
+            {isFuture && (
+                <div className="mt-2 inline-flex items-center gap-1 text-[10px] text-indigo-500 font-medium">
+                    <Lock size={10} /> 未來預覽
                 </div>
             )}
         </div>

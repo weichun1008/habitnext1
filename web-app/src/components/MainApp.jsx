@@ -408,9 +408,30 @@ const MainApp = () => {
         }
     };
 
-    // Group Tasks
-    const dailyTasks = tasks.filter(t => isTaskDueToday(t));
+    // Group Tasks — daily filter follows selectedDate so the interactive
+    // week strip can preview future days and replay past days. Period
+    // (week/month-windowed) tasks always show on the daily view since
+    // their progress doesn't shift by browsing date.
+    const dailyTasks = tasks.filter(t => isTaskDueToday(t, selectedDate));
     const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
+    const todayStr = getTodayStr();
+    const isSelectedToday = selectedDate === todayStr;
+    const dailySectionLabel = (() => {
+        if (isSelectedToday) return '今日行程';
+        const d = new Date(selectedDate);
+        if (isNaN(d.getTime())) return '行程';
+        const m = d.getMonth() + 1;
+        const day = d.getDate();
+        // Quick relative label for tomorrow / yesterday
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const ds = selectedDate;
+        if (ds === tomorrow.toISOString().split('T')[0]) return '明日行程';
+        if (ds === yesterday.toISOString().split('T')[0]) return '昨日行程';
+        return `${m}/${day} 行程`;
+    })();
 
     const hasJoinedFlowerTemplate = (() => {
         if (!user?.typeKey) return false;
@@ -478,6 +499,8 @@ const MainApp = () => {
                     user={user}
                     onLogout={handleLogout}
                     onOpenProfile={() => setIsProfileModalOpen(true)}
+                    selectedDate={selectedDate}
+                    onSelectDate={setSelectedDate}
                     className="md:hidden" // Hide on desktop
                 />
 
@@ -636,31 +659,53 @@ const MainApp = () => {
                                         </button>
                                     </div>
                                 )}
-                                <DashboardSummaryCard tasks={tasks} onOpenDetail={() => setCurrentView('dashboard_detail')} />
+                                {isSelectedToday && (
+                                    <DashboardSummaryCard tasks={tasks} onOpenDetail={() => setCurrentView('dashboard_detail')} />
+                                )}
+
+                                {/* Date browsing pill — only when viewing a non-today date */}
+                                {!isSelectedToday && (
+                                    <div className="mb-4 flex items-center justify-between gap-2 bg-indigo-50 border border-indigo-100 rounded-2xl px-4 py-3">
+                                        <p className="text-xs text-indigo-700">
+                                            正在預覽 <span className="font-bold">{dailySectionLabel}</span>
+                                        </p>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedDate(todayStr)}
+                                            className="text-xs font-bold px-3 py-1 rounded-full bg-white text-indigo-600 border border-indigo-200 hover:bg-indigo-100 transition-colors"
+                                        >
+                                            回到今天
+                                        </button>
+                                    </div>
+                                )}
 
                                 <div className="space-y-6">
-                                    {/* Section 1: Today's Schedule (Fixed) */}
+                                    {/* Section 1: Scheduled tasks for selected date */}
                                     <div>
                                         <h3 className="text-gray-800 font-bold text-lg mb-4 flex items-center gap-2">
-                                            <span className="w-1 h-5 bg-emerald-500 rounded-full"></span> 今日行程
+                                            <span className="w-1 h-5 bg-emerald-500 rounded-full"></span> {dailySectionLabel}
                                         </h3>
                                         <div className="space-y-3">
                                             {dailyTasks.map(task => (
-                                                <TaskCard key={task.id} task={task} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} />
+                                                <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} />
                                             ))}
-                                            {dailyTasks.length === 0 && <p className="text-gray-400 text-sm col-span-full">今日無固定行程。</p>}
+                                            {dailyTasks.length === 0 && (
+                                                <p className="text-gray-400 text-sm col-span-full">
+                                                    {isSelectedToday ? '今日無固定行程。' : '這天沒有安排任務。'}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
 
-                                    {/* Section 2: Period Goals (Flexible) */}
-                                    {flexibleTasks.length > 0 && (
+                                    {/* Section 2: Period Goals (Flexible) — only on today */}
+                                    {isSelectedToday && flexibleTasks.length > 0 && (
                                         <div>
                                             <h3 className="text-gray-800 font-bold text-lg mb-4 flex items-center gap-2">
                                                 <span className="w-1 h-5 bg-amber-500 rounded-full"></span> 週期目標 (彈性)
                                             </h3>
                                             <div className="space-y-3">
                                                 {flexibleTasks.map(task => (
-                                                    <TaskCard key={task.id} task={task} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} />
+                                                    <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} />
                                                 ))}
                                             </div>
                                         </div>

@@ -8,6 +8,16 @@ export function cn(...inputs) {
 export const generateId = () => Math.random().toString(36).substr(2, 9);
 export const getTodayStr = () => new Date().toISOString().split('T')[0];
 
+// Date comparison helpers for the date-navigation feature on the daily view.
+// Both args are 'yyyy-mm-dd' strings; string comparison is reliable because
+// the format is lexicographically sortable.
+export const isFutureDate = (dateStr, todayStr = getTodayStr()) =>
+    Boolean(dateStr && dateStr > todayStr);
+export const isPastDate = (dateStr, todayStr = getTodayStr()) =>
+    Boolean(dateStr && dateStr < todayStr);
+export const isToday = (dateStr, todayStr = getTodayStr()) =>
+    Boolean(dateStr && dateStr === todayStr);
+
 export const getNthWeekday = (dateStr) => {
     if (!dateStr) return { weekNum: 1, weekday: '', isLast: false, desc: '', lastDesc: '' };
     const date = new Date(dateStr);
