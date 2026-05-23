@@ -538,18 +538,10 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                             yourTasks={yourTasks}
                             excludeTaskId={initialData?.id}
                         />
-                        {formData.cue && (
-                            <p className="text-xs text-gray-500 mt-2">
-                                目前錨點：<span className="font-medium text-gray-700">{formData.cue}</span>
-                                <button
-                                    type="button"
-                                    onClick={() => setFormData(f => ({ ...f, cue: '' }))}
-                                    className="ml-2 text-xs text-emerald-600 hover:underline"
-                                >
-                                    清除
-                                </button>
-                            </p>
-                        )}
+                        {/* Note: "目前錨點：XXX [清除]" used to live here. As of
+                            2026-05-23 the AnchorPicker itself surfaces a pinned
+                            pill at the top — kept it in one place to avoid the
+                            UI showing the selected anchor twice. */}
                     </div>
 
                     {/* Identity */}

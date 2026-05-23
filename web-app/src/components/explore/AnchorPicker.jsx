@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Edit3 } from 'lucide-react';
+import { Edit3, X } from 'lucide-react';
 import { LIFE_MOMENTS_GROUPED, CUSTOM_ANCHOR_MAX_LENGTH } from '@/lib/anchors';
 
 function AnchorButton({ label, selected, onClick }) {
@@ -21,23 +21,27 @@ function AnchorButton({ label, selected, onClick }) {
   );
 }
 
-// A task is anchor-suitable when it represents a discrete moment, not an
-// accumulating target. Quantitative habits (e.g. "drink 2000cc") and
-// multi-step checklists don't make sense as anchors. Treat missing type as
-// suitable for backwards compatibility.
-function isAnchorSuitable(task) {
-  if (!task) return false;
-  if (task.isLocked) return false;
-  return !task.type || task.type === 'binary';
-}
-
-export default function AnchorPicker({ value, onChange, yourTasks = [], excludeTaskId = null }) {
+// AnchorPicker
+//
+// History note: prior versions included a "你的習慣" section that surfaced the
+// user's existing single-action tasks as candidate anchors. Removed 2026-05-23
+// — it produced duplicates whenever the same official habit was added more
+// than once, and the "chain new habit off old habit" pattern proved too
+// complex to teach during onboarding. The `yourTasks` and `excludeTaskId`
+// props are accepted but ignored for backwards compatibility with existing
+// callers; safe to remove from the signature once no caller relies on them.
+//
+// UX rules (this iteration):
+//   1. When a value is selected, surface a pinned "目前錨點：XXX [×]" pill at
+//      the TOP of the picker. Previously the selected indicator only lived
+//      inline on a button somewhere in the long list — easy to miss.
+//   2. Clicking the same selected button toggles off (onChange('')), so the
+//      user can clear without scrolling to find a "clear" affordance.
+//   3. The pill renders even when `value` is a custom string that doesn't
+//      match any preset — so the user always knows what's stored.
+export default function AnchorPicker({ value, onChange, yourTasks: _yourTasks, excludeTaskId: _excludeTaskId }) {
   const [customMode, setCustomMode] = useState(false);
   const [customText, setCustomText] = useState('');
-
-  const activeYourTasks = (yourTasks || []).filter(
-    t => isAnchorSuitable(t) && t.id !== excludeTaskId
-  );
 
   const submitCustom = () => {
     const trimmed = customText.trim();
@@ -59,9 +63,32 @@ export default function AnchorPicker({ value, onChange, yourTasks = [], excludeT
     }
   };
 
+  // Toggle helper: clicking the already-selected option clears it.
+  const select = (label) => onChange(value === label ? '' : label);
+
   return (
-    <div className="space-y-5">
-      {/* Life moments first — always available, primary entry */}
+    <div className="space-y-4">
+      {/* Selected pill — always at top when a value is set */}
+      {value && (
+        <div
+          data-testid="anchor-selected-pill"
+          className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200"
+        >
+          <span className="text-sm text-emerald-800">
+            目前錨點：<span className="font-bold">{value}</span>
+          </span>
+          <button
+            type="button"
+            onClick={() => onChange('')}
+            aria-label="清除錨點"
+            className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 rounded-full p-1 transition-colors"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
+      {/* Life moments — primary entry */}
       <div>
         <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
           生活時刻
@@ -76,7 +103,7 @@ export default function AnchorPicker({ value, onChange, yourTasks = [], excludeT
                     key={m.id}
                     label={m.label}
                     selected={value === m.label}
-                    onClick={() => onChange(m.label)}
+                    onClick={() => select(m.label)}
                   />
                 ))}
               </div>
@@ -124,27 +151,6 @@ export default function AnchorPicker({ value, onChange, yourTasks = [], excludeT
           )}
         </div>
       </div>
-
-      {/* Your existing single-action habits — secondary, for users who've already
-          established a routine to chain off of. Quantitative goals are filtered out
-          because they're targets, not discrete moments. */}
-      {activeYourTasks.length > 0 && (
-        <div>
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-            你的習慣 ({activeYourTasks.length} 個)
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {activeYourTasks.map(t => (
-              <AnchorButton
-                key={t.id}
-                label={t.title}
-                selected={value === t.title}
-                onClick={() => onChange(t.title)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
