@@ -102,6 +102,22 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
                                     <button onClick={() => onUpdate(task, 'add', (task.stepValue || 1), null, currentDate)} className="flex-1 py-3 rounded-xl bg-emerald-500 text-white font-bold shadow-md hover:bg-emerald-600 shadow-emerald-200">+ {task.stepValue}</button>
                                 </div>
                             </div>
+                        ) : totalSubtasks > 0 ? (
+                            // Checklist with subtasks: 完成任務 is auto-derived from
+                            // subtask completion, not a manual toggle. Button is
+                            // disabled and shows progress until all subtasks are done.
+                            <button
+                                disabled
+                                className={`w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg transition-all cursor-not-allowed ${
+                                    isCompleted
+                                        ? 'bg-emerald-100 text-emerald-700'
+                                        : 'bg-gray-100 text-gray-500'
+                                }`}
+                            >
+                                {isCompleted
+                                    ? <><Check size={24} /> 已完成</>
+                                    : <>需完成所有子任務（{completedSubtasks}/{totalSubtasks}）</>}
+                            </button>
                         ) : (
                             <button
                                 onClick={() => onUpdate(task, 'toggle', null, null, currentDate)}

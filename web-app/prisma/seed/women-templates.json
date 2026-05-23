@@ -64,7 +64,7 @@
               "details": "餐前補水有助消化與飽足感。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -160,7 +160,7 @@
               "details": "分段補水穩定全日水合狀態。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -190,7 +190,7 @@
               "details": "三時段分配最大化保健品吸收。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -269,7 +269,7 @@
               "details": "蛋白質穩定血糖與情緒。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -319,7 +319,7 @@
               "details": "進食順序平緩血糖反應。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -415,7 +415,7 @@
               "details": "穩定飲食結構支持週期平衡。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -445,7 +445,7 @@
               "details": "三時段分配最大化保健品吸收。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -570,7 +570,7 @@
               "details": "規律早餐穩定整日代謝。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 2,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -619,7 +619,7 @@
               "details": "規律三餐避免代償暴食。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -669,7 +669,7 @@
               "details": "蛋白質支撐荷爾蒙合成。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -699,7 +699,7 @@
               "details": "三時段分配最大化保健品吸收。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -778,7 +778,7 @@
               "details": "進食順序平緩餐後血糖。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -841,7 +841,7 @@
               "details": "規律餐後走路提升胰島素敏感度。",
               "type": "checklist",
               "category": "運動",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
@@ -950,7 +950,7 @@
               "details": "三時段分配最大化保健品吸收。",
               "type": "checklist",
               "category": "飲食",
-              "dailyTarget": 1,
+              "dailyTarget": 3,
               "unit": "餐",
               "stepValue": 1,
               "subtasks": [
