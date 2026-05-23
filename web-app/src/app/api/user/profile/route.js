@@ -96,7 +96,12 @@ export async function PUT(request) {
 
     } catch (error) {
         console.error('Update profile error:', error);
-        return NextResponse.json({ error: '更新失敗' }, { status: 500 });
+        // Surface the underlying message in the error string so production
+        // mishaps (e.g. a missing DB column after a schema change) show up
+        // in the UI instead of being swallowed as a generic 更新失敗.
+        return NextResponse.json({
+            error: `更新失敗：${error?.message || error?.code || '未知錯誤'}`,
+        }, { status: 500 });
     }
 }
 

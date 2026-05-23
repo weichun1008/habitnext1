@@ -117,20 +117,24 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl animate-fade-in-up">
+            {/* max-h-[calc(100dvh-2rem)] = viewport minus the p-4 padding above
+                so the card never overshoots the screen. Switching to a flex
+                column lets header / footer stay pinned while content scrolls.
+                Using 100dvh (not 100vh) accounts for iOS Safari's URL bar. */}
+            <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl animate-fade-in-up flex flex-col max-h-[calc(100dvh-2rem)]">
                 {/* Header */}
-                <div className="flex items-center justify-between p-5 border-b border-gray-100">
+                <div className="flex items-center justify-between p-5 border-b border-gray-100 shrink-0">
                     <h3 className="font-bold text-lg text-gray-800 flex items-center gap-2">
                         <User size={20} className="text-indigo-500" />
                         個人資料
                     </h3>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1 -m-1">
                         <X size={24} />
                     </button>
                 </div>
 
-                {/* Content */}
-                <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+                {/* Content (scrollable) */}
+                <div className="p-5 space-y-4 flex-1 overflow-y-auto">
                     {/* Avatar Preview + Picker — Material 3 Expressive set */}
                     {(() => {
                         const previewId = formData.avatar || DEFAULT_AVATAR_ID;
@@ -277,8 +281,8 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
                     )}
                 </div>
 
-                {/* Footer */}
-                <div className="p-5 border-t border-gray-100 space-y-3">
+                {/* Footer (pinned) */}
+                <div className="p-5 border-t border-gray-100 space-y-3 shrink-0">
                     <div className="flex gap-3">
                         <button
                             onClick={onClose}
