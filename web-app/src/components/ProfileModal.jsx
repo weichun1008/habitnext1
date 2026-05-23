@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState } from 'react';
-import { X, User, Phone, Lock, Save, Loader, Eye, EyeOff } from 'lucide-react';
+import { X, User, Phone, Lock, Save, Loader, Eye, EyeOff, LogOut } from 'lucide-react';
+import { AVATAR_DEFS, DEFAULT_AVATAR_ID, getAvatarDef } from '@/lib/avatars';
 
-const ProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
+const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
     const [formData, setFormData] = useState({
         nickname: user?.nickname || '',
         phone: user?.phone || '',
+        avatar: user?.avatar || '',
         oldPassword: '',
         newPassword: '',
         confirmPassword: '',
@@ -24,6 +26,7 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
                 ...prev,
                 nickname: user.nickname || '',
                 phone: user.phone || '',
+                avatar: user.avatar || '',
             }));
         }
     }, [user]);
@@ -58,6 +61,7 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
                 userId: user.id,
                 nickname: formData.nickname,
                 phone: formData.phone,
+                avatar: formData.avatar,
             };
 
             if (changePassword) {
@@ -81,6 +85,7 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
                         ...user,
                         nickname: formData.nickname,
                         phone: formData.phone,
+                        avatar: formData.avatar,
                     });
                 }
                 // Reset password fields
@@ -125,13 +130,50 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
                 </div>
 
                 {/* Content */}
-                <div className="p-5 space-y-4">
-                    {/* Avatar Preview */}
-                    <div className="flex justify-center mb-6">
-                        <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-indigo-400 to-purple-400 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                            {formData.nickname?.[0] || user?.name?.[0] || 'U'}
-                        </div>
-                    </div>
+                <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+                    {/* Avatar Preview + Picker — Material 3 Expressive set */}
+                    {(() => {
+                        const previewId = formData.avatar || DEFAULT_AVATAR_ID;
+                        const previewDef = getAvatarDef(previewId);
+                        return (
+                            <div>
+                                <div className="flex justify-center mb-4">
+                                    <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-indigo-200 shadow-lg bg-gray-100">
+                                        {previewDef
+                                            ? <previewDef.Component />
+                                            : (
+                                                <div className="w-full h-full bg-gradient-to-tr from-indigo-400 to-purple-400 flex items-center justify-center text-white text-2xl font-bold">
+                                                    {formData.nickname?.[0] || user?.name?.[0] || 'U'}
+                                                </div>
+                                            )}
+                                    </div>
+                                </div>
+                                <p className="text-xs text-gray-500 text-center mb-2">選擇你的頭像</p>
+                                <div className="grid grid-cols-6 gap-2">
+                                    {AVATAR_DEFS.map(def => {
+                                        const isSelected = formData.avatar === def.id;
+                                        return (
+                                            <button
+                                                key={def.id}
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, avatar: def.id }))}
+                                                className={`relative aspect-square rounded-full overflow-hidden transition-all ${
+                                                    isSelected
+                                                        ? 'ring-2 ring-indigo-500 ring-offset-2 scale-105'
+                                                        : 'ring-1 ring-gray-200 hover:ring-indigo-300 hover:scale-105'
+                                                }`}
+                                                title={def.label}
+                                                aria-label={def.label}
+                                                aria-pressed={isSelected}
+                                            >
+                                                <def.Component />
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        );
+                    })()}
 
                     {/* Nickname */}
                     <div>
@@ -236,21 +278,32 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="p-5 border-t border-gray-100 flex gap-3">
-                    <button
-                        onClick={onClose}
-                        className="flex-1 py-2.5 border border-gray-200 rounded-xl font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-                    >
-                        取消
-                    </button>
-                    <button
-                        onClick={handleSave}
-                        disabled={saving}
-                        className="flex-1 py-2.5 bg-indigo-500 text-white rounded-xl font-medium hover:bg-indigo-600 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
-                    >
-                        {saving ? <Loader size={18} className="animate-spin" /> : <Save size={18} />}
-                        儲存
-                    </button>
+                <div className="p-5 border-t border-gray-100 space-y-3">
+                    <div className="flex gap-3">
+                        <button
+                            onClick={onClose}
+                            className="flex-1 py-2.5 border border-gray-200 rounded-xl font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                        >
+                            取消
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            disabled={saving}
+                            className="flex-1 py-2.5 bg-indigo-500 text-white rounded-xl font-medium hover:bg-indigo-600 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                            {saving ? <Loader size={18} className="animate-spin" /> : <Save size={18} />}
+                            儲存
+                        </button>
+                    </div>
+                    {onLogout && (
+                        <button
+                            onClick={onLogout}
+                            className="w-full py-2.5 text-sm text-red-500 hover:bg-red-50 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors"
+                        >
+                            <LogOut size={16} />
+                            登出
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

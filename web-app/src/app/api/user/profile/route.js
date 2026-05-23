@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 export async function PUT(request) {
     try {
         const body = await request.json();
-        const { userId, nickname, phone, oldPassword, newPassword } = body;
+        const { userId, nickname, phone, avatar, oldPassword, newPassword } = body;
 
         if (!userId) {
             return NextResponse.json({ error: 'User ID required' }, { status: 400 });
@@ -27,6 +27,11 @@ export async function PUT(request) {
         // Update nickname
         if (nickname !== undefined && nickname !== user.nickname) {
             updateData.nickname = nickname;
+        }
+
+        // Update avatar (Material 3 Expressive avatar id; empty string clears it)
+        if (avatar !== undefined && avatar !== user.avatar) {
+            updateData.avatar = avatar || null;
         }
 
         // Update phone
@@ -80,6 +85,7 @@ export async function PUT(request) {
                 nickname: true,
                 phone: true,
                 email: true,
+                avatar: true,
             }
         });
 
