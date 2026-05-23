@@ -1,6 +1,8 @@
 [
   {
     "name": "每日攝取益生菌/發酵食物",
+    "impact": 4,
+    "ability": 3,
     "description": "益生菌維持腸道菌相平衡，發酵食物含活性菌與短鏈脂肪酸，幫助免疫與消化。",
     "category": "基因與腸道",
     "icon": "pill",
@@ -69,6 +71,8 @@
   },
   {
     "name": "觀察並記錄每日排便狀況",
+    "impact": 3,
+    "ability": 4,
     "description": "排便型態(布里斯托量表)是腸道健康的即時指標，連續記錄能及早察覺異常。",
     "category": "基因與腸道",
     "icon": "pill",
@@ -137,6 +141,8 @@
   },
   {
     "name": "避免攝取過敏原食物",
+    "impact": 4,
+    "ability": 3,
     "description": "個人化過敏原(如麩質、乳製品)會引發慢性發炎，主動辨識並避開可改善腸道與精神狀態。",
     "category": "基因與腸道",
     "icon": "pill",
@@ -205,6 +211,8 @@
   },
   {
     "name": "定期進行健康檢查",
+    "impact": 5,
+    "ability": 1,
     "description": "預防勝於治療，年度檢查能在症狀出現前發現慢性病風險指標。",
     "category": "基因與腸道",
     "icon": "pill",
@@ -259,6 +267,8 @@
   },
   {
     "name": "記錄家族病史風險",
+    "impact": 4,
+    "ability": 4,
     "description": "家族病史揭露遺傳傾向，能引導預防策略與篩檢頻率的選擇。",
     "category": "基因與腸道",
     "icon": "pill",
@@ -313,6 +323,8 @@
   },
   {
     "name": "每天攝取足夠膳食纖維",
+    "impact": 5,
+    "ability": 3,
     "description": "膳食纖維是腸道好菌的食物，幫助規律排便、穩定血糖、降低膽固醇。",
     "category": "基因與腸道",
     "icon": "pill",
@@ -367,6 +379,8 @@
   },
   {
     "name": "餐前喝一杯溫水",
+    "impact": 2,
+    "ability": 5,
     "description": "餐前補水可促進胃液分泌、減緩進食速度，協助控制食量並改善消化。",
     "category": "基因與腸道",
     "icon": "pill",
@@ -483,6 +497,8 @@
   },
   {
     "name": "避免不必要的抗生素使用",
+    "impact": 4,
+    "ability": 4,
     "description": "過度使用抗生素會破壞腸道菌相，僅在醫師建議下使用以保護微生物多樣性。",
     "category": "基因與腸道",
     "icon": "pill",
@@ -551,6 +567,8 @@
   },
   {
     "name": "練習腹式呼吸按摩腸道",
+    "impact": 2,
+    "ability": 4,
     "description": "腹式呼吸活絡橫膈膜與內臟，刺激副交感神經，幫助腸道蠕動並減壓。",
     "category": "基因與腸道",
     "icon": "pill",
@@ -619,6 +637,8 @@
   },
   {
     "name": "攝取富含益生元的食物 (洋蔥/蒜)",
+    "impact": 3,
+    "ability": 3,
     "description": "益生元是益生菌的食物來源，洋蔥、大蒜等富含寡糖能滋養腸道好菌。",
     "category": "基因與腸道",
     "icon": "pill",
@@ -687,6 +707,8 @@
   },
   {
     "name": "每天早晨開窗通風",
+    "impact": 3,
+    "ability": 5,
     "description": "夜間累積的二氧化碳與揮發物會影響清醒度，早晨換氣能提升空氣品質與精神。",
     "category": "環境",
     "icon": "sun",
@@ -755,6 +777,8 @@
   },
   {
     "name": "整理工作桌面保持清爽",
+    "impact": 2,
+    "ability": 4,
     "description": "整潔的環境減少視覺干擾與認知負荷，有助於專注與決策品質。",
     "category": "環境",
     "icon": "sun",
@@ -823,6 +847,8 @@
   },
   {
     "name": "接觸大自然/戶外散步",
+    "impact": 4,
+    "ability": 3,
     "description": "接觸綠地能降低皮質醇、改善情緒，被稱為「綠色處方」的低成本健康介入。",
     "category": "環境",
     "icon": "sun",
@@ -877,6 +903,8 @@
   },
   {
     "name": "減少暴露於噪音環境",
+    "impact": 3,
+    "ability": 3,
     "description": "長期噪音曝露會升高血壓並損害聽力，主動降噪可保護心血管與聽覺系統。",
     "category": "環境",
     "icon": "sun",
@@ -945,6 +973,8 @@
   },
   {
     "name": "每週進行數位環境大掃除",
+    "impact": 2,
+    "ability": 3,
     "description": "清理檔案、退訂郵件、整理桌面圖示能降低數位疲勞與資訊焦慮。",
     "category": "環境",
     "icon": "sun",
@@ -1005,6 +1035,8 @@
   },
   {
     "name": "臥室保持完全黑暗 (助眠)",
+    "impact": 5,
+    "ability": 4,
     "description": "光線會抑制褪黑激素分泌，完全黑暗的環境能提升入睡速度與睡眠深度。",
     "category": "環境",
     "icon": "sun",
@@ -1073,6 +1105,8 @@
   },
   {
     "name": "種植室內植物淨化空氣",
+    "impact": 2,
+    "ability": 2,
     "description": "室內植物吸收部分揮發性有機物並提升濕度，同時帶來心理放鬆效果。",
     "category": "環境",
     "icon": "sun",
@@ -1141,6 +1175,8 @@
   },
   {
     "name": "調整符合人體工學的桌椅",
+    "impact": 4,
+    "ability": 2,
     "description": "正確的桌椅高度減少頸肩腰背的累積性傷害，是長時間工作族群的基本投資。",
     "category": "環境",
     "icon": "sun",
@@ -1209,6 +1245,8 @@
   },
   {
     "name": "定期清理冰箱與儲藏室",
+    "impact": 2,
+    "ability": 3,
     "description": "清除過期食物降低食源性風險，整齊的食材陳列也讓飲食選擇更清楚。",
     "category": "環境",
     "icon": "sun",
@@ -1277,6 +1315,8 @@
   },
   {
     "name": "減少使用一次性塑膠",
+    "impact": 3,
+    "ability": 3,
     "description": "減塑能降低微塑膠暴露並減少環境負擔，自備容器是最簡單的入門做法。",
     "category": "環境",
     "icon": "sun",
@@ -1345,6 +1385,8 @@
   },
   {
     "name": "執行 168 間歇性斷食",
+    "impact": 4,
+    "ability": 2,
     "description": "16 小時不進食讓胰島素下降並啟動細胞自噬，是常見且容易執行的代謝介入。",
     "category": "飲食",
     "icon": "apple",
@@ -1399,6 +1441,8 @@
   },
   {
     "name": "每餐攝取一個拳頭的蔬菜",
+    "impact": 5,
+    "ability": 3,
     "description": "蔬菜提供纖維、維生素與植化素，足量蔬菜是均衡飲食的基石。",
     "category": "飲食",
     "icon": "apple",
@@ -1515,6 +1559,8 @@
   },
   {
     "name": "減少精緻糖與澱粉攝取",
+    "impact": 5,
+    "ability": 2,
     "description": "精緻糖與澱粉造成血糖劇烈波動，長期過量會增加代謝症候群風險。",
     "category": "飲食",
     "icon": "apple",
@@ -1583,6 +1629,8 @@
   },
   {
     "name": "吃飯細嚼慢嚥 (每口20下)",
+    "impact": 3,
+    "ability": 4,
     "description": "充分咀嚼讓飽足訊號有時間傳達，幫助控制食量並改善消化吸收。",
     "category": "飲食",
     "icon": "apple",
@@ -1699,6 +1747,8 @@
   },
   {
     "name": "維持血糖穩定 (先吃菜肉再吃飯)",
+    "impact": 4,
+    "ability": 4,
     "description": "進食順序影響餐後血糖反應，蔬菜蛋白質先行能減緩澱粉的血糖衝擊。",
     "category": "飲食",
     "icon": "apple",
@@ -1815,6 +1865,8 @@
   },
   {
     "name": "每天喝足 2500cc 水",
+    "impact": 4,
+    "ability": 4,
     "description": "水分攝取影響代謝、皮膚與認知；分次少量補水比一次大量更有效。",
     "category": "飲食",
     "icon": "apple",
@@ -1869,6 +1921,8 @@
   },
   {
     "name": "每週實行一日無肉日",
+    "impact": 3,
+    "ability": 3,
     "description": "減少動物性蛋白攝取一天可降低飽和脂肪與環境負擔，並增加植物多樣性。",
     "category": "飲食",
     "icon": "apple",
@@ -1929,6 +1983,8 @@
   },
   {
     "name": "避免晚餐後進食 (消夜)",
+    "impact": 4,
+    "ability": 3,
     "description": "睡前進食影響消化與睡眠品質，晚間禁食能促進代謝休息與脂肪燃燒。",
     "category": "飲食",
     "icon": "apple",
@@ -1997,6 +2053,8 @@
   },
   {
     "name": "攝取優質 Omega-3 油脂",
+    "impact": 4,
+    "ability": 3,
     "description": "Omega-3 對心血管與腦部抗發炎有益，常見來源包括深海魚、亞麻仁與核桃。",
     "category": "飲食",
     "icon": "apple",
@@ -2065,6 +2123,8 @@
   },
   {
     "name": "閱讀食品營養標示",
+    "impact": 3,
+    "ability": 4,
     "description": "看懂熱量、糖、鈉與成分順序，是擺脫加工食品陷阱的第一步。",
     "category": "飲食",
     "icon": "apple",
@@ -2133,6 +2193,8 @@
   },
   {
     "name": "每餐都要有一份蛋白質",
+    "impact": 4,
+    "ability": 3,
     "description": "蛋白質穩定血糖、增加飽足感、維持肌肉。蛋、豆腐、雞肉、豆漿任一都算。💡 斷食或某餐不吃？選擇較低難度，或在加入後編輯餐次。",
     "category": "飲食",
     "icon": "apple",
@@ -2249,6 +2311,8 @@
   },
   {
     "name": "每餐前先喝一杯水",
+    "impact": 2,
+    "ability": 5,
     "description": "餐前 200-300cc 水降低飢餓感、減慢進食速度，且確保水分攝取。💡 斷食日選低難度即可，水分仍然要喝。",
     "category": "飲食",
     "icon": "apple",
@@ -2365,6 +2429,8 @@
   },
   {
     "name": "飯後散步 15 分鐘 (穩定血糖)",
+    "impact": 4,
+    "ability": 3,
     "description": "飯後輕度活動可顯著降低餐後血糖高峰，對代謝健康影響大。",
     "category": "運動",
     "icon": "dumbbell",
@@ -2419,6 +2485,8 @@
   },
   {
     "name": "每天深蹲 30 下 (肌力)",
+    "impact": 4,
+    "ability": 4,
     "description": "深蹲訓練下肢大肌群，能維持基礎代謝與行動能力，是高效率的居家肌力動作。",
     "category": "運動",
     "icon": "dumbbell",
@@ -2473,6 +2541,8 @@
   },
   {
     "name": "避免久坐超過 60 分鐘",
+    "impact": 4,
+    "ability": 4,
     "description": "久坐使代謝速度下降並增加心血管風險，每小時起身活動即可顯著緩解。",
     "category": "運動",
     "icon": "dumbbell",
@@ -2541,6 +2611,8 @@
   },
   {
     "name": "每週進行 3 次有氧運動",
+    "impact": 5,
+    "ability": 2,
     "description": "規律有氧能提升心肺、改善胰島素敏感度，是 WHO 推薦的最低活動量。",
     "category": "運動",
     "icon": "dumbbell",
@@ -2601,6 +2673,8 @@
   },
   {
     "name": "晨間脊椎伸展操",
+    "impact": 3,
+    "ability": 4,
     "description": "晨起短時間伸展可喚醒神經系統並改善脊椎活動度，降低整日僵硬感。",
     "category": "運動",
     "icon": "dumbbell",
@@ -2669,6 +2743,8 @@
   },
   {
     "name": "走樓梯代替搭電梯",
+    "impact": 3,
+    "ability": 4,
     "description": "爬樓梯是高效率的非運動性熱量消耗(NEAT)，能無痛累積每日活動量。",
     "category": "運動",
     "icon": "dumbbell",
@@ -2737,6 +2813,8 @@
   },
   {
     "name": "進行 1 分鐘棒式 (Plank)",
+    "impact": 3,
+    "ability": 4,
     "description": "棒式訓練核心穩定性，有助於改善姿勢、保護下背並提升整體運動表現。",
     "category": "運動",
     "icon": "dumbbell",
@@ -2791,6 +2869,8 @@
   },
   {
     "name": "睡前拉筋放鬆肌肉",
+    "impact": 3,
+    "ability": 4,
     "description": "拉筋促進副交感神經作用、放鬆肌肉，有助於提升睡眠品質與隔日柔軟度。",
     "category": "運動",
     "icon": "dumbbell",
@@ -2859,6 +2939,8 @@
   },
   {
     "name": "每天步行 8000 步",
+    "impact": 5,
+    "ability": 3,
     "description": "步數是日常活動量的綜合指標，研究顯示每日 7000-8000 步即可顯著降低死亡率。",
     "category": "運動",
     "icon": "dumbbell",
@@ -2913,6 +2995,8 @@
   },
   {
     "name": "練習單腳站立 (平衡感)",
+    "impact": 3,
+    "ability": 5,
     "description": "單腳站立訓練本體感覺與核心穩定，是預防跌倒與老化最簡單的動作之一。",
     "category": "運動",
     "icon": "dumbbell",
@@ -2981,6 +3065,8 @@
   },
   {
     "name": "睡前 1 小時不看手機 (藍光)",
+    "impact": 5,
+    "ability": 2,
     "description": "螢幕藍光抑制褪黑激素分泌，睡前遠離手機能加速入睡與深度睡眠。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -3049,6 +3135,8 @@
   },
   {
     "name": "練習 4-7-8 呼吸法紓壓",
+    "impact": 3,
+    "ability": 5,
     "description": "4-7-8 呼吸法刺激迷走神經、啟動副交感系統，能在數分鐘內降低焦慮感。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -3117,6 +3205,8 @@
   },
   {
     "name": "確保每天 7 小時優質睡眠",
+    "impact": 5,
+    "ability": 2,
     "description": "睡眠時間與品質直接影響免疫、認知與情緒；7-9 小時是成人推薦範圍。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -3171,6 +3261,8 @@
   },
   {
     "name": "建立固定的睡前儀式",
+    "impact": 4,
+    "ability": 3,
     "description": "規律睡前活動傳達「準備休息」訊號給神經系統，加速入睡與深層睡眠。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -3239,6 +3331,8 @@
   },
   {
     "name": "午後不再攝取咖啡因",
+    "impact": 4,
+    "ability": 3,
     "description": "咖啡因半衰期約 5-6 小時，下午後攝取會干擾入睡與深層睡眠比例。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -3307,6 +3401,8 @@
   },
   {
     "name": "泡熱水澡放鬆神經",
+    "impact": 3,
+    "ability": 2,
     "description": "睡前 1-2 小時溫水浴有助於核心體溫下降，啟動入睡反應並放鬆肌肉。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -3375,6 +3471,8 @@
   },
   {
     "name": "使用眼罩或耳塞助眠",
+    "impact": 3,
+    "ability": 4,
     "description": "降低光線與聲音干擾能維持睡眠週期完整，特別適合都市與淺眠者。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -3443,6 +3541,8 @@
   },
   {
     "name": "寫下煩惱清單 (清空大腦)",
+    "impact": 3,
+    "ability": 4,
     "description": "睡前外化煩惱可降低反芻思考，幫助大腦從待辦模式切換到休息模式。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -3511,6 +3611,8 @@
   },
   {
     "name": "早上起床曬 10 分鐘太陽",
+    "impact": 5,
+    "ability": 4,
     "description": "晨光校準生理時鐘並促進血清素分泌，是穩定情緒與睡眠的關鍵錨點。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -3565,6 +3667,8 @@
   },
   {
     "name": "午間小睡 20 分鐘 (Power Nap)",
+    "impact": 3,
+    "ability": 3,
     "description": "20 分鐘以內的短午睡能恢復警覺度且不影響夜眠，超過 30 分鐘容易陷入深睡反而疲倦。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -3633,6 +3737,8 @@
   },
   {
     "name": "每天擁抱家人/伴侶",
+    "impact": 4,
+    "ability": 4,
     "description": "肢體接觸促進催產素分泌、降低壓力荷爾蒙，是低成本的情感連結方式。",
     "category": "社交互動",
     "icon": "users",
@@ -3701,6 +3807,8 @@
   },
   {
     "name": "每週與一位好友通話",
+    "impact": 4,
+    "ability": 3,
     "description": "強連結關係是長壽研究中最穩健的健康預測因子之一，主動維繫不可被動等待。",
     "category": "社交互動",
     "icon": "users",
@@ -3761,6 +3869,8 @@
   },
   {
     "name": "練習傾聽不打斷",
+    "impact": 4,
+    "ability": 3,
     "description": "完整傾聽建立信任與被理解感，是親密關係與職場溝通的核心能力。",
     "category": "社交互動",
     "icon": "users",
@@ -3829,6 +3939,8 @@
   },
   {
     "name": "主動表達感謝與愛",
+    "impact": 4,
+    "ability": 4,
     "description": "明確表達正向情感讓關係雙方都受益，已被多項心理學研究證實提升幸福感。",
     "category": "社交互動",
     "icon": "users",
@@ -3897,6 +4009,8 @@
   },
   {
     "name": "參與社群活動減少孤獨感",
+    "impact": 5,
+    "ability": 2,
     "description": "孤獨對健康的危害不亞於吸菸，定期社群互動是有效預防策略。",
     "category": "社交互動",
     "icon": "users",
@@ -3965,6 +4079,8 @@
   },
   {
     "name": "安排與伴侶的約會時光",
+    "impact": 4,
+    "ability": 2,
     "description": "刻意創造高品質共處時間能維持親密感，比次數更重要的是品質。",
     "category": "社交互動",
     "icon": "users",
@@ -4033,6 +4149,8 @@
   },
   {
     "name": "每天讚美一個人",
+    "impact": 3,
+    "ability": 5,
     "description": "具體的讚美促進人際正向循環，也訓練自己留意他人優點。",
     "category": "社交互動",
     "icon": "users",
@@ -4101,6 +4219,8 @@
   },
   {
     "name": "寫張卡片給重要的人",
+    "impact": 3,
+    "ability": 3,
     "description": "手寫訊息傳遞的情感深度遠超即時訊息，是強化關係的高效投資。",
     "category": "社交互動",
     "icon": "users",
@@ -4169,6 +4289,8 @@
   },
   {
     "name": "練習換位思考",
+    "impact": 4,
+    "ability": 3,
     "description": "主動嘗試以他人視角理解事件，可減少衝突並提升同理心。",
     "category": "社交互動",
     "icon": "users",
@@ -4237,6 +4359,8 @@
   },
   {
     "name": "與家人共進晚餐且不滑手機",
+    "impact": 4,
+    "ability": 3,
     "description": "共餐且專注互動可強化家庭連結，研究顯示與兒少心理健康正相關。",
     "category": "社交互動",
     "icon": "users",
@@ -4305,6 +4429,8 @@
   },
   {
     "name": "每日正念冥想 10 分鐘",
+    "impact": 5,
+    "ability": 3,
     "description": "規律冥想可改變大腦結構並降低杏仁核反應，提升情緒調節能力。",
     "category": "心靈",
     "icon": "yoga",
@@ -4359,6 +4485,8 @@
   },
   {
     "name": "寫下感恩日記 (三件事)",
+    "impact": 4,
+    "ability": 4,
     "description": "每日記下三件感謝之事訓練大腦留意正向訊號，可顯著提升主觀幸福感。",
     "category": "心靈",
     "icon": "yoga",
@@ -4427,6 +4555,8 @@
   },
   {
     "name": "定義個人核心價值觀",
+    "impact": 4,
+    "ability": 2,
     "description": "釐清自身價值觀作為決策羅盤，可降低人生迷茫感與選擇焦慮。",
     "category": "心靈",
     "icon": "yoga",
@@ -4495,6 +4625,8 @@
   },
   {
     "name": "練習自我慈悲與對話",
+    "impact": 4,
+    "ability": 3,
     "description": "對自己如對待好友般溫柔，是降低自我批判與憂鬱風險的核心技能。",
     "category": "心靈",
     "icon": "yoga",
@@ -4563,6 +4695,8 @@
   },
   {
     "name": "尋找生活中的意義感 (Ikigai)",
+    "impact": 5,
+    "ability": 1,
     "description": "意義感連結每日行為與長期目標，是 Blue Zones 長壽地區共通的心理特徵。",
     "category": "心靈",
     "icon": "yoga",
@@ -4631,6 +4765,8 @@
   },
   {
     "name": "閱讀心靈成長書籍",
+    "impact": 3,
+    "ability": 3,
     "description": "閱讀心理與哲學書籍提供思考框架，幫助梳理情緒與生命課題。",
     "category": "心靈",
     "icon": "yoga",
@@ -4685,6 +4821,8 @@
   },
   {
     "name": "進行十分鐘的靜默練習",
+    "impact": 4,
+    "ability": 4,
     "description": "刻意安排無刺激的安靜時間，讓神經系統從過度刺激中恢復。",
     "category": "心靈",
     "icon": "yoga",
@@ -4753,6 +4891,8 @@
   },
   {
     "name": "練習寬恕與放下",
+    "impact": 4,
+    "ability": 2,
     "description": "長期怨恨對身心健康有害，寬恕不是認同對方而是釋放自己。",
     "category": "心靈",
     "icon": "yoga",
@@ -4821,6 +4961,8 @@
   },
   {
     "name": "每天對著鏡子自我肯定",
+    "impact": 3,
+    "ability": 5,
     "description": "研究顯示自我肯定對某些情境有助益；對低自尊者可能反效果。可作為自我覺察練習，效果因人而異。",
     "category": "心靈",
     "icon": "yoga",
@@ -4889,6 +5031,8 @@
   },
   {
     "name": "參與藝術創作或欣賞",
+    "impact": 3,
+    "ability": 2,
     "description": "接觸藝術可激發創造力與情感表達，亦能降低壓力荷爾蒙皮質醇。",
     "category": "心靈",
     "icon": "yoga",
@@ -4957,6 +5101,8 @@
   },
   {
     "name": "每天閱讀非虛構書籍 15 分鐘",
+    "impact": 4,
+    "ability": 3,
     "description": "持續閱讀非虛構書籍是累積跨領域知識的高槓桿習慣，比資訊片段更有結構。",
     "category": "認知與智慧",
     "icon": "book",
@@ -5011,6 +5157,8 @@
   },
   {
     "name": "學習一項新技能或語言",
+    "impact": 5,
+    "ability": 1,
     "description": "持續學習可建立認知儲備、降低失智風險，並擴大職涯選擇權。",
     "category": "認知與智慧",
     "icon": "book",
@@ -5079,6 +5227,8 @@
   },
   {
     "name": "玩益智遊戲活化大腦",
+    "impact": 2,
+    "ability": 4,
     "description": "下棋、數獨等益智活動鍛鍊執行功能與工作記憶，是維持腦力的低門檻方式。",
     "category": "認知與智慧",
     "icon": "book",
@@ -5147,6 +5297,8 @@
   },
   {
     "name": "進行深度工作 (Deep Work)",
+    "impact": 4,
+    "ability": 2,
     "description": "無干擾的高專注時段是高價值產出的關鍵，越來越稀缺也越來越具競爭力。",
     "category": "認知與智慧",
     "icon": "book",
@@ -5201,6 +5353,8 @@
   },
   {
     "name": "寫作或輸出今日所學",
+    "impact": 4,
+    "ability": 3,
     "description": "輸出迫使知識被結構化與檢驗，是費曼學習法的核心步驟。",
     "category": "認知與智慧",
     "icon": "book",
@@ -5269,6 +5423,8 @@
   },
   {
     "name": "收聽知識型 Podcast",
+    "impact": 3,
+    "ability": 4,
     "description": "通勤、家務時間可被知識型音頻轉化為持續輸入的學習窗口。",
     "category": "認知與智慧",
     "icon": "book",
@@ -5337,6 +5493,8 @@
   },
   {
     "name": "每天學習一個新單字",
+    "impact": 3,
+    "ability": 5,
     "description": "詞彙量是思考精度的基礎，每日一字一年即可累積數百個新詞。",
     "category": "認知與智慧",
     "icon": "book",
@@ -5405,6 +5563,8 @@
   },
   {
     "name": "觀看一場 TED Talk",
+    "impact": 3,
+    "ability": 3,
     "description": "TED 提供高密度的觀點與新知，是接觸跨領域思考的高效率管道。",
     "category": "認知與智慧",
     "icon": "book",
@@ -5473,6 +5633,8 @@
   },
   {
     "name": "練習批判性思考",
+    "impact": 5,
+    "ability": 2,
     "description": "主動質疑訊息來源、辨識邏輯謬誤，是資訊爆炸時代的必備防身術。",
     "category": "認知與智慧",
     "icon": "book",
@@ -5541,6 +5703,8 @@
   },
   {
     "name": "參加線上課程或講座",
+    "impact": 4,
+    "ability": 2,
     "description": "結構化的課程提供有指引的學習路徑，比零散自學更易累積完整知識體系。",
     "category": "認知與智慧",
     "icon": "book",
@@ -5609,6 +5773,8 @@
   },
   {
     "name": "設定每日最重要的三件事",
+    "impact": 5,
+    "ability": 4,
     "description": "聚焦三件 MIT (Most Important Tasks) 可避免被瑣事消耗，將注意力投在高槓桿目標。",
     "category": "職涯與平衡",
     "icon": "briefcase",
@@ -5677,6 +5843,8 @@
   },
   {
     "name": "劃分清晰的工作/生活界線",
+    "impact": 5,
+    "ability": 2,
     "description": "明確的時間或空間界線可降低工作侵蝕私人生活的程度，是預防過勞的基礎。",
     "category": "職涯與平衡",
     "icon": "briefcase",
@@ -5745,6 +5913,8 @@
   },
   {
     "name": "定期檢視職涯成就感",
+    "impact": 4,
+    "ability": 3,
     "description": "週期性回顧職涯方向避免陷入慣性軌道，及早調整比後悔修正更有效率。",
     "category": "職涯與平衡",
     "icon": "briefcase",
@@ -5813,6 +5983,8 @@
   },
   {
     "name": "優化工作流程提升效率",
+    "impact": 3,
+    "ability": 3,
     "description": "識別重複耗時的步驟並自動化或簡化，是用同樣時間換更高產出的關鍵。",
     "category": "職涯與平衡",
     "icon": "briefcase",
@@ -5881,6 +6053,8 @@
   },
   {
     "name": "尋找工作中的心流體驗",
+    "impact": 4,
+    "ability": 2,
     "description": "挑戰與能力匹配時最容易進入心流，是工作意義感與長期動力的來源。",
     "category": "職涯與平衡",
     "icon": "briefcase",
@@ -5949,6 +6123,8 @@
   },
   {
     "name": "整理收件匣 (Inbox Zero)",
+    "impact": 3,
+    "ability": 3,
     "description": "讓收件匣保持空淨可降低資訊焦慮，將郵件視為待辦觸發點而非儲存空間。",
     "category": "職涯與平衡",
     "icon": "briefcase",
@@ -6017,6 +6193,8 @@
   },
   {
     "name": "番茄鐘工作法",
+    "impact": 3,
+    "ability": 4,
     "description": "25 分鐘專注加 5 分鐘休息的循環能維持高品質產出，避免長時間消耗。",
     "category": "職涯與平衡",
     "icon": "briefcase",
@@ -6071,6 +6249,8 @@
   },
   {
     "name": "拒絕不必要的會議",
+    "impact": 4,
+    "ability": 3,
     "description": "會議是時間黑洞，主動評估參與必要性可釋放大量深度工作的時段。",
     "category": "職涯與平衡",
     "icon": "briefcase",
@@ -6139,6 +6319,8 @@
   },
   {
     "name": "每週回顧工作進度",
+    "impact": 4,
+    "ability": 3,
     "description": "每週回顧能識別偏離與進展，是維持目標一致性與調整節奏的關鍵實踐。",
     "category": "職涯與平衡",
     "icon": "briefcase",
@@ -6199,6 +6381,8 @@
   },
   {
     "name": "建立個人品牌",
+    "impact": 3,
+    "ability": 1,
     "description": "持續輸出專業內容可累積個人信任資產，在職涯轉換或創業時形成槓桿。",
     "category": "職涯與平衡",
     "icon": "briefcase",
@@ -6267,6 +6451,8 @@
   },
   {
     "name": "睡前做 2 分鐘深呼吸（4-7-8）",
+    "impact": 3,
+    "ability": 5,
     "description": "4-7-8 呼吸法降低交感神經活性、放鬆肌肉、幫助入眠。約 2-3 個循環即有放鬆效應。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -6279,6 +6465,8 @@
   },
   {
     "name": "第一餐吃完後吃保健品",
+    "impact": 3,
+    "ability": 5,
     "description": "保健品配餐吸收率較高，胃部食物緩衝降低不適。設定固定錨點減少忘記。",
     "category": "飲食",
     "icon": "apple",
@@ -6291,6 +6479,8 @@
   },
   {
     "name": "起床後喝兩大口水",
+    "impact": 2,
+    "ability": 5,
     "description": "經過一夜代謝，身體處於輕度脫水。早晨補水活化代謝、減少早晨頭痛感。",
     "category": "飲食",
     "icon": "apple",
@@ -6303,6 +6493,8 @@
   },
   {
     "name": "上完廁所後伸展 10 分鐘",
+    "impact": 3,
+    "ability": 3,
     "description": "如廁是天然的「站起來」錨點。利用這個 cue 累積伸展時間、避免久坐。",
     "category": "運動",
     "icon": "dumbbell",
@@ -6315,6 +6507,8 @@
   },
   {
     "name": "空腹吃益生菌",
+    "impact": 3,
+    "ability": 5,
     "description": "空腹狀態胃酸暫時較低，益生菌通過胃部到腸道的存活率較高。",
     "category": "飲食",
     "icon": "apple",
@@ -6327,6 +6521,8 @@
   },
   {
     "name": "睡前補充鎂",
+    "impact": 3,
+    "ability": 5,
     "description": "鎂幫助肌肉放鬆與神經穩定，睡前補充改善入眠品質。建議遠離鈣與奶製品。",
     "category": "壓力與睡眠",
     "icon": "moon",
@@ -6339,6 +6535,8 @@
   },
   {
     "name": "飯後補充薑黃和葉酸鐵",
+    "impact": 3,
+    "ability": 5,
     "description": "薑黃配油脂吸收較好，葉酸鐵建議避免空腹（減低胃部不適）。",
     "category": "飲食",
     "icon": "apple",
@@ -6351,6 +6549,8 @@
   },
   {
     "name": "想吃甜食先吃堅果等 10 分鐘",
+    "impact": 3,
+    "ability": 4,
     "description": "甜食慾望多源於血糖快速波動。先吃堅果延緩吸收、10 分鐘後常自然降低渴求。",
     "category": "飲食",
     "icon": "apple",
@@ -6363,6 +6563,8 @@
   },
   {
     "name": "把含糖飲料換成白開水或無糖飲品",
+    "impact": 5,
+    "ability": 3,
     "description": "含糖飲料快速衝高血糖且不會增加飽足感。替換為無糖選項是減糖最簡單的一步。",
     "category": "飲食",
     "icon": "apple",
@@ -6375,6 +6577,8 @@
   },
   {
     "name": "找一個 5 分鐘什麼都不做的時間",
+    "impact": 3,
+    "ability": 4,
     "description": "短暫停頓讓神經系統從持續活躍的狀態切換到副交感模式，是日常情緒緩衝。",
     "category": "壓力與睡眠",
     "icon": "moon",
