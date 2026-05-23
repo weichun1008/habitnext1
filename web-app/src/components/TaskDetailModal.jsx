@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Edit2, Check, Calendar, Target, Flame, Trophy, ChevronRight, ChevronLeft } from 'lucide-react';
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG } from '@/lib/constants';
-import { getTodayStr, isCompletedOnDate, calculateStats } from '@/lib/utils';
+import { getTodayStr, isCompletedOnDate, calculateStats, isFutureDate } from '@/lib/utils';
 import { visibleSubtasks } from '@/lib/subtasks';
 
-const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
-    const [currentDate, setCurrentDate] = useState(getTodayStr());
+const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate }) => {
+    const [currentDate, setCurrentDate] = useState(initialDate || getTodayStr());
+
+    // Sync internal date when the modal re-opens for a different task or the
+    // parent's browsing date changes — otherwise the modal would keep showing
+    // today even when the user is browsing a future/past day on the daily view.
+    useEffect(() => {
+        if (isOpen) {
+            setCurrentDate(initialDate || getTodayStr());
+        }
+    }, [isOpen, task?.id, initialDate]);
 
     if (!isOpen || !task) return null;
 
@@ -32,7 +41,10 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
         setCurrentDate(date.toISOString().split('T')[0]);
     };
 
-    const isToday = currentDate === getTodayStr();
+    const todayStr = getTodayStr();
+    const isToday = currentDate === todayStr;
+    const isFuture = isFutureDate(currentDate, todayStr);
+    const isLocked = isFuture;
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">
@@ -59,15 +71,17 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
                         <button onClick={() => handleDateChange(-1)} className="p-1 hover:bg-gray-100 rounded-full text-gray-400"><ChevronLeft size={20} /></button>
                         <div className="flex items-center gap-2 font-bold text-gray-700">
                             <Calendar size={16} className="text-emerald-500" />
-                            {currentDate} {isToday && <span className="text-xs bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full">今天</span>}
+                            {currentDate}
+                            {isToday && <span className="text-xs bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full">今天</span>}
+                            {isFuture && <span className="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">未來</span>}
                         </div>
-                        <button onClick={() => handleDateChange(1)} className={`p-1 hover:bg-gray-100 rounded-full text-gray-400 ${isToday ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={isToday}><ChevronRight size={20} /></button>
+                        <button onClick={() => handleDateChange(1)} className="p-1 hover:bg-gray-100 rounded-full text-gray-400"><ChevronRight size={20} /></button>
                     </div>
 
                     {/* Main Info */}
                     <div className="flex flex-col items-center mb-8">
-                        <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mb-4 ${config.bg}`}>
-                            <IconRenderer category={task.category} size={40} className={config.type === 'emoji' ? 'text-5xl' : ''} />
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 ${config.bg}`}>
+                            <IconRenderer category={task.category} size={28} />
                         </div>
                         {task.identity && (
                             <p className="text-xs font-medium text-gray-500 mb-1">
@@ -98,8 +112,16 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
                                     <div className="bg-emerald-500 h-full transition-all duration-500" style={{ width: `${Math.min(100, ((task.dailyProgress?.[currentDate]?.value || 0) / task.dailyTarget) * 100)}%` }}></div>
                                 </div>
                                 <div className="flex gap-2 mt-4">
-                                    <button onClick={() => onUpdate(task, 'add', -(task.stepValue || 1), null, currentDate)} className="flex-1 py-3 rounded-xl bg-white border border-gray-200 font-bold text-gray-600 hover:bg-gray-50 shadow-sm">- {task.stepValue}</button>
-                                    <button onClick={() => onUpdate(task, 'add', (task.stepValue || 1), null, currentDate)} className="flex-1 py-3 rounded-xl bg-emerald-500 text-white font-bold shadow-md hover:bg-emerald-600 shadow-emerald-200">+ {task.stepValue}</button>
+                                    <button
+                                        disabled={isLocked}
+                                        onClick={() => onUpdate(task, 'add', -(task.stepValue || 1), null, currentDate)}
+                                        className={`flex-1 py-3 rounded-xl bg-white border border-gray-200 font-bold text-gray-600 shadow-sm ${isLocked ? 'opacity-40 cursor-not-allowed' : 'hover:bg-gray-50'}`}
+                                    >- {task.stepValue}</button>
+                                    <button
+                                        disabled={isLocked}
+                                        onClick={() => onUpdate(task, 'add', (task.stepValue || 1), null, currentDate)}
+                                        className={`flex-1 py-3 rounded-xl bg-emerald-500 text-white font-bold shadow-md shadow-emerald-200 ${isLocked ? 'opacity-40 cursor-not-allowed' : 'hover:bg-emerald-600'}`}
+                                    >+ {task.stepValue}</button>
                                 </div>
                             </div>
                         ) : totalSubtasks > 0 ? (
@@ -120,17 +142,27 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
                             </button>
                         ) : (
                             <button
+                                disabled={isLocked}
                                 onClick={() => onUpdate(task, 'toggle', null, null, currentDate)}
-                                className={`w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg transition-all ${isCompleted ? 'bg-gray-100 text-gray-500' : 'bg-emerald-500 text-white shadow-emerald-200 hover:bg-emerald-600 hover:scale-[1.02]'}`}
+                                className={`w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg transition-all ${
+                                    isLocked
+                                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                        : isCompleted
+                                            ? 'bg-gray-100 text-gray-500'
+                                            : 'bg-emerald-500 text-white shadow-emerald-200 hover:bg-emerald-600 hover:scale-[1.02]'
+                                }`}
                             >
-                                {isCompleted ? <><Check size={24} /> 已完成</> : '完成任務'}
+                                {isLocked
+                                    ? '尚未到當日'
+                                    : isCompleted
+                                        ? <><Check size={24} /> 已完成</>
+                                        : '完成任務'}
                             </button>
                         )}
                     </div>
 
                     {/* Subtasks (Interactive) */}
                     {_subsForDate.length > 0 && (() => {
-                        const todayStr = new Date().toISOString().slice(0, 10);
                         const isPastDate = currentDate < todayStr;
                         return (
                             <div className="mb-8">
@@ -141,7 +173,7 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate }) => {
                                 <div className="space-y-2">
                                     {_subsForDate.map(sub => {
                                         const isChecked = _completionsForDate[sub.id] === true;
-                                        const isReadonly = isPastDate;
+                                        const isReadonly = isPastDate || isFuture;
                                         return (
                                             <div
                                                 key={sub.id}
