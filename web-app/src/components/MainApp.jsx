@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, LogOut, Compass, BarChart3 } from 'lucide-react';
+import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3 } from 'lucide-react';
 import AppHeader from './AppHeader';
 import TaskCard from './TaskCard';
 import TaskFormModal from './TaskFormModal';
@@ -19,6 +19,7 @@ import { visibleSubtasks, computeChecklistValue } from '@/lib/subtasks';
 import PlanGroup from './PlanGroup';
 import TemplateExplorer from './TemplateExplorer';
 import ProfileModal from './ProfileModal';
+import Avatar from './Avatar';
 
 // StatsView is dynamically imported to keep recharts (~96kb gzip) off the
 // `/` route's First Load JS — it only loads when the user opens the stats tab.
@@ -497,7 +498,6 @@ const MainApp = () => {
                     onOpenBadges={() => setCurrentView('badges')}
                     onOpenExplore={() => setIsTemplateExplorerOpen(true)}
                     user={user}
-                    onLogout={handleLogout}
                     onOpenProfile={() => setIsProfileModalOpen(true)}
                     selectedDate={selectedDate}
                     onSelectDate={setSelectedDate}
@@ -588,20 +588,11 @@ const MainApp = () => {
                             onClick={() => setIsProfileModalOpen(true)}
                             className="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors text-left"
                         >
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-400 to-purple-400 flex items-center justify-center text-white font-bold text-sm">
-                                {user?.nickname?.[0] || user?.name?.[0] || 'U'}
-                            </div>
+                            <Avatar user={user} size="w-8 h-8" />
                             <div className="flex-1 min-w-0">
                                 <p className="font-medium text-gray-800 truncate">{user?.nickname || user?.name || '使用者'}</p>
                                 <p className="text-xs text-gray-500 truncate">{user?.phone || user?.email || ''}</p>
                             </div>
-                        </button>
-                        <button
-                            onClick={handleLogout}
-                            className="w-full flex items-center gap-3 p-3 rounded-xl text-left text-red-500 hover:bg-red-50 transition-colors"
-                        >
-                            <LogOut size={20} />
-                            登出
                         </button>
                     </div>
                 </aside>
@@ -835,6 +826,7 @@ const MainApp = () => {
                 isOpen={isProfileModalOpen}
                 onClose={() => setIsProfileModalOpen(false)}
                 user={user}
+                onLogout={() => { setIsProfileModalOpen(false); handleLogout(); }}
                 onUpdate={(updatedUser) => {
                     setUser(updatedUser);
                     localStorage.setItem('habit_user', JSON.stringify(updatedUser));
