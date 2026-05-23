@@ -1,5 +1,5 @@
 import React from 'react';
-import { CATEGORY_CONFIG, DOMAIN_TO_ICON_KEY } from '@/lib/constants';
+import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import MaterialIcon from './MaterialIcon';
 
 // IconRenderer — single rendering point for category-style icons.
@@ -13,20 +13,9 @@ import MaterialIcon from './MaterialIcon';
 // <MaterialIcon /> — no more emoji vs Lucide branching, no more 'value:
 // SVGComponent' pointers in CATEGORY_CONFIG.
 const IconRenderer = ({ category, size = 18, className = '' }) => {
-    // 1. Direct lookup
-    let config = CATEGORY_CONFIG[category];
-
-    // 2. Fall back to domain → config-key translation. Template-derived
-    //    tasks have Task.category = '飲食' / '運動' / … (HabitCategory.name).
-    //    Without this fallback every such task would render the 'star'
-    //    default — the bug user reported.
-    if (!config) {
-        const mappedKey = DOMAIN_TO_ICON_KEY[category];
-        if (mappedKey) config = CATEGORY_CONFIG[mappedKey];
-    }
-
-    // 3. Last-resort default
-    if (!config) config = CATEGORY_CONFIG['star'];
+    // resolveIconKey handles all three cases: direct config key, HabitCategory
+    // domain name (mapped via DOMAIN_TO_ICON_KEY), and unknown/falsy → 'star'.
+    const config = CATEGORY_CONFIG[resolveIconKey(category)];
 
     // Backwards-compat: TaskFormModal can dynamically add entries with
     // type 'emoji' when the user enters a custom emoji as their icon.

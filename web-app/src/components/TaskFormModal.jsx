@@ -5,7 +5,7 @@ import IconRenderer from './IconRenderer';
 import LockedTaskAlert from './LockedTaskAlert';
 import AnchorPicker from './explore/AnchorPicker';
 import IdentityPicker from './explore/IdentityPicker';
-import { CATEGORY_CONFIG } from '@/lib/constants';
+import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import { generateId, getTodayStr, getNthWeekday } from '@/lib/utils';
 
 const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, defaultDate, templateMode = false, yourTasks = [], userTypeKey = null }) => {
@@ -108,7 +108,11 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
         }
     };
 
-    const selectedConfig = CATEGORY_CONFIG[formData.category] || CATEGORY_CONFIG['star'] || { type: 'icon', value: 'Star', color: 'text-gray-500', bg: 'bg-gray-50', label: '預設' };
+    // Resolve through resolveIconKey so a template-derived task whose
+    // formData.category is a HabitCategory name ('飲食') still surfaces the
+    // right bg / color, and the legacy ' || {type:icon,value:Star,...}' fallback
+    // (which would break MaterialIcon) goes away.
+    const selectedConfig = CATEGORY_CONFIG[resolveIconKey(formData.category)];
 
     // If task is locked, show the locked alert instead of the form
     if (showLockedAlert && initialData?.isLocked) {
@@ -169,11 +173,14 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                                 </div>
                                 {Object.entries(CATEGORY_CONFIG).map(([key, config]) => {
                                     const isSelected = formData.category === key;
-                                    const IconComp = config.type === 'icon' ? config.value : null;
+                                    // type === 'emoji' is the only legacy shape kept (custom-emoji
+                                    // entries added at runtime via handleAddCustomEmoji). All
+                                    // 'material' entries render through IconRenderer, which knows
+                                    // how to translate either shape into a visible glyph.
                                     return (
                                         <div key={key} onClick={() => setFormData({ ...formData, category: key })} className={`flex flex-col items-center gap-1 cursor-pointer min-w-[3.5rem] p-2 rounded-lg transition-all flex-shrink-0 ${isSelected ? 'bg-emerald-50 border-2 border-emerald-500' : 'bg-gray-100 hover:bg-gray-200'}`}>
                                             <div className="w-8 h-8 flex items-center justify-center">
-                                                {config.type === 'icon' ? <IconComp size={20} className={config.color} /> : <span className="text-2xl">{config.value}</span>}
+                                                <IconRenderer category={key} size={20} className={config.type === 'emoji' ? 'text-2xl' : ''} />
                                             </div>
                                             <span className="text-[10px] text-gray-500 font-medium">{config.label}</span>
                                         </div>

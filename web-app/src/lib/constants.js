@@ -52,6 +52,22 @@ export function domainToIconKey(domainName) {
     return DOMAIN_TO_ICON_KEY[domainName] || 'star';
 }
 
+// resolveIconKey — single source of truth for "give me the CATEGORY_CONFIG
+// key for this value". Accepts either:
+//   - a CATEGORY_CONFIG key directly (e.g. 'apple', 'moon') — returned as-is
+//   - a HabitCategory name (e.g. '飲食', '運動') — translated via DOMAIN_TO_ICON_KEY
+//   - falsy / unknown — returns 'star' as fallback
+//
+// Use this before any direct CATEGORY_CONFIG[...] lookup that reads .bg / .color
+// outside of IconRenderer (which does the same fallback internally for icons).
+// Prevents the "config = CATEGORY_CONFIG['飲食']" footgun where the lookup
+// silently fails because '飲食' isn't a config key, leaving everything gray.
+export function resolveIconKey(value) {
+    if (!value) return 'star';
+    if (CATEGORY_CONFIG[value]) return value;
+    return DOMAIN_TO_ICON_KEY[value] || 'star';
+}
+
 export const OFFICIAL_TASKS = [
     {
         id: 'template_water', type: 'quantitative', category: 'droplet',

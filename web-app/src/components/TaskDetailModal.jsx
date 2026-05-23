@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Edit2, Check, Calendar, Target, Flame, Trophy, ChevronRight, ChevronLeft } from 'lucide-react';
 import IconRenderer from './IconRenderer';
-import { CATEGORY_CONFIG } from '@/lib/constants';
+import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import { getTodayStr, isCompletedOnDate, calculateStats, isFutureDate } from '@/lib/utils';
 import { visibleSubtasks } from '@/lib/subtasks';
 
@@ -19,7 +19,7 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate 
 
     if (!isOpen || !task) return null;
 
-    const config = CATEGORY_CONFIG[task.category] || CATEGORY_CONFIG['star'];
+    const config = CATEGORY_CONFIG[resolveIconKey(task.category)];
     const isCompleted = isCompletedOnDate(task, currentDate);
 
     // Subtask Progress

@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { Check } from 'lucide-react';
-import { CATEGORY_CONFIG } from '@/lib/constants';
+import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 
 const CalendarTaskChip = ({ task, isCompleted, onClick, compact = false, showTime = false }) => {
-    const config = CATEGORY_CONFIG[task.category] || CATEGORY_CONFIG['star'] || {};
+    const config = CATEGORY_CONFIG[resolveIconKey(task.category)] || {};
 
     // Extract color for border
     const getBorderColor = () => {
