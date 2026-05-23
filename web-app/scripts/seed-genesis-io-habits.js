@@ -26,6 +26,8 @@ async function main() {
         category: h.category,
         icon: h.icon ?? null,
         difficulties: h.difficulties,
+        impact: h.impact ?? 3,
+        ability: h.ability ?? 3,
         isActive: h.isActive ?? true,
       },
       create: {
@@ -34,6 +36,8 @@ async function main() {
         category: h.category,
         icon: h.icon ?? null,
         difficulties: h.difficulties,
+        impact: h.impact ?? 3,
+        ability: h.ability ?? 3,
         isActive: h.isActive ?? true,
       },
     });
