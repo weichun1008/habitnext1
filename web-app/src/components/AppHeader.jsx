@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { Calendar, Award, Plus, X, BookOpen, LogOut, BarChart3 } from 'lucide-react';
+import { Calendar, Award, Plus, X, BookOpen, BarChart3 } from 'lucide-react';
 import { getTodayStr } from '@/lib/utils';
+import Avatar from './Avatar';
 
 // Minimum horizontal travel (in px) to count as a week swipe. Below this
 // threshold we ignore the gesture so light scrolling / tapping doesn't shift
@@ -43,7 +44,6 @@ const AppHeader = ({
     onOpenBadges,
     onOpenExplore,
     user,
-    onLogout,
     onOpenProfile,
     className,
     // Date navigation — pass from MainApp so daily view can browse past/future
@@ -127,30 +127,14 @@ const AppHeader = ({
     return (
         <div className={`bg-white sticky top-0 z-30 shadow-sm ${className || ''}`}>
             <div className="flex items-center justify-between px-4 py-3">
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={onOpenProfile || (() => onViewChange('daily'))}
-                        className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                        <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden border border-gray-100 flex items-center justify-center">
-                            {user?.nickname ? (
-                                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.nickname}`} alt="Avatar" className="w-full h-full" />
-                            ) : (
-                                <span className="text-xs text-gray-500 font-bold">{user?.name?.[0] || 'U'}</span>
-                            )}
-                        </div>
-                        <span className="font-bold text-gray-800 text-sm md:text-base">{user?.nickname || user?.name || '訪客'}</span>
-                    </button>
-                    {onLogout && (
-                        <button
-                            onClick={onLogout}
-                            className="w-8 h-8 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg flex items-center justify-center transition-colors"
-                            title="登出"
-                        >
-                            <LogOut size={18} />
-                        </button>
-                    )}
-                </div>
+                <button
+                    onClick={onOpenProfile || (() => onViewChange('daily'))}
+                    className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                    aria-label="開啟個人資料"
+                >
+                    <Avatar user={user} size="w-8 h-8" />
+                    <span className="font-bold text-gray-800 text-sm md:text-base">{user?.nickname || user?.name || '訪客'}</span>
+                </button>
 
                 {currentView === 'daily' ? (
                     // Date label hidden on mobile — the week strip below already
