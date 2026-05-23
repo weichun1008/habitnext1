@@ -66,6 +66,28 @@ export const isCompletedOnDate = (task, dateStr) => {
     if (task.type === 'quantitative') {
         return (task.dailyProgress?.[dateStr]?.value || 0) >= (task.dailyTarget || 1);
     }
+
+    if (task.type === 'checklist') {
+        // For checklist tasks, completion is gated by `value` (count of
+        // true subtaskCompletions) meeting `dailyTarget`. Previously this
+        // branch fell through to `!!task.history?.[dateStr]`, which marked
+        // the task done as soon as ANY history entry existed — so toggling
+        // a single subtask would light up the whole task. (User-reported bug.)
+        const entry = task.history?.[dateStr];
+        if (!entry) return false;
+
+        // entry may be a number (legacy v1.0 shape), a boolean, or an
+        // object with { completed, value } (post-Slice-F shape).
+        if (typeof entry === 'object' && entry !== null) {
+            const value = entry.value || 0;
+            return value >= (task.dailyTarget || 1);
+        }
+        if (typeof entry === 'number') {
+            return entry >= (task.dailyTarget || 1);
+        }
+        return !!entry;
+    }
+
     return !!task.history?.[dateStr];
 };
 
