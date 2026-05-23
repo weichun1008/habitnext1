@@ -812,6 +812,7 @@ const MainApp = () => {
                 isOpen={isDetailModalOpen}
                 onClose={() => { setIsDetailModalOpen(false); setViewingTask(null); }}
                 task={viewingTask}
+                initialDate={selectedDate}
                 onEdit={(task) => { setIsDetailModalOpen(false); setEditingTask(task); setIsFormModalOpen(true); }}
                 onUpdate={handleUpdateProgress}
             />
