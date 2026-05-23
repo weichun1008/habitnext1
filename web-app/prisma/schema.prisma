@@ -188,7 +188,13 @@ model OfficialHabit {
   // NEW: Three difficulty levels (beginner/intermediate/challenge)
   // Each contains: { enabled, label, type, dailyTarget, unit, stepValue, subtasks, recurrence }
   difficulties Json    // { beginner?: DifficultyConfig, intermediate?: DifficultyConfig, challenge?: DifficultyConfig }
-  
+
+  // Slice D — focus map coordinates. 1–5 integers per the rubric in
+  // docs/superpowers/specs/2026-05-23-slice-d-focus-map-design.md §4.
+  // Default 3 ("middle") so unscored habits land at the chart center.
+  impact      Int      @default(3)
+  ability     Int      @default(3)
+
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
