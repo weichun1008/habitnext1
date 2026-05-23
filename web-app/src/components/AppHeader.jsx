@@ -70,14 +70,12 @@ const AppHeader = ({
     }, [selectedDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const weekCells = useMemo(() => computeWeek(weekAnchor), [weekAnchor]);
-    const isThisWeek = weekCells.some(c => c.isToday);
 
     const shiftWeek = (deltaDays) => {
         const d = new Date(weekAnchor);
         d.setDate(d.getDate() + deltaDays);
         setWeekAnchor(d);
     };
-    const goToThisWeek = () => setWeekAnchor(new Date());
 
     // Swipe handling — horizontal swipe ≥ SWIPE_THRESHOLD shifts ±7 days.
     // `swipedRef` is checked in the cell onClick handler so a long horizontal
@@ -247,16 +245,6 @@ const AppHeader = ({
                             </button>
                         );
                     })}
-                    {!isThisWeek && (
-                        <button
-                            type="button"
-                            onClick={goToThisWeek}
-                            aria-label="回到本週"
-                            className="absolute top-0.5 right-1 md:right-3 z-10 text-[10px] font-bold text-emerald-600 bg-emerald-50/90 px-1.5 py-0.5 rounded-full shadow-sm hover:bg-emerald-100"
-                        >
-                            今
-                        </button>
-                    )}
                 </div>
             )}
         </div>
