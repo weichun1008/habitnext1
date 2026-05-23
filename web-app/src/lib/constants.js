@@ -1,31 +1,40 @@
-import {
-    Droplet, Footprints, Dumbbell, Moon, Sun, Pill, Aperture, Book, Star, Users, Briefcase
-} from 'lucide-react';
+// src/lib/constants.js
+//
+// CATEGORY_CONFIG: visual style metadata for habit task icons.
+//
+// As of 2026-05-22 (PR D, Material Symbols migration) every entry is rendered
+// via Material Symbols Rounded — no more emoji / Lucide mix. Each key here
+// is referenced from OfficialHabit.icon (admin) and Task.category (visual
+// style) via IconRenderer. The Material symbol names below come from
+// Google's Material Symbols set: https://fonts.google.com/icons
+//
+// To add a new key:
+//   1. Pick a name from the Material Symbols catalog.
+//   2. Pair it with a tailwind color (text-X-500) + bg (bg-X-50).
+//   3. Add a short label (used in admin pickers).
 
 export const CATEGORY_CONFIG = {
-    // Lucide Icons
-    droplet: { type: 'icon', value: Droplet, color: 'text-blue-500', bg: 'bg-blue-50', label: '飲水' },
-    footprints: { type: 'icon', value: Footprints, color: 'text-pink-500', bg: 'bg-pink-50', label: '步數' },
-    dumbbell: { type: 'icon', value: Dumbbell, color: 'text-orange-500', bg: 'bg-orange-50', label: '運動' },
-    moon: { type: 'icon', value: Moon, color: 'text-indigo-500', bg: 'bg-indigo-50', label: '睡眠' },
-    sun: { type: 'icon', value: Sun, color: 'text-yellow-500', bg: 'bg-yellow-50', label: '陽光' },
-    pill: { type: 'icon', value: Pill, color: 'text-purple-500', bg: 'bg-purple-50', label: '保健' },
-    aperture: { type: 'icon', value: Aperture, color: 'text-fuchsia-500', bg: 'bg-fuchsia-50', label: '紀錄' },
-    users: { type: 'icon', value: Users, color: 'text-rose-500', bg: 'bg-rose-50', label: '社交' },
-    briefcase: { type: 'icon', value: Briefcase, color: 'text-slate-500', bg: 'bg-slate-50', label: '職涯' },
-
-    // Emojis
-    apple: { type: 'emoji', value: '🍎', color: 'text-red-500', bg: 'bg-red-50', label: '飲食' },
-    zap: { type: 'emoji', value: '⚡️', color: 'text-yellow-500', bg: 'bg-yellow-50', label: '專注' },
-    yoga: { type: 'emoji', value: '🧘', color: 'text-green-500', bg: 'bg-green-50', label: '冥想' },
-    book: { type: 'icon', value: Book, color: 'text-amber-500', bg: 'bg-amber-50', label: '閱讀' },
-    money: { type: 'emoji', value: '💰', color: 'text-lime-500', bg: 'bg-lime-50', label: '理財' },
-    journal: { type: 'emoji', value: '✍️', color: 'text-sky-500', bg: 'bg-sky-50', label: '日記' },
-    star: { type: 'icon', value: Star, color: 'text-gray-500', bg: 'bg-gray-50', label: '其他' },
+    droplet:    { type: 'material', name: 'water_drop',       color: 'text-blue-500',    bg: 'bg-blue-50',    label: '飲水' },
+    footprints: { type: 'material', name: 'directions_walk',  color: 'text-pink-500',    bg: 'bg-pink-50',    label: '步數' },
+    dumbbell:   { type: 'material', name: 'fitness_center',   color: 'text-orange-500',  bg: 'bg-orange-50',  label: '運動' },
+    moon:       { type: 'material', name: 'bedtime',          color: 'text-indigo-500',  bg: 'bg-indigo-50',  label: '睡眠' },
+    sun:        { type: 'material', name: 'wb_sunny',         color: 'text-yellow-500',  bg: 'bg-yellow-50',  label: '陽光' },
+    pill:       { type: 'material', name: 'medication',       color: 'text-purple-500',  bg: 'bg-purple-50',  label: '保健' },
+    aperture:   { type: 'material', name: 'monitoring',       color: 'text-fuchsia-500', bg: 'bg-fuchsia-50', label: '紀錄' },
+    users:      { type: 'material', name: 'groups',           color: 'text-rose-500',    bg: 'bg-rose-50',    label: '社交' },
+    briefcase:  { type: 'material', name: 'work',             color: 'text-slate-500',   bg: 'bg-slate-50',   label: '職涯' },
+    apple:      { type: 'material', name: 'restaurant',       color: 'text-red-500',     bg: 'bg-red-50',     label: '飲食' },
+    zap:        { type: 'material', name: 'bolt',             color: 'text-yellow-600',  bg: 'bg-yellow-50',  label: '專注' },
+    yoga:       { type: 'material', name: 'self_improvement', color: 'text-green-500',   bg: 'bg-green-50',   label: '冥想' },
+    book:       { type: 'material', name: 'menu_book',        color: 'text-amber-600',   bg: 'bg-amber-50',   label: '閱讀' },
+    money:      { type: 'material', name: 'payments',         color: 'text-lime-600',    bg: 'bg-lime-50',    label: '理財' },
+    journal:    { type: 'material', name: 'edit_note',        color: 'text-sky-500',     bg: 'bg-sky-50',     label: '日記' },
+    star:       { type: 'material', name: 'star',             color: 'text-gray-400',    bg: 'bg-gray-50',    label: '其他' },
 };
 
 // Map from the 9 GENESIS+IO HabitCategory names to a CATEGORY_CONFIG key.
-// Used to give OfficialHabits a default visual icon in admin UI / pickers.
+// Templates seed tasks with Task.category = '飲食' / '運動' / ... so IconRenderer
+// has to translate those domain names back to a CATEGORY_CONFIG key.
 // See: prisma/seed/genesis-io.json for the canonical 9 domain names.
 export const DOMAIN_TO_ICON_KEY = {
     '基因與腸道':  'pill',

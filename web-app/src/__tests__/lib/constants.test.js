@@ -40,3 +40,23 @@ describe('domainToIconKey', () => {
         expect(domainToIconKey('')).toBe('star');
     });
 });
+
+describe('CATEGORY_CONFIG (PR D Material Symbols migration)', () => {
+    test('every entry is type "material" with a valid name + color + bg', () => {
+        for (const [key, cfg] of Object.entries(CATEGORY_CONFIG)) {
+            expect(cfg.type).toBe('material');
+            expect(typeof cfg.name).toBe('string');
+            expect(cfg.name.length).toBeGreaterThan(0);
+            expect(typeof cfg.color).toBe('string');
+            expect(cfg.color).toMatch(/^text-/);
+            expect(typeof cfg.bg).toBe('string');
+            expect(cfg.bg).toMatch(/^bg-/);
+        }
+    });
+
+    test('no entry retains the legacy "value: SVGComponent" shape', () => {
+        for (const cfg of Object.values(CATEGORY_CONFIG)) {
+            expect(cfg.value).toBeUndefined();
+        }
+    });
+});
