@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Edit3, Sparkles } from 'lucide-react';
+import { Edit3, Sparkles, X } from 'lucide-react';
 import {
   USER_TYPE_PROFILES,
   GENERIC_IDENTITIES,
@@ -31,6 +31,14 @@ function IdentityButton({ label, selected, recommended, onClick }) {
   );
 }
 
+// IdentityPicker
+//
+// UX rules (same shape as AnchorPicker, applied 2026-05-23):
+//   1. Pinned "目前身分：XXX [×]" pill at the top whenever value is set —
+//      previously the only "selected" cue was the green button somewhere down
+//      the list, with no indicator for custom-typed identities at all.
+//   2. Clicking the same selected option toggles it off.
+//   3. The pill renders for custom values too.
 export default function IdentityPicker({ value, onChange, userTypeKey = null }) {
   const [customMode, setCustomMode] = useState(false);
   const [customText, setCustomText] = useState('');
@@ -57,8 +65,30 @@ export default function IdentityPicker({ value, onChange, userTypeKey = null }) 
     }
   };
 
+  const select = (s) => onChange(value === s ? '' : s);
+
   return (
     <div className="space-y-3">
+      {/* Selected pill */}
+      {value && (
+        <div
+          data-testid="identity-selected-pill"
+          className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200"
+        >
+          <span className="text-sm text-emerald-800">
+            目前身分：<span className="font-bold">{value}</span>
+          </span>
+          <button
+            type="button"
+            onClick={() => onChange('')}
+            aria-label="清除身分"
+            className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 rounded-full p-1 transition-colors"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
       {recommended && (
         <div>
           <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
@@ -68,7 +98,7 @@ export default function IdentityPicker({ value, onChange, userTypeKey = null }) 
             label={recommended}
             selected={value === recommended}
             recommended
-            onClick={() => onChange(recommended)}
+            onClick={() => select(recommended)}
           />
         </div>
       )}
@@ -84,7 +114,7 @@ export default function IdentityPicker({ value, onChange, userTypeKey = null }) 
               label={s}
               selected={value === s}
               recommended={false}
-              onClick={() => onChange(s)}
+              onClick={() => select(s)}
             />
           ))}
         </div>
