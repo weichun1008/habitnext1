@@ -131,8 +131,9 @@ model Task {
   
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  
-  history      TaskHistory[]
+
+  history          TaskHistory[]
+  aspirationHabits AspirationHabit[]   // Slice K — reverse FK from join table
 }
 
 model TaskHistory {
@@ -234,10 +235,16 @@ model AspirationHabit {
   aspirationId    String
   aspiration      Aspiration  @relation(fields: [aspirationId], references: [id], onDelete: Cascade)
 
-  taskId          String?     // commit 後寫入；null 代表使用者瀏覽過但未加入
+  // Real FK to Task with SetNull so deleting the Task leaves the
+  // AspirationHabit row intact (preserves "user once linked this aspiration
+  // to a habit" history) but clears the dangling reference.
+  taskId          String?
+  task            Task?       @relation(fields: [taskId], references: [id], onDelete: SetNull)
 
   createdAt       DateTime    @default(now())
 
+  // Prevent double-click duplicate joins (idempotent commit).
+  @@unique([aspirationId, taskId])
   @@index([aspirationId])
   @@index([taskId])
 }
