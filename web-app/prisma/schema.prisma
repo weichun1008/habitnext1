@@ -19,6 +19,7 @@ model User {
   countryCode String?      // e.g., +886
   password    String?      // Hashed password
   email       String?
+  avatar      String?      // ★ M3 Expressive avatar id ('sunrise', 'star', etc.) — see web-app/src/lib/avatars.jsx
   typeKey     String?      // ★ 新增 — 'daisy' | 'rose' | 'orchid' | 'sunflower' (set by quiz module)
   sleepTypeKey String?     // ★ 新增 — 'stress' | 'rhythm' | 'metabolic' | 'hormone'
   isActive    Boolean      @default(true)

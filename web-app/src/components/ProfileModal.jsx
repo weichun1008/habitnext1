@@ -78,15 +78,20 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
             const data = await res.json();
 
             if (res.ok) {
-                setSuccess('資料已更新');
-                // Update parent
+                // Use the server's echoed user when available so the parent's
+                // user state is the canonical, persisted version — not just an
+                // optimistic merge of the form. Falls back to a merge if the
+                // route didn't return a user (e.g. the "no changes" short
+                // circuit).
                 if (onUpdate) {
-                    onUpdate({
+                    const merged = {
                         ...user,
                         nickname: formData.nickname,
                         phone: formData.phone,
                         avatar: formData.avatar,
-                    });
+                        ...(data?.user || {}),
+                    };
+                    onUpdate(merged);
                 }
                 // Reset password fields
                 setFormData(prev => ({
@@ -97,11 +102,10 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
                 }));
                 setChangePassword(false);
 
-                // Auto close after delay
-                setTimeout(() => {
-                    setSuccess('');
-                    onClose();
-                }, 1500);
+                // Close immediately on success — the brief "資料已更新" toast
+                // was extra friction; the closed modal + updated avatar are
+                // confirmation enough.
+                onClose();
             } else {
                 setError(data.error || '更新失敗');
             }
