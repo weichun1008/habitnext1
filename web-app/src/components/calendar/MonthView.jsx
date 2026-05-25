@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { isTaskDueToday, getDaysInMonth, getFirstDayOfMonth } from '@/lib/utils';
-import { CATEGORY_CONFIG } from '@/lib/constants';
+import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
 
@@ -83,7 +83,7 @@ const MonthView = ({ currentDate, tasks, todayStr, onDateClick, onTaskClick }) =
 
     // Get category color for task chip
     const getCategoryColor = (category) => {
-        const config = CATEGORY_CONFIG[category];
+        const config = CATEGORY_CONFIG[resolveIconKey(category)];
         if (!config) return 'bg-gray-200';
         // Extract color class like 'text-blue-500' -> 'bg-blue-500'
         const colorMatch = config.color?.match(/text-(\w+)-(\d+)/);
@@ -151,7 +151,7 @@ const MonthView = ({ currentDate, tasks, todayStr, onDateClick, onTaskClick }) =
                                         const isCompleted = task.type === 'quantitative'
                                             ? (task.history?.[dateStr] || 0) >= (task.dailyTarget || 1)
                                             : !!task.history?.[dateStr];
-                                        const config = CATEGORY_CONFIG[task.category] || {};
+                                        const config = CATEGORY_CONFIG[resolveIconKey(task.category)] || {};
 
                                         return (
                                             <div

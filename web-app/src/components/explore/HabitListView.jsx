@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Plus, ChevronDown, ChevronUp, List as ListIcon, Crosshair } from 'lucide-react';
 import IconRenderer from '../IconRenderer';
-import { CATEGORY_CONFIG } from '@/lib/constants';
+import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 
 // FocusMap is dynamically imported — keeps recharts off this view's First
 // Load JS, kicks in only when the user actually flips to the map view.
@@ -174,7 +174,11 @@ function ListBody({
       {habits.map(habit => {
         const enabledDiffs = getEnabledDifficulties(habit);
         const currentDiff = selectedDifficulty[habit.id] || getDefaultDifficulty(habit);
-        const config = CATEGORY_CONFIG[habit.category] || CATEGORY_CONFIG['star'];
+        // Read admin-set per-habit icon first; fall back to the domain default
+        // only when the habit has no explicit icon. This mirrors the admin
+        // grid (habits/page.js:280) and HabitLibraryModal.
+        const iconKey = resolveIconKey(habit.icon || habit.category);
+        const config = CATEGORY_CONFIG[iconKey];
         const isExpanded = expandedId === habit.id;
 
         return (
@@ -192,7 +196,7 @@ function ListBody({
             >
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <div className={`${config.bg} p-2 rounded-xl flex-shrink-0`}>
-                  <IconRenderer category={habit.category} size={18} />
+                  <IconRenderer category={iconKey} size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="font-bold text-gray-800">{habit.name}</h4>

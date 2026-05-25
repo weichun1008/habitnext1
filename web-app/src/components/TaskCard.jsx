@@ -1,7 +1,7 @@
 import React from 'react';
 import { Check, Minus, Plus, Lock } from 'lucide-react';
 import IconRenderer from './IconRenderer';
-import { CATEGORY_CONFIG } from '@/lib/constants';
+import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import {
     getTodayStr,
     isCompletedOnDate,
@@ -48,7 +48,11 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
         }
     }
 
-    const config = CATEGORY_CONFIG[task.category] || CATEGORY_CONFIG['star'] || { type: 'icon', value: 'Star', color: 'text-gray-500', bg: 'bg-gray-50', label: '預設' };
+    // Route through resolveIconKey: task.category is usually a HabitCategory
+    // name ('飲食') for template-derived tasks, which would silently miss
+    // CATEGORY_CONFIG and leave bg/color gray. resolveIconKey translates the
+    // domain name to the right config key ('apple') first.
+    const config = CATEGORY_CONFIG[resolveIconKey(task.category)];
     const isQuant = task.type === 'quantitative';
     const isPeriod = task.recurrence?.mode === 'period_count';
     const isChecklist = task.type === 'checklist';
