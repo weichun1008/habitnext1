@@ -1,5 +1,6 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { visibleSubtasks } from "./subtasks";
 
 export function cn(...inputs) {
     return twMerge(clsx(inputs));
@@ -68,20 +69,34 @@ export const isCompletedOnDate = (task, dateStr) => {
     }
 
     if (task.type === 'checklist') {
-        // For checklist tasks, completion is gated by `value` (count of
-        // true subtaskCompletions) meeting `dailyTarget`. Previously this
-        // branch fell through to `!!task.history?.[dateStr]`, which marked
-        // the task done as soon as ANY history entry existed — so toggling
-        // a single subtask would light up the whole task. (User-reported bug.)
+        // Checklist completion rule (2026-05-25): the task is "done" for a
+        // given date only when ALL visible subtasks on that date are checked.
+        //
+        // History of this branch:
+        //   - v1: `!!history[dateStr]` — marked done as soon as ANY history
+        //     entry existed (toggling 1 subtask lit the whole task).
+        //   - v2 (2fb3668): gated by `value >= dailyTarget`. But seed habits
+        //     often ship with `dailyTarget = 1`, so 1 subtask checked still
+        //     lit the task with 0/3 visible. User-reported again 2026-05-25.
+        //   - v3 (this commit): ignore `dailyTarget` for checklists entirely
+        //     — `dailyTarget` is degenerate for this task type — and require
+        //     every visible subtask on that date to be true. Respects the
+        //     subtask visibility window (addedAt/removedAt), so retiring an
+        //     item doesn't strand old days at "9/10 forever".
         const entry = task.history?.[dateStr];
         if (!entry) return false;
 
-        // entry may be a number (legacy v1.0 shape), a boolean, or an
-        // object with { completed, value } (post-Slice-F shape).
+        // Post-Slice-F shape: { value, subtaskCompletions, ... }.
         if (typeof entry === 'object' && entry !== null) {
-            const value = entry.value || 0;
-            return value >= (task.dailyTarget || 1);
+            const visible = visibleSubtasks(task, dateStr);
+            if (visible.length === 0) return false;
+            const completions = entry.subtaskCompletions || {};
+            return visible.every(s => completions[s.id] === true);
         }
+
+        // Legacy v1.0 shapes — keep the old value-based gate so historical
+        // entries written before Slice F still read sensibly. New writes
+        // always produce the object shape, so this path is for archived rows.
         if (typeof entry === 'number') {
             return entry >= (task.dailyTarget || 1);
         }
