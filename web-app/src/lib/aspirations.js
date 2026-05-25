@@ -8,7 +8,8 @@ const GENESIS_DOMAINS = [
 ];
 
 // Detect whether the user already owns an aspiration with the same text.
-// Case-insensitive + trim — picker uses it to redirect to the existing row.
+// Trim-only exact match — picker uses it to redirect to the existing row.
+// (Chinese has no case, so case-folding is moot for the intended corpus.)
 function findDuplicateAspiration(existingAspirations, text) {
   if (!Array.isArray(existingAspirations) || !text || typeof text !== 'string') return null;
   const needle = text.trim();
@@ -55,7 +56,7 @@ function getPersonalisedPresets(presets, user) {
       if (p.domain === d && result.length < 5) result.push(p);
     }
   }
-  return result.slice(0, 5);
+  return result;
 }
 
 module.exports = {

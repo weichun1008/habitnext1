@@ -16,7 +16,7 @@ describe('GENESIS_DOMAINS', () => {
 });
 
 describe('findDuplicateAspiration', () => {
-  it('returns existing aspiration when text matches (case-insensitive trim)', () => {
+  it('returns existing aspiration when text matches after trim', () => {
     const list = [
       { id: 'a1', text: '想要快速入睡、睡眠品質好', status: 'active' },
       { id: 'a2', text: '想要瘦下來', status: 'achieved' },
