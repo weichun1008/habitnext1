@@ -10,16 +10,17 @@ require('./lib/env');
 const { PrismaClient } = require('@prisma/client');
 
 const SYSTEM_ROWS = [
-  // Flower (women's course) — pink family
-  { slug: 'daisy',           name: '雛菊型',         color: '#f472b6', icon: '🌼', order: 100 },
-  { slug: 'rose',            name: '玫瑰型',         color: '#ec4899', icon: '🌹', order: 101 },
-  { slug: 'orchid',          name: '蘭花型',         color: '#d946ef', icon: '🪷', order: 102 },
-  { slug: 'sunflower',       name: '向日葵型',       color: '#fb923c', icon: '🌻', order: 103 },
+  // Flower (women's course) — pink family. Domain = 壓力與睡眠
+  // (女性週期 templates primarily target sleep / stress symptoms during the cycle.)
+  { slug: 'daisy',           name: '雛菊型',         color: '#f472b6', icon: '🌼', order: 100, domain: '壓力與睡眠' },
+  { slug: 'rose',            name: '玫瑰型',         color: '#ec4899', icon: '🌹', order: 101, domain: '壓力與睡眠' },
+  { slug: 'orchid',          name: '蘭花型',         color: '#d946ef', icon: '🪷', order: 102, domain: '壓力與睡眠' },
+  { slug: 'sunflower',       name: '向日葵型',       color: '#fb923c', icon: '🌻', order: 103, domain: '壓力與睡眠' },
   // Sleep — indigo family
-  { slug: 'sleep_stress',    name: '睡眠 · 壓力',    color: '#818cf8', icon: '😵‍💫', order: 200 },
-  { slug: 'sleep_rhythm',    name: '睡眠 · 節律',    color: '#6366f1', icon: '🌙',  order: 201 },
-  { slug: 'sleep_metabolic', name: '睡眠 · 代謝',    color: '#4f46e5', icon: '⏰',  order: 202 },
-  { slug: 'sleep_hormone',   name: '睡眠 · 荷爾蒙',  color: '#4338ca', icon: '🔄',  order: 203 },
+  { slug: 'sleep_stress',    name: '睡眠 · 壓力',    color: '#818cf8', icon: '😵‍💫', order: 200, domain: '壓力與睡眠' },
+  { slug: 'sleep_rhythm',    name: '睡眠 · 節律',    color: '#6366f1', icon: '🌙',  order: 201, domain: '壓力與睡眠' },
+  { slug: 'sleep_metabolic', name: '睡眠 · 代謝',    color: '#4f46e5', icon: '⏰',  order: 202, domain: '壓力與睡眠' },
+  { slug: 'sleep_hormone',   name: '睡眠 · 荷爾蒙',  color: '#4338ca', icon: '🔄',  order: 203, domain: '壓力與睡眠' },
 ];
 
 async function main() {
@@ -48,6 +49,7 @@ async function main() {
           color: r.color,
           icon: r.icon,
           order: r.order,
+          domain: r.domain,
           isSystem: true,
         },
       });
@@ -60,6 +62,7 @@ async function main() {
           color: r.color,
           icon: r.icon,
           order: r.order,
+          domain: r.domain,
           isSystem: true,
         },
       });
