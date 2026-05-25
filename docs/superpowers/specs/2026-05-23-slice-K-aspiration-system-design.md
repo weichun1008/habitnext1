@@ -1,86 +1,180 @@
-# Slice K — Aspiration System
+# Slice K — 嚮往（Aspiration）系統
 
-**Date:** 2026-05-23
-**Status:** Design draft (Session 1 — schema + conceptual model), UX details deferred to Session 2
-**Scope:** habitnext1 web-app — introduce a per-user "Aspiration" concept (想要 / 想擁有 / 想成為) as the explicit anchor for non-template habit selection, paired with a multi-identity model and per-aspiration habit scoring.
+**Date:** 2026-05-23（Session 1 schema 草案）／ Session 2 修正於 2026-05-25
+**Status:** Design v2 — ready for plan
+**Scope:** habitnext1 web-app — 在「新增計畫 / 任務」flow 中引入「嚮往」做為起點，依嚮往的 GENESIS+IO domain 推薦既有 templates + habits。
+
+---
+
+## 0. Session 2 修正 changelog
+
+> Session 1 把嚮往設計為**獨立頁面 + sidebar nav**。Session 2 重新定位：**嚮往是 flow 中的工具、不是目的地**。
+
+| 議題 | Session 1 | Session 2 |
+|---|---|---|
+| 角色 | 獨立「嚮往頁」+ sidebar 入口 | 「+ 新增」flow 的 Step 1，無獨立頁 |
+| 主管理位置 | 嚮往頁列表 / FocusMap | Profile「我的嚮往」tab |
+| 推薦邏輯 | Slice D FocusMap (impact × ability) | GENESIS+IO domain mapping |
+| Aspiration model 欄位 | 多（`unlockedIdentity`/`isPinned`/`userImpact`...） | 精簡（移掉 5 個 v1 用不到的欄位） |
+| AspirationHabit join | 含 `userImpact`/`userAbility`/`customHabit` | 精簡：只剩 `taskId` |
+| Slice D 既有 FocusMap | 「保留、嚮往頁會用」 | 不會用了 — 留作 admin-側 debug tool |
+| 名字 | 「向往」 | 「嚮往」（typo 修正） |
 
 ---
 
 ## 1. 背景
 
-### 1.1 既有架構回顧
+### 1.1 既有「新增」路徑
 
-到 Slice J 為止，habitnext1 的「加入習慣」路徑有兩條：
+到目前為止，habitnext1 有三條「加進來」的路徑：
 
-1. **Template 路徑（探索計畫）**：使用者進「探索計畫」→ 看到花朵 / 睡眠 / 其他公開計畫 → 加入 → 14 天結構化任務
-2. **官方習慣路徑（添加習慣）**：使用者進「添加習慣」→ 9 大健康面向 grid → HabitListView 列出該面向官方習慣 → 選難度 → 加入
+1. **新增計畫** （TemplateExplorer）：花朵 / 睡眠 / 其他 公開計畫 → join
+2. **新增習慣** （TaskLibraryModal）：9 GENESIS+IO domain grid → habits → difficulty → anchor → identity → save
+3. **建立習慣** （TaskFormModal）：完全手動
 
-兩條路徑都假設**使用者已經知道想做什麼**。Template 是「我認同這個 14 天結構」，官方習慣是「我認同這條習慣」。
+三條都假設使用者**已知道想做什麼**。Template 是「我認同這個 14 天結構」，新增習慣是「我認同這條習慣」。
 
 ### 1.2 缺口
 
-許多使用者一開始**不知道想做什麼**。他們知道**痛點**（早上起來覺得累 / 想瘦下來 / 焦慮太多）但不知道對應到哪個健康面向、不知道哪些行為值得做、不知道從哪起步。
+許多使用者只知道**痛點**（早上累 / 想瘦 / 焦慮），不知道對應哪個 domain、哪些行為值得做、哪 14 天結構合適。
 
-更深的問題：Slice D 嘗試用 focus map 解決「不知從何起」，但**將 impact / ability 當系統預設**是錯的 — 那兩個分數是**主觀感受**，依使用者狀況不同。同一個「每週運動 3 次」對健身教練很容易、對久坐上班族很難。
+行為養成有三層詞，混用會出事：
 
-### 1.3 核心 insight（從討論結論精煉）
+| 詞 | 定義 | 範例 |
+|---|---|---|
+| **嚮往 (Aspiration)** | 想要的結果（outcome） | 「想要快速入睡」 |
+| **身分 (Identity)** | 我是 / 我成為（being） | 「我是尊重生理節律的人」 |
+| **習慣 (Habit)** | 具體動作（doing） | 「睡前 60 分鐘不滑手機」 |
 
-行為養成有三個層次的詞，混在一起會出事：
-
-| 詞 | 定義 | 性質 | 範例 |
-|---|---|---|---|
-| **嚮往 (Aspiration)** | 想要的具體成果 | OUTCOME-oriented, BJ Fogg "step 1: Clarify the aspiration" | 「想睡得更好」 |
-| **身分 (Identity)** | 我是 / 我成為 | BEING-oriented, James Clear 核心 | 「我是尊重生理節律的人」 |
-| **習慣 (Habit/Behavior)** | 具體可執行的動作 | DOING-oriented | 「睡前 1 小時不看手機」 |
-
-關鍵時間關係：**Aspiration → Habit 設計 → 重複執行 → 內化為 Identity**。Identity 是行為累積後的「加冕」，不是 onboarding 階段就該宣告的。
+時間關係：**嚮往 → 設計 habits → 重複執行 → 內化為 identity**。Identity 是行為累積後的加冕、不是 onboarding 階段宣告。
 
 ---
 
-## 2. 目標
+## 2. 目標（v1）
 
-**Slice K v1**：使用者擁有自己的 aspiration 清單；每個 aspiration 下可掛多個 habit（officialHabit 或未來 AI 生成的 customHabit）；每個 habit 在該 aspiration 脈絡下有使用者自己評的 impact / ability。
+**v1**：在「+ 新增」入口加一層 Step 1 詢問嚮往，依嚮往的 domain 推薦既有 templates + habits。Profile 加「我的嚮往」tab 給 read-only 管理。
 
 具體場景：
-
 ```
-新使用者進站
-  → 不知道從何下手
-  → 從 35 個 preset aspirations 點選共鳴的（or 自由打字）
-  → 系統 / 未來 AI 提案 N 個對應 habits
-  → 使用者評 impact × ability（per-aspiration）
-  → 在 focus map 看候選位置
-  → 選定 1-3 個 commit → 變成 Task
-  → 做到 mark achieved → 加冕 identity（v1 手動）
+新使用者按 [+]
+  → Step 1：「你想要什麼？」 picker
+       ├── 為你推薦（依 typeKey/sleepTypeKey 推 3-5 個 preset）
+       ├── 你已有的嚮往（active 才顯示）
+       ├── 35 個 preset 依 9 domain 分組
+       └── 自訂（自由文字 + 選 domain）
+  → Step 2：「為此嚮往，這些可能適合你」 推薦頁
+       ├── ✨ 適合的計畫（domain mapping → templates）
+       ├── 🌱 適合的習慣（domain mapping → OfficialHabits）
+       └── 「跳過 — 自己探索」
+  → Step 3：Template 路徑 / Habit 路徑（現有 flow 不動）
+  → commit 時寫 AspirationHabit{ aspirationId, taskId }
 ```
 
-### Non-goals
+### Non-goals（v1 不做）
 
-- **不接 AI**（v1 schema 只預留欄位、不發 API call）。生成 habits 的部分是 Session 3+ 才做。
-- **不動 template 加入流程** — 跟計畫的使用者已經明確選定路徑，不需要走 aspiration 探索。
-- **不在 Dashboard 顯示 aspiration** — 經討論決定有獨立「向往頁」承載。
-- **不做 multi-aspiration → identity 自動推導** — v1 identity 是手動 mark achieved 時 carry 一個字串。
-- **不做 aspiration 之間的優先排序 algorithm** — 使用者自己排（或 isPinned 旗標）。
-- **不做 aspiration 進度條 / 完成度量化** — 達成是主觀判斷，使用者覺得到了就 mark achieved。
-- **不做 social / 分享** — aspiration 是私人 layer。
-- **不做 multi-language** — 中文 only。
+- **AI 生 customHabit / aspiration** — schema 留欄位、不接 API call
+- **Identity 自動加冕** — `User.identities[]` 仍加，但只能 Profile 手動加
+- **進度條 / 量化** — 達成 = 使用者主觀 mark
+- **多 aspiration 一次加入** — Step 1 只選一個
+- **pinned / 排序 algorithm** — Profile 按 createdAt
+- **跨使用者分享 aspiration**
+- **Onboarding 強制** — 新使用者跳過 / 直接打卡都行
+- **Multi-language** — 中文 only
 
 ---
 
-## 3. 與既有資料模型的合約
+## 3. 主流程（UX）
 
-### 3.1 Schema diff（純加法、不破壞既有）
+### 3.1 入口
+
+```
+AppHeader 「+」icon（emerald-50） → 開啟嚮往 Picker modal
+Sidebar 「建立習慣」按鈕 → 開啟嚮往 Picker modal
+```
+
+「探索計畫」「探索習慣」兩個既有入口**不動**（手動探索 fallback）。
+
+### 3.2 Step 1：嚮往 Picker
+
+modal，類 TemplateExplorer 結構（h-[80dvh] 底部彈出 / 中央 desktop）：
+
+```
+┌─────────────────────────────────────┐
+│ 你想要什麼？                      X │
+│ 從這裡開始，我們會推薦合適的計畫與習慣 │
+├─────────────────────────────────────┤
+│ 為你推薦（依你的類型）  ←─ 條件顯示    │
+│  [想要快速入睡、睡眠品質好]            │
+│  [想要焦慮少一點...]                  │
+│                                     │
+│ 你已有的嚮往  ←─ 條件顯示             │
+│  [想要瘦下來] 掛 3 個任務 / 14 天前   │
+│  [想要規律運動不偷懶] 掛 5 個 ...     │
+│                                     │
+│ 從 35 個生活面向開始                   │
+│  ▼ 基因與腸道                         │
+│    [想要腸道更健康]                    │
+│    [想要降低家族遺傳病風險]            │
+│    [想要找出自己的食物敏感原]          │
+│  ▼ 環境                               │
+│    ...                                │
+│  ▼ 飲食 ...                          │
+│                                     │
+│ [+] 自訂嚮往                          │
+└─────────────────────────────────────┘
+```
+
+點任何一個 → Step 2。
+
+### 3.3 Step 2：推薦頁
+
+modal 內滑入，類 TemplateDetailPanel pattern：
+
+```
+┌─────────────────────────────────────┐
+│ ← 想要快速入睡、睡眠品質好             │
+├─────────────────────────────────────┤
+│ ✨ 適合的計畫                          │
+│ ┌─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐    │
+│ │ 🌙 壓力型睡眠處方                │    │
+│ │ 14 天循序漸進，從 baby step      │    │
+│ │ ...                              │    │
+│ │ [查看 / 加入]                    │    │
+│ └─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘    │
+│                                     │
+│ 🌱 適合的習慣                          │
+│ ┌────────────────────────────┐     │
+│ │ 😴 睡前 60 分鐘停止高刺激螢幕  │     │
+│ │ 入門 / 進階 / 挑戰              │     │
+│ │ [選用]                          │     │
+│ └────────────────────────────┘     │
+│ ...                                 │
+│                                     │
+│ ────────────────────                 │
+│ 或者，跳過嚮往直接探索：              │
+│ [探索計畫] [探索習慣]                 │
+└─────────────────────────────────────┘
+```
+
+點計畫卡 → 原 TemplateDetailPanel / join flow（onJoin 時帶 `aspirationId`，server 寫 `AspirationHabit`）
+點習慣卡 → 原 TaskFormModal difficulty/anchor/identity flow（save 時帶 `aspirationId`）
+
+### 3.4 Step 3：commit
+
+加入成功後：
+- 寫 `Aspiration` row（如果是新嚮往）
+- 寫 `AspirationHabit { aspirationId, taskId }`
+- Modal 關閉，回到 daily view
+
+---
+
+## 4. Schema diff
 
 ```diff
 model User {
   ...
-  typeKey     String?
-  sleepTypeKey String?
-+ identities  String[]   // ★ 新增 — 多身分並存（"我是尊重生理節律的人", "我是個父親", ...）
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  tasks       Task[]
-  assignments Assignment[]
++ identities  String[]   // 多身分並存（手動 / Profile 加；v1 不自動加冕）
+  ...
 + aspirations Aspiration[]
 }
 
@@ -89,18 +183,14 @@ model User {
 +   userId      String
 +   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 +
-+   text        String   // "想要早上起床不再覺得累"
-+   domain      String?  // GENESIS+IO 9 domain — optional（AI 未來可推測）
-+   source      String   @default("user")   // user | preset | ai (預留)
++   text        String              // "想要快速入睡、睡眠品質好"
++   domain      String?             // GENESIS+IO domain — 推薦來源
 +
-+   status      String   @default("active")  // active | achieved | paused | archived
-+   isPinned    Boolean  @default(false)     // 向往頁優先顯示
-+
-+   unlockedIdentity String?    // ★ v1 手動 mark 時可選擇 carry 一個 identity 字串
-+   unlockedAt       DateTime?
-+
++   status      String   @default("active")  // active | achieved | archived
 +   achievedAt  DateTime?
-+   archivedAt  DateTime?
++
++   source      String   @default("user")    // user | preset (v1 沒 ai)
++
 +   createdAt   DateTime @default(now())
 +   updatedAt   DateTime @updatedAt
 +
@@ -108,174 +198,186 @@ model User {
 + }
 
 + model AspirationHabit {
-+   id              String   @id @default(cuid())
++   id              String      @id @default(cuid())
 +   aspirationId    String
-+   aspiration      Aspiration @relation(fields: [aspirationId], references: [id], onDelete: Cascade)
++   aspiration      Aspiration  @relation(fields: [aspirationId], references: [id], onDelete: Cascade)
 +
-+   // habit reference — 二擇一，二者皆 nullable 因為 v1 OfficialHabit ref-only，
-+   //   customHabit 為未來 AI 生成的 ad-hoc habit 預留。
-+   officialHabitId String?
-+   customHabit     Json?
++   taskId          String?     // commit 後寫入；null 代表使用者瀏覽過但未加入
 +
-+   // Per-aspiration 評分 — 同一 habit 在不同 aspiration 下可有不同分
-+   userImpact      Int?     // 1-5
-+   userAbility     Int?     // 1-5
-+
-+   // 被「選定 commit」後填入；追溯該 habit 變成了哪個 Task
-+   taskId          String?
-+
-+   createdAt       DateTime @default(now())
-+   updatedAt       DateTime @updatedAt
++   createdAt       DateTime    @default(now())
 + }
+
+# PlanCategory（既有）— 加一欄
+  model PlanCategory {
+    ...
++   domain    String?   // GENESIS+IO domain mapping for aspiration recommendation
+  }
 ```
 
-**設計決策回顧**：
+### 4.1 與既有 model 的關係（不變）
 
-| 議題 | 決定 | 理由 |
-|---|---|---|
-| `User.aspirations` 為何升格成 model 而非 `String[]` | model | 要 carry status / unlockedIdentity / 多 habit 關聯，String[] 不夠 |
-| `User.identities` 為何維持 `String[]` | String[] | 純字串標籤、不需狀態 / 關聯 |
-| `AspirationHabit` 為何用 join table 而非直接 `Aspiration.habits Json[]` | join table | 要 per-row 評分 + index by officialHabitId（查「這個 habit 在哪些 aspiration 用過」） |
-| `customHabit Json?` 為何不另開 table | nullable JSON | v1 不接 AI、不汙染 OfficialHabit；未來如果 AI 大量生成可再 normalize |
-| `Aspiration.source` 為何加 enum | tracking | 「使用者自己想 vs 點 preset vs AI 建議」對未來分析 + UX 都有意義 |
+- **Template** 不動。
+- **OfficialHabit** 不動。`OfficialHabit.category` 已直接是 GENESIS+IO domain → 推薦時直接 `WHERE category = aspiration.domain` 過濾。
+- **Task** 不動。
 
-### 3.2 與既有 model 的關係（不變）
+### 4.2 Slice D 既有產物的處置
 
-- **Template** 不動。Template 加入流程不走 aspiration（Non-goal）。
-- **OfficialHabit** 不動。`OfficialHabit.impact / ability`（Slice D 加的）變成「seed 預設位置 / 推薦預設值」，不是強制使用者的觀感。
-- **Task** 不動。從 aspiration 流程加入 task 的時候、Task 還是 Task，只是 `AspirationHabit.taskId` 紀錄是哪個 aspiration 觸發的。
-
-### 3.3 Slice D 既有產物的處置
-
-Slice D 已 merge 進 main 的東西：
-
-| 產物 | 處置 |
+| 產物 | v2 處置 |
 |---|---|
-| `OfficialHabit.impact / ability` schema | **保留**，重新定位為「seed 預設 / 未評分時 fallback」 |
-| 102 個 seed 評分 | **保留**，當作系統推薦的初始位置 |
-| `FocusMap.jsx` | **保留** — Slice K 的「向往頁」會用 |
-| `HabitListView` 內 [清單 ｜ 焦點地圖] toggle | **移除** — 探索流程錯位、由 Slice K 的向往頁取代（這部分由 Slice K Session 2 處理） |
-| `check-focus-map-distribution.js` | **保留** |
+| `OfficialHabit.impact / ability` schema | **保留**（admin 端可看，但 user UX 不用） |
+| 102 個 seed 評分 | **保留**（無害） |
+| `FocusMap.jsx` | **保留**（admin / debug tool） |
+| `HabitListView` 內 [清單 ｜ 焦點地圖] toggle | **移除** — 不在 user 主流程出現 |
 
 ---
 
-## 4. Preset Aspirations Seed (35 個)
+## 5. PlanCategory 加 domain 欄位
 
-跨 9 個 GENESIS+IO domain，每 domain 3-5 個。源檔 `prisma/seed/preset-aspirations.json`：
+`PlanCategory.domain String?` 給 admin 標每個分類對應的 GENESIS+IO domain。
 
-```json
-[
-  { "text": "想要腸道更健康（減少脹氣 / 排便不順）", "domain": "基因與腸道" },
-  { "text": "想要降低家族遺傳病風險", "domain": "基因與腸道" },
-  { "text": "想要找出自己的食物敏感原", "domain": "基因與腸道" },
-  { "text": "想要打造一個讓人放鬆的家", "domain": "環境" },
-  { "text": "想要工作環境更舒服、不腰痠背痛", "domain": "環境" },
-  { "text": "想要對環境更友善（減塑）", "domain": "環境" },
-  { "text": "想要瘦下來", "domain": "飲食" },
-  { "text": "想要戒糖 / 戒含糖飲料", "domain": "飲食" },
-  { "text": "想要不再下午想睡覺", "domain": "飲食" },
-  { "text": "想要食量穩定不暴飲暴食", "domain": "飲食" },
-  { "text": "想要學會煮健康料理", "domain": "飲食" },
-  { "text": "想要規律運動不偷懶", "domain": "運動" },
-  { "text": "想要肌肉量增加 / 體脂下降", "domain": "運動" },
-  { "text": "想要能輕鬆爬樓梯不喘", "domain": "運動" },
-  { "text": "想要早上起床不再覺得累", "domain": "壓力與睡眠" },
-  { "text": "想要快速入睡、睡眠品質好", "domain": "壓力與睡眠" },
-  { "text": "想要焦慮少一點、放鬆多一點", "domain": "壓力與睡眠" },
-  { "text": "想要白天能維持專注不昏沈", "domain": "壓力與睡眠" },
-  { "text": "想要少滑手機、減少數位疲勞", "domain": "壓力與睡眠" },
-  { "text": "想要跟伴侶 / 家人關係更好", "domain": "社交互動" },
-  { "text": "想要結交新朋友、不孤單", "domain": "社交互動" },
-  { "text": "想要溝通更有同理心", "domain": "社交互動" },
-  { "text": "想要每天都有 me time", "domain": "心靈" },
-  { "text": "想要找到生活的意義感", "domain": "心靈" },
-  { "text": "想要心情更平穩、不易煩躁", "domain": "心靈" },
-  { "text": "想要終身學習保持腦力", "domain": "認知與智慧" },
-  { "text": "想要寫作 / 創作能力提升", "domain": "認知與智慧" },
-  { "text": "想要學會一項新技能 / 語言", "domain": "認知與智慧" },
-  { "text": "想要工作專注效率提升", "domain": "職涯與平衡" },
-  { "text": "想要工作 / 生活平衡", "domain": "職涯與平衡" },
-  { "text": "想要找到工作熱情 / 心流", "domain": "職涯與平衡" },
-  { "text": "想要更敢於說「不」", "domain": "職涯與平衡" }
-]
+系統 row 預設值（seed migration）：
+
+| slug | domain |
+|---|---|
+| `daisy` / `rose` / `orchid` / `sunflower` | 「壓力與睡眠」（女性週期主要影響） |
+| `sleep_stress` / `sleep_rhythm` / `sleep_metabolic` / `sleep_hormone` | 「壓力與睡眠」 |
+| `健康生活` | （null — admin 自設）|
+
+**v1 不支援 multi-domain**（一個 PlanCategory 只能對一個 domain）。
+
+Admin 在 `/templates/categories` 編輯時可選 domain（dropdown 9 個 GENESIS+IO option）。
+
+---
+
+## 6. Preset Aspirations
+
+`prisma/seed/preset-aspirations.json`（不進 DB），35 個跨 9 domain，內容同 Session 1 spec §4。
+
+Picker 直接 import JSON。使用者點 preset → 複製 text+domain → 新增 `Aspiration{ source: 'preset' }`。之後改 / 刪 / 達成都不影響原始 preset。
+
+---
+
+## 7. Profile「我的嚮往」tab
+
+進入：Profile modal → tab 切換「個人資料 ｜ 我的嚮往」（或下方 section）。
+
+List view：
+```
+┌────────────────────────────────────┐
+│ 想要快速入睡、睡眠品質好             │
+│ active · 掛 3 個任務 · 14 天前      │
+│ [標記達成] [封存] [刪除]            │
+├────────────────────────────────────┤
+│ 想要瘦下來                          │
+│ achieved · 5/12 · 掛 2 個任務      │
+│ [封存] [刪除]                       │
+└────────────────────────────────────┘
 ```
 
-**約定**：preset 列入 DB 後不可改寫使用者既有資料；使用者在 onboarding 點選某個 preset 時，**複製文字成自己的 Aspiration row**（`source='preset'`），之後改 / 刪 / 達成都不影響原始 preset。
+操作：
+- **標記達成**：`status='achieved', achievedAt=now()`
+- **封存**：`status='archived'`
+- **刪除**：confirm → `DELETE`，cascade 移除 AspirationHabit（不刪 Task）
+
+**沒做**（v1）：编輯 text / 改 domain（改 = 刪除重建）；不顯示 archived 預設（filter toggle 給 v2）。
 
 ---
 
-## 5. 已確定的設計決定（討論結果定錨）
+## 8. 推薦邏輯（v1）
+
+```js
+// aspirationRecommendations(aspiration, allTemplates, allHabits)
+const templates = allTemplates.filter(t => {
+  const cat = planCategoryMap[t.category];
+  return cat?.domain === aspiration.domain;
+});
+
+const habits = allHabits.filter(h => h.category === aspiration.domain);
+
+return { templates, habits };
+```
+
+**零結果處理**：顯示「這個嚮往目前還沒有對應的計畫 / 習慣，去[探索計畫][探索習慣] 自己找看看」（兩個按鈕導向既有 nav）。
+
+---
+
+## 9. API
+
+```
+POST   /api/aspirations
+  body: { userId, text, domain, source: 'user'|'preset' }
+  → Aspiration row, return id
+
+GET    /api/aspirations?userId=&status=active
+  → list (default active, ?status=all returns 全部)
+
+PATCH  /api/aspirations/:id
+  body: { status?, achievedAt? }
+  → updated row
+
+DELETE /api/aspirations/:id
+  → cascade AspirationHabit
+
+POST   /api/aspirations/:id/habits
+  body: { taskId }
+  → AspirationHabit row（commit task 完成時呼叫）
+
+GET    /api/aspirations/:id/recommendations
+  → { templates: [...], habits: [...] } 依 domain mapping
+```
+
+無 admin endpoint — preset 改動走 JSON + redeploy。
+
+---
+
+## 10. 已敲定的設計決定（Session 2）
 
 | # | 議題 | 決定 |
 |---|---|---|
-| 1 | User aspirations 數量 | 不限、使用者自己管 |
-| 2 | User identities 數量 | 不限、多身分並存 |
-| 3 | 每個 task 的 identity | 從 `User.identities[]` 選一個（或自訂自由文字） |
-| 4 | AI 生 habits 怎麼存 | 不存 backend；selected 後才寫入 `AspirationHabit.customHabit Json?` |
-| 5 | AI 接入時程 | v1 不接、schema 預留欄位 (`source='ai'`, `customHabit`) |
-| 6 | Habit 評分範圍 | per-aspiration（`AspirationHabit.userImpact / userAbility`） |
-| 7 | Identity 加冕觸發 | v1 使用者手動 mark achieved；AI 自動加冕留到未來 |
-| 8 | Aspiration 在 dashboard | **不顯示**，獨立「向往頁」 |
-| 9 | Preset aspirations 數量 | 35 個跨 9 domain |
-| 10 | Slice D 留下的 FocusMap | 保留、Slice K Session 2 移到「向往頁」 |
-| 11 | Slice D HabitListView toggle | 移除（錯誤位置） |
+| 1 | v1 包 AI？ | 不包，只手動挑現有 OfficialHabit |
+| 2 | Preset storage | JSON only |
+| 3 | 名字 | 嚮往 |
+| 4 | Task.identity vs User.identities[] | Task.identity 保持自由文字；User.identities[] 是另一層 |
+| 5 | 嚮往的角色 | 「+ 新增」flow 的 Step 1 |
+| 6 | 推薦類型 | 計畫 + 習慣 兩種都推薦，同一頁兩區 |
+| 7 | 既有 nav 處置 | 保留「探索計畫」「探索習慣」做手動 fallback |
+| 8 | 推薦邏輯 | GENESIS+IO domain mapping（PlanCategory.domain 新欄位） |
+| 9 | Aspiration 管理位置 | Profile「我的嚮往」tab |
+| 10 | PlanCategory.domain 多/單選 | v1 單選 |
 
 ---
 
-## 6. 待 Session 2 釐清的開放問題（UX 細節）
+## 11. Open Questions（留 Session 3 / 寫 plan 前）
 
-> 以下不在本 spec 範圍。Session 2 開始前要先逐項拍板。
-
-1. **「向往頁」UI** — list / card / sections by domain / 狀態 tab？aspiration 卡片內顯示什麼（habit count、status badge、unlocked identity）？
-2. **「向往頁」入口** — Sidebar 多一個 nav？AppHeader 多一個 icon？Profile menu？dashboard 多一個 CTA「探索新習慣」？
-3. **Onboarding** — 新使用者首次進站要不要強制走 aspiration 流程？跳過行不行？跳過後何時補？
-4. **加 habit 進 aspiration 的 flow** — 從 OfficialHabit list 「加入向往」 vs 從 aspiration 內按「加 habit」進入官方 library 篩選 — 兩條路都支援嗎？
-5. **Template 跟 aspiration 的關係** — Template 要不要也加 `aspirations[]`？加入 template 時讓使用者選一個 aspiration 「掛靠」？或完全分開？
-6. **「向往頁」內 FocusMap 怎麼顯示** — 一個 aspiration 一張圖？所有 active aspirations 的 habits 合在一張？篩選器設計？
-7. **加冕 identity 的 UX** — mark achieved 時跳一個小慶祝 modal？讓使用者輸入這次學到「我是個 ___ 的人」？
-8. **Aspiration 進度視覺暗示** — 沒進度條（已 non-goal），但要不要顯示「掛了 X 個 habit、其中 Y 個正在打卡」？
+1. **Step 1 picker** 是 fullscreen modal 還是現有 modal pattern + 滑入 panel？
+2. **零推薦 fallback** 體驗：是 inline 提示還是直接導去既有 nav？
+3. **重複嚮往** — 使用者已有「想快速入睡」、又點 preset 同名 — 阻擋還是新增第二筆？
+4. **Step 1 「為你推薦」** 演算法細節：依 typeKey / sleepTypeKey 推哪 3-5 個 preset？hardcoded mapping 還是 attribute match？
+5. **AppHeader [+]** 目前是 `onOpenAddFlow` → TaskLibraryModal — 要改成嚮往 picker 還是再加新按鈕？
 
 ---
 
-## 7. 技術實作分塊（Session 3+ 才動工）
+## 12. Acceptance Criteria
 
-> 預估順序、實際依 plan 文件為準。
+僅針對 schema + seed + spec 確認，不涵蓋實作：
 
-1. **Session 2 (UX)** — 釘 §6 開放問題、寫 plan 文件
-2. **Session 3 (Schema + Seed)** — `prisma db push` + preset-aspirations seed script + 既有 user 的 `identities=[]` migration
-3. **Session 4 (API)** — `/api/aspirations` CRUD + `/api/aspirations/[id]/habits` (add/remove/score) + `/api/aspirations/[id]/achieve`
-4. **Session 5 (UI)** — 向往頁 + onboarding flow + dashboard 入口 + 既有 HabitListView 拿掉錯位 toggle
-5. **Session 6 (Polish)** — Per-aspiration FocusMap + 加冕 modal + tests + bundle 預算驗證
-6. **Session 7+ (AI, separate spec)** — Gemini / OpenAI 接入、prompt 工程、rate limit、cost monitoring
-
----
-
-## 8. 風險與開放問題（Spec 階段）
-
-1. **Schema 預留太多沒用的欄位** — `unlockedIdentity / customHabit / source='ai'` 都是預留。如果未來 AI 不接，這些變成死欄位。**緩解**：每個預留欄位都 nullable，dead-code 沒實際成本。
-2. **使用者在「向往頁」與「探索計畫」之間概念混淆** — 兩個都是「我想做」的入口、可能 cognitive load。**緩解**：Session 2 UX 設計需要明確區分「我跟著結構走 (Template)」vs「我從痛點出發 (Aspiration)」的入口文案。
-3. **Preset 35 個太多 / 太少** — 沒實機驗證。**緩解**：Session 5 onboarding 實作時 A/B 觀察、必要時調整 seed JSON。
-4. **`User.identities[]` 跟既有 `Task.identity` 的關係** — 既有 Task.identity 是自由文字，使用者可填任何東西。Slice K 加 `User.identities[]` 之後，是要強制 Task.identity ∈ User.identities，還是繼續自由？**留 Session 2 拍板**。
-5. **Identity 從 aspiration 「加冕」時的命名來源** — 使用者自填？預設文案？參考 `OfficialHabit.defaultIdentity`？**留 Session 2 拍板**。
+- [x] 本 spec 同意（Session 2 設計討論結束）
+- [ ] schema diff 完成 `prisma db push`
+- [ ] `preset-aspirations.json` 35 筆 entries 在位
+- [ ] PlanCategory 系統列 domain backfill seed script
+- [ ] Plan 文件（待寫）push 到同分支
 
 ---
 
-## 9. Acceptance Criteria
+## 13. 實作分段（待 Session 3 寫 plan 時定）
 
-僅針對本 spec 範圍（schema + preset seed + 設計決策），不涵蓋 UI：
-
-- [ ] `prisma/schema.prisma` 加入 `Aspiration` model + `AspirationHabit` model + `User.identities String[]`
-- [ ] `prisma db push` 乾淨完成（既有 user 自動拿到 `identities=[]`）
-- [ ] `prisma/seed/preset-aspirations.json` 含 35 個 entries 對應 §4
-- [ ] Seed script `scripts/seed-preset-aspirations.js` 把 preset 寫進獨立 `PresetAspiration` reference table（**待 Session 2 決定要不要 table、目前傾向 JSON only**）
-- [ ] 這份 spec push 到 `feat/slice-K-aspiration-system` branch
-- [ ] Plan 文件（Session 2 寫）push 到同一 branch
-- [ ] 不寫任何 application code
-
----
-
-## 10. 開放問題（spec 階段 — 待 Session 2 前 user 確認）
-
-1. **「向往頁」要叫什麼名字** — 「向往」 / 「探索」 / 「我的願景」 / 「我想要」？影響 sidebar nav 文案。
-2. **Preset 要不要也存 table** — 目前 spec 是 JSON only；如果要做「使用者也能新增成 preset 分享給別人」，就要 table。v1 是否需要？
-3. **Slice K vs Slice K + AI Slice L 分還是合** — 目前 spec 把 AI 留 Session 7+ ；如果你想做「沒有 AI 的 v1 也要能跑」、就確認本 spec 的「使用者自己手動加 OfficialHabit 進 aspiration」的 fallback flow 是否足夠。
+預估順序：
+1. **Schema + Seed**：`prisma db push` + PlanCategory.domain backfill
+2. **API**：`/api/aspirations/*` CRUD + recommendations
+3. **嚮往 Picker modal**（Step 1）
+4. **推薦頁 panel**（Step 2）
+5. **Hook into existing flows**：TemplateExplorer / TaskFormModal save 時帶 aspirationId
+6. **Profile「我的嚮往」tab**
+7. **AppHeader [+] / Sidebar 改 wiring**
+8. **Slice D HabitListView toggle 移除**
+9. **Tests**：lib helpers + API integration + key UI flows
