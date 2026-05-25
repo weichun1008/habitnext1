@@ -23,6 +23,8 @@ export async function PATCH(request, { params }) {
                 data.achievedAt = null;
             }
         }
+        // Explicit achievedAt in the body takes precedence over the auto-derived
+        // value above — lets callers override the timestamp (e.g. backfill).
         if (achievedAt !== undefined) {
             data.achievedAt = achievedAt ? new Date(achievedAt) : null;
         }

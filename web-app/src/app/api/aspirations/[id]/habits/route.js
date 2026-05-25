@@ -26,9 +26,10 @@ export async function POST(request, { params }) {
             return NextResponse.json(created);
         } catch (e) {
             if (e?.code === 'P2002') {
-                // Unique constraint violation — return existing row
-                const existing = await prisma.aspirationHabit.findFirst({
-                    where: { aspirationId: params.id, taskId },
+                // Unique constraint violation — return existing row via the
+                // compound unique key (cheaper than findFirst).
+                const existing = await prisma.aspirationHabit.findUnique({
+                    where: { aspirationId_taskId: { aspirationId: params.id, taskId } },
                 });
                 return NextResponse.json(existing);
             }
