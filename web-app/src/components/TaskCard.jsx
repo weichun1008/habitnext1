@@ -1,5 +1,5 @@
-import React from 'react';
-import { Check, Minus, Plus, Lock } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp } from 'lucide-react';
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import {
@@ -20,6 +20,11 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
     const dateStr = viewingDate || todayStr;
     const isFuture = isFutureDate(dateStr, todayStr);
     const isPast = isPastDate(dateStr, todayStr);
+
+    // Inline subtask expand/collapse state. Session-only (resets on refresh /
+    // remount) — keeping the card list visually tidy by default. Tapping the
+    // chevron flips it; tapping the card body still opens the detail modal.
+    const [subtasksExpanded, setSubtasksExpanded] = useState(false);
 
     let isCompleted, currentVal, targetVal, displayStatus, progressPercent;
 
@@ -57,17 +62,20 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
     const isPeriod = task.recurrence?.mode === 'period_count';
     const isChecklist = task.type === 'checklist';
 
-    // Subtask Progress Display — also follows viewingDate.
+    // Subtask progress — hoisted so we can render both the X/Y badge AND the
+    // inline subtask list (when expanded) from the same source.
     let subtaskDisplay = null;
+    let visibleSubs = [];
+    let subtaskCompletions = {};
     if (isChecklist) {
-        const visible = visibleSubtasks(task, dateStr);
+        visibleSubs = visibleSubtasks(task, dateStr);
         const historyForDate = task.history?.[dateStr];
-        const completions = (historyForDate && typeof historyForDate === 'object')
+        subtaskCompletions = (historyForDate && typeof historyForDate === 'object')
             ? (historyForDate.subtaskCompletions || {})
             : {};
-        const completedCount = visible.filter(s => completions[s.id] === true).length;
-        if (visible.length > 0) {
-            subtaskDisplay = `${completedCount}/${visible.length}`;
+        const completedCount = visibleSubs.filter(s => subtaskCompletions[s.id] === true).length;
+        if (visibleSubs.length > 0) {
+            subtaskDisplay = `${completedCount}/${visibleSubs.length}`;
         }
     }
 
@@ -137,11 +145,30 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
                                 <span className="flex items-center gap-1">🎉 {displayStatus}</span>
                             ) : displayStatus}
                         </span>
-                    ) : (
+                    ) : isChecklist ? (
+                        // Checklist: X/Y badge + chevron to expand inline subtasks.
+                        // No outer toggle — the bug was that toggling here flipped
+                        // `completed` on the task without going through subtask
+                        // logic, leaving partial state ('1/3 + 已完成' inconsistency).
                         <div className="flex items-center gap-2">
-                            {isChecklist && subtaskDisplay && (
-                                <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-md">{subtaskDisplay}</span>
+                            {subtaskDisplay && (
+                                <span className={`text-xs font-bold px-2 py-1 rounded-md ${isCompleted ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-400'}`}>
+                                    {subtaskDisplay}
+                                </span>
                             )}
+                            <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); setSubtasksExpanded(v => !v); }}
+                                aria-label={subtasksExpanded ? '收合子任務' : '展開子任務'}
+                                aria-expanded={subtasksExpanded}
+                                className="w-6 h-6 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors text-gray-400"
+                            >
+                                {subtasksExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                            </button>
+                        </div>
+                    ) : (
+                        // Binary / other — keep the existing toggle button.
+                        <div className="flex items-center gap-2">
                             {isFuture ? (
                                 <span
                                     title="未來的任務 — 到那天才能完成"
@@ -162,6 +189,55 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
                     )}
                 </div>
             </div>
+
+            {/* Inline subtask list — only for checklist tasks when expanded.
+                Subtasks tap-toggle through the same `toggle_subtask` handler
+                the detail modal uses, so the completion contract (ALL
+                visible subtasks checked → task complete) flows through
+                naturally. Future/past dates show the same UI but with
+                disabled checkboxes so users can still see structure. */}
+            {isChecklist && subtasksExpanded && visibleSubs.length > 0 && (
+                <div
+                    className="mt-3 pt-3 border-t border-gray-100 space-y-1.5"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {visibleSubs.map(sub => {
+                        const isChecked = subtaskCompletions[sub.id] === true;
+                        return (
+                            <button
+                                key={sub.id}
+                                type="button"
+                                disabled={isLocked}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (isLocked) return;
+                                    handleUpdate('toggle_subtask', null, sub.id, dateStr);
+                                }}
+                                className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-colors ${
+                                    isLocked
+                                        ? 'cursor-not-allowed'
+                                        : 'hover:bg-gray-50 cursor-pointer'
+                                }`}
+                            >
+                                <div className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-colors ${
+                                    isChecked
+                                        ? 'bg-emerald-500 border-emerald-500'
+                                        : 'border-gray-300'
+                                } ${isLocked ? 'opacity-50' : ''}`}>
+                                    {isChecked && <Check size={10} className="text-white" strokeWidth={3} />}
+                                </div>
+                                <span className={`text-xs ${
+                                    isChecked
+                                        ? 'text-gray-400 line-through'
+                                        : isLocked ? 'text-gray-400' : 'text-gray-700'
+                                }`}>
+                                    {sub.label}
+                                </span>
+                            </button>
+                        );
+                    })}
+                </div>
+            )}
 
             {/* Quick Add for Quant Tasks — hidden on past/future to prevent edits */}
             {isQuant && !isPeriod && !isLocked && (
