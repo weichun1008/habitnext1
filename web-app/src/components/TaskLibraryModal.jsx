@@ -2,14 +2,32 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Target, X, Edit2, Loader, Search, ChevronLeft } from 'lucide-react';
+import { Target, X, Edit2, Loader, Search, ChevronLeft, Sparkles, ChevronRight } from 'lucide-react';
 import DomainGrid from './explore/DomainGrid';
 import HabitListView from './explore/HabitListView';
 import CategoryIcon from './explore/CategoryIcon';
 import AnchorPicker from './explore/AnchorPicker';
 import IdentityPicker from './explore/IdentityPicker';
 
-const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, userTypeKey = null, yourTasks = [] }) => {
+// Slice K (2026-05-26): added two optional props.
+//   - onOpenAspirationPicker: when set, an "✨ 從嚮往開始" entry button
+//     renders above the domain grid. Lets users who haven't decided on a
+//     habit start from a goal/outcome (Aspiration) and follow recommendations.
+//   - initialHabit: when set, the modal skips the domain grid on open and
+//     jumps straight to a single-habit list (the picked habit's accordion +
+//     difficulty picker). After the user picks difficulty, the existing
+//     anchor → identity → emit flow runs unchanged. Used when the user
+//     picked a habit card from AspirationRecommendationPanel.
+const TaskLibraryModal = ({
+    isOpen,
+    onClose,
+    onSelectTask,
+    onOpenCustomForm,
+    userTypeKey = null,
+    yourTasks = [],
+    onOpenAspirationPicker = null,
+    initialHabit = null,
+}) => {
     const [habits, setHabits] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -24,14 +42,28 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, use
     useEffect(() => {
         if (isOpen) {
             fetchHabits();
-            setView('domain');
-            setSelectedDomain(null);
+            // Slice K: if initialHabit is set, skip the domain grid and land
+            // on the single-habit list view so the user picks difficulty next.
+            // selectedDomain is synthesized from the habit's category so the
+            // header shows the domain name + the back arrow still walks the
+            // user back to the domain grid if they change their mind.
+            if (initialHabit) {
+                setView('list');
+                setSelectedDomain({
+                    name: initialHabit.category || '習慣',
+                    color: '#10B981',
+                    icon: null,
+                });
+            } else {
+                setView('domain');
+                setSelectedDomain(null);
+            }
             setSearch('');
             setPendingHabit(null);
             setPendingCue(null);
             setIdentityChoice(null);
         }
-    }, [isOpen]);
+    }, [isOpen, initialHabit?.id]);
 
     const fetchHabits = async () => {
         setLoading(true);
@@ -117,6 +149,16 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, use
     };
 
     const visibleHabits = (() => {
+        // Slice K initialHabit override: when the user landed here via the
+        // aspiration recommendation flow, show ONLY that habit so they
+        // proceed directly to its difficulty picker. The back arrow on the
+        // header still lets them escape to the domain grid if they change
+        // their mind. Match by id from the fetched list so we use the
+        // canonical row (recommendation API returns a subset).
+        if (initialHabit && view === 'list') {
+            const match = habits.find(h => h.id === initialHabit.id);
+            return match ? [match] : [initialHabit];
+        }
         const q = search.trim().toLowerCase();
         if (view === 'domain') return [];
         if (view === 'search') {
@@ -181,6 +223,26 @@ const TaskLibraryModal = ({ isOpen, onClose, onSelectTask, onOpenCustomForm, use
                 )}
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    {/* Slice K — aspiration entry. Only on the 'domain' view
+                        (and only when the parent wired a handler) so it
+                        doesn't compete for attention once the user has
+                        already picked a domain or is deep in the flow. */}
+                    {view === 'domain' && onOpenAspirationPicker && (
+                        <button
+                            type="button"
+                            onClick={onOpenAspirationPicker}
+                            className="w-full p-3 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white hover:from-emerald-100 hover:to-emerald-50 transition-all text-left flex items-center gap-3"
+                        >
+                            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                                <Sparkles size={18} className="text-emerald-600" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-bold text-gray-800">從嚮往開始</p>
+                                <p className="text-xs text-gray-500 leading-snug">不確定要做什麼？從你想要的目標找推薦</p>
+                            </div>
+                            <ChevronRight size={16} className="text-gray-400 flex-shrink-0" />
+                        </button>
+                    )}
                     {view !== 'anchor' && view !== 'identity' && (
                         <button
                             onClick={onOpenCustomForm}
