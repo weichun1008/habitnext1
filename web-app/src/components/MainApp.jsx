@@ -20,6 +20,8 @@ import PlanGroup from './PlanGroup';
 import TemplateExplorer from './TemplateExplorer';
 import ProfileModal from './ProfileModal';
 import Avatar from './Avatar';
+import AspirationPicker from './AspirationPicker';
+import AspirationRecommendationPanel from './AspirationRecommendationPanel';
 
 // StatsView is dynamically imported to keep recharts (~96kb gzip) off the
 // `/` route's First Load JS — it only loads when the user opens the stats tab.
@@ -49,6 +51,20 @@ const MainApp = () => {
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const [isMenstrualMode, setIsMenstrualMode] = useState(false);
     const [menstrualStart, setMenstrualStart] = useState(null);
+
+    // Slice K — aspiration-driven add flow.
+    //   - isAspirationPickerOpen: Step 1 modal (嚮往 Picker) visibility.
+    //   - activeAspiration: the chosen aspiration row. When non-null, the
+    //     RecommendationPanel renders on top of the picker. When the user
+    //     proceeds to pick a template/habit, we keep activeAspiration set
+    //     until the downstream Task/Assignment is committed — that's the
+    //     window during which we tag AspirationHabit. After commit (success
+    //     or fail) it's cleared so the next add flow doesn't auto-tag.
+    //   - initialTemplateForExplorer: when set, TemplateExplorer opens with
+    //     this template's detail panel pre-expanded (saves the user a scroll).
+    const [isAspirationPickerOpen, setIsAspirationPickerOpen] = useState(false);
+    const [activeAspiration, setActiveAspiration] = useState(null);
+    const [initialTemplateForExplorer, setInitialTemplateForExplorer] = useState(null);
 
     console.log('MainApp Render:', { user, isTemplateExplorerOpen }); // Debug Log
 
@@ -378,6 +394,23 @@ const MainApp = () => {
                     const created = await res.json();
                     const formatted = { ...created, history: {}, dailyProgress: {} };
                     setTasks(prev => [...prev, formatted]);
+
+                    // Slice K — if the user entered through the aspiration
+                    // flow, tag this new task as belonging to that aspiration.
+                    // Best-effort: a failure here doesn't roll back the task,
+                    // it just leaves the aspiration's habit count under-counted.
+                    if (activeAspiration?.id) {
+                        try {
+                            await fetch(`/api/aspirations/${activeAspiration.id}/habits`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ taskId: created.id }),
+                            });
+                        } catch (e) {
+                            console.warn('[MainApp] aspiration habit tag failed:', e);
+                        }
+                        setActiveAspiration(null);
+                    }
                 } else {
                     const err = await res.json();
                     alert(`建立失敗: ${err.error || '未知錯誤'}`);
@@ -390,6 +423,116 @@ const MainApp = () => {
 
         setIsFormModalOpen(false);
         setEditingTask(null);
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    // Slice K — aspiration flow callbacks (Picker → RecommendationPanel
+    // → existing template/habit flows). Centralised here so the modal
+    // tree stays readable and activeAspiration's lifetime is obvious.
+    // ────────────────────────────────────────────────────────────────
+
+    // Picker's onSelectAspiration: store the chosen aspiration; the
+    // RecommendationPanel renders on top because it's gated by activeAspiration.
+    const handleAspirationSelected = (aspiration) => {
+        setActiveAspiration(aspiration);
+    };
+
+    // RecommendationPanel back arrow → keep picker open, drop activeAspiration
+    // so the panel unmounts but Step 1 is still visible underneath.
+    const handleRecommendationBack = () => {
+        setActiveAspiration(null);
+    };
+
+    // Pick a template from the recommendation panel: close the picker chain,
+    // open the existing TemplateExplorer with the picked template's detail
+    // pane auto-expanded. activeAspiration is kept so the eventual onJoin
+    // can write AspirationHabit rows for each task the assignment spawns.
+    const handlePickTemplateFromAspiration = (template) => {
+        setIsAspirationPickerOpen(false);
+        setInitialTemplateForExplorer(template);
+        setIsTemplateExplorerOpen(true);
+    };
+
+    // Pick a habit from the recommendation panel: close the picker chain,
+    // build the same task shape TaskLibraryModal would have produced for the
+    // first enabled difficulty level, and route through handleSaveTask. The
+    // aspiration tag is written inside handleSaveTask via activeAspiration.
+    // User can re-pick difficulty / set anchor / set identity later by
+    // editing the task; v1 trades that for a one-step add.
+    const handlePickHabitFromAspiration = async (habit) => {
+        setIsAspirationPickerOpen(false);
+        const difficulties = habit?.difficulties || {};
+        const diffKey = ['beginner', 'intermediate', 'challenge'].find(k => difficulties[k]?.enabled) || 'beginner';
+        const config = difficulties[diffKey] || {};
+        const task = {
+            title: habit.name,
+            details: habit.description || '',
+            cue: null,
+            identity: null,
+            type: config.type || 'binary',
+            category: habit.category || 'star',
+            frequency: config.recurrence?.type || 'daily',
+            recurrence: config.recurrence || { type: 'daily', interval: 1, endType: 'never' },
+            dailyTarget: config.dailyTarget || 1,
+            unit: config.unit || '次',
+            stepValue: config.stepValue || 1,
+            subtasks: config.subtasks || [],
+        };
+        // Generate a placeholder id like TaskLibraryModal does (handleSaveTask
+        // ignores it and lets the API mint one) — keeps the local-state shape
+        // consistent if anything else reads `.id` before refresh.
+        await handleSaveTask({ ...task, id: generateId() });
+    };
+
+    // Skip-to-explore branches: aspiration is dropped on purpose — these are
+    // the "I'd rather just browse" exits. Closes the picker chain and lands
+    // the user on the same explorer / library modal they had before Slice K.
+    const handleSkipToTemplates = () => {
+        setIsAspirationPickerOpen(false);
+        setActiveAspiration(null);
+        setInitialTemplateForExplorer(null);
+        setIsTemplateExplorerOpen(true);
+    };
+    const handleSkipToHabits = () => {
+        setIsAspirationPickerOpen(false);
+        setActiveAspiration(null);
+        setIsLibraryModalOpen(true);
+    };
+
+    // Picker close (X button or backdrop tap): clear all aspiration state.
+    const handleAspirationPickerClose = () => {
+        setIsAspirationPickerOpen(false);
+        setActiveAspiration(null);
+    };
+
+    // TemplateExplorer onJoin — called after an assignment is created. When
+    // the user arrived via the aspiration flow, tag every task the assignment
+    // spawned with an AspirationHabit row. We can't get the tasks from
+    // confirmJoin's response (it only returns the assignment), so we fetch
+    // them fresh and filter by assignmentId.
+    const handleTemplateJoined = async (assignment) => {
+        fetchTasks(user.id);
+        fetchAssignments(user.id);
+        if (activeAspiration?.id && assignment?.id) {
+            try {
+                const res = await fetch(`/api/tasks?userId=${user.id}`, { cache: 'no-store' });
+                if (res.ok) {
+                    const allTasks = await res.json();
+                    const newTasks = allTasks.filter(t => t.assignmentId === assignment.id);
+                    await Promise.all(newTasks.map(t =>
+                        fetch(`/api/aspirations/${activeAspiration.id}/habits`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ taskId: t.id }),
+                        }).catch(e => console.warn('[MainApp] tag fail for task', t.id, e))
+                    ));
+                }
+            } catch (e) {
+                console.warn('[MainApp] aspiration template tag failed:', e);
+            }
+            setActiveAspiration(null);
+        }
+        setInitialTemplateForExplorer(null);
     };
 
     const handleDeleteTask = async (taskId) => {
@@ -494,7 +637,17 @@ const MainApp = () => {
                 <AppHeader
                     onViewChange={setCurrentView}
                     currentView={currentView}
-                    onOpenAddFlow={() => { setIsLibraryModalOpen(true); setIsFormModalOpen(false); setEditingTask(null); setSelectedDate(getTodayStr()); }}
+                    onOpenAddFlow={() => {
+                        // Slice K: the [+] button now opens the aspiration
+                        // picker (Step 1) instead of jumping straight to the
+                        // habit library. The "探索計畫 / 探索習慣" buttons
+                        // inside the recommendation panel are the v1 escape
+                        // hatch that keeps the old direct-pick paths reachable.
+                        setIsAspirationPickerOpen(true);
+                        setIsFormModalOpen(false);
+                        setEditingTask(null);
+                        setSelectedDate(getTodayStr());
+                    }}
                     onOpenBadges={() => setCurrentView('badges')}
                     onOpenExplore={() => setIsTemplateExplorerOpen(true)}
                     user={user}
@@ -778,14 +931,19 @@ const MainApp = () => {
             {/* Modals moved outside to prevent clipping */}
             <TemplateExplorer
                 isOpen={isTemplateExplorerOpen}
-                onClose={() => setIsTemplateExplorerOpen(false)}
-                userId={user?.id}
-                onJoin={() => {
-                    fetchTasks(user.id);
-                    fetchAssignments(user.id);
+                onClose={() => {
+                    setIsTemplateExplorerOpen(false);
+                    // Drop the initial-template hint AND clear activeAspiration
+                    // — if the user closes without joining, we shouldn't keep
+                    // an aspiration "armed" for the next add flow.
+                    setInitialTemplateForExplorer(null);
+                    if (activeAspiration) setActiveAspiration(null);
                 }}
+                userId={user?.id}
+                onJoin={handleTemplateJoined}
                 userTypeKey={user?.typeKey || null}
                 userSleepTypeKey={user?.sleepTypeKey || null}
+                initialTemplate={initialTemplateForExplorer}
             />
 
             <TaskFormModal
@@ -821,6 +979,30 @@ const MainApp = () => {
                 isOpen={isLoginModalOpen}
                 onLogin={handleLogin}
             />
+
+            {/* Slice K — Aspiration flow (Step 1 picker + Step 2 panel).
+                Both modals are gated on isAspirationPickerOpen so the panel
+                can never render orphaned (and so closing the picker tears
+                both down at once). The panel is visually layered on top
+                because its container uses z-[10000] vs the picker's z-[9999]. */}
+            <AspirationPicker
+                isOpen={isAspirationPickerOpen && !activeAspiration}
+                onClose={handleAspirationPickerClose}
+                userId={user?.id}
+                userTypeKey={user?.typeKey || null}
+                userSleepTypeKey={user?.sleepTypeKey || null}
+                onSelectAspiration={handleAspirationSelected}
+            />
+            {isAspirationPickerOpen && activeAspiration && (
+                <AspirationRecommendationPanel
+                    aspiration={activeAspiration}
+                    onBack={handleRecommendationBack}
+                    onPickTemplate={handlePickTemplateFromAspiration}
+                    onPickHabit={handlePickHabitFromAspiration}
+                    onSkipToTemplates={handleSkipToTemplates}
+                    onSkipToHabits={handleSkipToHabits}
+                />
+            )}
 
             <ProfileModal
                 isOpen={isProfileModalOpen}
