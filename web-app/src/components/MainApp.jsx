@@ -55,16 +55,21 @@ const MainApp = () => {
     // Slice K — aspiration-driven add flow.
     //   - isAspirationPickerOpen: Step 1 modal (嚮往 Picker) visibility.
     //   - activeAspiration: the chosen aspiration row. When non-null, the
-    //     RecommendationPanel renders on top of the picker. When the user
-    //     proceeds to pick a template/habit, we keep activeAspiration set
-    //     until the downstream Task/Assignment is committed — that's the
-    //     window during which we tag AspirationHabit. After commit (success
-    //     or fail) it's cleared so the next add flow doesn't auto-tag.
+    //     RecommendationPanel renders on top of the picker. Kept set until
+    //     the downstream Task/Assignment commits, at which point
+    //     handleSaveTask / handleTemplateJoined tag AspirationHabit rows.
+    //     Cleared on every flow exit (picker close, modal close mid-flow).
     //   - initialTemplateForExplorer: when set, TemplateExplorer opens with
     //     this template's detail panel pre-expanded (saves the user a scroll).
+    //   - aspirationHabitForLibrary: when set, TaskLibraryModal opens with
+    //     this single habit pre-selected (skipping the domain grid) so the
+    //     user goes through the full difficulty / anchor / identity flow.
+    //     Lifecycle mirrors activeAspiration: set on RecommendationPanel pick,
+    //     cleared when library closes.
     const [isAspirationPickerOpen, setIsAspirationPickerOpen] = useState(false);
     const [activeAspiration, setActiveAspiration] = useState(null);
     const [initialTemplateForExplorer, setInitialTemplateForExplorer] = useState(null);
+    const [aspirationHabitForLibrary, setAspirationHabitForLibrary] = useState(null);
 
     console.log('MainApp Render:', { user, isTemplateExplorerOpen }); // Debug Log
 
@@ -453,35 +458,16 @@ const MainApp = () => {
         setIsTemplateExplorerOpen(true);
     };
 
-    // Pick a habit from the recommendation panel: close the picker chain,
-    // build the same task shape TaskLibraryModal would have produced for the
-    // first enabled difficulty level, and route through handleSaveTask. The
-    // aspiration tag is written inside handleSaveTask via activeAspiration.
-    // User can re-pick difficulty / set anchor / set identity later by
-    // editing the task; v1 trades that for a one-step add.
-    const handlePickHabitFromAspiration = async (habit) => {
+    // Pick a habit from the recommendation panel: close the picker chain
+    // and hand the habit to TaskLibraryModal as `initialHabit`. The library
+    // jumps to that habit's list view so the user picks difficulty, then
+    // walks the existing anchor → identity → emit flow. handleSaveTask
+    // writes AspirationHabit afterward because activeAspiration is still
+    // set when the library's onSelectTask fires.
+    const handlePickHabitFromAspiration = (habit) => {
         setIsAspirationPickerOpen(false);
-        const difficulties = habit?.difficulties || {};
-        const diffKey = ['beginner', 'intermediate', 'challenge'].find(k => difficulties[k]?.enabled) || 'beginner';
-        const config = difficulties[diffKey] || {};
-        const task = {
-            title: habit.name,
-            details: habit.description || '',
-            cue: null,
-            identity: null,
-            type: config.type || 'binary',
-            category: habit.category || 'star',
-            frequency: config.recurrence?.type || 'daily',
-            recurrence: config.recurrence || { type: 'daily', interval: 1, endType: 'never' },
-            dailyTarget: config.dailyTarget || 1,
-            unit: config.unit || '次',
-            stepValue: config.stepValue || 1,
-            subtasks: config.subtasks || [],
-        };
-        // Generate a placeholder id like TaskLibraryModal does (handleSaveTask
-        // ignores it and lets the API mint one) — keeps the local-state shape
-        // consistent if anything else reads `.id` before refresh.
-        await handleSaveTask({ ...task, id: generateId() });
+        setAspirationHabitForLibrary(habit);
+        setIsLibraryModalOpen(true);
     };
 
     // Skip-to-explore branches: aspiration is dropped on purpose — these are
@@ -638,12 +624,13 @@ const MainApp = () => {
                     onViewChange={setCurrentView}
                     currentView={currentView}
                     onOpenAddFlow={() => {
-                        // Slice K: the [+] button now opens the aspiration
-                        // picker (Step 1) instead of jumping straight to the
-                        // habit library. The "探索計畫 / 探索習慣" buttons
-                        // inside the recommendation panel are the v1 escape
-                        // hatch that keeps the old direct-pick paths reachable.
-                        setIsAspirationPickerOpen(true);
+                        // [+] opens TaskLibraryModal (the habit picker). Direct
+                        // task creation stays the default — most users come
+                        // here knowing roughly what they want to add. The
+                        // aspiration funnel is reachable as an entry button
+                        // inside TaskLibraryModal's domain view for users
+                        // who prefer to start from an outcome / goal.
+                        setIsLibraryModalOpen(true);
                         setIsFormModalOpen(false);
                         setEditingTask(null);
                         setSelectedDate(getTodayStr());
@@ -968,11 +955,35 @@ const MainApp = () => {
 
             <TaskLibraryModal
                 isOpen={isLibraryModalOpen}
-                onClose={() => setIsLibraryModalOpen(false)}
-                onSelectTask={(task) => { handleSaveTask({ ...task, id: generateId() }); setIsLibraryModalOpen(false); }}
+                onClose={() => {
+                    setIsLibraryModalOpen(false);
+                    // If the user opened the library via the aspiration flow
+                    // and closes without completing, drop both the library's
+                    // initial-habit hint AND the active aspiration. Otherwise
+                    // the next time [+] is pressed we'd silently tag a fresh
+                    // task with a stale aspiration.
+                    if (aspirationHabitForLibrary) setAspirationHabitForLibrary(null);
+                    if (activeAspiration) setActiveAspiration(null);
+                }}
+                onSelectTask={(task) => {
+                    handleSaveTask({ ...task, id: generateId() });
+                    setIsLibraryModalOpen(false);
+                    setAspirationHabitForLibrary(null);
+                }}
                 onOpenCustomForm={() => { setIsLibraryModalOpen(false); setIsFormModalOpen(true); }}
+                onOpenAspirationPicker={() => {
+                    // The library's "從嚮往開始" button hands off to the
+                    // aspiration funnel. We close the library and open the
+                    // picker — activeAspiration / aspirationHabitForLibrary
+                    // start clean since the user is entering Step 1 fresh.
+                    setIsLibraryModalOpen(false);
+                    setActiveAspiration(null);
+                    setAspirationHabitForLibrary(null);
+                    setIsAspirationPickerOpen(true);
+                }}
                 yourTasks={tasks}
                 userTypeKey={user?.typeKey || null}
+                initialHabit={aspirationHabitForLibrary}
             />
 
             <LoginModal
