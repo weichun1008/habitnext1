@@ -22,10 +22,12 @@ model User {
   avatar      String?      // ★ M3 Expressive avatar id ('sunrise', 'star', etc.) — see web-app/src/lib/avatars.jsx
   typeKey     String?      // ★ 新增 — 'daisy' | 'rose' | 'orchid' | 'sunflower' (set by quiz module)
   sleepTypeKey String?     // ★ 新增 — 'stress' | 'rhythm' | 'metabolic' | 'hormone'
+  identities  String[]     @default([])  // ★ Slice K — 多身分並存（手動 / Profile 加；v1 不自動加冕）
   isActive    Boolean      @default(true)
   createdAt   DateTime     @default(now())
   tasks       Task[]
   assignments Assignment[]
+  aspirations Aspiration[]                 // ★ Slice K
 }
 
 // ============================================
@@ -129,8 +131,9 @@ model Task {
   
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  
-  history      TaskHistory[]
+
+  history          TaskHistory[]
+  aspirationHabits AspirationHabit[]   // Slice K — reverse FK from join table
 }
 
 model TaskHistory {
@@ -173,6 +176,7 @@ model PlanCategory {
   name      String                     // display label — e.g. 雛菊型, 睡眠 · 壓力
   color     String?                    // Hex color for UI
   icon      String?                    // Emoji or icon key
+  domain    String?                          // ★ Slice K — GENESIS+IO domain mapping
   order     Int      @default(0)
   isSystem  Boolean  @default(false)   // true for lib-enumerated slugs; locked from rename/delete
   createdAt DateTime @default(now())
@@ -199,4 +203,48 @@ model OfficialHabit {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// ============================================
+// Slice K — 嚮往系統
+// ============================================
+
+model Aspiration {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  text        String              // "想要快速入睡、睡眠品質好"
+  domain      String?             // GENESIS+IO domain key — 推薦來源
+
+  status      String   @default("active")   // active | achieved | archived
+  achievedAt  DateTime?
+
+  source      String   @default("user")     // user | preset (v1 沒 ai)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  habits      AspirationHabit[]
+
+  @@index([userId, status])
+}
+
+model AspirationHabit {
+  id              String      @id @default(cuid())
+  aspirationId    String
+  aspiration      Aspiration  @relation(fields: [aspirationId], references: [id], onDelete: Cascade)
+
+  // Real FK to Task with SetNull so deleting the Task leaves the
+  // AspirationHabit row intact (preserves "user once linked this aspiration
+  // to a habit" history) but clears the dangling reference.
+  taskId          String?
+  task            Task?       @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  createdAt       DateTime    @default(now())
+
+  // Prevent double-click duplicate joins (idempotent commit).
+  @@unique([aspirationId, taskId])
+  @@index([aspirationId])
+  @@index([taskId])
 }
