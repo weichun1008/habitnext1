@@ -1,19 +1,16 @@
 "use client";
 
 import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
-import { Plus, ChevronDown, ChevronUp, List as ListIcon, Crosshair } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import IconRenderer from '../IconRenderer';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 
-// FocusMap is dynamically imported — keeps recharts off this view's First
-// Load JS, kicks in only when the user actually flips to the map view.
-const FocusMap = dynamic(() => import('./FocusMap'), {
-    ssr: false,
-    loading: () => (
-        <div className="text-center py-12 text-gray-400">載入地圖…</div>
-    ),
-});
+// NOTE (2026-05-25, Slice K Task 11): the 「清單 ｜ 焦點地圖」view-mode
+// toggle was removed here. Spec v2 reframed the add-flow around the
+// aspiration picker, and FocusMap (impact × ability) is no longer in the
+// user's main path. The FocusMap component itself is kept (admin / debug
+// tool); OfficialHabit.impact / ability data + tests stay valid. Only the
+// HabitListView toggle was wrong-placed for v2's UX.
 
 const DIFFICULTY_OPTIONS = [
   { key: 'beginner',     label: '入門', color: 'emerald' },
@@ -75,9 +72,6 @@ export default function HabitListView({
   emptyText,
 }) {
   const [expandedId, setExpandedId] = useState(null);
-  // 'list' (default) shows the existing accordion; 'map' swaps in FocusMap.
-  // Toggle state lives here so flipping doesn't lose the expanded habit.
-  const [viewMode, setViewMode] = useState('list');
 
   if (habits.length === 0) {
     return (
@@ -91,84 +85,6 @@ export default function HabitListView({
     setExpandedId(prev => prev === habitId ? null : habitId);
   };
 
-  // Build the data slice the map needs from the existing habits prop.
-  // HabitCategory.color isn't on the habit object; default to a neutral
-  // emerald so dots are always visible even before per-domain colors flow.
-  const mapHabits = habits.map(h => ({
-    id: h.id,
-    name: h.name,
-    impact: typeof h.impact === 'number' ? h.impact : 3,
-    ability: typeof h.ability === 'number' ? h.ability : 3,
-    color: '#10B981',
-  }));
-
-  const handleMapSelect = (mapHabit) => {
-    // Tap a dot → switch back to list view with that habit auto-expanded,
-    // so the user lands on the same accordion row + difficulty picker
-    // they would have used in list mode.
-    setExpandedId(mapHabit.id);
-    setViewMode('list');
-  };
-
-  return (
-    <>
-      {/* View-mode toggle — chip switcher. Order: 清單 (default) | 焦點地圖. */}
-      <div className="flex items-center gap-1 mb-3 p-1 bg-gray-100 rounded-lg w-fit">
-        <button
-          type="button"
-          onClick={() => setViewMode('list')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-colors ${
-            viewMode === 'list' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-          }`}
-          aria-pressed={viewMode === 'list'}
-        >
-          <ListIcon size={14} />
-          清單
-        </button>
-        <button
-          type="button"
-          onClick={() => setViewMode('map')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-colors ${
-            viewMode === 'map' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-          }`}
-          aria-pressed={viewMode === 'map'}
-        >
-          <Crosshair size={14} />
-          焦點地圖
-        </button>
-      </div>
-
-      {viewMode === 'map' ? (
-        <div>
-          <FocusMap habits={mapHabits} onSelect={handleMapSelect} />
-          <p className="text-xs text-gray-500 mt-2 px-1 leading-relaxed">
-            點選右上角（高影響 × 高容易）的習慣開始，最容易看到效果。
-          </p>
-        </div>
-      ) : (
-        <ListBody
-          habits={habits}
-          expandedId={expandedId}
-          toggleExpand={toggleExpand}
-          selectedDifficulty={selectedDifficulty}
-          setSelectedDifficulty={setSelectedDifficulty}
-          onSelectHabit={onSelectHabit}
-        />
-      )}
-    </>
-  );
-}
-
-// ListBody — the existing accordion rendering, factored out so the view-mode
-// toggle stays at the same DOM level above both list + map.
-function ListBody({
-  habits,
-  expandedId,
-  toggleExpand,
-  selectedDifficulty,
-  setSelectedDifficulty,
-  onSelectHabit,
-}) {
   return (
     <div className="space-y-3">
       {habits.map(habit => {
