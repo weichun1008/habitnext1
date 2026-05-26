@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { name, color, icon, order } = body;
+        const { name, color, icon, order, domain } = body;
 
         if (!name?.trim()) {
             return NextResponse.json({ error: '請輸入分類名稱' }, { status: 400 });
@@ -47,7 +47,10 @@ export async function POST(request) {
                 name: name.trim(),
                 color: color || '#10b981',
                 icon: icon || null,
-                order: newOrder
+                order: newOrder,
+                // domain is a free-form GENESIS+IO label; '' from the form is
+                // treated as "no mapping" and stored as null.
+                domain: (typeof domain === 'string' && domain.trim()) ? domain.trim() : null,
             }
         });
         return NextResponse.json(category);

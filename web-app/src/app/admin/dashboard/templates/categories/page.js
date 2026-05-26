@@ -3,17 +3,22 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, Plus, Edit2, Trash2, Save, X, Lock } from 'lucide-react';
+import { GENESIS_DOMAINS } from '@/lib/aspirations';
 
 const COLOR_OPTIONS = [
     '#10B981', '#F59E0B', '#3B82F6', '#8B5CF6', '#EF4444',
     '#EC4899', '#06B6D4', '#84CC16', '#F97316', '#6366F1'
 ];
 
+// Empty form payload — extracted so add / edit / cancel reset to the same
+// shape and so adding a new field is a single-line change.
+const EMPTY_FORM = { name: '', color: '#10B981', icon: '', domain: '' };
+
 export default function PlanCategoriesPage() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState(null);
-    const [formData, setFormData] = useState({ name: '', color: '#10B981', icon: '' });
+    const [formData, setFormData] = useState(EMPTY_FORM);
     const [isAdding, setIsAdding] = useState(false);
 
     useEffect(() => {
@@ -49,7 +54,7 @@ export default function PlanCategoriesPage() {
 
             if (res.ok) {
                 fetchCategories();
-                setFormData({ name: '', color: '#10B981', icon: '' });
+                setFormData(EMPTY_FORM);
                 setIsAdding(false);
             } else {
                 const error = await res.json();
@@ -71,7 +76,7 @@ export default function PlanCategoriesPage() {
             if (res.ok) {
                 fetchCategories();
                 setEditingId(null);
-                setFormData({ name: '', color: '#10B981', icon: '' });
+                setFormData(EMPTY_FORM);
             } else {
                 const error = await res.json();
                 alert(error.error || '更新失敗');
@@ -105,7 +110,8 @@ export default function PlanCategoriesPage() {
         setFormData({
             name: category.name,
             color: category.color || '#10B981',
-            icon: category.icon || ''
+            icon: category.icon || '',
+            domain: category.domain || '',
         });
         setIsAdding(false);
     };
@@ -113,7 +119,7 @@ export default function PlanCategoriesPage() {
     const cancelEdit = () => {
         setEditingId(null);
         setIsAdding(false);
-        setFormData({ name: '', color: '#10B981', icon: '' });
+        setFormData(EMPTY_FORM);
     };
 
     return (
@@ -143,7 +149,7 @@ export default function PlanCategoriesPage() {
             {isAdding && (
                 <div className="admin-card p-4 space-y-4">
                     <h3 className="text-white font-medium">新增分類</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="admin-label">名稱</label>
                             <input
@@ -163,6 +169,19 @@ export default function PlanCategoriesPage() {
                                 value={formData.icon}
                                 onChange={e => setFormData({ ...formData, icon: e.target.value })}
                             />
+                        </div>
+                        <div>
+                            <label className="admin-label">面向（嚮往推薦用）</label>
+                            <select
+                                className="admin-input"
+                                value={formData.domain}
+                                onChange={e => setFormData({ ...formData, domain: e.target.value })}
+                            >
+                                <option value="">（無 — 不參與嚮往推薦）</option>
+                                {GENESIS_DOMAINS.map(d => (
+                                    <option key={d} value={d}>{d}</option>
+                                ))}
+                            </select>
                         </div>
                         <div>
                             <label className="admin-label">顏色</label>
@@ -202,6 +221,7 @@ export default function PlanCategoriesPage() {
                                 <th>圖示</th>
                                 <th>名稱</th>
                                 <th>Slug</th>
+                                <th>面向</th>
                                 <th>顏色</th>
                                 <th>類型</th>
                                 <th>操作</th>
@@ -236,6 +256,18 @@ export default function PlanCategoriesPage() {
                                                 )}
                                             </td>
                                             <td className="text-gray-400 text-xs font-mono">{cat.slug || '—'}</td>
+                                            <td>
+                                                <select
+                                                    className="admin-input text-xs"
+                                                    value={formData.domain}
+                                                    onChange={e => setFormData({ ...formData, domain: e.target.value })}
+                                                >
+                                                    <option value="">—</option>
+                                                    {GENESIS_DOMAINS.map(d => (
+                                                        <option key={d} value={d}>{d}</option>
+                                                    ))}
+                                                </select>
+                                            </td>
                                             <td>
                                                 <div className="flex gap-1 flex-wrap">
                                                     {COLOR_OPTIONS.map(color => (
@@ -279,6 +311,9 @@ export default function PlanCategoriesPage() {
                                             <td className="text-2xl">{cat.icon || '📁'}</td>
                                             <td className="text-white font-medium">{cat.name}</td>
                                             <td className="text-gray-400 text-xs font-mono">{cat.slug || '—'}</td>
+                                            <td className="text-gray-300 text-xs">
+                                                {cat.domain || <span className="text-gray-600">—</span>}
+                                            </td>
                                             <td>
                                                 <div
                                                     className="w-6 h-6 rounded"

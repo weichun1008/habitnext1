@@ -7,7 +7,7 @@ import { prisma } from '@/lib/prisma';
 export async function PUT(request, { params }) {
     try {
         const body = await request.json();
-        const { name, color, icon, order } = body;
+        const { name, color, icon, order, domain } = body;
 
         const existing = await prisma.planCategory.findUnique({ where: { id: params.id } });
         if (!existing) {
@@ -18,6 +18,11 @@ export async function PUT(request, { params }) {
         if (color !== undefined) data.color = color;
         if (icon !== undefined) data.icon = icon;
         if (order !== undefined) data.order = order;
+        // domain is editable on both system and user-created rows. '' from
+        // the form means "no mapping" and is stored as null.
+        if (domain !== undefined) {
+            data.domain = (typeof domain === 'string' && domain.trim()) ? domain.trim() : null;
+        }
 
         // Name edits only allowed on non-system rows
         if (name && !existing.isSystem) {
