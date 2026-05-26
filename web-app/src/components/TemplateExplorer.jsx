@@ -17,7 +17,12 @@ const fallbackForSlug = (slug) => {
     return { name: slug, color: '#10b981', icon: '' };
 };
 
-const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null, userSleepTypeKey = null }) => {
+// initialTemplate (Slice K wiring): when set, the explorer auto-opens that
+// template's detail panel as soon as the templates list finishes loading.
+// Used by the aspiration recommendation flow so picking a template card in
+// the recommendation panel lands the user directly on that template's
+// detail view here, instead of forcing them to scroll-find it again.
+const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null, userSleepTypeKey = null, initialTemplate = null }) => {
     const [templates, setTemplates] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -37,6 +42,17 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
             fetchAll();
         }
     }, [isOpen]);
+
+    // After templates load (or are reloaded), honour the initialTemplate prop
+    // by opening that template's detail panel automatically. We match by id
+    // against the freshly-fetched list so the panel reads the canonical
+    // server row (the one the recommendation API gave us is a subset).
+    useEffect(() => {
+        if (!isOpen || !initialTemplate?.id) return;
+        if (loading) return;
+        const match = templates.find(t => t.id === initialTemplate.id) || initialTemplate;
+        setDetailTemplate(match);
+    }, [isOpen, initialTemplate, loading, templates]);
 
     const fetchAll = async () => {
         setLoading(true);
@@ -116,7 +132,12 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
             });
 
             if (res.ok) {
-                onJoin(); // Refresh tasks
+                // Pass the newly-created assignment back so the parent can
+                // tag it with AspirationHabit rows when an aspiration is the
+                // entry point (Slice K wiring). Existing callers that ignore
+                // the arg keep their behavior because JS is permissive.
+                const assignment = await res.json().catch(() => null);
+                onJoin(assignment);
                 onClose();
             } else {
                 alert('加入失敗，請稍後再試');
