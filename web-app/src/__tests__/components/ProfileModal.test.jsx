@@ -30,7 +30,12 @@ describe('ProfileModal', () => {
             />
         );
 
-        expect(screen.getByText('個人資料')).toBeInTheDocument();
+        // After Slice K Task 8 the string 個人資料 appears twice — once in
+        // the header (h3) and once on the tab switcher button. Scope to the
+        // h3 to keep this assertion specific to "modal is rendering with
+        // the profile tab active".
+        const header = screen.getByRole('heading', { level: 3 });
+        expect(header).toHaveTextContent('個人資料');
         expect(screen.getByDisplayValue('測試用戶')).toBeInTheDocument();
         expect(screen.getByDisplayValue('0912345678')).toBeInTheDocument();
     });

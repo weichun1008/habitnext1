@@ -1,10 +1,16 @@
 "use client";
 
 import React, { useState } from 'react';
-import { X, User, Phone, Lock, Save, Loader, Eye, EyeOff, LogOut } from 'lucide-react';
+import { X, User, Phone, Lock, Save, Loader, Eye, EyeOff, LogOut, Sparkles } from 'lucide-react';
 import { AVATAR_DEFS, DEFAULT_AVATAR_ID, getAvatarDef } from '@/lib/avatars';
+import MyAspirationsTab from './profile/MyAspirationsTab';
 
 const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
+    // Two tabs (Slice K Task 8): 'profile' (default — existing avatar/name/
+    // phone/password form) and 'aspirations' (list + manage user's
+    // 我的嚮往). Footer save button only renders on 'profile' tab — the
+    // aspirations tab has no batch save, each row mutates inline.
+    const [activeTab, setActiveTab] = useState('profile');
     const [formData, setFormData] = useState({
         nickname: user?.nickname || '',
         phone: user?.phone || '',
@@ -129,16 +135,51 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
                 {/* Header */}
                 <div className="flex items-center justify-between p-5 border-b border-gray-100 shrink-0">
                     <h3 className="font-bold text-lg text-gray-800 flex items-center gap-2">
-                        <User size={20} className="text-indigo-500" />
-                        個人資料
+                        {activeTab === 'profile' ? (
+                            <><User size={20} className="text-indigo-500" /> 個人資料</>
+                        ) : (
+                            <><Sparkles size={20} className="text-emerald-500" /> 我的嚮往</>
+                        )}
                     </h3>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1 -m-1">
                         <X size={24} />
                     </button>
                 </div>
 
-                {/* Content (scrollable) */}
+                {/* Tab switcher */}
+                <div className="flex border-b border-gray-100 shrink-0 px-2">
+                    <button
+                        type="button"
+                        onClick={() => setActiveTab('profile')}
+                        aria-pressed={activeTab === 'profile'}
+                        className={`flex-1 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+                            activeTab === 'profile'
+                                ? 'border-indigo-500 text-indigo-600'
+                                : 'border-transparent text-gray-500 hover:text-gray-700'
+                        }`}
+                    >
+                        個人資料
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setActiveTab('aspirations')}
+                        aria-pressed={activeTab === 'aspirations'}
+                        className={`flex-1 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+                            activeTab === 'aspirations'
+                                ? 'border-emerald-500 text-emerald-600'
+                                : 'border-transparent text-gray-500 hover:text-gray-700'
+                        }`}
+                    >
+                        我的嚮往
+                    </button>
+                </div>
+
+                {/* Content (scrollable) — branches by activeTab. */}
                 <div className="p-5 space-y-4 flex-1 overflow-y-auto">
+                    {activeTab === 'aspirations' && (
+                        <MyAspirationsTab userId={user?.id} />
+                    )}
+                    {activeTab === 'profile' && (<>
                     {/* Avatar Preview + Picker — Material 3 Expressive set */}
                     {(() => {
                         const previewId = formData.avatar || DEFAULT_AVATAR_ID;
@@ -283,26 +324,31 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
                     {success && (
                         <div className="text-emerald-600 text-sm bg-emerald-50 p-3 rounded-lg">{success}</div>
                     )}
+                    </>)}
                 </div>
 
-                {/* Footer (pinned) */}
+                {/* Footer (pinned) — Save / Cancel only on the profile tab;
+                    aspirations rows mutate inline so there's nothing to save
+                    in batch. Logout stays visible on both tabs. */}
                 <div className="p-5 border-t border-gray-100 space-y-3 shrink-0">
-                    <div className="flex gap-3">
-                        <button
-                            onClick={onClose}
-                            className="flex-1 py-2.5 border border-gray-200 rounded-xl font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-                        >
-                            取消
-                        </button>
-                        <button
-                            onClick={handleSave}
-                            disabled={saving}
-                            className="flex-1 py-2.5 bg-indigo-500 text-white rounded-xl font-medium hover:bg-indigo-600 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
-                        >
-                            {saving ? <Loader size={18} className="animate-spin" /> : <Save size={18} />}
-                            儲存
-                        </button>
-                    </div>
+                    {activeTab === 'profile' && (
+                        <div className="flex gap-3">
+                            <button
+                                onClick={onClose}
+                                className="flex-1 py-2.5 border border-gray-200 rounded-xl font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                            >
+                                取消
+                            </button>
+                            <button
+                                onClick={handleSave}
+                                disabled={saving}
+                                className="flex-1 py-2.5 bg-indigo-500 text-white rounded-xl font-medium hover:bg-indigo-600 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                            >
+                                {saving ? <Loader size={18} className="animate-spin" /> : <Save size={18} />}
+                                儲存
+                            </button>
+                        </div>
+                    )}
                     {onLogout && (
                         <button
                             onClick={onLogout}
