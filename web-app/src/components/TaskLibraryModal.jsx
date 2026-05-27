@@ -39,6 +39,14 @@ const TaskLibraryModal = ({
     const [pendingCue, setPendingCue] = useState(null);        // chosen anchor string (null = skip)
     const [identityChoice, setIdentityChoice] = useState(null);
 
+    // Slice L — candidate-pool feedback: after each save we keep the modal
+    // open and show a transient toast + a persistent footer count. The
+    // toast self-clears after ~2.2s via a setTimeout we track in state so
+    // rapid re-saves can cancel the previous one cleanly.
+    const [toast, setToast] = useState(null);          // { text } | null
+    const [toastTimer, setToastTimer] = useState(null);
+    const [savedThisSession, setSavedThisSession] = useState(0);
+
     useEffect(() => {
         if (isOpen) {
             fetchHabits();
@@ -62,6 +70,9 @@ const TaskLibraryModal = ({
             setPendingHabit(null);
             setPendingCue(null);
             setIdentityChoice(null);
+            // Slice L — reset session-only feedback on each fresh open
+            setToast(null);
+            setSavedThisSession(0);
         }
     }, [isOpen, initialHabit?.id]);
 
@@ -142,10 +153,27 @@ const TaskLibraryModal = ({
             unit: config.unit || '次',
             stepValue: config.stepValue || 1,
             subtasks: config.subtasks || [],
+            // Slice L — flow into the candidate pool by default. officialHabitId
+            // lets the focus-map sliders seed from the catalog impact/ability.
+            status: 'candidate',
+            officialHabitId: habit.id,
         };
         onSelectTask(task);
+
+        // Slice L — reset to domain grid so the user can keep adding without
+        // re-opening the modal. Show a transient toast confirming the save.
+        setPendingHabit(null);
         setPendingCue(null);
         setIdentityChoice(null);
+        setView('domain');
+        setSelectedDomain(null);
+        setSearch('');
+
+        setSavedThisSession(n => n + 1);
+        if (toastTimer) clearTimeout(toastTimer);
+        const timer = setTimeout(() => setToast(null), 2200);
+        setToastTimer(timer);
+        setToast({ text: `+1 候選：${habit.name}` });
     };
 
     const visibleHabits = (() => {
@@ -187,6 +215,12 @@ const TaskLibraryModal = ({
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">
             <div className="bg-white w-full md:max-w-xl h-[90dvh] md:h-auto md:max-h-[85dvh] md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up">
+                {/* Slice L — transient toast confirming each save */}
+                {toast && (
+                    <div className="mx-6 mt-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-bold flex items-center gap-2 animate-fade-in-up">
+                        <Sparkles size={14} /> {toast.text}
+                    </div>
+                )}
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         {view !== 'domain' && (
@@ -348,6 +382,23 @@ const TaskLibraryModal = ({
                         </>
                     )}
                 </div>
+
+                {/* Slice L — persistent footer count, only after >=1 save this session.
+                    Reminds the user that closing won't lose their candidate pool. */}
+                {savedThisSession > 0 && (
+                    <div className="px-6 py-3 border-t border-gray-100 bg-amber-50 flex items-center justify-between gap-3 flex-shrink-0">
+                        <p className="text-xs text-amber-700">
+                            <span className="font-bold">{savedThisSession}</span> 個已加候選 · 關閉後到 daily 一起評分
+                        </p>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="text-xs font-bold text-amber-700 underline hover:text-amber-800"
+                        >
+                            完成 →
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
