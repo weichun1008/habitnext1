@@ -1031,8 +1031,16 @@ const MainApp = () => {
                 }}
                 onSelectTask={(task) => {
                     handleSaveTask({ ...task, id: generateId() });
-                    setIsLibraryModalOpen(false);
-                    setAspirationHabitForLibrary(null);
+                    // Slice L — only auto-close on the aspiration-derived
+                    // single-habit flow. Normal batch adding keeps the modal
+                    // open so the library's toast + persist banner can guide
+                    // the user to add 3-5 candidates before exiting (Fogg's
+                    // Behavior Swarm). User dismisses via the persist banner's
+                    // 「完成 →」 button or the modal's X.
+                    if (aspirationHabitForLibrary) {
+                        setIsLibraryModalOpen(false);
+                        setAspirationHabitForLibrary(null);
+                    }
                 }}
                 onOpenCustomForm={() => { setIsLibraryModalOpen(false); setIsFormModalOpen(true); }}
                 onOpenAspirationPicker={() => {
