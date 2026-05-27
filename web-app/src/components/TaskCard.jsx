@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp } from 'lucide-react';
 import SwipeReveal from './taskCard/SwipeReveal';
 import TaskHoverDots from './taskCard/TaskHoverDots';
@@ -28,6 +28,22 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
     // remount) — keeping the card list visually tidy by default. Tapping the
     // chevron flips it; tapping the card body still opens the detail modal.
     const [subtasksExpanded, setSubtasksExpanded] = useState(false);
+
+    // Check-pulse trigger — when isCompleted transitions false → true we
+    // bump pulseKey, which re-mounts the Check icon and runs the
+    // animate-check-pop keyframe. Avoids needing imperative animation
+    // libraries. The ref tracks previous value across renders.
+    const [pulseKey, setPulseKey] = useState(0);
+    const prevCompletedRef = useRef(isCompletedOnDate(task, dateStr));
+    useEffect(() => {
+        const nowCompleted = isCompletedOnDate(task, dateStr);
+        if (!prevCompletedRef.current && nowCompleted) {
+            setPulseKey(k => k + 1);
+        }
+        prevCompletedRef.current = nowCompleted;
+        // task.history changing is the primary trigger; dateStr changes when
+        // user navigates the week strip so we reset baseline then too.
+    }, [task.history, dateStr, task]);
 
     let isCompleted, currentVal, targetVal, displayStatus, progressPercent;
 
@@ -213,7 +229,16 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                                     disabled={isLocked}
                                     className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-gray-200 hover:border-emerald-400'} ${isLocked ? 'opacity-60 cursor-not-allowed' : ''}`}
                                 >
-                                    {isCompleted && <Check size={14} className="text-white" strokeWidth={3} />}
+                                    {isCompleted && (
+                                        // key={pulseKey} re-mounts the Check on every
+                                        // false→true transition so animate-check-pop replays.
+                                        <Check
+                                            key={pulseKey}
+                                            size={14}
+                                            className="text-white animate-check-pop"
+                                            strokeWidth={3}
+                                        />
+                                    )}
                                 </button>
                             )}
                         </div>
