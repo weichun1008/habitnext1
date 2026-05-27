@@ -1,19 +1,24 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-// GET: Fetch all tasks for a user (requires userId in query params for now, or header)
-// In a real app, we'd use session/cookies. For this prototype, we'll pass userId header.
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
+    const assignmentId = searchParams.get('assignmentId');
+    // Slice L — daily view defaults to active only. Pass ?status=candidate
+    // or ?status=all to see other statuses.
+    const status = searchParams.get('status') || 'active';
 
     if (!userId) {
         return NextResponse.json({ error: 'User ID required' }, { status: 400 });
     }
 
     try {
+        const where = { userId };
+        if (assignmentId) where.assignmentId = assignmentId;
+        if (status !== 'all') where.status = status;
         const tasks = await prisma.task.findMany({
-            where: { userId },
+            where,
             include: { history: true },
             orderBy: { createdAt: 'asc' }
         });
@@ -33,6 +38,8 @@ export async function POST(request) {
             return NextResponse.json({ error: 'User ID required' }, { status: 400 });
         }
 
+        // Slice L — validate status; default candidate if missing/invalid
+        const status = ['candidate', 'active', 'archived'].includes(taskData.status) ? taskData.status : 'candidate';
         const task = await prisma.task.create({
             data: {
                 userId,
@@ -51,6 +58,8 @@ export async function POST(request) {
                 stepValue: taskData.stepValue,
                 date: taskData.date,
                 time: taskData.time,
+                status,
+                officialHabitId: taskData.officialHabitId ?? null,
             },
             include: { history: true }
         });
