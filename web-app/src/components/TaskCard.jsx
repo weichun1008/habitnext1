@@ -89,10 +89,11 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
         onUpdate(task, action, ...args);
     };
 
-    // Card border accent: emerald when complete, indigo dashed for future,
-    // gray for past read-only, neutral otherwise.
+    // Slice M — completed cards use a calm "done" treatment: 55% opacity, gray
+    // border (not emerald), and a 3px emerald accent rail on the left rendered
+    // as an absolute element. Title keeps its normal color (no strikethrough).
     const borderCls = isCompleted
-        ? 'border-emerald-200 bg-emerald-50/30'
+        ? 'border-gray-200 opacity-55'
         : isFuture
             ? 'border-indigo-200 bg-indigo-50/20 border-dashed'
             : 'border-gray-100';
@@ -102,6 +103,12 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
             onClick={onClick}
             className={`bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${borderCls} ${isPast && !isCompleted ? 'opacity-75' : ''}`}
         >
+
+            {/* Slice M — left emerald accent rail when completed (non-strikethrough
+                indicator that the task is done; complements the checkmark) */}
+            {isCompleted && (
+                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-emerald-400" aria-hidden />
+            )}
 
             {/* Background Progress for Quant or Period Tasks */}
             {(isQuant || isPeriod) && (
@@ -129,7 +136,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
                                 <span className="text-gray-300">→</span>
                             </p>
                         )}
-                        <h3 className={`font-bold text-sm ${isCompleted && !isQuant && !isPeriod ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                        <h3 className="font-bold text-sm text-gray-800">
                             {task.title}
                         </h3>
                         <p className="text-xs text-gray-400 line-clamp-1">
