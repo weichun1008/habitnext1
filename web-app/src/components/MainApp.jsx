@@ -15,7 +15,7 @@ import { generateId, getTodayStr, isTaskDueToday, isCompletedOnDate } from '@/li
 import { cueOrderFor } from '@/lib/anchors';
 import { USER_TYPE_PROFILES } from '@/lib/typeKeys';
 import { SLEEP_TYPE_PROFILES } from '@/lib/sleepTypeKeys';
-import { CATEGORY_CONFIG } from '@/lib/constants';
+import { CATEGORY_CONFIG, domainToIconKey } from '@/lib/constants';
 import { visibleSubtasks, computeChecklistValue } from '@/lib/subtasks';
 import PlanGroup from './PlanGroup';
 import TemplateExplorer from './TemplateExplorer';
@@ -473,6 +473,75 @@ const MainApp = () => {
     // RecommendationPanel renders on top because it's gated by activeAspiration.
     const handleAspirationSelected = (aspiration) => {
         setActiveAspiration(aspiration);
+    };
+
+    // RecommendationPanel "加入候選": create a Task with status='candidate'
+    // from the OfficialHabit + its first enabled difficulty (typically
+    // beginner). The user defers difficulty / anchor / identity choices to
+    // the FocusMap rating step. We keep the panel open so the user can
+    // accumulate multiple candidates before evaluating.
+    const handleAddHabitAsCandidate = async (habit, aspiration) => {
+        if (!user?.id || !habit) {
+            console.warn('[MainApp] add candidate aborted — missing user or habit');
+            return;
+        }
+
+        const difficulties = habit.difficulties || {};
+        const firstEnabledKey = ['beginner', 'intermediate', 'challenge']
+            .find(k => difficulties[k]?.enabled);
+        const diffConfig = firstEnabledKey ? difficulties[firstEnabledKey] : {};
+
+        const taskPayload = {
+            userId: user.id,
+            title: habit.name,
+            details: habit.description || '',
+            type: diffConfig.type || 'binary',
+            category: habit.icon || domainToIconKey(habit.category),
+            frequency: diffConfig.recurrence?.type || 'daily',
+            recurrence: diffConfig.recurrence || { type: 'daily', interval: 1, endType: 'never' },
+            reminder: { enabled: false, offset: 0 },
+            dailyTarget: diffConfig.dailyTarget || 1,
+            unit: diffConfig.unit || '次',
+            stepValue: diffConfig.stepValue || 1,
+            subtasks: diffConfig.subtasks || [],
+            officialHabitId: habit.id,
+            status: 'candidate',
+        };
+
+        try {
+            const res = await fetch('/api/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(taskPayload),
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const created = await res.json();
+
+            setCandidateCount(c => c + 1);
+
+            // Tag with aspiration — best-effort, same pattern as handleSaveTask.
+            if (aspiration?.id) {
+                fetch(`/api/aspirations/${aspiration.id}/habits`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ taskId: created.id }),
+                }).catch(e => console.warn('[MainApp] aspiration habit tag failed:', e));
+            }
+        } catch (e) {
+            console.error('[MainApp] add candidate failed:', e);
+            alert('加入候選失敗，請再試一次');
+            throw e;  // let the panel's pickingId clear so the button can retry
+        }
+    };
+
+    // RecommendationPanel sticky-CTA "開始評分": tear down the aspiration
+    // chain (panel + picker) and open the focus-map modal directly. Bypasses
+    // the dashboard banner's 5+ threshold for users who want to evaluate
+    // mid-session.
+    const handleOpenFocusMapFromPanel = () => {
+        setIsAspirationPickerOpen(false);
+        setActiveAspiration(null);
+        setIsFocusMapModalOpen(true);
     };
 
     // RecommendationPanel back arrow → keep picker open, drop activeAspiration
@@ -1119,6 +1188,8 @@ const MainApp = () => {
                     onBack={handleRecommendationBack}
                     onPickTemplate={handlePickTemplateFromAspiration}
                     onPickHabit={handlePickHabitFromAspiration}
+                    onAddHabitAsCandidate={handleAddHabitAsCandidate}
+                    onOpenFocusMap={handleOpenFocusMapFromPanel}
                     onSkipToTemplates={handleSkipToTemplates}
                     onSkipToHabits={handleSkipToHabits}
                 />
