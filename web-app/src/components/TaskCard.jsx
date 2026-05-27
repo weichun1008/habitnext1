@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp } from 'lucide-react';
+import SwipeReveal from './taskCard/SwipeReveal';
+import TaskHoverDots from './taskCard/TaskHoverDots';
+import TaskActionMenu from './taskCard/TaskActionMenu';
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import {
@@ -15,7 +18,7 @@ import { visibleSubtasks } from '@/lib/subtasks';
 // `viewingDate` (yyyy-mm-dd) lets the card render any day's state — used by
 // the daily view's interactive week strip. Defaults to today so existing
 // callers that don't pass it (other views) behave unchanged.
-const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
+const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction }) => {
     const todayStr = getTodayStr();
     const dateStr = viewingDate || todayStr;
     const isFuture = isFutureDate(dateStr, todayStr);
@@ -89,19 +92,49 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
         onUpdate(task, action, ...args);
     };
 
-    // Card border accent: emerald when complete, indigo dashed for future,
-    // gray for past read-only, neutral otherwise.
+    // Slice M — completed cards use a calm "done" treatment: 55% opacity, gray
+    // border (not emerald), and a 3px emerald accent rail on the left rendered
+    // as an absolute element. Title keeps its normal color (no strikethrough).
     const borderCls = isCompleted
-        ? 'border-emerald-200 bg-emerald-50/30'
+        ? 'border-gray-200 opacity-55'
         : isFuture
             ? 'border-indigo-200 bg-indigo-50/20 border-dashed'
             : 'border-gray-100';
 
     return (
+        <SwipeReveal
+            rightActions={
+                <TaskActionMenu
+                    taskId={task.id}
+                    taskTitle={task.title}
+                    variant="swipe"
+                    onAction={(action, success) => { if (success) onAfterAction?.(action); }}
+                />
+            }
+            onSwipeRight={() => {
+                if (!isLocked) handleUpdate('toggle');
+            }}
+        >
         <div
             onClick={onClick}
             className={`bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${borderCls} ${isPast && !isCompleted ? 'opacity-75' : ''}`}
         >
+
+            {/* Slice M — left emerald accent rail when completed (non-strikethrough
+                indicator that the task is done; complements the checkmark) */}
+            {isCompleted && (
+                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-emerald-400" aria-hidden />
+            )}
+
+            {/* Slice M — desktop hover dots top-right */}
+            <TaskHoverDots>
+                <TaskActionMenu
+                    taskId={task.id}
+                    taskTitle={task.title}
+                    variant="popover"
+                    onAction={(action, success) => { if (success) onAfterAction?.(action); }}
+                />
+            </TaskHoverDots>
 
             {/* Background Progress for Quant or Period Tasks */}
             {(isQuant || isPeriod) && (
@@ -129,7 +162,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
                                 <span className="text-gray-300">→</span>
                             </p>
                         )}
-                        <h3 className={`font-bold text-sm ${isCompleted && !isQuant && !isPeriod ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                        <h3 className="font-bold text-sm text-gray-800">
                             {task.title}
                         </h3>
                         <p className="text-xs text-gray-400 line-clamp-1">
@@ -268,6 +301,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
                 </div>
             )}
         </div>
+        </SwipeReveal>
     );
 };
 
