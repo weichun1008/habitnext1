@@ -65,4 +65,61 @@ export const LIFE_MOMENTS_GROUPED = ['morning', 'noon', 'evening', 'work', 'comm
   }))
   .filter(g => g.items.length > 0);
 
+// Time-of-day order for each built-in anchor. Higher number = later in day.
+// The 3 "any" group anchors intentionally omitted — they fall through to 99
+// (anytime bucket) so they sort alongside custom cues.
+//
+// Used by daily-view sort to walk the user's day from morning to bedtime.
+export const CUE_ORDER = {
+  // 早晨 (morning)
+  '起床後':                     1,
+  '喝完第一杯水後':             2,
+  '刷完牙後':                   3,
+  '洗完臉後':                   4,
+  '吃完早餐後':                 5,
+  '出門前':                     6,
+
+  // 通勤 (commute) — morning side
+  '通勤路上':                   7,
+  '等公車／捷運時':             8,
+  '等紅綠燈時':                 9,
+
+  // 到工作場所
+  '到辦公室／工作場所後':       10,
+
+  // 工作 (work) — morning to afternoon
+  '開電腦／開始工作前':         11,
+  '手機第一次解鎖時':           12,
+  '泡咖啡／泡茶時':             13,
+
+  // 中午 (noon)
+  '午餐前':                     14,
+  '午餐後':                     15,
+  '午間休息時':                 16,
+
+  // 工作 (work) — afternoon side
+  '結束一個會議後':             17,
+  '完成一項任務後':             18,
+  '站起來伸展時':               19,
+
+  // 晚上 (evening)
+  '下班離開工作場所後':         20,
+  '回家進門後':                 21,
+  '晚餐前':                     22,
+  '晚餐後':                     23,
+  '洗完澡後':                   24,
+  '上床睡覺前':                 25,
+  '睡前躺上床後':               26,
+  '關燈前':                     27,
+};
+
+// Resolves a Task.cue string to its position in the day:
+//   built-in anchor (e.g. 起床後) → 1..27 by time
+//   "any" anchor (e.g. 排隊／等候時) or custom cue (any other string) → 99
+//   no cue (null/undefined/empty) → 100 (sort last)
+export function cueOrderFor(cue) {
+  if (!cue) return 100;
+  return CUE_ORDER[cue] ?? 99;
+}
+
 export const CUSTOM_ANCHOR_MAX_LENGTH = 30;
