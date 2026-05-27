@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Sparkles, Leaf, Loader, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Sparkles, Leaf, Loader, ChevronRight, Plus, Check, Target } from 'lucide-react';
 
 // AspirationRecommendationPanel — Slice K, Step 2 of the new-add flow.
 // Spec: docs/superpowers/specs/2026-05-23-slice-K-aspiration-system-design.md §3.3
@@ -66,7 +66,7 @@ function TemplateCard({ template, onPick, picking }) {
     );
 }
 
-function HabitCard({ habit, onPick, picking }) {
+function HabitCard({ habit, onPick, onAddCandidate, picking, addedAsCandidate }) {
     // Difficulties keys are pre-sorted by the enum order, but the seed habit
     // shape uses string keys so just look at which are enabled.
     const enabledLevels = ['beginner', 'intermediate', 'challenge'].filter(
@@ -77,36 +77,66 @@ function HabitCard({ habit, onPick, picking }) {
         if (k === 'intermediate') return '進階';
         return '挑戰';
     });
+
+    // Once user added this habit to candidate pool in this panel session,
+    // both CTAs lock to "已加入" read-only. Prevents the same habit getting
+    // dropped into both 'active' and 'candidate' status from two clicks.
+    const locked = addedAsCandidate || picking;
+
     return (
-        <button
-            type="button"
-            onClick={onPick}
-            disabled={picking}
-            className="w-full text-left p-3 rounded-xl border border-gray-200 bg-white hover:border-emerald-300 hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-            <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0 flex-1">
-                    <h5 className="font-bold text-sm text-gray-800 leading-snug">
-                        {habit.name}
-                    </h5>
-                    {habit.description && (
-                        <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
-                            {habit.description}
-                        </p>
-                    )}
-                    {levelLabels.length > 0 && (
-                        <p className="text-[11px] text-gray-400 mt-1.5">
-                            {levelLabels.join(' · ')}
-                        </p>
-                    )}
-                </div>
-                {picking ? (
-                    <Loader size={14} className="animate-spin text-emerald-500 mt-1" />
-                ) : (
-                    <ChevronRight size={16} className="text-gray-400 flex-shrink-0 mt-1" />
+        <div className={`p-3 rounded-xl border transition-all ${
+            addedAsCandidate
+                ? 'border-emerald-200 bg-emerald-50/40'
+                : 'border-gray-200 bg-white hover:border-emerald-300 hover:shadow-sm'
+        }`}>
+            <div className="min-w-0">
+                <h5 className="font-bold text-sm text-gray-800 leading-snug">
+                    {habit.name}
+                </h5>
+                {habit.description && (
+                    <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
+                        {habit.description}
+                    </p>
+                )}
+                {levelLabels.length > 0 && (
+                    <p className="text-[11px] text-gray-400 mt-1.5">
+                        {levelLabels.join(' · ')}
+                    </p>
                 )}
             </div>
-        </button>
+
+            {/* Two CTAs: candidate (defer-decision) + direct-add (commit now) */}
+            <div className="mt-3 grid grid-cols-2 gap-2">
+                <button
+                    type="button"
+                    onClick={onAddCandidate}
+                    disabled={locked}
+                    className={`flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors disabled:cursor-not-allowed ${
+                        addedAsCandidate
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : 'bg-white border border-gray-200 text-gray-700 hover:border-emerald-300 hover:bg-emerald-50'
+                    }`}
+                >
+                    {addedAsCandidate ? (
+                        <><Check size={14} /> 已加入候選</>
+                    ) : (
+                        <><Plus size={14} /> 加入候選</>
+                    )}
+                </button>
+                <button
+                    type="button"
+                    onClick={onPick}
+                    disabled={locked}
+                    className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-500 text-white hover:bg-emerald-600"
+                >
+                    {picking ? (
+                        <Loader size={14} className="animate-spin" />
+                    ) : (
+                        <>直接加入 <ChevronRight size={14} /></>
+                    )}
+                </button>
+            </div>
+        </div>
     );
 }
 
@@ -115,6 +145,8 @@ export default function AspirationRecommendationPanel({
     onBack,
     onPickTemplate,
     onPickHabit,
+    onAddHabitAsCandidate,
+    onOpenFocusMap,
     onSkipToTemplates,
     onSkipToHabits,
 }) {
@@ -124,6 +156,10 @@ export default function AspirationRecommendationPanel({
     // pickingId is the id of the template or habit currently being committed
     // — disables sibling cards so a double-tap doesn't fire two onPick calls.
     const [pickingId, setPickingId] = useState(null);
+    // Habit ids the user has added to the candidate pool in THIS panel
+    // session. Once added the buttons lock; the sticky bottom CTA shows
+    // the running count + a path into FocusMapModal.
+    const [candidateAddedIds, setCandidateAddedIds] = useState(() => new Set());
 
     useEffect(() => {
         if (!aspiration?.id) return;
@@ -170,6 +206,23 @@ export default function AspirationRecommendationPanel({
             setPickingId(null);
         }
     };
+
+    const handleAddCandidate = async (habit) => {
+        if (pickingId || candidateAddedIds.has(habit.id)) return;
+        setPickingId(`habit-${habit.id}`);
+        try {
+            await onAddHabitAsCandidate?.(habit, aspiration);
+            setCandidateAddedIds(prev => {
+                const next = new Set(prev);
+                next.add(habit.id);
+                return next;
+            });
+        } finally {
+            setPickingId(null);
+        }
+    };
+
+    const candidateCount = candidateAddedIds.size;
 
     const templates = data?.templates || [];
     const habits = data?.habits || [];
@@ -257,7 +310,9 @@ export default function AspirationRecommendationPanel({
                                             key={h.id}
                                             habit={h}
                                             picking={pickingId === `habit-${h.id}`}
+                                            addedAsCandidate={candidateAddedIds.has(h.id)}
                                             onPick={() => handlePickHabit(h)}
+                                            onAddCandidate={() => handleAddCandidate(h)}
                                         />
                                     ))}
                                 </div>
@@ -292,6 +347,31 @@ export default function AspirationRecommendationPanel({
                         </section>
                     )}
                 </div>
+
+                {/* Sticky bottom CTA — appears once user has added ≥ 1 habit
+                    to candidate pool this session. Gives a clear path into
+                    FocusMapModal without waiting for the dashboard banner
+                    (which only fires at 5+). */}
+                {candidateCount > 0 && (
+                    <div className="border-t border-gray-100 bg-gradient-to-br from-amber-50 to-orange-50 px-5 py-3 flex items-center justify-between gap-3 flex-shrink-0 rounded-b-2xl">
+                        <div className="min-w-0 flex-1">
+                            <p className="text-xs font-bold text-amber-700 flex items-center gap-1">
+                                <Target size={12} /> 已加入 {candidateCount} 個候選
+                            </p>
+                            <p className="text-[11px] text-gray-500 mt-0.5">
+                                繼續加入或開始評分挑出黃金行為
+                            </p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={onOpenFocusMap}
+                            disabled={!onOpenFocusMap}
+                            className="flex-shrink-0 px-3 py-2 rounded-lg bg-amber-500 text-white text-xs font-bold hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            開始評分 →
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
