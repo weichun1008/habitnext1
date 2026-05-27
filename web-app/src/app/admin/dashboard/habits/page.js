@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Edit2, Trash2, Archive, RotateCcw, X, Save, Settings, FolderOpen, Link } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Archive, RotateCcw, X, Save, Settings, FolderOpen, Link, BookOpen } from 'lucide-react';
 import IconRenderer from '@/components/IconRenderer';
 import { CATEGORY_CONFIG, domainToIconKey } from '@/lib/constants';
+import HabitInsightsModal from './components/HabitInsightsModal';
 
 const TASK_TYPES = [
     { value: 'binary', label: '一般' },
@@ -56,6 +57,8 @@ export default function HabitsPage() {
     // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingHabit, setEditingHabit] = useState(null);
+    // Slice N — admin insights manager modal (separate from the habit edit modal).
+    const [insightsHabit, setInsightsHabit] = useState(null);
     const [formData, setFormData] = useState(defaultFormData);
     const [activeDiffTab, setActiveDiffTab] = useState('beginner');
 
@@ -290,6 +293,17 @@ export default function HabitsPage() {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
+                                    {/* Slice N — quick entry to the科學佐證 manager.
+                                        Placed before Edit so users discover it (it's
+                                        new); icon distinguishes it from the existing
+                                        habit edit action. */}
+                                    <button
+                                        onClick={() => setInsightsHabit(habit)}
+                                        className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-colors"
+                                        title="科學佐證"
+                                    >
+                                        <BookOpen size={18} />
+                                    </button>
                                     <button
                                         onClick={() => toggleActive(habit)}
                                         className={`p-2 rounded-lg transition-colors ${habit.isActive
@@ -659,6 +673,15 @@ export default function HabitsPage() {
                     </div>
                 </div>
             )}
+
+            {/* Slice N — Scientific Brief manager. Rendered at root so it
+                stacks on top of the habit list (and renders its own form
+                modal on top of itself, z-index escalates). */}
+            <HabitInsightsModal
+                isOpen={Boolean(insightsHabit)}
+                onClose={() => setInsightsHabit(null)}
+                habit={insightsHabit}
+            />
         </div>
     );
 }
