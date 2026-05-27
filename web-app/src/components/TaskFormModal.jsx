@@ -29,6 +29,11 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
     const [activeTab, setActiveTab] = useState('basic');
     const iconContainerRef = useRef(null);
 
+    // Slice L — opt-out for power users: skip the candidate pool and
+    // activate the task directly. Only relevant when creating new tasks;
+    // editing existing tasks keeps whatever status they already had.
+    const [activateImmediately, setActivateImmediately] = useState(false);
+
     // Helper for monthly recurrence labels
     const dateInfo = getNthWeekday(formData.date);
 
@@ -137,7 +142,16 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                         <button onClick={onClose}><X size={24} className="text-gray-500" /></button>
                         <h3 className="font-bold text-lg text-gray-800">{initialData ? '編輯任務' : '新增任務'}</h3>
                     </div>
-                    <button onClick={() => onSave(formData)} className="text-emerald-600 font-bold text-sm px-4 py-2 bg-emerald-50 rounded-full hover:bg-emerald-100">
+                    <button
+                        onClick={() => onSave({
+                            ...formData,
+                            // Slice L — manual create defaults to candidate; opt-out
+                            // checkbox lets power users jump straight to active. Edit
+                            // path passes no status, preserving existing value.
+                            ...(initialData ? {} : { status: activateImmediately ? 'active' : 'candidate' }),
+                        })}
+                        className="text-emerald-600 font-bold text-sm px-4 py-2 bg-emerald-50 rounded-full hover:bg-emerald-100"
+                    >
                         儲存
                     </button>
                 </div>
@@ -564,6 +578,24 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                     </div>
 
                 </div>
+
+                {/* Slice L — opt-out checkbox: skip the candidate pool. Only
+                    shown on create (not edit) since editing preserves the
+                    existing status. */}
+                {!initialData && (
+                    <div className="px-6 py-3 border-t border-gray-100 bg-gray-50 flex items-center gap-2">
+                        <input
+                            id="activate-immediately"
+                            type="checkbox"
+                            checked={activateImmediately}
+                            onChange={e => setActivateImmediately(e.target.checked)}
+                            className="w-4 h-4 text-emerald-500 rounded cursor-pointer"
+                        />
+                        <label htmlFor="activate-immediately" className="text-sm text-gray-700 cursor-pointer select-none">
+                            直接啟用，不進入候選池
+                        </label>
+                    </div>
+                )}
 
                 {/* Footer */}
                 {initialData && (
