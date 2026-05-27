@@ -22,6 +22,7 @@ import ProfileModal from './ProfileModal';
 import Avatar from './Avatar';
 import AspirationPicker from './AspirationPicker';
 import AspirationRecommendationPanel from './AspirationRecommendationPanel';
+import FocusMapModal from './FocusMapModal';
 
 // StatsView is dynamically imported to keep recharts (~96kb gzip) off the
 // `/` route's First Load JS — it only loads when the user opens the stats tab.
@@ -67,6 +68,15 @@ const MainApp = () => {
     //     Lifecycle mirrors activeAspiration: set on RecommendationPanel pick,
     //     cleared when library closes.
     const [isAspirationPickerOpen, setIsAspirationPickerOpen] = useState(false);
+
+    // Slice L — focus map / candidate pool.
+    //   - isFocusMapModalOpen: controls FocusMapModal visibility
+    //   - candidateCount: cached number of candidate-status tasks; banner
+    //     appears when >= 5. Refreshed after add/rate/login.
+    //   - bannerDismissed: per-session hide flag (resets on page reload).
+    const [isFocusMapModalOpen, setIsFocusMapModalOpen] = useState(false);
+    const [candidateCount, setCandidateCount] = useState(0);
+    const [bannerDismissed, setBannerDismissed] = useState(false);
     const [activeAspiration, setActiveAspiration] = useState(null);
     const [initialTemplateForExplorer, setInitialTemplateForExplorer] = useState(null);
     const [aspirationHabitForLibrary, setAspirationHabitForLibrary] = useState(null);
@@ -85,11 +95,25 @@ const MainApp = () => {
             setUser(parsedUser);
             fetchTasks(parsedUser.id);
             fetchAssignments(parsedUser.id);
+            fetchCandidateCount(parsedUser.id);  // Slice L
         } else {
             setIsLoginModalOpen(true);
             setLoading(false);
         }
     }, []);
+
+    // Slice L — refresh candidate count after add/rate. Cheap fetch (1 row).
+    const fetchCandidateCount = async (userId) => {
+        try {
+            const res = await fetch(`/api/tasks/candidates?userId=${userId}`);
+            if (res.ok) {
+                const data = await res.json();
+                setCandidateCount(Array.isArray(data) ? data.length : 0);
+            }
+        } catch (e) {
+            console.error('Fetch candidate count error', e);
+        }
+    };
 
     // 2. Fetch Tasks
     const fetchTasks = async (userId) => {
@@ -213,9 +237,11 @@ const MainApp = () => {
             setTasks(formattedTasks);
             // Also fetch assignments
             fetchAssignments(userData.id);
+            fetchCandidateCount(userData.id);  // Slice L
         } else {
             fetchTasks(userData.id);
             fetchAssignments(userData.id);
+            fetchCandidateCount(userData.id);  // Slice L
         }
     };
 
@@ -397,8 +423,14 @@ const MainApp = () => {
                 });
                 if (res.ok) {
                     const created = await res.json();
-                    const formatted = { ...created, history: {}, dailyProgress: {} };
-                    setTasks(prev => [...prev, formatted]);
+                    // Slice L — candidates don't appear in the daily view yet;
+                    // bump the candidate count badge instead of adding to tasks.
+                    if (created.status === 'candidate') {
+                        setCandidateCount(c => c + 1);
+                    } else {
+                        const formatted = { ...created, history: {}, dailyProgress: {} };
+                        setTasks(prev => [...prev, formatted]);
+                    }
 
                     // Slice K — if the user entered through the aspiration
                     // flow, tag this new task as belonging to that aspiration.
@@ -790,6 +822,38 @@ const MainApp = () => {
                                         </button>
                                     </div>
                                 )}
+                                {/* Slice L — focus-map banner. Shown when the user has built up
+                                    >= 5 candidates and hasn't dismissed this session. Per-session
+                                    dismiss only (resets on full page reload). */}
+                                {isSelectedToday && candidateCount >= 5 && !bannerDismissed && (
+                                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 mb-4">
+                                        <div className="flex items-start justify-between gap-2">
+                                            <div className="flex-1">
+                                                <p className="text-xs font-bold text-amber-700">
+                                                    ✨ 你有 {candidateCount} 個候選習慣
+                                                </p>
+                                                <p className="text-sm font-black text-gray-800 mt-1">開始焦點地圖，挑出黃金行為</p>
+                                                <p className="text-[11px] text-gray-500 mt-1">Fogg 建議篩 3 個實際開始</p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setBannerDismissed(true)}
+                                                className="p-1 -mr-1 text-gray-400 hover:text-gray-600 text-lg leading-none"
+                                                aria-label="暫時隱藏"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsFocusMapModalOpen(true)}
+                                            className="mt-3 w-full px-4 py-2 rounded-xl bg-amber-500 text-white text-sm font-bold hover:bg-amber-600 transition-colors"
+                                        >
+                                            開始評分 →
+                                        </button>
+                                    </div>
+                                )}
+
                                 {isSelectedToday && (
                                     <DashboardSummaryCard tasks={tasks} onOpenDetail={() => setCurrentView('dashboard_detail')} />
                                 )}
@@ -989,6 +1053,24 @@ const MainApp = () => {
             <LoginModal
                 isOpen={isLoginModalOpen}
                 onLogin={handleLogin}
+            />
+
+            {/* Slice L — focus map modal. Opens from the daily-view banner
+                when the user has accumulated >= 5 candidate tasks. On submit
+                runs PATCH /api/tasks/batch-rate and we refresh both the
+                active task list and the candidate count. */}
+            <FocusMapModal
+                isOpen={isFocusMapModalOpen}
+                userId={user?.id}
+                onClose={() => setIsFocusMapModalOpen(false)}
+                onActivated={() => {
+                    setIsFocusMapModalOpen(false);
+                    setBannerDismissed(false);
+                    if (user?.id) {
+                        fetchTasks(user.id);
+                        fetchCandidateCount(user.id);
+                    }
+                }}
             />
 
             {/* Slice K — Aspiration flow (Step 1 picker + Step 2 panel).
