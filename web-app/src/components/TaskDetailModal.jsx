@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Edit2, Check, Calendar, Target, Flame, Trophy, ChevronRight, ChevronLeft } from 'lucide-react';
 import IconRenderer from './IconRenderer';
+import HabitInsightSection from './insights/HabitInsightSection';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import { getTodayStr, isCompletedOnDate, calculateStats, isFutureDate } from '@/lib/utils';
 import { visibleSubtasks } from '@/lib/subtasks';
@@ -215,6 +216,17 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate 
                             {task.science || '將這個習慣與你已經養成的習慣綁定在一起（例如：刷牙後就做...），可以大幅提升成功率喔！'}
                         </p>
                     </div>
+
+                    {/* Slice N — scientific brief surface. Only renders when the
+                        task has a backing OfficialHabit (task.officialHabitId
+                        set by Slice L candidate-pool work) AND that habit has
+                        published insights. Custom user-created tasks and
+                        habits with no insights render nothing — silent. */}
+                    {task.officialHabitId && (
+                        <div className="mt-6">
+                            <HabitInsightSection habitId={task.officialHabitId} />
+                        </div>
+                    )}
 
                 </div>
             </div>
