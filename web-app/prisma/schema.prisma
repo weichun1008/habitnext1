@@ -126,9 +126,22 @@ model Task {
   // Expert assignment fields
   assignmentId String?  // 如果是專家指派的任務
   isLocked     Boolean  @default(false) // 是否鎖定不可編輯
+
+  // ★ Slice L — candidate pool + focus map
+  // Tasks enter the system as candidates and only become active after the
+  // user rates them on the focus map. Template-joined tasks bypass this
+  // and write 'active' directly (策劃過的計畫不走候選池).
+  status       String   @default("candidate")  // candidate | active | archived
+  userImpact   Int?                             // 1-5, user-rated (overrides OfficialHabit default)
+  userAbility  Int?                             // 1-5
+  ratedAt      DateTime?                        // last time the user rated this task
+  officialHabitId String?                       // FK fallback so slider can seed from OfficialHabit.impact/ability
+  officialHabit   OfficialHabit? @relation(fields: [officialHabitId], references: [id], onDelete: SetNull)
+  // ★ end Slice L
+
   expertName   String?  // 指派專家名稱 (方便顯示)
   metadata     Json?    // Phase info and other metadata
-  
+
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -203,6 +216,8 @@ model OfficialHabit {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  tasks       Task[]   // ★ Slice L — reverse relation for Task.officialHabitId FK
 }
 
 // ============================================
