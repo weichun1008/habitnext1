@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp } from 'lucide-react';
 import AppHeader from './AppHeader';
 import TaskCard from './TaskCard';
+import UndoToast from './UndoToast';
 import TaskFormModal from './TaskFormModal';
 import TaskLibraryModal from './TaskLibraryModal';
 import DashboardSummaryCard from './DashboardSummaryCard';
@@ -83,6 +84,16 @@ const MainApp = () => {
     // divider row to peek at what they've already done. Session-only (resets
     // on full page reload), no persistence needed.
     const [completedExpanded, setCompletedExpanded] = useState(false);
+    // Completion-flow animation — when a binary task is toggled to complete
+    // we keep the card visible for ~700ms (so the check-pop animation reads),
+    // then collapse the row height for ~300ms, then re-fetch to remove it.
+    // During the window, the user sees a 還原 undo toast.
+    //   exitingTaskIds: cards currently shrinking out
+    //   undoToast:      the most-recent completion's undo snackbar payload
+    //   exitTimersRef:  cancellation handles, keyed by taskId
+    const [exitingTaskIds, setExitingTaskIds] = useState(() => new Set());
+    const [undoToast, setUndoToast] = useState(null);   // { taskId, message, date } | null
+    const exitTimersRef = useRef({});
     const [activeAspiration, setActiveAspiration] = useState(null);
     const [initialTemplateForExplorer, setInitialTemplateForExplorer] = useState(null);
     const [aspirationHabitForLibrary, setAspirationHabitForLibrary] = useState(null);
@@ -382,6 +393,112 @@ const MainApp = () => {
             setTasks(prevTasks); // Revert
         }
     };
+
+    // ────────────────────────────────────────────────────────────────
+    // Completion-flow animation glue
+    //
+    // handleTaskUpdate wraps handleUpdateProgress: it runs the existing
+    // optimistic update + API call unchanged, then for a binary 'toggle'
+    // that transitioned the task to completed on the SELECTED date, it
+    // schedules a three-phase animation:
+    //   t=0      check-pop runs inside TaskCard (it detects the false→true
+    //            transition via its own useEffect)
+    //   t=700ms  add task.id to exitingTaskIds → wrapper collapses height
+    //   t=1000ms re-fetch tasks (server truth) → row leaves the DOM
+    // Undo toast shows for 5s; tapping it cancels the pending exit AND
+    // toggles the task back to incomplete via the same handleUpdateProgress
+    // path with action='toggle' (which flips it back since now completed).
+    // ────────────────────────────────────────────────────────────────
+
+    const clearExitTimersFor = (taskId) => {
+        const t = exitTimersRef.current[taskId];
+        if (!t) return;
+        clearTimeout(t.collapseAt);
+        clearTimeout(t.fetchAt);
+        delete exitTimersRef.current[taskId];
+    };
+
+    const scheduleCompletionExit = (task) => {
+        clearExitTimersFor(task.id);
+        const collapseAt = setTimeout(() => {
+            // Phase 2 — start the height-collapse animation. Wrapper class in
+            // the render below transitions max-height + opacity over 300ms.
+            setExitingTaskIds(prev => {
+                const next = new Set(prev);
+                next.add(task.id);
+                return next;
+            });
+            const fetchAt = setTimeout(() => {
+                // Phase 3 — refresh from server. The completed task drops out
+                // of the incomplete bucket and appears in the (collapsed)
+                // 已完成 N 個 section. Animation cleanup releases the id.
+                if (user?.id) fetchTasks(user.id);
+                setExitingTaskIds(prev => {
+                    const next = new Set(prev);
+                    next.delete(task.id);
+                    return next;
+                });
+                delete exitTimersRef.current[task.id];
+            }, 300);
+            exitTimersRef.current[task.id] = { collapseAt: null, fetchAt };
+        }, 700);
+        exitTimersRef.current[task.id] = { collapseAt, fetchAt: null };
+    };
+
+    const handleUndoCompletion = async () => {
+        if (!undoToast) return;
+        const { taskId } = undoToast;
+
+        // Cancel any pending exit animation + clear the row out of exitingIds
+        // immediately so the card snaps back to full height.
+        clearExitTimersFor(taskId);
+        setExitingTaskIds(prev => {
+            const next = new Set(prev);
+            next.delete(taskId);
+            return next;
+        });
+
+        // Flip completion off via the same handler the card uses.
+        const t = tasks.find(x => x.id === taskId);
+        if (t) {
+            // selectedDate is current view; if user navigated away meanwhile
+            // we still un-complete on the original date.
+            await handleUpdateProgress(t, 'toggle', null, null, undoToast.date || selectedDate);
+        }
+        setUndoToast(null);
+    };
+
+    const handleTaskUpdate = (task, action, value, subtaskId, dateStr) => {
+        const date = dateStr || selectedDate;
+        // Snapshot the pre-update completion state on the relevant date.
+        // We compare against this AFTER the underlying update to decide if
+        // this action moved the task from incomplete → complete.
+        const wasCompleted = isCompletedOnDate(task, date);
+
+        handleUpdateProgress(task, action, value, subtaskId, date);
+
+        // Only celebrate a binary 'toggle' that flipped false → true on the
+        // currently-viewed date. Subtask toggle completion happens via the
+        // inline accordion which has its own X/Y feedback; quantitative
+        // tasks have a progress bar. Layering a slide-out + toast on those
+        // would be noise.
+        if (action !== 'toggle' || wasCompleted) return;
+        if (date !== selectedDate) return;
+        if (task.type === 'quantitative') return;
+        if (task.type === 'checklist') return;   // checklist completes via subtasks
+
+        scheduleCompletionExit(task);
+        setUndoToast({
+            taskId: task.id,
+            date,
+            message: `完成「${task.title}」`,
+        });
+    };
+
+    // Clean up timers + toast on unmount.
+    useEffect(() => () => {
+        Object.keys(exitTimersRef.current).forEach(clearExitTimersFor);
+    }, []);   // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleSaveTask = async (taskData) => {
         // Sanitize data before sending
@@ -979,10 +1096,26 @@ const MainApp = () => {
                                             <span className="w-1 h-5 bg-emerald-500 rounded-full"></span> {dailySectionLabel}
                                         </h3>
                                         <div className="space-y-3">
-                                            {/* Incomplete tasks — prominent, always visible. */}
-                                            {incompleteDailyTasks.map(task => (
-                                                <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} />
-                                            ))}
+                                            {/* Incomplete tasks — prominent, always visible.
+                                                Each card is wrapped in an exit-animation div so
+                                                that when a binary task is completed, the wrapper
+                                                collapses max-height + fades opacity → the cards
+                                                below naturally slide up (CSS layout reflow). */}
+                                            {incompleteDailyTasks.map(task => {
+                                                const isExiting = exitingTaskIds.has(task.id);
+                                                return (
+                                                    <div
+                                                        key={task.id}
+                                                        className={`overflow-hidden transition-all duration-300 ease-out ${
+                                                            isExiting
+                                                                ? 'max-h-0 opacity-0 pointer-events-none'
+                                                                : 'max-h-[640px] opacity-100'
+                                                        }`}
+                                                    >
+                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} />
+                                                    </div>
+                                                );
+                                            })}
 
                                             {/* Divider + collapsible 已完成 section. Only renders when
                                                 there's at least one completed task; tap toggles expand.
@@ -1007,6 +1140,11 @@ const MainApp = () => {
                                                         <span className="flex-1 h-px bg-gray-200" />
                                                     </button>
                                                     {completedExpanded && completedDailyTasks.map(task => (
+                                                        // Re-completing from the already-done section
+                                                        // un-toggles back to incomplete; no exit animation
+                                                        // needed (Task naturally jumps back into the list
+                                                        // above on re-fetch). Use handleUpdateProgress
+                                                        // directly to skip the toast / scheduled exit.
                                                         <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} />
                                                     ))}
                                                 </>
@@ -1245,6 +1383,16 @@ const MainApp = () => {
                     setUser(updatedUser);
                     localStorage.setItem('habit_user', JSON.stringify(updatedUser));
                 }}
+            />
+
+            {/* Bottom undo snackbar — shown for 5s after a binary task is
+                completed via the daily list. Tapping 還原 cancels the
+                pending exit animation and toggles the task back. */}
+            <UndoToast
+                visible={!!undoToast}
+                message={undoToast?.message || ''}
+                onUndo={handleUndoCompletion}
+                onDismiss={() => setUndoToast(null)}
             />
         </>
     );
