@@ -101,20 +101,14 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
             ? 'border-indigo-200 bg-indigo-50/20 border-dashed'
             : 'border-gray-100';
 
-    return (
-        <SwipeReveal
-            rightActions={
-                <TaskActionMenu
-                    taskId={task.id}
-                    taskTitle={task.title}
-                    variant="swipe"
-                    onAction={(action, success) => { if (success) onAfterAction?.(action); }}
-                />
-            }
-            onSwipeRight={() => {
-                if (!isLocked) handleUpdate('toggle');
-            }}
-        >
+    // Past/future days are read-only snapshots — 暫停 / 隱藏 / 刪除 only
+    // make sense on a live, active habit instance. Bypassing SwipeReveal +
+    // TaskHoverDots when isLocked also fixes the user-reported regression
+    // where the swipe layer's bg colors bled through the right edge of
+    // historical cards (the inner translate wrapper could end up with a
+    // residual offset across re-renders, leaving 暫停 / 刪除 visible behind
+    // every past-day card).
+    const cardBody = (
         <div
             onClick={onClick}
             className={`bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${borderCls} ${isPast && !isCompleted ? 'opacity-75' : ''}`}
@@ -126,15 +120,19 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                 <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-emerald-400" aria-hidden />
             )}
 
-            {/* Slice M — desktop hover dots top-right */}
-            <TaskHoverDots>
-                <TaskActionMenu
-                    taskId={task.id}
-                    taskTitle={task.title}
-                    variant="popover"
-                    onAction={(action, success) => { if (success) onAfterAction?.(action); }}
-                />
-            </TaskHoverDots>
+            {/* Slice M — desktop hover dots top-right. Only render when the
+                task is editable (active, today's slot); skip for locked
+                past/future to avoid offering actions that don't apply. */}
+            {!isLocked && (
+                <TaskHoverDots>
+                    <TaskActionMenu
+                        taskId={task.id}
+                        taskTitle={task.title}
+                        variant="popover"
+                        onAction={(action, success) => { if (success) onAfterAction?.(action); }}
+                    />
+                </TaskHoverDots>
+            )}
 
             {/* Background Progress for Quant or Period Tasks */}
             {(isQuant || isPeriod) && (
@@ -301,6 +299,25 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                 </div>
             )}
         </div>
+    );
+
+    // Locked (past / future) tasks render raw — no swipe gesture handler,
+    // no action menu. Active tasks get the full SwipeReveal envelope.
+    if (isLocked) return cardBody;
+
+    return (
+        <SwipeReveal
+            rightActions={
+                <TaskActionMenu
+                    taskId={task.id}
+                    taskTitle={task.title}
+                    variant="swipe"
+                    onAction={(action, success) => { if (success) onAfterAction?.(action); }}
+                />
+            }
+            onSwipeRight={() => handleUpdate('toggle')}
+        >
+            {cardBody}
         </SwipeReveal>
     );
 };
