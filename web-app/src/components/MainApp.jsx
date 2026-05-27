@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3 } from 'lucide-react';
+import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp } from 'lucide-react';
 import AppHeader from './AppHeader';
 import TaskCard from './TaskCard';
 import TaskFormModal from './TaskFormModal';
@@ -78,6 +78,11 @@ const MainApp = () => {
     const [isFocusMapModalOpen, setIsFocusMapModalOpen] = useState(false);
     const [candidateCount, setCandidateCount] = useState(0);
     const [bannerDismissed, setBannerDismissed] = useState(false);
+    // Daily view — completed-section collapse state. Defaults to collapsed
+    // so the daily list visually focuses on incomplete tasks; users tap the
+    // divider row to peek at what they've already done. Session-only (resets
+    // on full page reload), no persistence needed.
+    const [completedExpanded, setCompletedExpanded] = useState(false);
     const [activeAspiration, setActiveAspiration] = useState(null);
     const [initialTemplateForExplorer, setInitialTemplateForExplorer] = useState(null);
     const [aspirationHabitForLibrary, setAspirationHabitForLibrary] = useState(null);
@@ -662,6 +667,12 @@ const MainApp = () => {
             if (ao !== bo) return ao - bo;
             return new Date(a.createdAt) - new Date(b.createdAt);
         });
+    // Split into incomplete (rendered prominently above) + completed (rendered
+    // inside the collapsible '已完成 N 個' section below). The sort above
+    // already groups completed at the bottom, but we still need an explicit
+    // partition for the divider + collapse UI.
+    const incompleteDailyTasks = dailyTasks.filter(t => !isCompletedOnDate(t, selectedDate));
+    const completedDailyTasks = dailyTasks.filter(t => isCompletedOnDate(t, selectedDate));
     const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
     const todayStr = getTodayStr();
     const isSelectedToday = selectedDate === todayStr;
@@ -968,9 +979,39 @@ const MainApp = () => {
                                             <span className="w-1 h-5 bg-emerald-500 rounded-full"></span> {dailySectionLabel}
                                         </h3>
                                         <div className="space-y-3">
-                                            {dailyTasks.map(task => (
+                                            {/* Incomplete tasks — prominent, always visible. */}
+                                            {incompleteDailyTasks.map(task => (
                                                 <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} />
                                             ))}
+
+                                            {/* Divider + collapsible 已完成 section. Only renders when
+                                                there's at least one completed task; tap toggles expand.
+                                                Default state is collapsed (set via completedExpanded
+                                                useState above) so the daily list visually focuses on
+                                                what still needs doing. */}
+                                            {completedDailyTasks.length > 0 && (
+                                                <>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setCompletedExpanded(v => !v)}
+                                                        aria-expanded={completedExpanded}
+                                                        className="w-full flex items-center gap-3 py-2 px-2 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors"
+                                                    >
+                                                        <span className="flex-1 h-px bg-gray-200" />
+                                                        <span className="flex items-center gap-1 whitespace-nowrap">
+                                                            已完成 {completedDailyTasks.length} 個
+                                                            {completedExpanded
+                                                                ? <ChevronUp size={14} />
+                                                                : <ChevronDown size={14} />}
+                                                        </span>
+                                                        <span className="flex-1 h-px bg-gray-200" />
+                                                    </button>
+                                                    {completedExpanded && completedDailyTasks.map(task => (
+                                                        <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} />
+                                                    ))}
+                                                </>
+                                            )}
+
                                             {dailyTasks.length === 0 && (
                                                 <p className="text-gray-400 text-sm col-span-full">
                                                     {isSelectedToday ? '今日無固定行程。' : '這天沒有安排任務。'}
