@@ -131,7 +131,7 @@ model Task {
   // Tasks enter the system as candidates and only become active after the
   // user rates them on the focus map. Template-joined tasks bypass this
   // and write 'active' directly (策劃過的計畫不走候選池).
-  status       String   @default("candidate")  // candidate | active | archived
+  status       String   @default("candidate")  // candidate | active | paused | archived
   userImpact   Int?                             // 1-5, user-rated (overrides OfficialHabit default)
   userAbility  Int?                             // 1-5
   ratedAt      DateTime?                        // last time the user rated this task

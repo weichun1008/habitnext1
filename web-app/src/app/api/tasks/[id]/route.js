@@ -27,6 +27,12 @@ export async function PUT(request, { params }) {
                 stepValue: taskData.stepValue,
                 date: taskData.date,
                 time: taskData.time,
+                // Slice M — accept status transitions to paused/archived from
+                // TaskCard action menu + TaskDetailModal footer. Validates the
+                // enum so a stray value can't poison the daily view filter.
+                ...(taskData.status !== undefined && ['candidate', 'active', 'paused', 'archived'].includes(taskData.status)
+                    ? { status: taskData.status }
+                    : {}),
             }
         });
 
