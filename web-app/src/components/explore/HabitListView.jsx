@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import IconRenderer from '../IconRenderer';
+import HabitInsightSection from '../insights/HabitInsightSection';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 
 // NOTE (2026-05-25, Slice K Task 11): the 「清單 ｜ 焦點地圖」view-mode
@@ -126,12 +127,17 @@ export default function HabitListView({
               </div>
             </button>
 
-            {/* Expanded body — full description, 3-tier comparison, add button */}
+            {/* Expanded body — full description, scientific brief, 3-tier
+                comparison, add button. Insight section silently no-ops when
+                the habit has no published insights, so it doesn't take vertical
+                space for habits that haven't been authored yet. */}
             {isExpanded && (
               <div className="px-4 pb-4 border-t border-gray-100 pt-3 space-y-3">
                 {habit.description && (
                   <p className="text-sm text-gray-600 leading-relaxed">{habit.description}</p>
                 )}
+
+                <HabitInsightSection habitId={habit.id} />
 
                 <div>
                   <p className="text-xs text-gray-500 mb-2">選擇難度：</p>
