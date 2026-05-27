@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp } from 'lucide-react';
+import SwipeReveal from './taskCard/SwipeReveal';
+import TaskHoverDots from './taskCard/TaskHoverDots';
+import TaskActionMenu from './taskCard/TaskActionMenu';
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import {
@@ -15,7 +18,7 @@ import { visibleSubtasks } from '@/lib/subtasks';
 // `viewingDate` (yyyy-mm-dd) lets the card render any day's state — used by
 // the daily view's interactive week strip. Defaults to today so existing
 // callers that don't pass it (other views) behave unchanged.
-const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
+const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction }) => {
     const todayStr = getTodayStr();
     const dateStr = viewingDate || todayStr;
     const isFuture = isFutureDate(dateStr, todayStr);
@@ -99,6 +102,19 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
             : 'border-gray-100';
 
     return (
+        <SwipeReveal
+            rightActions={
+                <TaskActionMenu
+                    taskId={task.id}
+                    taskTitle={task.title}
+                    variant="swipe"
+                    onAction={(action, success) => { if (success) onAfterAction?.(action); }}
+                />
+            }
+            onSwipeRight={() => {
+                if (!isLocked) handleUpdate('toggle');
+            }}
+        >
         <div
             onClick={onClick}
             className={`bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${borderCls} ${isPast && !isCompleted ? 'opacity-75' : ''}`}
@@ -109,6 +125,16 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
             {isCompleted && (
                 <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-emerald-400" aria-hidden />
             )}
+
+            {/* Slice M — desktop hover dots top-right */}
+            <TaskHoverDots>
+                <TaskActionMenu
+                    taskId={task.id}
+                    taskTitle={task.title}
+                    variant="popover"
+                    onAction={(action, success) => { if (success) onAfterAction?.(action); }}
+                />
+            </TaskHoverDots>
 
             {/* Background Progress for Quant or Period Tasks */}
             {(isQuant || isPeriod) && (
@@ -275,6 +301,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate }) => {
                 </div>
             )}
         </div>
+        </SwipeReveal>
     );
 };
 
