@@ -11,7 +11,8 @@ import DashboardSummaryCard from './DashboardSummaryCard';
 import HabitCalendar from './HabitCalendar';
 import TaskDetailModal from './TaskDetailModal';
 import LoginModal from './LoginModal';
-import { generateId, getTodayStr, isTaskDueToday } from '@/lib/utils';
+import { generateId, getTodayStr, isTaskDueToday, isCompletedOnDate } from '@/lib/utils';
+import { cueOrderFor } from '@/lib/anchors';
 import { USER_TYPE_PROFILES } from '@/lib/typeKeys';
 import { SLEEP_TYPE_PROFILES } from '@/lib/sleepTypeKeys';
 import { CATEGORY_CONFIG } from '@/lib/constants';
@@ -574,7 +575,24 @@ const MainApp = () => {
     // week strip can preview future days and replay past days. Period
     // (week/month-windowed) tasks always show on the daily view since
     // their progress doesn't shift by browsing date.
-    const dailyTasks = tasks.filter(t => isTaskDueToday(t, selectedDate));
+    // Slice M — daily view sort:
+    //   1. status='active' only (paused/archived 已被 GET /api/tasks?status=active 過濾，
+    //      但加保險避免 stale state)
+    //   2. 未完成在上、已完成在下
+    //   3. 組內按 cue 在 anchors.js 中的時間序升冪
+    //   4. tie-break: createdAt asc
+    const dailyTasks = tasks
+        .filter(t => isTaskDueToday(t, selectedDate))
+        .filter(t => !t.status || t.status === 'active')  // safety: hide paused/archived
+        .sort((a, b) => {
+            const ac = isCompletedOnDate(a, selectedDate) ? 1 : 0;
+            const bc = isCompletedOnDate(b, selectedDate) ? 1 : 0;
+            if (ac !== bc) return ac - bc;
+            const ao = cueOrderFor(a.cue);
+            const bo = cueOrderFor(b.cue);
+            if (ao !== bo) return ao - bo;
+            return new Date(a.createdAt) - new Date(b.createdAt);
+        });
     const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
     const todayStr = getTodayStr();
     const isSelectedToday = selectedDate === todayStr;
