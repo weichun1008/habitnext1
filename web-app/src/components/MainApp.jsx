@@ -88,9 +88,14 @@ const MainApp = () => {
     // we keep the card visible for ~700ms (so the check-pop animation reads),
     // then collapse the row height for ~300ms, then re-fetch to remove it.
     // During the window, the user sees a 還原 undo toast.
-    //   exitingTaskIds: cards currently shrinking out
+    //   completingTaskIds: cards in the full t=0→1000ms completion window.
+    //     Keeps them pinned to the *incomplete* list (so the check shows +
+    //     pulses) even though their optimistic isCompleted already flipped.
+    //   exitingTaskIds:    subset in the t=700ms→1000ms collapse phase;
+    //     drives the max-height/opacity slide-out class.
     //   undoToast:      the most-recent completion's undo snackbar payload
     //   exitTimersRef:  cancellation handles, keyed by taskId
+    const [completingTaskIds, setCompletingTaskIds] = useState(() => new Set());
     const [exitingTaskIds, setExitingTaskIds] = useState(() => new Set());
     const [undoToast, setUndoToast] = useState(null);   // { taskId, message, date } | null
     const exitTimersRef = useRef({});
@@ -420,20 +425,34 @@ const MainApp = () => {
 
     const scheduleCompletionExit = (task) => {
         clearExitTimersFor(task.id);
+        // Phase 1 (t=0) — pin the card in the incomplete list so its check
+        // shows + pulses. Without this the optimistic isCompleted=true would
+        // make the partition filter drop the card immediately (vanish bug).
+        setCompletingTaskIds(prev => {
+            const next = new Set(prev);
+            next.add(task.id);
+            return next;
+        });
         const collapseAt = setTimeout(() => {
-            // Phase 2 — start the height-collapse animation. Wrapper class in
-            // the render below transitions max-height + opacity over 300ms.
+            // Phase 2 (t=700ms) — start the height-collapse animation. The
+            // check has now been visible ~700ms; the wrapper class transitions
+            // max-height + opacity over 300ms.
             setExitingTaskIds(prev => {
                 const next = new Set(prev);
                 next.add(task.id);
                 return next;
             });
             const fetchAt = setTimeout(() => {
-                // Phase 3 — refresh from server. The completed task drops out
-                // of the incomplete bucket and appears in the (collapsed)
-                // 已完成 N 個 section. Animation cleanup releases the id.
+                // Phase 3 (t=1000ms) — refresh from server and release both
+                // sets. The completed task now naturally sorts into the
+                // (collapsed) 已完成 N 個 section.
                 if (user?.id) fetchTasks(user.id);
                 setExitingTaskIds(prev => {
+                    const next = new Set(prev);
+                    next.delete(task.id);
+                    return next;
+                });
+                setCompletingTaskIds(prev => {
                     const next = new Set(prev);
                     next.delete(task.id);
                     return next;
@@ -449,10 +468,15 @@ const MainApp = () => {
         if (!undoToast) return;
         const { taskId } = undoToast;
 
-        // Cancel any pending exit animation + clear the row out of exitingIds
-        // immediately so the card snaps back to full height.
+        // Cancel any pending exit animation + clear the row out of both sets
+        // immediately so the card snaps back to full height and full opacity.
         clearExitTimersFor(taskId);
         setExitingTaskIds(prev => {
+            const next = new Set(prev);
+            next.delete(taskId);
+            return next;
+        });
+        setCompletingTaskIds(prev => {
             const next = new Set(prev);
             next.delete(taskId);
             return next;
@@ -788,8 +812,21 @@ const MainApp = () => {
     // inside the collapsible '已完成 N 個' section below). The sort above
     // already groups completed at the bottom, but we still need an explicit
     // partition for the divider + collapse UI.
-    const incompleteDailyTasks = dailyTasks.filter(t => !isCompletedOnDate(t, selectedDate));
-    const completedDailyTasks = dailyTasks.filter(t => isCompletedOnDate(t, selectedDate));
+    //
+    // IMPORTANT: a task that was JUST completed (and is mid exit-animation)
+    // must stay in the *incomplete* list, NOT immediately jump to completed —
+    // otherwise the optimistic update flips isCompletedOnDate→true, the
+    // filter drops the card on the very next render, and React unmounts it
+    // before the check-pulse + slide-out animation can run (the card just
+    // vanishes — exactly the "no checkmark dwell" the user reported).
+    // We keep exitingTaskIds in the incomplete bucket so the card lingers
+    // with its check showing, then the t=1000ms re-fetch finally moves it.
+    const incompleteDailyTasks = dailyTasks.filter(t =>
+        !isCompletedOnDate(t, selectedDate) || completingTaskIds.has(t.id)
+    );
+    const completedDailyTasks = dailyTasks.filter(t =>
+        isCompletedOnDate(t, selectedDate) && !completingTaskIds.has(t.id)
+    );
     const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
     const todayStr = getTodayStr();
     const isSelectedToday = selectedDate === todayStr;
