@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp } from 'lucide-react';
 import AppHeader from './AppHeader';
+import WeekStrip from './WeekStrip';
 import TaskCard from './TaskCard';
 import UndoToast from './UndoToast';
 import TaskFormModal from './TaskFormModal';
@@ -1028,6 +1029,18 @@ const MainApp = () => {
 
                         {currentView === 'daily' && (
                             <div className="animate-fade-in-up">
+                                {/* Desktop-only week strip — AppHeader (which
+                                    carries the mobile strip) is md:hidden, so
+                                    without this desktop users have no way to
+                                    switch dates. Hidden on mobile to avoid a
+                                    duplicate strip. */}
+                                <div className="hidden md:block mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                                    <WeekStrip
+                                        selectedDate={selectedDate}
+                                        onSelectDate={setSelectedDate}
+                                        className="px-3 py-1"
+                                    />
+                                </div>
                                 <div className="flex items-center justify-between gap-2 mb-3 px-1">
                                     <span className="text-sm text-gray-600">
                                         {isMenstrualMode
