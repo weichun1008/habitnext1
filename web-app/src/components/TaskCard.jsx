@@ -3,6 +3,7 @@ import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw } from 'luc
 import SwipeReveal from './taskCard/SwipeReveal';
 import TaskHoverDots from './taskCard/TaskHoverDots';
 import TaskActionMenu from './taskCard/TaskActionMenu';
+import LocationChip from './taskCard/LocationChip';
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import {
@@ -18,7 +19,7 @@ import { visibleSubtasks } from '@/lib/subtasks';
 // `viewingDate` (yyyy-mm-dd) lets the card render any day's state — used by
 // the daily view's interactive week strip. Defaults to today so existing
 // callers that don't pass it (other views) behave unchanged.
-const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction }) => {
+const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction, onPickLocation }) => {
     const todayStr = getTodayStr();
     const dateStr = viewingDate || todayStr;
     const isFuture = isFutureDate(dateStr, todayStr);
@@ -189,6 +190,16 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                         <p className="text-xs text-gray-400 line-clamp-1">
                             {isPeriod ? (task.frequency === 'weekly' ? '本週目標' : '本月目標') : (task.details || '無詳細說明')}
                         </p>
+                        {/* Slice O — completion location chip (where the user did it) */}
+                        {isCompleted && (
+                            <div className="mt-0.5" onClick={(e) => e.stopPropagation()}>
+                                <LocationChip
+                                    city={task.locationByDate?.[dateStr] || null}
+                                    recentCities={Object.values(task.locationByDate || {}).slice(-3)}
+                                    onPick={(cityName) => onPickLocation?.(task, dateStr, cityName)}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
 
