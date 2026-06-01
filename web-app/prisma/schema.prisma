@@ -245,6 +245,10 @@ model HabitInsight {
   status String @default("draft") // draft | published | archived
   order  Int    @default(0) // admin-controlled per-habit ordering
 
+  // ★ 證據力指標 — { studyType, scale, causality, replication }，各為整數等級。
+  // null = 未評分（不顯示 badge）。total/tier 由 lib/evidenceStrength.js 推算。
+  evidence Json?
+
   aiGenerated  Boolean @default(false) // for editorial QA stats
   sourcePrompt String? // AI input audit trail (never user-visible)
 
