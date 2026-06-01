@@ -23,7 +23,12 @@
     "order": 0,
     "aiGenerated": false,
     "sourcePrompt": null,
-    "evidence": { "studyType": 1, "scale": 2, "causality": 0, "replication": 0 }
+    "evidence": {
+      "studyType": 1,
+      "scale": 2,
+      "causality": 0,
+      "replication": 0
+    }
   },
   {
     "habitName": "減少精緻糖與澱粉攝取",
@@ -64,7 +69,12 @@
     "order": 1,
     "aiGenerated": false,
     "sourcePrompt": null,
-    "evidence": { "studyType": 0, "scale": 0, "causality": 0, "replication": 1 }
+    "evidence": {
+      "studyType": 0,
+      "scale": 0,
+      "causality": 0,
+      "replication": 1
+    }
   },
   {
     "habitName": "維持血糖穩定 (先吃菜肉再吃飯)",
@@ -90,7 +100,12 @@
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
-    "evidence": { "studyType": 2, "scale": 1, "causality": 2, "replication": 1 }
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 2,
+      "replication": 1
+    }
   },
   {
     "habitName": "吃飯細嚼慢嚥 (每口20下)",
@@ -115,7 +130,12 @@
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
-    "evidence": { "studyType": 2, "scale": 1, "causality": 1, "replication": 0 }
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 1,
+      "replication": 0
+    }
   },
   {
     "habitName": "執行 168 間歇性斷食",
@@ -140,7 +160,12 @@
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
-    "evidence": { "studyType": 2, "scale": 2, "causality": 2, "replication": 2 }
+    "evidence": {
+      "studyType": 2,
+      "scale": 2,
+      "causality": 2,
+      "replication": 2
+    }
   },
   {
     "habitName": "攝取優質 Omega-3 油脂",
@@ -166,6 +191,424 @@
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
-    "evidence": { "studyType": 3, "scale": 2, "causality": 2, "replication": 2 }
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 2,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "每餐攝取一個拳頭的蔬菜",
+    "title": "多吃蔬果，死亡風險隨份數下降",
+    "summary": "BMJ 2014 一篇納入 16 項前瞻世代、逾 83 萬人的統合分析發現：每日多攝取一份蔬果，全因死亡風險下降約 5%（HR 0.95；95% CI 0.92–0.98），到每日五份時效益趨於穩定。此為觀察性相關研究，無法排除整體健康生活型態等混淆因子。",
+    "detail": "**研究設計**\n系統性綜述暨劑量反應統合分析，納入 16 項前瞻世代研究，共 833,234 人、56,423 例死亡，追蹤 4.6–26 年。\n\n**主要發現**\n- 全因死亡：每日每增一份蔬果，HR 0.95（95% CI 0.92–0.98，P=0.001）\n- 心血管死亡：HR 0.96／份；癌症死亡無顯著相關\n- 劑量反應在每日約五份後出現「天花板效應」，再增加未見額外益處\n\n**限制**\n觀察性設計，無法排除飲食整體型態、社經地位等混淆；蔬果量多仰賴問卷自填，有測量誤差；各研究對「一份」定義略有差異。屬強相關證據，非因果。",
+    "takeaway": "每餐至少一份蔬菜，每日累積到五份是合理目標。",
+    "sources": [
+      {
+        "label": "Wang et al., BMJ 2014 — 蔬果攝取與死亡率：系統性綜述暨劑量反應統合分析",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4115152/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "蔬果攝取",
+      "全因死亡率",
+      "統合分析",
+      "劑量反應"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "把含糖飲料換成白開水或無糖飲品",
+    "title": "以水取代含糖飲料，糖尿病風險降一成",
+    "summary": "Diabetologia 2015 利用英國 EPIC-Norfolk 世代（24,653 人、追蹤約 10.8 年）發現：以白開水取代每日一份汽水類含糖飲料，第二型糖尿病風險下降約 14%（HR 0.86；95% CI 0.74–0.99）；改以無糖茶或咖啡替代效益相近。屬觀察性研究，不能排除整體飲食差異。",
+    "detail": "**研究設計**\n前瞻世代研究（EPIC-Norfolk），24,653 名成人，追蹤約 10.8 年，確診 847 例第二型糖尿病，以等量飲品替代分析計算風險。\n\n**主要發現**\n- 白開水替代汽水類含糖飲料：HR 0.86（95% CI 0.74–0.99），降約 14%\n- 無糖茶／咖啡替代：HR 0.86，效益相近\n- 人工甜味飲料替代：HR 0.93，未達顯著\n\n**限制**\n觀察性設計、飲食由問卷自填有誤差；替代分析為統計推論非直接介入；僅英國人口，推廣至亞洲族群需謹慎。屬相關非因果。",
+    "takeaway": "把每天那杯含糖飲料換成白開水或無糖茶，是最划算的第一步。",
+    "sources": [
+      {
+        "label": "Imamura et al., Diabetologia 2015 — EPIC-Norfolk：含糖飲料替代與第二型糖尿病風險",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4473082/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "含糖飲料",
+      "第二型糖尿病",
+      "以水替代",
+      "世代研究"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "每週實行一日無肉日",
+    "title": "減少加工肉，降低大腸癌已知風險",
+    "summary": "世界衛生組織／IARC 2015 彙整逾 800 項研究後，將加工肉列為「確定對人類致癌物」（Group 1），並估計每日每多攝取 50 克加工肉，大腸直腸癌風險上升約 18%。此分類反映「證據確定性」而非危害的絕對大小；每週一日無肉是可行的減量策略。",
+    "detail": "**研究設計**\nIARC 第 114 冊 Monograph（2015），22 名科學家系統評估 800 多項研究，其中逾 400 項聚焦加工肉，以流行病學觀察研究為主、輔以機制證據（血基質鐵、N-亞硝基化合物等）。\n\n**主要發現**\n- 加工肉列為 Group 1「確定對人類致癌」，主要部位為大腸直腸\n- 每日 50 克加工肉，大腸直腸癌相對風險上升約 18%\n- 紅肉列為 Group 2A「可能致癌」，證據較弱\n\n**限制**\nGroup 分類描述「證據確定性」非「風險絕對量」；主要依據觀察研究，混淆與測量誤差難全控；不同加工方式風險可能不同；台灣基準發生率與西方不同，相對風險換算為絕對風險時數值較小。",
+    "takeaway": "每週至少一天不吃香腸、培根等加工肉，是務實的開始。",
+    "sources": [
+      {
+        "label": "WHO/IARC 2015 — 紅肉與加工肉致癌性 Q&A（Monograph Vol.114）",
+        "url": "https://www.who.int/news-room/questions-and-answers/item/cancer-carcinogenicity-of-the-consumption-of-red-meat-and-processed-meat",
+        "type": "other"
+      }
+    ],
+    "tags": [
+      "加工肉",
+      "大腸直腸癌",
+      "IARC",
+      "植物性飲食"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "避免晚餐後進食 (消夜)",
+    "title": "提早收食，體重與代謝較易控制",
+    "summary": "British Journal of Nutrition 2016 的 12 週隨機試驗（82 名女性、完成 75 人）發現：在相同熱量限制與運動下，晚餐提早（約 19:00–19:30）組平均減重 6.74 公斤，顯著優於延後（22:30–23:00）組的 4.81 公斤（P<0.001），且胰島素阻抗（HOMA-IR）改善更多。",
+    "detail": "**研究設計**\n隨機對照試驗（RCT），82 名 BMI 27–35 健康女性，隨機分為早晚餐組與晚晚餐組，兩組熱量限制（−25%）與運動相同，追蹤 12 週，75 人完成。\n\n**主要發現**\n- 減重：早 6.74 kg vs 晚 4.81 kg（P<0.001）\n- BMI、腰圍下降幅度早組皆顯著較大\n- HOMA-IR 改善早組較佳；兩組熱量與運動量無顯著差異，顯示「進食時間」本身有獨立影響\n\n**限制**\n樣本僅女性、僅 12 週；受試者皆有控重意圖，可能高估一般族群效益；機制（晝夜節律、胰島素節律）仍在研究中。",
+    "takeaway": "晚餐盡量在七點半前完食，之後就別再進食。",
+    "sources": [
+      {
+        "label": "Madjd et al., British Journal of Nutrition 2016 — 晚餐時間對減重與代謝的隨機試驗",
+        "url": "https://www.cambridge.org/core/journals/british-journal-of-nutrition/article/effects-of-consuming-later-evening-meal-v-earlier-evening-meal-on-weight-loss-during-a-weight-loss-diet-a-randomised-clinical-trial/B8967889CBD49D9AF2170F92457F8CD7",
+        "type": "journal"
+      }
+    ],
+    "tags": [
+      "晚餐時間",
+      "消夜",
+      "體重管理",
+      "晝夜節律"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 2,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "每餐都要有一份蛋白質",
+    "title": "蛋白質吃夠，自動少吃零食",
+    "summary": "PLOS ONE 2011 一項 22 人三階段隨機交叉試驗發現：當飲食蛋白質比例從 15% 降到 10%，4 天總熱量攝取平均增加約 12%，且多出來的熱量約七成來自餐間零食；而從 15% 提高到 25% 則未進一步減少攝取，支持「蛋白質槓桿」以補足蛋白質缺口為主的機制。",
+    "detail": "**研究設計**\n隨機交叉 RCT，22 名健康精瘦成人，以隨機順序接受蛋白質佔 10%／15%／25% 三種等熱量密度飲食，各 4 天，全程任食。\n\n**主要發現**\n- 蛋白質 15%→10%：4 天總熱量增加約 12%（P=0.02），多出熱量約七成來自餐間零食\n- 蛋白質 15%→25%：攝取無顯著變化，顯示保護效果有閾值\n- 即使吃更多熱量仍無法完全補足蛋白質目標（槓桿效應「不完整」）\n\n**限制**\n樣本小（22 人）、皆年輕精瘦者，推廣至過重族群需謹慎；每階段僅 4 天，無長期資料；食物選擇受限；槓桿假說仍在驗證中。",
+    "takeaway": "每餐確保有豆腐、蛋、魚或肉，有助壓下餐間零食衝動。",
+    "sources": [
+      {
+        "label": "Gosby et al., PLOS ONE 2011 — 蛋白質比例與能量攝取：蛋白質槓桿隨機交叉試驗",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3192127/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "蛋白質",
+      "飽足感",
+      "能量攝取",
+      "蛋白質槓桿"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 2,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "每天喝足 2500cc 水",
+    "title": "多喝水與較低的腎結石風險",
+    "summary": "Medicine 2015 一篇納入 15 項研究、35 萬人的統合分析發現：每多喝 500 mL 水，腎結石風險下降約 7%（RR 0.93；95% CI 0.87–0.98）。不過「2500cc」並非人人適用的鐵律，實際需求因體重、氣候與活動量而異。屬觀察性相關證據。",
+    "detail": "**研究設計**\nXu 等人（Medicine 2015）PRISMA 系統性回顧暨劑量反應統合分析，納入 10 項世代 + 5 項病例對照，共 9,601 腎結石個案、351,081 人。\n\n**主要發現**\n- 每增 500 mL 水：腎結石風險 RR 0.93（95% CI 0.87–0.98，P<0.01），無明顯閾值\n- 茶、酒精亦見保護關聯；果汁、汽水、牛奶無顯著關聯\n\n**限制**\n全為觀察性設計，無法建立因果；飲水量多自我回報有誤差；「2500cc」為概略參考——美國國家醫學院建議男約 3700 mL、女約 2700 mL（含食物水分），個人差異大。",
+    "takeaway": "多喝水有助降低腎結石風險，但水量因人而異、不必死守單一數字。",
+    "sources": [
+      {
+        "label": "Xu et al., Medicine 2015 — 飲水量與腎結石風險統合分析（PMID 26166074）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4504608/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "補水",
+      "腎結石預防",
+      "統合分析",
+      "觀察性研究"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 1,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "每餐前先喝一杯水",
+    "title": "餐前 500 mL 水，有助減重",
+    "summary": "Obesity 2010 一項 12 週隨機試驗讓 48 名中老年過重者每餐前 30 分鐘喝 500 mL 水，搭配低熱量飲食，水組比對照組多減約 2 公斤、減重速度快約 44%。同團隊交叉試驗顯示餐前 500 mL 水可使當餐熱量減少約 13%。",
+    "detail": "**研究設計**\nDennis 等人（Obesity 2010）12 週 RCT，48 名 55–75 歲過重／肥胖者，隨機分為「低熱量飲食＋每餐前 500 mL 水」與「低熱量飲食（對照）」。同團隊 Davy 等人（2008）另以 24 名老年肥胖者交叉試驗測單餐熱量。\n\n**主要發現**\n- 12 週：水組多減約 2 kg，減重速度比對照快約 44%（P<0.001）\n- 交叉試驗：餐前喝水當餐熱量約減 13%（500 vs 574 kcal，P=0.004）\n\n**限制**\n樣本小（48 人）、僅 55–75 歲中老年人，年輕族群效果未明；與低熱量飲食併行，難單獨歸因餐前水；長期（>12 週）證據不足。",
+    "takeaway": "餐前先喝一杯水，是有 RCT 支持的簡易減重輔助。",
+    "sources": [
+      {
+        "label": "Dennis et al., Obesity 2010 — 餐前喝水促進減重 RCT（PMID 19661958）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/19661958/",
+        "type": "pubmed"
+      },
+      {
+        "label": "Davy et al., 2008 — 餐前 500 mL 水降低早餐熱量攝取",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2743119/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "餐前喝水",
+      "體重管理",
+      "RCT",
+      "熱量攝取"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 2,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "起床後喝兩大口水",
+    "title": "晨起補水：合理，但直接證據薄弱",
+    "summary": "目前找不到專門驗證「起床後立即喝水」此行為的高品質研究；現有探討增加每日飲水量的系統性回顧（Ann Intern Med 2024）並未單獨檢驗晨起飲水的特殊效益。晨起補水作為整日補水的一環很合理，但它「獨立於整日補水之外」的好處尚無直接證據，屬初步建議。",
+    "detail": "**研究設計**\nSavoye 等人（Annals of Internal Medicine 2024）系統性回顧，從 1,464 篇篩出 18 項 RCT，涵蓋體重、腎結石、尿路感染等結果，但全是「增加每日總飲水量」的介入，並非針對「起床後」這個時間點。\n\n**主要發現**\n- 該回顧支持「增加每日總飲水量」與較多減重、較少腎結石復發有關\n- 找不到以「晨起飲水」為介入組的 RCT；約半數研究有正面結果、約四成為負面\n\n**限制**\n晨起喝水是「增加每日補水」的一種可行做法，機制上合理（夜間禁食後略有水分虧欠），但此特定行為本身的獨立效益未被直接研究，現有說法多為一般補水原則的外推，證據等級屬初步。",
+    "takeaway": "晨起喝水合理，但別期待它有超出「整天多喝水」之外的神奇效果。",
+    "sources": [
+      {
+        "label": "Savoye et al., Annals of Internal Medicine 2024 — 增加飲水量之 RCT 系統性回顧（PMID 39585691）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/39585691/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "晨起補水",
+      "補水",
+      "初步證據",
+      "系統性回顧"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 1,
+      "causality": 0,
+      "replication": 0
+    }
+  },
+  {
+    "habitName": "想吃甜食先吃堅果等 10 分鐘",
+    "title": "堅果有飽足感，但「等10分鐘」屬行為推論",
+    "summary": "Nutrients 2025 一項 16 週隨機試驗（84 人）顯示，以每日堅果當點心的組別對餅乾的渴望下降 0.63 分、冰淇淋下降 0.55 分（P<0.01），對照（高碳水點心）組則無顯著變化。但「先吃堅果、等 10 分鐘再決定」這個具體流程本身尚無實驗驗證，屬行為策略推論，整體證據偏初步。",
+    "detail": "**研究設計**\nNutrients 2025 發表的 16 週平行臂單盲 RCT（84 人，具代謝症候群風險），堅果組每日吃約 33.5 g 混合堅果，對照組吃等熱量高碳水點心，以食物渴望量表評估。另有統合分析（31 項 RCT）探討堅果與飢餓感。\n\n**主要發現**\n- 堅果組對餅乾渴望 −0.63、冰淇淋 −0.55（皆 P<0.01），對照組無顯著變化\n- 統合分析顯示堅果可小幅抑制飢餓感（VAS MD −6.54 mm，P=0.03），但飽足感與體重無顯著變化\n\n**限制**\n「先吃堅果等 10 分鐘再決定是否吃甜食」此具體流程未被 RCT 直接驗證，屬延遲—替代的行為推論；堅果飽足感效果量偏小、研究異質性高；樣本普遍偏小、長期效果未明。",
+    "takeaway": "嘴饞時先抓一小把堅果、給自己幾分鐘，是合理但屬經驗性的策略。",
+    "sources": [
+      {
+        "label": "Nutrients 2025 — 每日堅果點心與甜食渴望 16 週 RCT（PMC12694199）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12694199/",
+        "type": "pubmed"
+      },
+      {
+        "label": "Crit Rev Food Sci Nutr 2020 — 堅果與飢餓感／能量攝取統合分析（PMID 30422677）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/30422677/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "堅果",
+      "甜食渴望",
+      "飽足感",
+      "行為策略",
+      "初步證據"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 0,
+      "replication": 0
+    }
+  },
+  {
+    "habitName": "閱讀食品營養標示",
+    "title": "看營養標示與較佳飲食品質有關",
+    "summary": "Appetite 2019 一篇納入 26 項研究（20 橫斷面、1 世代、5 RCT）的系統性綜述指出：閱讀「營養成分」標示與較佳的飲食品質呈正相關，但多數證據為觀察性，難以排除「健康意識」本身的混淆，且對成分表、份量、包裝正面標示的效果證據不足。",
+    "detail": "**研究設計**\nAnastasiou 等人（Appetite 2019）系統性綜述，檢索至 2017 年 8 月，納入 26 篇研究（20 橫斷面、1 世代、5 RCT），以食物頻率問卷及 24 小時飲食回憶評估攝取。\n\n**主要發現**\n- 閱讀「營養成分」標示與較健康的整體飲食型態正相關\n- 使用「健康宣稱」標示反而可能與較差飲食相關，但證據不一致\n- 對成分表、份量、包裝正面標示的關聯，研究仍不足\n\n**限制**\n絕大多數為橫斷面設計，無法確立因果；標示使用率多自填、常被高估；研究族群多為西方成人，台灣在地資料有限。標示閱讀較像「健康行為的指標」，其獨立效果難以分離。",
+    "takeaway": "養成看營養標示的習慣不錯，但它更像健康意識的一部分，別期待單靠它見效。",
+    "sources": [
+      {
+        "label": "Anastasiou K, Miller M, Dickinson K, Appetite 2019 — 營養標示使用與飲食攝取：系統性綜述",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/31010704/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "營養標示",
+      "飲食品質",
+      "觀察性研究",
+      "系統性綜述"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "第一餐吃完後吃保健品",
+    "title": "脂溶性維生素隨餐吃，吸收較好",
+    "summary": "Journal of Bone and Mineral Research 2010 一項 17 人的前瞻研究發現：把維生素 D 改成隨「當天最大一餐」服用後，血清 25(OH)D 平均上升約 56.7%（歷時 2–3 個月）。推測與餐中脂肪促進膽鹽微胞吸收有關；但樣本小、無對照組，屬初步至中等證據。",
+    "detail": "**研究設計**\nMulligan & Licata（JBMR 2010）單臂前瞻研究，17 名維生素 D 吸收不佳的患者（多為老年女性），改為隨當日最大一餐服用補充劑，2–3 個月後再測。另有小型 RCT（Meemanee 2011）比較高脂 vs 低脂餐後吸收。\n\n**主要發現**\n- 隨最大一餐服用後，血清 25(OH)D 平均上升約 56.7%\n- 脂溶性維生素（D、E、K）在有脂肪時更易包入腸道膽鹽微胞而吸收\n- RCT 顯示高脂餐後第 14 日 25(OH)D 較低脂餐高約 59%\n\n**限制**\n主研究僅 17 人、無對照組、多為老年女性，代表性有限；不能排除服藥依從性改善等混淆；脂溶性維生素適用，水溶性／其他保健品未必相同。",
+    "takeaway": "脂溶性維生素（如 D）隨含油脂的一餐後吃，吸收較有保障。",
+    "sources": [
+      {
+        "label": "Mulligan & Licata, J Bone Miner Res 2010 — 維生素 D 隨最大一餐服用提升吸收（PMID 20200983）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/20200983/",
+        "type": "pubmed"
+      },
+      {
+        "label": "Meemanee et al., 2011 — 高脂 vs 低脂餐後單劑維生素 D 之血清濃度",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3235461/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "維生素D",
+      "脂溶性維生素",
+      "隨餐吸收",
+      "初步證據"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 1,
+      "causality": 1,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "空腹吃益生菌",
+    "title": "益生菌隨餐吃，存活率可能較好",
+    "summary": "一項體外消化模型研究（Beneficial Microbes 2011）發現，益生菌隨餐或餐前 30 分鐘服用時菌株存活率最佳，空腹服用因胃酸直接攻擊而存活較差。但這是體外模型、非人體試驗，且不同菌株差異大——「空腹 vs 隨餐」的人體直接證據其實很有限，屬初步。",
+    "detail": "**研究設計**\nTompkins 等人（Beneficial Microbes 2011）以體外消化系統模擬上消化道，測多菌株產品在不同用餐時機下的存活；食物條件含燕麥粥加牛奶、果汁、水等。\n\n**主要發現**\n- 隨含燕麥粥的餐食或餐前 30 分鐘服用時存活率最高；空腹或餐後 30 分鐘較差\n- 食物（尤其含脂肪者）可緩衝胃酸、縮短菌株暴露於高酸的時間\n\n**限制**\n為體外模型，無法完整模擬人體腸道；直接比較服用時機的人體 RCT 極少；腸溶膠囊等劑型可能大幅削弱時機影響；菌株不同結論難一概而論。整體證據屬初步。",
+    "takeaway": "想顧存活率，隨餐或餐前服用即可，不必拘泥「一定要空腹」。",
+    "sources": [
+      {
+        "label": "Tompkins et al., Beneficial Microbes 2011 — 用餐時機對益生菌通過上消化道存活的影響（PMID 22146689）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/22146689/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "益生菌",
+      "服用時機",
+      "胃酸存活",
+      "體外模型",
+      "初步證據"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 0,
+      "scale": 0,
+      "causality": 0,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "飯後補充薑黃和葉酸鐵",
+    "title": "薑黃素吸收差，搭配方式是關鍵",
+    "summary": "Planta Medica 1998 的人體試驗顯示，20 mg 胡椒鹼與薑黃素同服可把薑黃素生物利用率提高約 2000%；但 2025 年一項較嚴謹的藥代動力學研究指出胡椒鹼對某些配方並無明顯增益，各配方結果分歧。薑黃素本身吸收極差，臨床終點效益尚未確立，屬初步證據。",
+    "detail": "**研究設計**\nShoba 等人（Planta Medica 1998）藥代動力學試驗，於大鼠與人體比較薑黃素單獨服用 vs 合併 20 mg 胡椒鹼；胡椒鹼藉抑制葡萄糖醛酸化減慢薑黃素代謝。另有 2025 年藥代動力學研究重新檢視各增效配方。\n\n**主要發現**\n- 單獨服用薑黃素血中濃度極低；合併胡椒鹼後人體生物利用率提升約 2000%\n- 薑黃素為脂溶性，隨含脂肪飲食亦有助吸收\n- 鐵的部分：非血基質鐵與維生素 C／食物同食可提升吸收（與薑黃素為不同主題）\n\n**限制**\n2025 年研究顯示即使用增效配方，活性薑黃素血漿濃度仍遠低於體外有效濃度，且部分研究中胡椒鹼無增益；多為「生物利用率」機制研究，非臨床結局 RCT；隨餐建議主要基於機制推論，證據屬初步。",
+    "takeaway": "薑黃素要吸收得靠脂肪或胡椒鹼，但別把它當有確證療效的保健品。",
+    "sources": [
+      {
+        "label": "Shoba et al., Planta Medica 1998 — 胡椒鹼對薑黃素藥代動力學的影響（PMID 9619120）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/9619120/",
+        "type": "pubmed"
+      },
+      {
+        "label": "藥代動力學研究 2025 — 重新評估提升薑黃素生物利用率的配方（PMC12144411）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12144411/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "薑黃素",
+      "胡椒鹼",
+      "生物利用率",
+      "脂溶性吸收",
+      "初步證據"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 1,
+      "causality": 1,
+      "replication": 0
+    }
   }
 ]
