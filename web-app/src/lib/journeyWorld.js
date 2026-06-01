@@ -60,4 +60,36 @@ function aggregateJourney(rows) {
   return { homeCity: cities[0]?.city ?? null, cities };
 }
 
-module.exports = { cityTier, flagshipLevel, buildingCount, buildingStyleIndex, aggregateJourney };
+// 確定性城市佈局：domain 各占一個扇區，flagship 錨在扇區內側，building 沿扇區外擴，
+// generic 房子填中心附近。座標皆由 _hash seed 產生（同資料同佈局，禁用 Math.random）。
+const VIEW_W = 320, VIEW_H = 240, CX = 160, CY = 134;
+
+function _seededOffset(seedStr, radius) {
+  const h = _hash(seedStr);
+  const ang = (h % 360) * (Math.PI / 180);
+  const r = radius * (0.55 + ((h >> 9) % 100) / 100 * 0.45);
+  return { x: CX + Math.cos(ang) * r, y: CY + Math.sin(ang) * r * 0.62 };
+}
+
+function layoutCity(cityData) {
+  const nodes = [];
+  if (!cityData) return nodes;
+  const domains = cityData.domains || [];
+  domains.forEach((d, di) => {
+    const baseAng = (di / Math.max(1, domains.length)) * Math.PI * 2;
+    const fx = CX + Math.cos(baseAng) * 64, fy = CY + Math.sin(baseAng) * 64 * 0.62;
+    nodes.push({ kind: 'flagship', domain: d.domain, level: d.flagshipLevel, x: fx, y: fy, scale: 1 });
+    for (let b = 0; b < d.buildingCount; b++) {
+      const off = _seededOffset(`${cityData.city}|${d.domain}|b${b}`, 96);
+      nodes.push({ kind: 'building', domain: d.domain, styleIndex: buildingStyleIndex(d.domain, b), x: off.x, y: off.y, scale: 0.7 });
+    }
+  });
+  const generic = Math.floor((cityData.otherCount || 0) / BUILDING_EVERY);
+  for (let g = 0; g < generic; g++) {
+    const off = _seededOffset(`${cityData.city}|generic|${g}`, 70);
+    nodes.push({ kind: 'generic', domain: 'other', styleIndex: buildingStyleIndex('other', g), x: off.x, y: off.y, scale: 0.65 });
+  }
+  return nodes;
+}
+
+module.exports = { cityTier, flagshipLevel, buildingCount, buildingStyleIndex, aggregateJourney, layoutCity, VIEW_W, VIEW_H };
