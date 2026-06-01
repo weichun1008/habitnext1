@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>習慣模組 — 旅程世界概念圖</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,-50..200" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1c1b1f;
+    --paper: #fdfbf7;
+    --teal: #0d9488;
+    --teal-soft: #ccfbf1;
+    --coral: #f97362;
+    --amber: #f59e0b;
+    --sand: #efe9dd;
+  }
+  body { font-family: 'Outfit', 'Noto Sans TC', sans-serif; background: #e9e4da; }
+  .zh { font-family: 'Noto Sans TC', 'Outfit', sans-serif; }
+  .material-symbols-rounded {
+    font-family: 'Material Symbols Rounded'; font-weight: normal; font-style: normal;
+    line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block;
+    white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-smoothing: antialiased;
+  }
+  .phone {
+    width: 390px; background: var(--paper); border-radius: 40px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12); position: relative;
+  }
+  .label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; }
+
+  /* polaroid food cards */
+  .polaroid {
+    background: white; padding: 6px 6px 22px 6px; border-radius: 4px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12); position: relative;
+  }
+  .polaroid .photo { border-radius: 2px; height: 88px; display: flex; align-items: center; justify-content: center; font-size: 34px; }
+  .polaroid .cap { position: absolute; bottom: 4px; left: 0; right: 0; text-align: center; font-size: 9px; color: #78716c; font-weight: 600; }
+
+  /* world fog reveal */
+  .fogged { filter: grayscale(1) opacity(0.25); }
+
+  /* badge */
+  .badge-ring {
+    background: conic-gradient(from 0deg, #f59e0b, #f97362, #0d9488, #f59e0b);
+    padding: 3px; border-radius: 999px;
+  }
+
+  /* completion check pop */
+  @keyframes pop { 0%{transform:scale(0);opacity:0} 55%{transform:scale(1.2);opacity:1} 100%{transform:scale(1)} }
+  .pop { animation: pop .4s cubic-bezier(.34,1.56,.64,1) both; }
+
+  /* pin drop */
+  @keyframes drop { 0%{transform:translateY(-30px) scale(.6);opacity:0} 60%{transform:translateY(4px) scale(1.05);opacity:1} 100%{transform:translateY(0) scale(1)} }
+  .drop { animation: drop .55s cubic-bezier(.34,1.56,.64,1) both; }
+
+  .grain {
+    background-color: var(--paper);
+    background-image:
+      radial-gradient(at 15% 10%, rgba(13,148,136,0.05) 0, transparent 45%),
+      radial-gradient(at 85% 90%, rgba(249,115,98,0.05) 0, transparent 45%);
+  }
+</style>
+</head>
+<body class="py-12 px-4">
+
+<div class="max-w-[1400px] mx-auto">
+  <div class="text-center mb-3">
+    <h1 class="text-3xl font-extrabold text-stone-900">習慣模組 · 旅程世界</h1>
+  </div>
+  <p class="text-center text-stone-600 max-w-2xl mx-auto mb-10 zh text-sm leading-relaxed">
+    雙引擎：<b>走</b>＝探索世界、<b>吃</b>＝沿途收集回憶。工具側（每日打卡）維持乾淨；收集側（旅程世界）是讓你想回來的引擎。不接地圖 API、城市級插旗、零懲罰。
+  </p>
+
+  <div class="flex flex-wrap gap-10 justify-center items-start">
+
+    <!-- ============ SCREEN 1: DAILY (clean tool) ============ -->
+    <div>
+      <p class="text-center label text-stone-500 mb-3">① 每日 · 工具側（保持乾淨）</p>
+      <div class="phone grain" style="height: 800px;">
+        <!-- top -->
+        <div class="flex items-center justify-between px-6 pt-12 pb-2">
+          <div>
+            <p class="label text-stone-400">週五 · 11月14日</p>
+            <h2 class="zh text-2xl font-bold text-stone-900 mt-0.5">嗨，Johnson</h2>
+          </div>
+          <!-- streak as a quiet pill, not steps -->
+          <div class="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-100">
+            <span class="material-symbols-rounded text-amber-500" style="font-size:18px">local_fire_department</span>
+            <span class="font-bold text-amber-700 text-sm">14</span>
+          </div>
+        </div>
+
+        <!-- identity strip -->
+        <div class="px-6 py-3">
+          <div class="bg-teal-50/70 border border-teal-100 rounded-2xl px-4 py-3">
+            <p class="label text-teal-700 mb-0.5">為了 · 想要快速入睡</p>
+            <p class="zh text-teal-900 font-bold">我是個尊重身體節律的人</p>
+          </div>
+        </div>
+
+        <!-- today list -->
+        <div class="px-6 pt-2">
+          <div class="flex items-center justify-between mb-2">
+            <p class="label text-stone-400">今天 · 1 / 4</p>
+          </div>
+
+          <!-- the two universal底層 habits, marked subtly -->
+          <div class="space-y-2.5">
+            <!-- eat (done, with photo) -->
+            <div class="flex items-center gap-3 py-2.5 px-3 bg-white rounded-2xl border border-stone-100">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-200 to-rose-200 flex items-center justify-center text-lg">🍱</div>
+              <div class="flex-1">
+                <p class="zh font-semibold text-stone-800 text-sm">記錄午餐</p>
+                <p class="text-[11px] text-emerald-600 zh">已拍 · 已收進旅程 ✦</p>
+              </div>
+              <span class="material-symbols-rounded text-emerald-500 pop" style="font-size:24px">check_circle</span>
+            </div>
+
+            <!-- walk -->
+            <div class="flex items-center gap-3 py-2.5 px-3 bg-white rounded-2xl border border-stone-100">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-200 to-cyan-200 flex items-center justify-center text-lg">🚶</div>
+              <div class="flex-1">
+                <p class="zh font-semibold text-stone-800 text-sm">飯後散步</p>
+                <p class="text-[11px] text-stone-400 zh">解鎖新區域 · 約 15 分鐘</p>
+              </div>
+              <span class="w-6 h-6 rounded-full border-2 border-stone-300"></span>
+            </div>
+
+            <!-- personal habit 1 -->
+            <div class="flex items-center gap-3 py-2.5 px-3 bg-white rounded-2xl border border-stone-100">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-200 to-indigo-200 flex items-center justify-center text-lg">💧</div>
+              <div class="flex-1">
+                <p class="zh font-semibold text-stone-800 text-sm">不喝含糖飲料</p>
+                <p class="text-[11px] text-stone-400 zh">蔡英傑教授 · 腸道計劃</p>
+              </div>
+              <span class="w-6 h-6 rounded-full border-2 border-stone-300"></span>
+            </div>
+
+            <!-- personal habit 2 -->
+            <div class="flex items-center gap-3 py-2.5 px-3 bg-white rounded-2xl border border-stone-100">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-200 to-blue-200 flex items-center justify-center text-lg">🌙</div>
+              <div class="flex-1">
+                <p class="zh font-semibold text-stone-800 text-sm">睡前停止螢幕</p>
+                <p class="text-[11px] text-stone-400 zh">22:00</p>
+              </div>
+              <span class="w-6 h-6 rounded-full border-2 border-stone-300"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- bottom nav -->
+        <div class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur border-t border-stone-100 px-8 py-3 flex justify-between">
+          <div class="flex flex-col items-center gap-0.5 text-teal-600">
+            <span class="material-symbols-rounded" style="font-size:24px">today</span>
+            <span class="text-[10px] zh font-bold">今天</span>
+          </div>
+          <div class="flex flex-col items-center gap-0.5 text-stone-400">
+            <span class="material-symbols-rounded" style="font-size:24px">explore</span>
+            <span class="text-[10px] zh">旅程</span>
+          </div>
+          <div class="flex flex-col items-center gap-0.5 text-stone-400">
+            <span class="material-symbols-rounded" style="font-size:24px">grid_view</span>
+            <span class="text-[10px] zh">計劃</span>
+          </div>
+          <div class="flex flex-col items-center gap-0.5 text-stone-400">
+            <span class="material-symbols-rounded" style="font-size:24px">person</span>
+            <span class="text-[10px] zh">我的</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-xs text-stone-500 mt-3 zh max-w-[360px]">每日就是乾淨清單。吃＝🍱、走＝🚶 兩個普世底層習慣有自己的圖示；達人計劃的習慣標注來源。完成「吃」會悄悄說「已收進旅程 ✦」。</p>
+    </div>
+
+    <!-- ============ SCREEN 2: JOURNEY WORLD (the collection engine) ============ -->
+    <div>
+      <p class="text-center label text-stone-500 mb-3">② 旅程 · 收集側（讓你想回來）</p>
+      <div class="phone" style="height: 800px; background: linear-gradient(180deg,#eafaf6 0%, #fdfbf7 40%);">
+        <!-- header -->
+        <div class="px-6 pt-12 pb-3">
+          <p class="label text-teal-600">你的旅程</p>
+          <h2 class="zh text-2xl font-extrabold text-stone-900 mt-0.5">吃過 23 地 · 探索 5 區</h2>
+        </div>
+
+        <!-- stylized world (SVG, no map API) -->
+        <div class="mx-5 rounded-3xl overflow-hidden relative" style="height: 280px; background: radial-gradient(circle at 50% 40%, #d1f5ec 0, #bfe9f7 70%, #a9dcf0 100%);">
+          <!-- soft continents -->
+          <svg viewBox="0 0 360 280" class="w-full h-full">
+            <!-- discovered island cluster -->
+            <path d="M70 120 Q60 80 110 75 Q160 60 190 95 Q230 85 235 130 Q255 160 210 175 Q190 210 140 195 Q85 200 75 160 Z" fill="#f2ead8" stroke="#e0d3b8" stroke-width="2"/>
+            <!-- fogged future area -->
+            <path d="M250 180 Q290 165 310 195 Q325 225 290 240 Q255 245 248 215 Z" fill="#cfd8d6" opacity="0.4"/>
+            <path d="M40 200 Q25 185 50 175 Q75 180 70 205 Q60 225 45 215 Z" fill="#cfd8d6" opacity="0.4"/>
+
+            <!-- route dotted line (走過的軌跡，風格化) -->
+            <path d="M110 150 Q140 110 175 130 Q205 140 195 165" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-dasharray="2 7" stroke-linecap="round" opacity="0.7"/>
+          </svg>
+
+          <!-- food pins on the island -->
+          <div class="absolute drop" style="left: 26%; top: 38%;">
+            <div class="polaroid" style="width:52px; transform: rotate(-8deg);">
+              <div class="photo" style="background:linear-gradient(135deg,#fde68a,#fca5a5);height:40px;font-size:20px">🍜</div>
+            </div>
+          </div>
+          <div class="absolute drop" style="left: 46%; top: 30%; animation-delay:.1s">
+            <div class="polaroid" style="width:52px; transform: rotate(6deg);">
+              <div class="photo" style="background:linear-gradient(135deg,#bbf7d0,#86efac);height:40px;font-size:20px">🥗</div>
+            </div>
+          </div>
+          <div class="absolute drop" style="left: 52%; top: 52%; animation-delay:.2s">
+            <div class="polaroid" style="width:52px; transform: rotate(-4deg);">
+              <div class="photo" style="background:linear-gradient(135deg,#fed7aa,#fdba74);height:40px;font-size:20px">🍱</div>
+            </div>
+          </div>
+          <!-- expert destination flag -->
+          <div class="absolute" style="left: 70%; top: 60%;">
+            <div class="badge-ring" style="width:34px;height:34px;">
+              <div class="w-full h-full rounded-full bg-white flex items-center justify-center text-base">🦠</div>
+            </div>
+          </div>
+          <!-- "?" fog markers -->
+          <div class="absolute text-stone-400 font-bold" style="left:80%;top:78%;">?</div>
+          <div class="absolute text-stone-400 font-bold" style="left:12%;top:74%;">?</div>
+        </div>
+
+        <p class="text-center text-[11px] text-stone-400 zh mt-2">繼續散步，解鎖更多區域 · 點亮你的世界</p>
+
+        <!-- recent food collection strip -->
+        <div class="px-5 mt-4">
+          <p class="label text-stone-400 mb-2">最近收集 · 台北</p>
+          <div class="flex gap-3 overflow-x-auto pb-2">
+            <div class="polaroid flex-shrink-0" style="width:84px; transform:rotate(-3deg)">
+              <div class="photo" style="background:linear-gradient(135deg,#fde68a,#fca5a5)">🍜</div>
+              <span class="cap zh">永康牛肉麵</span>
+            </div>
+            <div class="polaroid flex-shrink-0" style="width:84px; transform:rotate(2deg)">
+              <div class="photo" style="background:linear-gradient(135deg,#bbf7d0,#86efac)">🥗</div>
+              <span class="cap zh">減糖沙拉</span>
+            </div>
+            <div class="polaroid flex-shrink-0" style="width:84px; transform:rotate(-2deg)">
+              <div class="photo" style="background:linear-gradient(135deg,#fed7aa,#fdba74)">🍱</div>
+              <span class="cap zh">原型食物餐盒</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- nav -->
+        <div class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur border-t border-stone-100 px-8 py-3 flex justify-between">
+          <div class="flex flex-col items-center gap-0.5 text-stone-400"><span class="material-symbols-rounded" style="font-size:24px">today</span><span class="text-[10px] zh">今天</span></div>
+          <div class="flex flex-col items-center gap-0.5 text-teal-600"><span class="material-symbols-rounded" style="font-size:24px">explore</span><span class="text-[10px] zh font-bold">旅程</span></div>
+          <div class="flex flex-col items-center gap-0.5 text-stone-400"><span class="material-symbols-rounded" style="font-size:24px">grid_view</span><span class="text-[10px] zh">計劃</span></div>
+          <div class="flex flex-col items-center gap-0.5 text-stone-400"><span class="material-symbols-rounded" style="font-size:24px">person</span><span class="text-[10px] zh">我的</span></div>
+        </div>
+      </div>
+      <p class="text-center text-xs text-stone-500 mt-3 zh max-w-[360px]">風格化世界（純 SVG、零地圖 API）。飲食照片＝拍立得插旗、走路＝解鎖霧區、達人計劃＝地圖上的目的地（🦠＝腸道）。城市級分組，不追精確 GPS。</p>
+    </div>
+
+    <!-- ============ SCREEN 3: capture moment + expert badge ============ -->
+    <div class="space-y-10">
+
+      <!-- 3a: food capture → pin moment -->
+      <div>
+        <p class="text-center label text-stone-500 mb-3">③ 拍照的瞬間 · 收進旅程</p>
+        <div class="phone grain" style="height: 380px;">
+          <div class="h-full flex flex-col items-center justify-center px-8 text-center">
+            <div class="polaroid drop mb-5" style="width:150px; transform:rotate(-4deg)">
+              <div class="photo" style="background:linear-gradient(135deg,#fde68a,#fca5a5);height:130px;font-size:54px">🍜</div>
+              <span class="cap zh" style="font-size:11px">永康牛肉麵 · 台北</span>
+            </div>
+            <p class="zh text-lg font-bold text-stone-800">收進旅程！</p>
+            <p class="zh text-sm text-stone-500 mt-1">這是你在台北的第 8 個回憶</p>
+            <div class="flex items-center gap-1.5 mt-3 bg-teal-50 px-3 py-1.5 rounded-full">
+              <span class="material-symbols-rounded text-teal-600" style="font-size:16px">add_location</span>
+              <span class="text-xs font-bold text-teal-700 zh">台北 · 解鎖進度 8/15</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-center text-xs text-stone-500 mt-3 zh max-w-[360px]">拍立得「掉進」旅程的小動畫（drop + spring）。慶祝強但短 — 不持續噪音。8 週後不強制，但這個瞬間讓人想繼續拍。</p>
+      </div>
+
+      <!-- 3b: expert plan + badge -->
+      <div>
+        <p class="text-center label text-stone-500 mb-3">④ 達人計劃 · 徽章</p>
+        <div class="phone" style="height: 380px; background:#fdfbf7;">
+          <div class="px-6 pt-8">
+            <p class="label text-stone-400 mb-3">初日會客室 · 專家計劃</p>
+
+            <!-- expert plan card -->
+            <div class="rounded-3xl overflow-hidden border border-stone-200" style="box-shadow:0 8px 24px rgba(0,0,0,0.06)">
+              <div class="px-5 py-4 flex items-center gap-3" style="background:linear-gradient(135deg,#0d9488,#0891b2)">
+                <div class="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-2xl">👨‍🔬</div>
+                <div class="text-white">
+                  <p class="zh font-bold">蔡英傑 教授</p>
+                  <p class="zh text-xs text-teal-50 opacity-90">腸道權威 · 國際知名</p>
+                </div>
+              </div>
+              <div class="px-5 py-4">
+                <h3 class="zh font-extrabold text-stone-900 text-lg">14 天腸道改善計劃</h3>
+                <p class="zh text-xs text-stone-500 mt-1 leading-relaxed">益生菌、發酵食物、減糖三管齊下，重建腸道菌相。</p>
+
+                <!-- the collectible badge -->
+                <div class="flex items-center gap-3 mt-4 p-3 bg-amber-50 rounded-2xl border border-amber-100">
+                  <div class="badge-ring" style="width:48px;height:48px;flex-shrink:0">
+                    <div class="w-full h-full rounded-full bg-white flex items-center justify-center text-xl">🦠</div>
+                  </div>
+                  <div>
+                    <p class="zh text-xs font-bold text-amber-800">完成後獲得徽章</p>
+                    <p class="zh text-[11px] text-amber-600">「腸道修復者」· 限定簽名章</p>
+                  </div>
+                </div>
+
+                <button class="w-full mt-4 py-3 rounded-full text-white font-bold zh" style="background:#0d9488">
+                  免費加入計劃
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-center text-xs text-stone-500 mt-3 zh max-w-[360px]">每位專家有簽名徽章（社交貨幣）。105 萬訂閱頻道 → 專家設計計劃 → 完成蓋章 → 截圖炫耀＝免費行銷。免費/付費分層。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- philosophy footer -->
+  <div class="max-w-4xl mx-auto mt-14 bg-white rounded-3xl p-8 border border-stone-200">
+    <h2 class="text-2xl font-extrabold text-stone-900 mb-5 zh">這版怎麼回應你所有的需求</h2>
+    <div class="grid md:grid-cols-2 gap-x-10 gap-y-5 text-sm zh">
+      <div><b class="text-teal-700">雙引擎</b><p class="text-stone-600 mt-1 leading-relaxed">走＝探索（解鎖霧區）、吃＝收集（拍立得插旗）。兩個普世、終身、產生真實資料的行為當底層；其他習慣是「你正在練的功」+ 達人計劃。</p></div>
+      <div><b class="text-teal-700">不接地圖 API · 不靠步數</b><p class="text-stone-600 mt-1 leading-relaxed">世界是純 SVG 風格化插畫，城市級插旗。零地圖成本，web 上也跑得動。步數那種要原生整合的留到 cofit app。</p></div>
+      <div><b class="text-teal-700">工具乾淨 / 收集分開</b><p class="text-stone-600 mt-1 leading-relaxed">「今天」分頁是純清單（產品目的）；「旅程」分頁才是收集世界（留存引擎）。不潑灑、不麻痺、opt-in。</p></div>
+      <div><b class="text-teal-700">零懲罰</b><p class="text-stone-600 mt-1 leading-relaxed">漏一天不會失去任何收集。沒做只是沒長新東西。用「珍惜」拉回來，不是「恐懼」（比 Forest 進步的地方）。</p></div>
+      <div><b class="text-teal-700">結合現實世界</b><p class="text-stone-600 mt-1 leading-relaxed">飲食照片＝你真實生活的回憶（旅行、美食），這是 Pikmin 明信片機制的對應，而且是你們本來就在拍的東西。</p></div>
+      <div><b class="text-teal-700">達人飛輪</b><p class="text-stone-600 mt-1 leading-relaxed">專家簽名徽章＝社交貨幣 + 行銷 + 變現分層。蔡英傑「腸道修復者」、文長安「食安守護者」各有專屬章。</p></div>
+    </div>
+    <div class="mt-6 pt-5 border-t border-stone-100 text-sm zh">
+      <p class="text-stone-500"><b class="text-stone-700">仍待你定的：</b>① 視覺調性（這版是「明亮現代插畫」，也可更暖手作或更冷科技）② 走路要不要真的影響解鎖、還是純象徵 ③ 個人習慣要 (a)純底層 還是 (b)有加成回饋到世界。</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
