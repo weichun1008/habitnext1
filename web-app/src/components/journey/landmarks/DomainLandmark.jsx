@@ -1,7 +1,9 @@
 // Building SVG archetypes per health domain, lifted from the committed mockup
 // docs/.../2026-06-01-sliceP-domain-landmarks.html (ground ellipse + labels dropped;
-// the CityScene draws the ground). Each stage is a <g> drawn in the mockup's
-// 120x104 local space (building sits around x=60, baseline y≈80).
+// the CityScene draws the ground). Each stage is authored in the mockup's
+// 120x104 space (building sits around x=60, baseline y≈80); the render wraps that
+// content in a translate(-60,-80) so the building base-center lands at local origin
+// (0,0), matching Tree/MemoryPin/GenericBuilding for the CityScene node contract.
 
 const LANDMARKS = {
   基因與腸道: {
@@ -243,7 +245,9 @@ export default function DomainLandmark({ domain, level, x = 0, y = 0, scale = 1 
       data-level={String(level)}
       transform={`translate(${x},${y}) scale(${scale})`}
     >
-      {stage || <Fallback />}
+      <g transform="translate(-60,-80)">
+        {stage || <Fallback />}
+      </g>
     </g>
   );
 }
