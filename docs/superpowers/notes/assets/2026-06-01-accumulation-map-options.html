@@ -1,0 +1,84 @@
+<h2>習慣「累積」怎麼放進地圖</h2>
+<p class="subtitle">地圖的軸是空間（城市），累積的軸是時間×重複×領域。3 種設計哲學 — 同一個台北隨累積長大的樣子</p>
+
+<div class="cards">
+
+  <!-- A. 城市成長 村→鎮→都市 -->
+  <div class="card" data-choice="city-grow" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:14px;background:#fdfbf7">
+      <div style="font-family:'Outfit','Noto Sans TC',sans-serif">
+        <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:8px">
+          <!-- stage 1 -->
+          <div style="flex:1;text-align:center">
+            <div style="height:70px;background:linear-gradient(160deg,#ccfbf1,#fef3c7);border-radius:10px;position:relative;overflow:hidden">
+              <div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:14px">🏕️</div>
+            </div>
+            <div style="font-size:9px;color:#78716c;margin-top:3px" class="zh">台北 · 3 次</div>
+          </div>
+          <!-- stage 2 -->
+          <div style="flex:1;text-align:center">
+            <div style="height:70px;background:linear-gradient(160deg,#ccfbf1,#fef3c7);border-radius:10px;position:relative;overflow:hidden">
+              <div style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:18px">🏘️</div>
+            </div>
+            <div style="font-size:9px;color:#78716c;margin-top:3px" class="zh">台北 · 30 次</div>
+          </div>
+          <!-- stage 3 -->
+          <div style="flex:1;text-align:center">
+            <div style="height:70px;background:linear-gradient(160deg,#5eead4,#fcd34d);border-radius:10px;position:relative;overflow:hidden">
+              <div style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:22px">🌆</div>
+            </div>
+            <div style="font-size:9px;color:#0f766e;font-weight:700;margin-top:3px" class="zh">台北 · 120 次</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. 城市成長（村莊 → 城鎮 → 都市）</h3>
+      <p>累積次數讓「該地點」越長越繁榮。你最常待的家鄉（台北）會長成大都市、旅行城市是小村莊。<br><b>優</b>：地理軸不變、累積=地方變繁華（Pikmin 開花感）、家鄉變大都市 = 持之以恆的獎勵。<br><b>缺</b>：看不出「累積在哪個健康領域」（睡眠?腸道?都混在一起）。</p>
+    </div>
+  </div>
+
+  <!-- B. 領域地標 -->
+  <div class="card" data-choice="domain-landmark" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:14px;background:#fdfbf7">
+      <div style="font-family:'Outfit','Noto Sans TC',sans-serif">
+        <div style="height:124px;background:linear-gradient(160deg,#ccfbf1,#fef3c7);border-radius:12px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:6px;left:10px;font-size:9px;font-weight:800;color:#0f766e" class="zh">台北 · 你蓋的地標</div>
+          <!-- domain landmarks -->
+          <div style="position:absolute;bottom:14px;left:18px;text-align:center"><div style="font-size:24px">🛏️</div><div style="font-size:7px;color:#78716c" class="zh">睡眠燈塔 Lv3</div></div>
+          <div style="position:absolute;bottom:14px;left:88px;text-align:center"><div style="font-size:24px">🌿</div><div style="font-size:7px;color:#78716c" class="zh">腸道花園 Lv2</div></div>
+          <div style="position:absolute;bottom:14px;left:158px;text-align:center"><div style="font-size:24px">🧘</div><div style="font-size:7px;color:#78716c" class="zh">禪園 Lv1</div></div>
+          <div style="position:absolute;bottom:16px;left:228px;text-align:center;opacity:.4"><div style="font-size:24px">🏃</div><div style="font-size:7px;color:#a8a29e" class="zh">運動場 鎖</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. 領域地標（9 大面向 = 9 種建築）</h3>
+      <p>每個 GENESIS+IO 領域累積到里程碑 → 城市裡長出該領域的主題建築（睡眠=燈塔、腸道=花園、壓力=禪園…），再升級 Lv1→Lv2→Lv3。<br><b>優</b>：一眼看出「我在練哪些功、各練到幾級」，呼應既有 9 面向資產、收集感強。<br><b>缺</b>：建築放哪個城市要決定（通常放家鄉）。</p>
+    </div>
+  </div>
+
+  <!-- C. 結合（推薦）-->
+  <div class="card" data-choice="combined" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:14px;background:#fdfbf7">
+      <div style="font-family:'Outfit','Noto Sans TC',sans-serif">
+        <div style="height:124px;background:linear-gradient(160deg,#5eead4,#fcd34d);border-radius:12px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:6px;left:10px;font-size:9px;font-weight:800;color:#0f766e" class="zh">台北 · 都市 Lv4 · 120 次</div>
+          <!-- skyline grows (city level) + domain landmarks within -->
+          <div style="position:absolute;bottom:10px;left:14px;font-size:26px">🌆</div>
+          <div style="position:absolute;bottom:16px;left:78px;text-align:center"><div style="font-size:20px">🛏️</div><div style="font-size:7px;color:#0f766e" class="zh">燈塔3</div></div>
+          <div style="position:absolute;bottom:16px;left:130px;text-align:center"><div style="font-size:20px">🌿</div><div style="font-size:7px;color:#0f766e" class="zh">花園2</div></div>
+          <div style="position:absolute;bottom:16px;left:182px;text-align:center"><div style="font-size:20px">🧘</div><div style="font-size:7px;color:#0f766e" class="zh">禪園1</div></div>
+          <!-- food polaroid memory still pinned -->
+          <div style="position:absolute;top:30px;left:230px;background:#fff;padding:3px 3px 9px;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.15);transform:rotate(7deg)"><div style="width:30px;height:24px;background:#fb923c;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:13px">🍜</div></div>
+          <div style="position:absolute;top:6px;left:228px;font-size:16px;filter:drop-shadow(0 0 4px gold)">⭐</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. 結合：城市等級 + 領域地標 + 回憶 pin（推薦）</h3>
+      <p>三軸同框在一個世界：<br>• <b>城市大小/等級</b> = 在這累積了多少次（廣度 + 量）<br>• <b>領域地標</b> = 各健康面向練到幾級（深度 + 領域）<br>• <b>拍立得 / ⭐</b> = 飲食回憶 + 加成特殊地點<br><b>優</b>：一張圖看完「去過哪、做了多少、練了什麼、吃了什麼」。最豐富。<br><b>缺</b>：視覺要小心別太擠（用城市縮放 / 點開城市看細節解）。</p>
+    </div>
+  </div>
+
+</div>
