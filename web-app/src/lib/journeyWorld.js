@@ -27,6 +27,14 @@ function flagshipLevel(count) {
 }
 function buildingCount(count) { return Math.floor(count / BUILDING_EVERY); }
 
+function nextTierProgress(total) {
+  const tier = cityTier(total);
+  const idx = CITY_TIERS.findIndex((row) => row.tier === tier);
+  const next = CITY_TIERS[idx + 1];
+  if (!next) return { tier, nextTier: null, remaining: 0 };
+  return { tier, nextTier: next.tier, remaining: next.min - total };
+}
+
 function _hash(str) {
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
@@ -92,4 +100,4 @@ function layoutCity(cityData) {
   return nodes;
 }
 
-module.exports = { cityTier, flagshipLevel, buildingCount, buildingStyleIndex, aggregateJourney, layoutCity, VIEW_W, VIEW_H };
+module.exports = { cityTier, flagshipLevel, buildingCount, buildingStyleIndex, aggregateJourney, layoutCity, nextTierProgress, VIEW_W, VIEW_H };
