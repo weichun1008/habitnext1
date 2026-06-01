@@ -22,7 +22,8 @@
     "status": "published",
     "order": 0,
     "aiGenerated": false,
-    "sourcePrompt": null
+    "sourcePrompt": null,
+    "evidence": { "studyType": 1, "scale": 2, "causality": 0, "replication": 0 }
   },
   {
     "habitName": "減少精緻糖與澱粉攝取",
@@ -62,7 +63,8 @@
     "status": "published",
     "order": 1,
     "aiGenerated": false,
-    "sourcePrompt": null
+    "sourcePrompt": null,
+    "evidence": { "studyType": 0, "scale": 0, "causality": 0, "replication": 1 }
   },
   {
     "habitName": "維持血糖穩定 (先吃菜肉再吃飯)",
@@ -87,7 +89,8 @@
     "status": "draft",
     "order": 0,
     "aiGenerated": true,
-    "sourcePrompt": null
+    "sourcePrompt": null,
+    "evidence": { "studyType": 2, "scale": 1, "causality": 2, "replication": 1 }
   },
   {
     "habitName": "吃飯細嚼慢嚥 (每口20下)",
@@ -111,7 +114,8 @@
     "status": "draft",
     "order": 0,
     "aiGenerated": true,
-    "sourcePrompt": null
+    "sourcePrompt": null,
+    "evidence": { "studyType": 2, "scale": 1, "causality": 1, "replication": 0 }
   },
   {
     "habitName": "執行 168 間歇性斷食",
@@ -135,7 +139,8 @@
     "status": "draft",
     "order": 0,
     "aiGenerated": true,
-    "sourcePrompt": null
+    "sourcePrompt": null,
+    "evidence": { "studyType": 2, "scale": 2, "causality": 2, "replication": 2 }
   },
   {
     "habitName": "攝取優質 Omega-3 油脂",
@@ -160,6 +165,7 @@
     "status": "draft",
     "order": 0,
     "aiGenerated": true,
-    "sourcePrompt": null
+    "sourcePrompt": null,
+    "evidence": { "studyType": 3, "scale": 2, "causality": 2, "replication": 2 }
   }
 ]

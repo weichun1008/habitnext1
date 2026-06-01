@@ -34,7 +34,7 @@ async function main() {
     let skipped = 0;
 
     for (const entry of entries) {
-        const { habitName, title, summary, detail, takeaway, sources, tags, status, order, aiGenerated, sourcePrompt } = entry;
+        const { habitName, title, summary, detail, takeaway, sources, tags, status, order, aiGenerated, sourcePrompt, evidence } = entry;
 
         if (!habitName || !title || !summary || !detail) {
             console.warn(`✗ Skip — missing required fields:`, { habitName, title });
@@ -62,6 +62,7 @@ async function main() {
             order: Number.isFinite(order) ? order : 0,
             aiGenerated: Boolean(aiGenerated),
             sourcePrompt: sourcePrompt || null,
+            evidence: (evidence && typeof evidence === 'object') ? evidence : null,
         };
 
         // Idempotency: match on (habitId, title). Title is the closest thing
