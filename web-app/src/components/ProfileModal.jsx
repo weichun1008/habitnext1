@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { X, User, Phone, Lock, Save, Loader, Eye, EyeOff, LogOut, Sparkles } from 'lucide-react';
+import { X, User, Phone, Lock, Save, Loader, Eye, EyeOff, LogOut, Sparkles, MapPin } from 'lucide-react';
 import { AVATAR_DEFS, DEFAULT_AVATAR_ID, getAvatarDef } from '@/lib/avatars';
 import MyAspirationsTab from './profile/MyAspirationsTab';
 
@@ -24,6 +24,28 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
     const [success, setSuccess] = useState('');
     const [showPasswords, setShowPasswords] = useState(false);
     const [changePassword, setChangePassword] = useState(false);
+    // Slice O — opt-in 記錄完成地點 (default off). Persists immediately on toggle.
+    const [trackLocation, setTrackLocation] = useState(!!user?.trackLocation);
+
+    const handleToggleTrackLocation = async () => {
+        const next = !trackLocation;
+        setTrackLocation(next);
+        try {
+            await fetch('/api/user/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id, trackLocation: next }),
+            });
+            onUpdate?.({ ...user, trackLocation: next });
+            // First enable → trigger one permission prompt (best-effort, non-blocking)
+            if (next && typeof navigator !== 'undefined' && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(() => {}, () => {}, { enableHighAccuracy: false, timeout: 8000 });
+            }
+        } catch (e) {
+            console.error('toggle trackLocation failed', e);
+            setTrackLocation(!next); // revert on error
+        }
+    };
 
     // Reset form when user changes
     React.useEffect(() => {
@@ -34,6 +56,7 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
                 phone: user.phone || '',
                 avatar: user.avatar || '',
             }));
+            setTrackLocation(!!user.trackLocation);   // ★ Slice O
         }
     }, [user]);
 
@@ -316,6 +339,24 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
                             </div>
                         </div>
                     )}
+
+                    {/* Slice O — opt-in 記錄完成地點 */}
+                    <div className="flex items-start justify-between gap-3 py-3 border-t border-gray-100">
+                        <div className="flex-1">
+                            <p className="text-sm font-bold text-gray-800 flex items-center gap-1.5"><MapPin size={14} className="text-emerald-500" />記錄完成地點</p>
+                            <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                                僅在你完成習慣時記錄城市、只存座標數字、不會背景追蹤你的位置。可隨時關閉。
+                            </p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={handleToggleTrackLocation}
+                            aria-pressed={trackLocation}
+                            className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 mt-0.5 ${trackLocation ? 'bg-emerald-500' : 'bg-gray-300'}`}
+                        >
+                            <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${trackLocation ? 'translate-x-5' : ''}`} />
+                        </button>
+                    </div>
 
                     {/* Error / Success */}
                     {error && (

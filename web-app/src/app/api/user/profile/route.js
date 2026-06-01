@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 export async function PUT(request) {
     try {
         const body = await request.json();
-        const { userId, nickname, phone, avatar, oldPassword, newPassword } = body;
+        const { userId, nickname, phone, avatar, oldPassword, newPassword, trackLocation } = body;
 
         if (!userId) {
             return NextResponse.json({ error: 'User ID required' }, { status: 400 });
@@ -23,6 +23,11 @@ export async function PUT(request) {
 
         // Build update data
         const updateData = {};
+
+        // Slice O — opt-in location tracking flag
+        if (trackLocation !== undefined) {
+            updateData.trackLocation = !!trackLocation;
+        }
 
         // Update nickname
         if (nickname !== undefined && nickname !== user.nickname) {
