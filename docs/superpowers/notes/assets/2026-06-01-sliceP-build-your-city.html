@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slice P — 建構你的城市（成長過程 + 三種幾何）</title>
+<style>
+  :root{
+    --teal:#0d9488; --teal-d:#0f766e; --teal-l:#34b3a6; --coral:#f97362; --amber:#f59e0b;
+    --paper:#fdfbf7; --ink:#1f2937; --muted:#6b7280; --line:#e7e2d8;
+    --grass:#cfe8bf; --grass-d:#a9d49a; --grass-e:#9ccb8a;
+    --road:#e9e2d2; --sky:#eaf6f3;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#f3efe7;color:var(--ink);
+    font-family:'Outfit','Noto Sans TC',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 20px 90px}
+  h1{font-size:25px;margin:0 0 4px;letter-spacing:-.02em}
+  h2{font-size:18px;margin:36px 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px;margin:0}
+  .lead{font-size:13.5px;color:#374151;line-height:1.7;margin:6px 0 0;max-width:760px}
+  .note{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12.5px;
+    padding:10px 14px;border-radius:12px;margin:16px 0 6px;line-height:1.6}
+  /* progression */
+  .prog{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:18px}
+  @media(max-width:980px){.prog{grid-template-columns:repeat(2,1fr)}}
+  .stage{background:var(--paper);border:1px solid var(--line);border-radius:20px;overflow:hidden;
+    box-shadow:0 6px 20px rgba(31,41,55,.06)}
+  .scene{height:200px;background:radial-gradient(120% 90% at 50% 0%,var(--sky) 0%,#dcefe9 70%,#cbe9e2 100%)}
+  .cap{padding:12px 16px 16px}
+  .cap .t{font-size:14px;font-weight:800;letter-spacing:-.01em}
+  .cap .n{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .cap .d{font-size:11.5px;color:#4b5563;margin-top:7px;line-height:1.6}
+  .lv{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;color:#fff}
+  .lv0{background:#9ca3af}.lv1{background:var(--grass-e)}.lv2{background:var(--teal-l)}.lv3{background:var(--teal-d)}
+  /* geometry options */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:18px}
+  @media(max-width:980px){.grid3{grid-template-columns:1fr}}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:22px;overflow:hidden;
+    box-shadow:0 6px 22px rgba(31,41,55,.06)}
+  .card h3{font-size:16px;margin:0;padding:16px 18px 2px}
+  .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:999px;
+    background:var(--teal);color:#fff;margin-left:8px;vertical-align:middle}
+  .desc{font-size:12px;color:var(--muted);padding:0 18px 10px;line-height:1.6;min-height:54px}
+  .gscene{height:240px;background:radial-gradient(120% 90% at 50% 0%,var(--sky) 0%,#dcefe9 70%,#cbe9e2 100%);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .pros{font-size:12px;padding:12px 18px 16px;line-height:1.7}
+  .pros b{color:var(--teal-d)} .pros .con{color:#b45309}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:16px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .citylabel{font-weight:800;fill:var(--ink)}
+  .pin{filter:drop-shadow(0 2px 2px rgba(0,0,0,.18))}
+  .world{display:flex;gap:14px;align-items:center;background:var(--paper);border:1px solid var(--line);
+    border-radius:18px;padding:14px 18px;margin-top:18px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Slice P — 建構你的城市 🏙️</h1>
+  <p class="sub">主層＝養大「你住的城市」（大富翁式累積）；多城市世界改放到次層（旅行足跡）。調性 A、純 SVG、零地圖 API、read-only（豐富度＝完成次數算出來）。</p>
+
+  <!-- ============ PROGRESSION ============ -->
+  <h2>① 核心爽點：同一座城市越蓋越美</h2>
+  <p class="lead">每完成一個有記座標的習慣 → 你的城市長出一點東西。漏天不崩塌（零懲罰），只是今天沒長新的。下面是台北從第 0 次到 40+ 次的同一座城市：</p>
+
+  <div class="prog">
+    <!-- STAGE 0: empty -->
+    <div class="stage">
+      <div class="scene"><svg viewBox="0 0 260 200" width="100%" height="100%">
+        <ellipse cx="130" cy="150" rx="118" ry="44" fill="var(--grass)"/>
+        <ellipse cx="130" cy="150" rx="118" ry="44" fill="none" stroke="var(--grass-d)" stroke-width="2"/>
+        <!-- dashed empty plots -->
+        <g stroke="var(--grass-e)" stroke-width="1.6" stroke-dasharray="4 5" fill="none" opacity=".8">
+          <rect x="92" y="128" width="30" height="22" rx="3"/>
+          <rect x="132" y="132" width="28" height="20" rx="3"/>
+          <rect x="112" y="152" width="26" height="16" rx="3"/>
+        </g>
+        <!-- signpost -->
+        <line x1="130" y1="118" x2="130" y2="92" stroke="#a98b62" stroke-width="3"/>
+        <rect x="108" y="80" width="44" height="16" rx="3" fill="#fff" stroke="var(--grass-d)" stroke-width="1.5"/>
+        <text x="130" y="91.5" text-anchor="middle" font-size="9" font-weight="800" fill="var(--teal-d)">台北</text>
+      </svg></div>
+      <div class="cap"><span class="lv lv0">空地</span>
+        <div class="t" style="margin-top:6px">還沒開始</div>
+        <div class="n">完成 0 次</div>
+        <div class="d">一塊標好你城市名的空地，虛線是「未來會長出來的地塊」——引導你開始。</div>
+      </div>
+    </div>
+
+    <!-- STAGE 1: village -->
+    <div class="stage">
+      <div class="scene"><svg viewBox="0 0 260 200" width="100%" height="100%">
+        <ellipse cx="130" cy="150" rx="118" ry="44" fill="var(--grass)"/>
+        <ellipse cx="130" cy="150" rx="118" ry="44" fill="none" stroke="var(--grass-d)" stroke-width="2"/>
+        <!-- 2 cottages + tree -->
+        <g><rect x="104" y="126" width="22" height="18" fill="#fbe3c4" stroke="#e0b483" stroke-width="1.5"/><polygon points="103,126 115,114 127,126" fill="var(--coral)"/></g>
+        <g><rect x="134" y="130" width="20" height="16" fill="#fff" stroke="#e0b483" stroke-width="1.5"/><polygon points="133,130 144,120 155,130" fill="var(--teal-l)"/></g>
+        <circle cx="166" cy="138" r="9" fill="var(--grass-e)"/><line x1="166" y1="138" x2="166" y2="148" stroke="#8a6b46" stroke-width="2"/>
+        <g class="pin"><circle cx="115" cy="110" r="5.5" fill="var(--coral)"/><circle cx="115" cy="110" r="1.8" fill="#fff"/></g>
+      </svg></div>
+      <div class="cap"><span class="lv lv1">村莊</span>
+        <div class="t" style="margin-top:6px">開始有生活</div>
+        <div class="n">完成 3 次</div>
+        <div class="d">幾間小屋、一棵樹。第一個回憶 pin（你完成習慣的地方）插上去。</div>
+      </div>
+    </div>
+
+    <!-- STAGE 2: town -->
+    <div class="stage">
+      <div class="scene"><svg viewBox="0 0 260 200" width="100%" height="100%">
+        <ellipse cx="130" cy="152" rx="120" ry="46" fill="var(--grass)"/>
+        <ellipse cx="130" cy="152" rx="120" ry="46" fill="none" stroke="var(--grass-d)" stroke-width="2"/>
+        <!-- plaza -->
+        <ellipse cx="130" cy="150" rx="20" ry="9" fill="var(--road)"/>
+        <!-- buildings -->
+        <g><rect x="88" y="120" width="20" height="26" fill="var(--teal)"/><polygon points="87,120 98,110 109,120" fill="#0c6157"/></g>
+        <g><rect x="112" y="126" width="18" height="20" fill="#fbe3c4" stroke="#e0b483" stroke-width="1.2"/><polygon points="111,126 121,117 131,126" fill="var(--coral)"/></g>
+        <g><rect x="150" y="122" width="18" height="24" fill="#fff" stroke="#e0b483" stroke-width="1.2"/><polygon points="149,122 159,113 169,122" fill="var(--teal-l)"/></g>
+        <!-- sleep lighthouse (small) -->
+        <g><rect x="174" y="116" width="9" height="30" fill="#fde8c8" stroke="#e0b483" stroke-width="1.2"/><polygon points="173,116 178.5,108 184,116" fill="var(--amber)"/><rect x="174" y="124" width="9" height="4" fill="var(--coral)"/></g>
+        <circle cx="78" cy="140" r="8" fill="var(--grass-e)"/>
+        <g class="pin"><circle cx="100" cy="104" r="5.5" fill="var(--coral)"/><circle cx="100" cy="104" r="1.8" fill="#fff"/></g>
+        <g class="pin"><circle cx="158" cy="100" r="5.5" fill="var(--coral)"/><circle cx="158" cy="100" r="1.8" fill="#fff"/></g>
+      </svg></div>
+      <div class="cap"><span class="lv lv2">城鎮</span>
+        <div class="t" style="margin-top:6px">出現地標</div>
+        <div class="n">完成 12 次</div>
+        <div class="d">廣場成形，第一座<b>領域地標</b>（睡眠＝燈塔）升 Lv1。多個 pin。</div>
+      </div>
+    </div>
+
+    <!-- STAGE 3: city -->
+    <div class="stage">
+      <div class="scene"><svg viewBox="0 0 260 200" width="100%" height="100%">
+        <ellipse cx="130" cy="154" rx="124" ry="48" fill="var(--grass)"/>
+        <ellipse cx="130" cy="154" rx="124" ry="48" fill="none" stroke="var(--grass-d)" stroke-width="2"/>
+        <!-- river -->
+        <path d="M40 150 Q110 140 130 156 Q160 176 220 158" fill="none" stroke="#9bd6ea" stroke-width="7" stroke-linecap="round" opacity=".85"/>
+        <ellipse cx="130" cy="150" rx="22" ry="9" fill="var(--road)"/>
+        <!-- tall skyline -->
+        <rect x="70" y="112" width="16" height="34" fill="var(--teal-d)"/>
+        <rect x="90" y="98" width="16" height="48" fill="var(--teal)"/><polygon points="89,98 98,88 107,98" fill="#0c6157"/>
+        <rect x="110" y="118" width="15" height="28" fill="var(--teal-l)"/>
+        <rect x="142" y="106" width="16" height="40" fill="var(--teal)"/>
+        <!-- gut garden -->
+        <g><rect x="162" y="128" width="22" height="18" fill="#e6f6d8" stroke="var(--grass-d)" stroke-width="1.2"/><circle cx="167" cy="126" r="5" fill="var(--grass-e)"/><circle cx="175" cy="124" r="6" fill="#7fc56b"/><circle cx="182" cy="127" r="4.5" fill="var(--grass-e)"/></g>
+        <!-- sleep lighthouse Lv2 -->
+        <g><rect x="190" y="100" width="11" height="46" fill="#fde8c8" stroke="#e0b483" stroke-width="1.4"/><polygon points="189,100 195.5,90 202,100" fill="var(--amber)"/><rect x="190" y="110" width="11" height="5" fill="var(--coral)"/><circle cx="195.5" cy="94" r="3" fill="#fff7d6"/></g>
+        <circle cx="58" cy="140" r="9" fill="var(--grass-e)"/><circle cx="48" cy="148" r="7" fill="#7fc56b"/>
+        <!-- pins + bonus star -->
+        <g class="pin"><circle cx="82" cy="92" r="5.5" fill="var(--coral)"/><circle cx="82" cy="92" r="1.8" fill="#fff"/></g>
+        <g class="pin"><circle cx="128" cy="100" r="5.5" fill="var(--coral)"/><circle cx="128" cy="100" r="1.8" fill="#fff"/></g>
+        <g class="pin"><circle cx="150" cy="92" r="6.5" fill="var(--amber)"/><text x="146.5" y="95.5" font-size="8" fill="#fff">★</text></g>
+      </svg></div>
+      <div class="cap"><span class="lv lv3">都市</span>
+        <div class="t" style="margin-top:6px">繁榮的你</div>
+        <div class="n">完成 40+ 次</div>
+        <div class="d">天際線、河流、多座領域地標（睡眠燈塔 Lv2＋腸道花園）。★＝達人/加成解鎖（後面 slice 佔位）。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot" style="background:var(--coral)"></span>回憶 pin＝有記座標的習慣完成</span>
+    <span><span class="dot" style="background:var(--teal)"></span>領域地標（9 健康面向各一種建築，會升級）</span>
+    <span><span class="dot" style="background:var(--amber)"></span>★ 達人/加成解鎖（Slice R/S 佔位）</span>
+  </div>
+
+  <!-- ============ GEOMETRY OPTIONS ============ -->
+  <h2>② 城市要用哪種「幾何」長大？</h2>
+  <p class="lead">上面成長感都一樣，差別在「建築怎麼排、美怎麼長出來」。三種路線（都用同一份「都市」資料示意）：</p>
+
+  <div class="grid3">
+    <!-- G1 ring road / monopoly -->
+    <div class="card">
+      <h3>路線 1 · 環狀街道（大富翁式）</h3>
+      <div class="desc">建築沿著一圈環形街道蓋；完成習慣＝沿路再蓋一棟。最貼近你說的大富翁，有「繞一圈＝你的路線」敘事。</div>
+      <div class="gscene"><svg viewBox="0 0 320 240" width="100%" height="100%">
+        <ellipse cx="160" cy="130" rx="120" ry="78" fill="var(--grass)"/>
+        <ellipse cx="160" cy="130" rx="120" ry="78" fill="none" stroke="var(--grass-d)" stroke-width="2"/>
+        <!-- ring road -->
+        <ellipse cx="160" cy="130" rx="86" ry="52" fill="none" stroke="var(--road)" stroke-width="13"/>
+        <ellipse cx="160" cy="130" rx="86" ry="52" fill="none" stroke="#d8cfb8" stroke-width="13" stroke-dasharray="2 12"/>
+        <!-- buildings around ring -->
+        <g><rect x="150" y="58" width="20" height="22" fill="var(--teal)"/><polygon points="149,58 160,49 171,58" fill="#0c6157"/></g>
+        <g><rect x="222" y="92" width="18" height="20" fill="#fff" stroke="#e0b483" stroke-width="1.2"/><polygon points="221,92 231,83 241,92" fill="var(--coral)"/></g>
+        <g><rect x="226" y="150" width="11" height="34" fill="#fde8c8" stroke="#e0b483" stroke-width="1.2"/><polygon points="225,150 231.5,142 238,150" fill="var(--amber)"/></g>
+        <g><rect x="150" y="176" width="20" height="20" fill="var(--teal-l)"/></g>
+        <g><rect x="74" y="150" width="20" height="20" fill="#e6f6d8" stroke="var(--grass-d)" stroke-width="1.2"/><circle cx="84" cy="148" r="6" fill="#7fc56b"/></g>
+        <g><rect x="78" y="92" width="18" height="22" fill="var(--teal)"/></g>
+        <!-- center plaza -->
+        <ellipse cx="160" cy="130" rx="20" ry="11" fill="var(--road)"/><circle cx="160" cy="128" r="5" fill="var(--teal-l)"/>
+        <g class="pin"><circle cx="200" cy="74" r="5.5" fill="var(--coral)"/><circle cx="200" cy="74" r="1.8" fill="#fff"/></g>
+        <g class="pin"><circle cx="110" cy="180" r="5.5" fill="var(--coral)"/><circle cx="110" cy="180" r="1.8" fill="#fff"/></g>
+      </svg></div>
+      <div class="pros"><b>優點</b>：最符合大富翁直覺、有路線敘事、繞圈＝進度。<br>
+        <span class="con">取捨</span>：環形偏遊戲盤感、不易長得「自然美」、城市大了環會太擠。</div>
+    </div>
+
+    <!-- G2 organic cluster -->
+    <div class="card">
+      <h3>路線 2 · 聚落自由生長<span class="tag">推薦</span></h3>
+      <div class="desc">建築以中央廣場為核心，往外有機生長（像 Townscaper／動森小鎮）。「越蓋越美」最自然，城市多大都好看。</div>
+      <div class="gscene"><svg viewBox="0 0 320 240" width="100%" height="100%">
+        <ellipse cx="160" cy="138" rx="132" ry="84" fill="var(--grass)"/>
+        <ellipse cx="160" cy="138" rx="132" ry="84" fill="none" stroke="var(--grass-d)" stroke-width="2"/>
+        <path d="M30 150 Q120 138 160 158 Q210 184 290 150" fill="none" stroke="#9bd6ea" stroke-width="7" stroke-linecap="round" opacity=".85"/>
+        <ellipse cx="158" cy="134" rx="24" ry="11" fill="var(--road)"/><circle cx="158" cy="131" r="6" fill="var(--teal-l)"/>
+        <rect x="86" y="96" width="16" height="34" fill="var(--teal-d)"/>
+        <rect x="108" y="80" width="17" height="50" fill="var(--teal)"/><polygon points="107,80 116.5,69 126,80" fill="#0c6157"/>
+        <rect x="130" y="102" width="15" height="28" fill="var(--teal-l)"/>
+        <rect x="176" y="92" width="16" height="40" fill="var(--teal)"/>
+        <g><rect x="198" y="110" width="24" height="20" fill="#e6f6d8" stroke="var(--grass-d)" stroke-width="1.2"/><circle cx="204" cy="108" r="6" fill="#7fc56b"/><circle cx="213" cy="106" r="7" fill="var(--grass-e)"/></g>
+        <g><rect x="228" y="84" width="12" height="48" fill="#fde8c8" stroke="#e0b483" stroke-width="1.4"/><polygon points="227,84 234,74 241,84" fill="var(--amber)"/><circle cx="234" cy="78" r="3" fill="#fff7d6"/></g>
+        <circle cx="64" cy="132" r="10" fill="var(--grass-e)"/><circle cx="52" cy="142" r="7" fill="#7fc56b"/>
+        <g class="pin"><circle cx="100" cy="74" r="5.5" fill="var(--coral)"/><circle cx="100" cy="74" r="1.8" fill="#fff"/></g>
+        <g class="pin"><circle cx="158" cy="86" r="5.5" fill="var(--coral)"/><circle cx="158" cy="86" r="1.8" fill="#fff"/></g>
+        <g class="pin"><circle cx="186" cy="78" r="6.5" fill="var(--amber)"/><text x="182.5" y="81.5" font-size="8" fill="#fff">★</text></g>
+      </svg></div>
+      <div class="pros"><b>優點</b>：最美、最溫暖、隨資料量優雅長大、領域地標自然散落其中。<br>
+        <span class="con">取捨</span>：少了「環狀路線」那種明確進度條感（用城市等級條補）。</div>
+    </div>
+
+    <!-- G3 domain districts -->
+    <div class="card">
+      <h3>路線 3 · 領域分區</h3>
+      <div class="desc">城市切成區，每區＝一個健康面向（睡眠／腸道／壓力／運動…）。哪區習慣做得多，哪區就繁榮。把城市直接綁上 9 大健康模型。</div>
+      <div class="gscene"><svg viewBox="0 0 320 240" width="100%" height="100%">
+        <rect x="26" y="40" width="268" height="172" rx="14" fill="var(--grass)" stroke="var(--grass-d)" stroke-width="2"/>
+        <!-- district divider roads -->
+        <line x1="160" y1="44" x2="160" y2="208" stroke="var(--road)" stroke-width="9"/>
+        <line x1="30" y1="126" x2="290" y2="126" stroke="var(--road)" stroke-width="9"/>
+        <!-- sleep district (top-left) -->
+        <text x="92" y="58" text-anchor="middle" font-size="9" font-weight="800" fill="var(--teal-d)">睡眠</text>
+        <g><rect x="74" y="86" width="11" height="32" fill="#fde8c8" stroke="#e0b483" stroke-width="1.2"/><polygon points="73,86 79.5,78 86,86" fill="var(--amber)"/></g>
+        <rect x="100" y="92" width="16" height="26" fill="var(--teal)"/>
+        <!-- gut district (top-right) -->
+        <text x="228" y="58" text-anchor="middle" font-size="9" font-weight="800" fill="var(--teal-d)">腸道</text>
+        <g><rect x="200" y="92" width="26" height="24" fill="#e6f6d8" stroke="var(--grass-d)" stroke-width="1.2"/><circle cx="207" cy="90" r="6" fill="#7fc56b"/><circle cx="217" cy="88" r="7" fill="var(--grass-e)"/></g>
+        <!-- stress district (bottom-left) faint = less done -->
+        <text x="92" y="146" text-anchor="middle" font-size="9" font-weight="800" fill="var(--muted)">壓力</text>
+        <g opacity=".5" stroke="var(--grass-e)" stroke-dasharray="4 5" fill="none"><rect x="78" y="166" width="22" height="20" rx="3"/></g>
+        <!-- exercise district (bottom-right) -->
+        <text x="228" y="146" text-anchor="middle" font-size="9" font-weight="800" fill="var(--teal-d)">運動</text>
+        <rect x="198" y="166" width="30" height="20" fill="var(--teal-l)"/>
+        <g class="pin"><circle cx="120" cy="80" r="5" fill="var(--coral)"/><circle cx="120" cy="80" r="1.6" fill="#fff"/></g>
+        <g class="pin"><circle cx="236" cy="78" r="5" fill="var(--coral)"/><circle cx="236" cy="78" r="1.6" fill="#fff"/></g>
+      </svg></div>
+      <div class="pros"><b>優點</b>：一眼看出「哪個健康面向在發光、哪個荒著」、跟 GENESIS+IO 模型最緊。<br>
+        <span class="con">取捨</span>：較格狀、不自由；要先設計好 9 區；空區會明顯（也可能是優點＝提醒）。</div>
+    </div>
+  </div>
+
+  <!-- ============ WORLD ZOOM-OUT ============ -->
+  <h2>③ 多城市世界 → 退到次層（旅行足跡）</h2>
+  <p class="lead">出差／旅遊在別的城市完成習慣，才會在「世界」zoom-out 看到那些城市的小縮影。日常爽點留在你的主城市。</p>
+  <div class="world">
+    <svg viewBox="0 0 120 90" width="120" height="90">
+      <ellipse cx="60" cy="50" rx="52" ry="34" fill="#dff1ea" stroke="#bfe3d9" stroke-width="2"/>
+      <g><circle cx="46" cy="46" r="13" fill="var(--teal)"/><text x="46" y="70" text-anchor="middle" font-size="8" font-weight="800" fill="var(--ink)">台北</text></g>
+      <circle cx="84" cy="34" r="6" fill="var(--teal-l)"/><text x="84" y="26" text-anchor="middle" font-size="7" fill="var(--muted)">東京</text>
+      <circle cx="78" cy="62" r="4" fill="var(--grass-e)"/><text x="78" y="78" text-anchor="middle" font-size="7" fill="var(--muted)">新加坡</text>
+    </svg>
+    <div style="font-size:12.5px;color:#4b5563;line-height:1.7;max-width:560px">
+      <b>主城市（台北）</b>＝你天天蓋的那座（點進去＝上面的城市建構畫面）。<br>
+      <b>東京/新加坡</b>＝去旅行時順手完成幾次留下的小城。世界地圖＝你的「旅人足跡」收藏，不是日常重心。
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:24px">
+    範圍提醒：Slice P 只做 <b>read-only 渲染</b>（城市豐富度＝<code>TaskHistory</code> 完成次數算出來）。拍照回憶（Q）、達人簽名徽章（R）、★加成（S）是後面的 slice，這裡只先佔視覺位。
+  </div>
+</div>
+</body>
+</html>
