@@ -4,8 +4,9 @@ import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import { getTodayStr, isCompletedOnDate, calculateStats, isFutureDate } from '@/lib/utils';
 import { visibleSubtasks } from '@/lib/subtasks';
+import TaskActionMenu from './taskCard/TaskActionMenu';
 
-const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate }) => {
+const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate, onAfterAction }) => {
     const [currentDate, setCurrentDate] = useState(initialDate || getTodayStr());
 
     // Sync internal date when the modal re-opens for a different task or the
@@ -217,6 +218,21 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate 
                     </div>
 
                 </div>
+
+                {/* Slice M — footer with lifecycle actions (pause / hide / delete) */}
+                {task?.id && (
+                    <TaskActionMenu
+                        taskId={task.id}
+                        taskTitle={task.title}
+                        variant="detail-footer"
+                        onAction={(action, success) => {
+                            if (success) {
+                                onClose?.();
+                                onAfterAction?.(action);
+                            }
+                        }}
+                    />
+                )}
             </div>
         </div>
     );
