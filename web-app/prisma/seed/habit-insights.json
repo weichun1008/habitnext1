@@ -956,5 +956,403 @@
       "causality": 1,
       "replication": 0
     }
+  },
+  {
+    "habitName": "確保每天 7 小時優質睡眠",
+    "title": "睡眠時數與死亡風險呈 U 型",
+    "summary": "Scientific Reports 2016 一篇納入 35 項前瞻世代的劑量反應統合分析發現：以每天 7 小時睡眠為基準，睡 9 小時者全因死亡風險相對上升 21%、11 小時更高達 55%；過短睡眠亦有風險，整體呈 U 型，7 小時為最低風險區間。屬觀察性相關。",
+    "detail": "**研究設計**\n納入 35 項前瞻世代研究的劑量反應統合分析，分析夜間睡眠時數與全因死亡率關聯。\n\n**主要發現**\n以每天 7 小時為基準，相對風險（RR）：6 小時 1.01、8 小時 1.07、9 小時 1.21、10 小時 1.37、11 小時 1.55；過短睡眠亦微升。整體 U 型，過長睡眠的風險上升幅度大於過短。\n\n**限制**\n觀察性設計，睡眠時數多為自我報告，無法排除「因潛在疾病而睡較長」的反向因果；各研究定義與共變項控制不一。屬相關非因果。",
+    "takeaway": "把睡眠穩定在 7 小時左右，過長過短都不理想。",
+    "sources": [
+      {
+        "label": "Shen, Wu & Zhang, Scientific Reports 2016 — 睡眠時數與全因死亡率劑量反應統合分析",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4761879/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "睡眠時數",
+      "死亡率",
+      "U型關係",
+      "統合分析"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "午後不再攝取咖啡因",
+    "title": "睡前 6 小時喝咖啡仍干擾睡眠",
+    "summary": "Journal of Clinical Sleep Medicine 2013 的隨機雙盲交叉試驗發現：即使在睡前 6 小時攝取 400 mg 咖啡因（約 4 杯濃縮），客觀量測的總睡眠時間仍減少超過 1 小時。研究建議睡前至少 6 小時避免大量咖啡因。",
+    "detail": "**研究設計**\nDrake 等人（J Clin Sleep Med 2013）隨機雙盲交叉試驗，健康成人於就寢前 0、3、6 小時各服 400 mg 咖啡因或安慰劑，以可攜式睡眠監測儀客觀記錄居家睡眠。\n\n**主要發現**\n三個時間點（含睡前 6 小時）攝取咖啡因都顯著干擾睡眠；睡前 6 小時組客觀總睡眠時間仍減少逾 60 分鐘，並伴隨主觀睡眠品質下降。\n\n**限制**\n劑量固定 400 mg，對低攝取者外推性有限；樣本小；未評估長期習慣性使用者的耐受差異。咖啡因半衰期約 5 小時、個體差異大。",
+    "takeaway": "下午（約 2 點後）就別再碰咖啡、濃茶與能量飲料。",
+    "sources": [
+      {
+        "label": "Drake et al., J Clin Sleep Med 2013 — 咖啡因攝取時機對睡眠的影響（PMID 24235903）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/24235903/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "咖啡因",
+      "睡眠干擾",
+      "睡眠衛生",
+      "RCT"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 2,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "泡熱水澡放鬆神經",
+    "title": "睡前溫水浴可加速入睡",
+    "summary": "Sleep Medicine Reviews 2019 一篇系統綜述暨統合分析（自 5,322 篇篩出 17 篇）發現：睡前 1–2 小時用 40–42.5°C 溫水沐浴至少 10 分鐘，平均可縮短入睡時間約 10 分鐘，並改善自評睡眠品質與效率。機制與促進散熱、加速核心體溫下降有關。",
+    "detail": "**研究設計**\nHaghayegh 等人（Sleep Med Rev 2019）系統綜述暨統合分析，自 5,322 篇候選文獻篩出 17 篇、13 篇可合併量化分析。\n\n**主要發現**\n- 睡前 1–2 小時（最佳約 90 分鐘前）以 40–42.5°C 溫水沐浴 ≥10 分鐘\n- 平均縮短入睡潛伏期約 10 分鐘，改善整體睡眠品質與效率\n- 機制：被動加熱促進末梢散熱、加速核心體溫下降，強化入睡訊號\n\n**限制**\n納入研究樣本量普遍偏小、水溫與時長異質性高；多依賴主觀睡眠報告，客觀睡眠儀資料較少。",
+    "takeaway": "睡前 1–2 小時泡個約 40°C 的熱水澡，有助更快入睡。",
+    "sources": [
+      {
+        "label": "Haghayegh et al., Sleep Medicine Reviews 2019 — 睡前被動體溫加熱與睡眠之統合分析（PMID 31102877）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/31102877/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "溫水浴",
+      "入睡",
+      "睡眠品質",
+      "統合分析"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 1,
+      "causality": 2,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "早上起床曬 10 分鐘太陽",
+    "title": "晨間光照幫生理時鐘往前調",
+    "summary": "Sleep Medicine 2015 一項隨機試驗顯示，早晨強光照射可使生理時鐘往前移約 1.8 小時（搭配下午褪黑激素）；單次 30 分鐘即達 2 小時方案約 75% 的效果。自然晨光也有類似的相位前移作用，有助穩定睡眠節律。",
+    "detail": "**研究設計**\nCrowley & Eastman（Sleep Medicine 2015）隨機對照試驗，晚睡型年輕成人接受連續 3 天的早晨光照（2／1／0.5 小時），搭配下午 0.5 mg 褪黑激素，以暗光褪黑激素起始點（DLMO）量化相位前移。\n\n**主要發現**\n- 2 小時光照平均前移 2.4 小時、1 小時組 1.7 小時、單次 30 分鐘組 1.8 小時（達 2 小時方案約 75% 效益）\n- 機制：藍光刺激視網膜 ipRGC → 調控視交叉上核（生理時鐘）\n\n**限制**\n本研究同時給褪黑激素，單獨光照效果難完全分離；對象為實驗室年輕人；「10 分鐘」這個短時長尚缺直接驗證，戶外實際光照強度與可及性也因人而異。",
+    "takeaway": "起床後盡快到戶外或窗邊接受晨光，幫睡眠時鐘歸位。",
+    "sources": [
+      {
+        "label": "Crowley & Eastman, Sleep Medicine 2015 — 晨間光照劑量與晝夜相位前移 RCT（PMID 25620199）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/25620199/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "晨間光照",
+      "晝夜節律",
+      "相位前移",
+      "睡眠時鐘"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 2,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "午間小睡 20 分鐘 (Power Nap)",
+    "title": "短午睡提神，長午睡反而有疑慮",
+    "summary": "IJERPH 2021 一篇納入 11 項研究、381 人的統合分析發現：白天短暫小睡後整體認知表現小幅提升（效應量 0.18），其中警覺力改善最明顯（0.29）。但多項觀察性研究發現，超過約 60 分鐘的長午睡與較高的心血管與死亡風險相關，因此短睡（約 20 分鐘）較理想。",
+    "detail": "**研究設計**\nDutheil 等人（IJERPH 2021）系統綜述暨統合分析，納入 11 項研究（多為實驗室條件）、共 381 名受試者，評估白天小睡對認知表現的影響。\n\n**主要發現**\n- 小睡後整體認知表現提升，效應量 0.18（95% CI 0.09–0.27）；警覺力改善效應量最大（0.29）\n- 效益在醒後約 1–2 小時較明顯；超過 30 分鐘較易進入深睡，醒來出現「睡眠惰性」\n- 另一方面，多項觀察性研究指出長午睡（約 >60 分鐘）與較高的心血管疾病與全因死亡風險相關（屬相關，可能受潛在疾病等反向因果影響）\n\n**限制**\n認知效益的研究多為實驗室、樣本小、效應量偏小；短睡（10–20 分）長期健康影響缺大型 RCT；長午睡的風險證據為觀察性，因果未定。",
+    "takeaway": "午睡控制在 20 分鐘內提神就好，別睡超過一小時。",
+    "sources": [
+      {
+        "label": "Dutheil et al., IJERPH 2021 — 短暫午睡與認知表現系統綜述暨統合分析",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8507757/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "午睡",
+      "Power Nap",
+      "警覺力",
+      "午睡時長"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 1,
+      "causality": 1,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "睡前 1 小時不看手機 (藍光)",
+    "title": "夜間藍光抑制褪黑激素、延後入睡",
+    "summary": "PNAS 2015 一項 12 人交叉實驗發現：睡前連續使用發光電子閱讀器（vs 紙本書），入睡時間平均延後約 10 分鐘、褪黑激素受抑制、生理時鐘延後逾 1.5 小時、隔日早晨警覺性下降。藍光（峰值約 450 nm）是干擾生理時鐘的主要波段。",
+    "detail": "**研究設計**\n隨機交叉實驗（n=12 健康成人），受控環境下比較連續 5 晚睡前使用發光電子閱讀器與閱讀紙本書，量測睡眠生理與荷爾蒙。\n\n**主要發現**\n- 電子閱讀器組入睡延長約 10 分鐘、夜間褪黑激素受抑制\n- 暗光褪黑激素起始時間延後逾 1.5 小時、REM 比例下降、次日警覺性較差\n\n**限制**\n樣本僅 12 人、高度受控的實驗室環境，外推有限；研究用的是睡前 4 小時電子閱讀器，「手機、1 小時」屬合理延伸；屬機制研究，長期日常影響待更多驗證。",
+    "takeaway": "睡前 1 小時把手機放下、調暗光線，有助縮短入睡。",
+    "sources": [
+      {
+        "label": "Chang et al., PNAS 2015 — 夜間發光電子閱讀器對睡眠、生理時鐘與晨間警覺的影響",
+        "url": "https://www.pnas.org/doi/10.1073/pnas.1418490112",
+        "type": "journal"
+      }
+    ],
+    "tags": [
+      "藍光",
+      "褪黑激素",
+      "生理時鐘",
+      "手機使用"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 2,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "使用眼罩或耳塞助眠",
+    "title": "眼罩耳塞增加 REM、減少夜間清醒",
+    "summary": "Frontiers in Psychiatry 2021 一篇系統綜述（35 項研究、2,687 人）統合分析顯示：使用眼罩及／或耳塞者 REM 睡眠顯著增加（MD 4.66%）、總睡眠時間平均延長約 25 分鐘、夜間覺醒次數減少約 8 次。多數研究在加護病房等高干擾環境。",
+    "detail": "**研究設計**\n系統綜述暨統合分析（35 項研究、21 項納入統計），以加護病房、術後及模擬 ICU 環境為主，含 RCT 與準實驗。\n\n**主要發現**\n- REM 增加 MD 4.66%（p<0.001）、總睡眠時間 +25.47 分鐘（p<0.001）、夜間覺醒 −8.4 次（p<0.001）、睡眠效率提升\n- 主觀量表（PSQI、RCSQ）亦見改善\n\n**限制**\n多數對象為 ICU 病患，環境噪音／光線遠高於一般寢室，不能直接推論至健康成人日常；部分研究品質參差、採主觀量表。",
+    "takeaway": "環境太亮太吵時，眼罩加耳塞是低成本的助眠工具。",
+    "sources": [
+      {
+        "label": "Karimi et al., Frontiers in Psychiatry 2021 — 眼罩與耳塞促進重症患者睡眠之系統綜述暨統合分析",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8678458/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "眼罩",
+      "耳塞",
+      "REM睡眠",
+      "睡眠品質"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 1,
+      "causality": 2,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "寫下煩惱清單 (清空大腦)",
+    "title": "睡前寫待辦清單，入睡更快",
+    "summary": "Journal of Experimental Psychology: General 2018 一項 57 人的睡眠實驗室 RCT 發現：睡前花 5 分鐘寫「明日具體待辦清單」者，比寫「已完成事項」者平均快約 9 分鐘入睡（約 16 vs 25 分鐘），且清單越具體、入睡越快。",
+    "detail": "**研究設計**\nScullin 等人（J Exp Psychol Gen 2018）隨機對照實驗，57 名 18–30 歲健康年輕人，於睡眠實驗室以腦電圖客觀量測入睡潛伏期；隨機分配睡前 5 分鐘寫「未來待辦清單」或「已完成事項清單」。\n\n**主要發現**\n- 寫待辦清單組客觀入睡潛伏期平均縮短約 9 分鐘，效果量與部分安眠藥試驗相當\n- 清單越具體、入睡越快；反之寫越詳細的「已完成事項」反而稍延後入睡\n- 推論：把待辦「卸載」到紙上，減輕腦中認知負擔\n\n**限制**\n樣本為年輕大學生、代表性有限；實驗室單晚量測，個體差異影響大；長期效果未知。",
+    "takeaway": "睡前把明天要做的事寫下來，幫大腦關機。",
+    "sources": [
+      {
+        "label": "Scullin et al., J Exp Psychol Gen 2018 — 睡前書寫待辦／已完成清單對入睡之多頻道睡眠研究（PMID 29058942）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/29058942/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "書寫",
+      "待辦清單",
+      "入睡",
+      "認知卸載"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 2,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "建立固定的睡前儀式",
+    "title": "規律作息與睡眠有關，儀式本身證據較少",
+    "summary": "Applied Physiology, Nutrition & Metabolism 2020 一篇系統綜述（41 篇、92,340 名成人）發現：睡眠時間越不規律，越常與體重、心血管、代謝及心理健康的不良指標相關；規律作息則與較佳健康正相關。不過成人「睡前儀式」本身的直接 RCT 仍少，主要是睡眠衛教與兒童研究的延伸。",
+    "detail": "**研究設計**\n系統綜述（非統合分析），納入 41 篇成人研究（14 國、92,340 人），檢視睡眠時間點與規律性與 14 項健康結果的關聯；37% 採客觀測量。\n\n**主要發現**\n- 較晚就寢與較大睡眠時間變異，普遍與不良健康結果相關；規律就寢／起床與較佳健康正相關\n- 一項小型可行性研究（n=24）顯示，個人化重整睡前流程一週後睡眠品質各面向顯著改善（p≤.004），但樣本極小\n\n**限制**\n睡眠規律性的證據以觀察性相關為主、非介入；成人「睡前儀式」本身的直接隨機試驗極少，因果強度屬中等偏初步。",
+    "takeaway": "每天用同一套放鬆流程收尾，幫身體建立「該睡了」的訊號。",
+    "sources": [
+      {
+        "label": "Chaput et al., Appl Physiol Nutr Metab 2020 — 成人睡眠時間點與規律性對健康之系統綜述（DOI 10.1139/apnm-2020-0032）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9815428/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "睡前儀式",
+      "睡眠規律",
+      "睡眠衛生",
+      "生理時鐘"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 2,
+      "causality": 1,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "練習 4-7-8 呼吸法紓壓",
+    "title": "緩慢呼吸能安撫自律神經",
+    "summary": "Neuroscience & Biobehavioral Reviews 2022 一篇納入 223 項研究的統合分析確認：緩慢呼吸可顯著提升副交感神經活性（迷走相關 HRV）；另一項 828 人實驗顯示呼吸越慢、焦慮越低，且關鍵在「慢」而非特定吸吐比例。4-7-8 是一種緩慢呼吸法，但其特定節拍無專屬大型 RCT。",
+    "detail": "**研究設計**\n(1) Laborde 等人（Neurosci Biobehav Rev 2022）統合分析，納入 223 項研究；(2) 一項 828 人跨地點實驗，測試不同呼吸頻率對焦慮的影響。\n\n**主要發現**\n- 緩慢呼吸期間與之後，副交感（迷走相關）HRV 一致顯著上升\n- 828 人實驗：呼吸越慢、事後焦慮越低（線性關係）；吸吐比例無顯著影響 → 關鍵是「慢」\n\n**限制**\n4-7-8（4 秒吸、7 秒憋、8 秒吐）特定方案無專屬大型 RCT，證據來自廣義緩慢呼吸；最佳頻率、憋氣時間與長期效果仍待釐清。",
+    "takeaway": "感到緊繃時，刻意把呼吸放慢幾分鐘就有效，4-7-8 是好用的節拍。",
+    "sources": [
+      {
+        "label": "Laborde et al., Neuroscience & Biobehavioral Reviews 2022 — 自主緩慢呼吸對 HRV 之系統綜述暨統合分析（PMID 35623448）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/35623448/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "緩慢呼吸",
+      "HRV",
+      "自律神經",
+      "焦慮",
+      "壓力管理"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "睡前做 2 分鐘深呼吸（4-7-8）",
+    "title": "睡前緩慢呼吸助眠：證據仍初步",
+    "summary": "睡前緩慢呼吸的研究多為小型試驗：如一項 64 人 RCT 顯示緩慢呼吸組睡眠量表（PSQI）改善、夜間心臟迷走活性提升（效應量 0.68）；但另一項 20 人睡眠儀試驗未見入睡時間縮短。4-7-8 的「憋氣 7 秒」特定設計尚無直接 RCT，整體證據屬初步。",
+    "detail": "**研究設計**\n以兩項小型 RCT 為主：(1) 64 名健康年輕人、30 天每日 15 分鐘緩慢呼吸 vs 控制；(2) 20 人睡前緩慢呼吸的多頻道睡眠儀試驗。\n\n**主要發現**\n- 64 人 RCT：緩慢呼吸組 PSQI 改善、夜間心臟迷走活性效應量 0.68（中等）\n- 20 人睡眠儀試驗：入睡潛伏期未顯著縮短，但深睡（N3）略增；樣本太小僅能偵測大效果\n\n**限制**\n對象皆健康年輕人、非臨床失眠者；樣本小、效果量不穩；4-7-8 的憋氣段無實驗驗證，不宜直接套用一般緩慢呼吸研究作為其專屬證據。屬初步。",
+    "takeaway": "睡前放慢呼吸當入睡儀式可以，但別期待它有藥物級效果。",
+    "sources": [
+      {
+        "label": "睡前緩慢呼吸與睡眠品質 RCT（n=64，PMC6406675）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6406675/",
+        "type": "pubmed"
+      },
+      {
+        "label": "睡前緩慢呼吸之多頻道睡眠儀先導 RCT（n=20，PMC7198497）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7198497/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "睡前呼吸",
+      "睡眠品質",
+      "入睡",
+      "初步證據"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 0,
+      "replication": 0
+    }
+  },
+  {
+    "habitName": "睡前補充鎂",
+    "title": "補鎂助眠？證據薄弱、僅限老年",
+    "summary": "BMC Complementary Medicine & Therapies 2021 一篇統合分析（僅 3 項 RCT、151 名老年人）發現補鎂後入睡時間平均縮短 17.36 分鐘；但作者以 GRADE 評定整體證據品質「低至極低」，並結論「文獻品質不足以據此做臨床建議」。不宜推廣至一般族群。",
+    "detail": "**研究設計**\nMah & Pitre（BMC Complement Med Ther 2021）系統綜述暨統合分析，僅找到 3 項符合條件的 RCT、共 151 名老年人，劑量 320–729 mg/天、20 天至 8 週。\n\n**主要發現**\n- 入睡潛伏期：補鎂組比安慰劑短約 17.36 分鐘（p=0.0006）\n- 總睡眠時間改善約 16 分鐘但未達顯著；睡眠量表結果不一\n\n**限制**\nGRADE 評為低至極低品質（隨機化／盲法報告不足）；對象全為老年人，無法外推年輕／中年；作者明言證據不足以做臨床建議。鎂安全性高、價格低，可參考但別過度期待。",
+    "takeaway": "缺鎂的人補一補無妨，但別把它當可靠的安眠手段。",
+    "sources": [
+      {
+        "label": "Mah & Pitre, BMC Complement Med Ther 2021 — 口服鎂治療老年失眠之系統綜述暨統合分析（PMC8053283）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8053283/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "鎂",
+      "失眠",
+      "睡眠",
+      "低品質證據",
+      "初步證據"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 0,
+      "replication": 0
+    }
+  },
+  {
+    "habitName": "找一個 5 分鐘什麼都不做的時間",
+    "title": "短暫微休息能回血、但效果不大",
+    "summary": "PLOS ONE 2022 一篇納入 22 個樣本、2,335 人的統合分析發現：微休息（micro-break）可小幅提升活力（效應量 0.36）、降低疲勞（0.35），但對整體工作表現無顯著效果（0.16，未達顯著）。「5 分鐘放空」這個特定形式尚無直接研究，屬初步機制支持。",
+    "detail": "**研究設計**\nBenedetti 等人（PLOS ONE 2022）系統綜述暨統合分析，納入 22 個獨立樣本、2,335 名受試者（學生與上班族），微休息定義為任務間的短暫中斷。\n\n**主要發現**\n- 活力 +0.36（p<0.001）、疲勞 −0.35（p<0.001），皆小至中度效果\n- 整體工作表現 +0.16（p=0.116，未顯著）；休息越長，表現效益越明顯\n- 「5 分鐘放空」屬廣義微休息，研究未單獨測試此形式\n\n**限制**\n各研究微休息形式差異大（冥想、伸展、自由休息）；學生樣本佔比高；「放空／放任思緒」本身的獨立效果尚無大型介入驗證。屬初步至中等。",
+    "takeaway": "中間插一段什麼都不做的小空檔，幫自己回點血、消點疲勞。",
+    "sources": [
+      {
+        "label": "Benedetti et al., PLOS ONE 2022 — 微休息對幸福感與表現之系統綜述暨統合分析（PMC9432722）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9432722/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "微休息",
+      "疲勞恢復",
+      "壓力",
+      "活力",
+      "初步證據"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 2,
+      "causality": 1,
+      "replication": 1
+    }
   }
 ]
