@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { MapPin, Search } from 'lucide-react';
 import { searchCities } from '@/lib/cities';
 
-// LocationChip — Slice O. Shows "📍城市" on a completed card / in TaskDetailModal.
+// LocationChip — Slice O. Shows a MapPin + city on a completed card / in TaskDetailModal.
 // Tapping opens a small popover to correct the city (recent cities + offline
 // search). When the task has no city yet (completed without location), it
 // renders a subtle "加地點" affordance instead.

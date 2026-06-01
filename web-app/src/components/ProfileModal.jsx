@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { X, User, Phone, Lock, Save, Loader, Eye, EyeOff, LogOut, Sparkles } from 'lucide-react';
+import { X, User, Phone, Lock, Save, Loader, Eye, EyeOff, LogOut, Sparkles, MapPin } from 'lucide-react';
 import { AVATAR_DEFS, DEFAULT_AVATAR_ID, getAvatarDef } from '@/lib/avatars';
 import MyAspirationsTab from './profile/MyAspirationsTab';
 
@@ -343,7 +343,7 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
                     {/* Slice O — opt-in 記錄完成地點 */}
                     <div className="flex items-start justify-between gap-3 py-3 border-t border-gray-100">
                         <div className="flex-1">
-                            <p className="text-sm font-bold text-gray-800">記錄完成地點 📍</p>
+                            <p className="text-sm font-bold text-gray-800 flex items-center gap-1.5"><MapPin size={14} className="text-emerald-500" />記錄完成地點</p>
                             <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
                                 僅在你完成習慣時記錄城市、只存座標數字、不會背景追蹤你的位置。可隨時關閉。
                             </p>
