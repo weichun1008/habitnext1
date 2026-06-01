@@ -610,5 +610,351 @@
       "causality": 1,
       "replication": 0
     }
+  },
+  {
+    "habitName": "每天步行 8000 步",
+    "title": "每日步數越多，死亡風險越低",
+    "summary": "Lancet Public Health 2022 一篇納入 15 個國際世代、47,471 人的統合分析發現：與步數最低組相比，每日約 7,800 步組的全因死亡風險低約 45%（HR 0.55）；60 歲以上者效益在 6,000–8,000 步即趨於平緩，不必硬追「一萬步」。屬觀察性相關。",
+    "detail": "**研究設計**\nPaluch 等人（Lancet Public Health 2022）統合 15 個國際世代研究、47,471 名成人，中位追蹤 7.1 年、3,013 例死亡。\n\n**主要發現**\n- 以最低步數組為對照：約 5,800 步 HR 0.60、約 7,800 步 HR 0.55、約 10,900 步 HR 0.47\n- 效益隨年齡有不同「天花板」：60 歲以上約 6,000–8,000 步、60 歲以下約 8,000–10,000 步後趨平\n\n**限制**\n各世代步數測量工具不一；觀察性設計無法排除「本來較健康者走較多」的反向因果，相關不等於因果。",
+    "takeaway": "每天累積到約 8,000 步，效益就很顯著，不必執著一萬步。",
+    "sources": [
+      {
+        "label": "Paluch et al., Lancet Public Health 2022 — 每日步數與全因死亡率：15 國際世代統合分析（PMID 35247352）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/35247352/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "步數",
+      "全因死亡率",
+      "統合分析",
+      "劑量反應"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "每週進行 3 次有氧運動",
+    "title": "達到建議運動量，死亡風險降近三成",
+    "summary": "一項納入 416,420 名美國成人的全國世代研究顯示，每週約 3 小時中等至高強度有氧運動（符合 WHO 每週 150–300 分鐘建議）與全因死亡風險下降約 27%（HR 0.73）相關；每週只要 1 小時也有約 15% 的相關降幅。",
+    "detail": "**研究設計**\nColeman 等人（BJSM 2022）以美國國民健康訪問調查連結死亡資料，分析 416,420 名成人。WHO 2020 指引建議成人每週 150–300 分鐘中等強度有氧，約等於每週 3 次、每次 30–50 分鐘。\n\n**主要發現**\n- 每週 1 小時中／高強度有氧：死亡風險約 −15%（HR 0.85）\n- 每週 3 小時達最大效益：HR 0.73（約 −27%），再增加額外效益有限\n- 任何程度的活動都優於完全不動\n\n**限制**\n運動量為自填問卷、有回憶偏誤；觀察性設計無法排除「較健康者較常運動」的選擇偏誤，屬相關非因果。",
+    "takeaway": "每週運動到 WHO 建議的 150 分鐘，就是很划算的健康投資。",
+    "sources": [
+      {
+        "label": "Coleman et al., British Journal of Sports Medicine 2022 — 運動量與全因死亡率（NHIS 世代）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10064988/",
+        "type": "pubmed"
+      },
+      {
+        "label": "WHO 身體活動與久坐行為指引 2020",
+        "url": "https://www.who.int/europe/publications/i/item/9789240014886",
+        "type": "other"
+      }
+    ],
+    "tags": [
+      "有氧運動",
+      "WHO 指引",
+      "死亡率",
+      "劑量反應"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "避免久坐超過 60 分鐘",
+    "title": "久坐每多一小時，死亡風險微升",
+    "summary": "Journal of Nutrition, Health & Aging 2020 一篇統合 24 項前瞻世代的分析顯示：每日靜坐時間每多 1 小時，全因死亡風險相關上升約 3%（HR 1.03）；另一統合分析估計每日久坐達 10 小時者，即使校正運動量，死亡風險仍高約 34%。",
+    "detail": "**研究設計**\nZhao 等人（J Nutr Health Aging 2020）統合 24 項前瞻世代研究，分析久坐時間與慢性病及死亡的劑量反應；並參考 Biswas 2015（Ann Intern Med，47 篇）與 Chau 2013（PLoS One）統合分析。\n\n**主要發現**\n- 每日靜坐每增 1 小時：全因死亡 HR 1.03（95% CI 1.02–1.03），呈非線性\n- Chau 估算每日久坐 10 小時者，校正運動量後死亡風險仍高約 34%\n- 保持規律身體活動可部分抵銷久坐危害\n\n**限制**\n久坐測量多為自填問卷；觀察性設計無法確立因果；「每 60 分鐘起身」的最佳頻率／時長尚無統一定論。",
+    "takeaway": "設個鬧鐘，每坐約一小時就起身動一動、走幾步。",
+    "sources": [
+      {
+        "label": "Zhao et al., J Nutr Health Aging 2020 — 久坐時間與死亡率劑量反應統合分析（PMID 31886810）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/31886810/",
+        "type": "pubmed"
+      },
+      {
+        "label": "Biswas et al., Annals of Internal Medicine 2015 — 久坐與健康結果系統綜述（PMID 25599350）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/25599350/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "久坐",
+      "靜態行為",
+      "死亡率",
+      "統合分析"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "飯後散步 15 分鐘 (穩定血糖)",
+    "title": "餐後散步 15 分鐘，壓低血糖波動",
+    "summary": "Diabetes Care 2013 一項針對血糖偏高老年人的隨機交叉試驗發現：每餐後散步 15 分鐘，可使 24 小時平均血糖從 129 降到 116 mg/dL（約降 10%）；且餐後散步對「晚餐後 3 小時血糖」的改善，明顯優於一次走 45 分鐘的晨間散步。",
+    "detail": "**研究設計**\nDiPietro 等人（Diabetes Care 2013）隨機交叉試驗，10 名血糖偏高（空腹 105–125 mg/dL）的靜態生活老年人，在代謝艙內完成三種方案：不運動、每餐後走 15 分鐘、一次走 45 分鐘。\n\n**主要發現**\n- 餐後散步組 24 小時平均血糖 129→116 mg/dL（P<0.01）\n- 唯有「餐後散步」能顯著壓低晚餐後 3 小時血糖，效果優於一次走 45 分鐘\n\n**限制**\n樣本極小（n=10）、僅老年血糖前期者，無法直接推論至年輕人或糖尿病患；為短期 RCT、缺長期追蹤；代謝艙環境與日常略有差異。",
+    "takeaway": "三餐後各走 15 分鐘，比集中走一次更能穩住血糖。",
+    "sources": [
+      {
+        "label": "DiPietro et al., Diabetes Care 2013 — 餐後步行對血糖調控的隨機交叉試驗（PMID 23761134）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/23761134/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "餐後步行",
+      "血糖控制",
+      "RCT",
+      "老年人"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 2,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "每天深蹲 30 下 (肌力)",
+    "title": "規律肌力訓練，降低死亡風險",
+    "summary": "American Journal of Preventive Medicine 2022 一篇納入 16 項研究的統合分析發現：做任何量的阻力（肌力）訓練，相較完全不做，全因死亡風險降低約 15%；每週約 60 分鐘時效益最大（約 −27%）。「每天 30 下深蹲」是達成肌力訓練量的實務目標，無此特定動作的專屬試驗。",
+    "detail": "**研究設計**\nShailendra 等人（Am J Prev Med 2022）依 PRISMA 統合 16 項前瞻世代研究，追蹤數萬名成人，分析阻力訓練與死亡率關係。\n\n**主要發現**\n- 做任何量阻力訓練 vs 不做：全因死亡風險 −15%\n- 劑量反應呈倒 U 型，每週約 60 分鐘風險降幅最大（RR 0.74，約 −27%），更高量效益遞減\n- 心血管與癌症死亡亦見相關下降\n\n**限制**\n全為觀察性研究，無法排除整體健康意識等混淆；「30 下深蹲」為依據此證據轉化的實務目標，無直接 RCT；對象多為中高齡。",
+    "takeaway": "重點是「規律做肌力」，深蹲 30 下是好記又好執行的起點。",
+    "sources": [
+      {
+        "label": "Shailendra et al., Am J Prev Med 2022 — 阻力訓練與死亡風險系統綜述暨統合分析（PMID 35599175）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/35599175/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "阻力訓練",
+      "肌力",
+      "全因死亡率",
+      "統合分析"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "練習單腳站立 (平衡感)",
+    "title": "站不滿 10 秒，死亡風險高八成",
+    "summary": "British Journal of Sports Medicine 2022 一項巴西前瞻世代研究（1,702 人、中位追蹤 7 年）發現：無法完成 10 秒單腳站立者，校正年齡、性別與共病後，全因死亡風險約為能完成者的 1.84 倍（HR 1.84）。平衡可能是整體健康的指標，屬相關非因果。",
+    "detail": "**研究設計**\nAraujo 等人（BJSM 2022）針對 1,702 名 51–75 歲成人進行前瞻觀察，要求赤腳、慣用腳、睜眼、3 次內完成 10 秒單腳站立。\n\n**主要發現**\n- 20.4% 受試者無法通過，失敗率隨年齡陡升（51–55 歲 4.7%；71–75 歲 53.6%）\n- 追蹤期死亡率：失敗組 17.5% vs 成功組 4.6%\n- 校正後 HR 1.84（95% CI 1.23–2.78），失敗者死亡風險約高 84%\n\n**限制**\n觀察性設計、無介入臂，平衡能力可能只是整體健康的代理指標；樣本以巴西中產為主，代表性有限；未驗證「練平衡」能否降低死亡率。",
+    "takeaway": "把單腳站立當日常小測驗，站不穩就是該練平衡的訊號。",
+    "sources": [
+      {
+        "label": "Araujo et al., British Journal of Sports Medicine 2022 — 10 秒單腳站立與全因死亡率（DOI 10.1136/bjsports-2021-105360）",
+        "url": "https://doi.org/10.1136/bjsports-2021-105360",
+        "type": "journal"
+      }
+    ],
+    "tags": [
+      "平衡能力",
+      "單腳站立",
+      "全因死亡率",
+      "前瞻世代"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 2,
+      "causality": 1,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "進行 1 分鐘棒式 (Plank)",
+    "title": "等長運動降血壓，效果在各運動中居冠",
+    "summary": "British Journal of Sports Medicine 2023 一篇含 270 項 RCT、15,827 人的網絡統合分析發現：等長運動訓練使靜態收縮壓降約 8.24 mmHg、舒張壓降約 4.00 mmHg，在所有運動類型中降壓效果最佳。棒式為核心等長運動的代表；不過試驗中最常測的是靠牆深蹲，「棒式 1 分鐘」屬延伸的實務建議。",
+    "detail": "**研究設計**\nEdwards 等人（BJSM 2023）大規模成對與網絡統合分析，納入 1990–2023 年 270 項 RCT、15,827 人，比較有氧、阻力、複合、HIIT 與等長運動對靜態血壓的效果。\n\n**主要發現**\n- 等長運動降壓最顯著：收縮壓 −8.24、舒張壓 −4.00 mmHg（SUCRA 98.3%，居各運動之冠）\n- 對照：有氧 −4.49/−2.53、動態阻力 −4.55/−3.04 mmHg\n- 次分析中「靠牆深蹲」是降收縮壓最有效的等長動作\n\n**限制**\n各研究等長方案不一（靠牆深蹲、握力等），棒式並非主流測試動作，套用時需保留；「1 分鐘棒式」為依等長原理延伸的目標、無專屬 RCT；部分試驗追蹤期短。",
+    "takeaway": "想降血壓，棒式、靠牆深蹲這類「撐住不動」的等長運動特別值得做。",
+    "sources": [
+      {
+        "label": "Edwards et al., British Journal of Sports Medicine 2023 — 運動與靜態血壓網絡統合分析（DOI 10.1136/bjsports-2022-106503）",
+        "url": "https://doi.org/10.1136/bjsports-2022-106503",
+        "type": "journal"
+      }
+    ],
+    "tags": [
+      "等長運動",
+      "棒式",
+      "血壓",
+      "統合分析"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "走樓梯代替搭電梯",
+    "title": "爬樓梯習慣，顯著提升心肺適能",
+    "summary": "British Journal of Sports Medicine 2005 一項 8 週隨機試驗（15 名久坐年輕女性）發現：每天累積爬樓梯的組別，最大攝氧量（VO₂max，心肺適能指標）相對對照組提升約 17.1%，並使低密度脂蛋白膽固醇（LDL）下降約 7.7%。",
+    "detail": "**研究設計**\nBoreham 等人（BJSM 2005）對 15 名久坐年輕女性進行 8 週 RCT：爬樓梯組每週 5 天、每天累積爬 199 階並逐週增量；對照組維持原生活。\n\n**主要發現**\n- 8 週後爬樓梯組 VO₂max 相對對照提升約 17.1%\n- LDL 膽固醇下降約 7.7%，有助心血管風險管理\n- 總膽固醇、HDL、三酸甘油酯無顯著差異\n\n**限制**\n樣本極小（n=15）、僅年輕女性，外推性有限；VO₂max、血脂為代理指標，未追蹤長期心血管事件；真實情境中「選樓梯不選電梯」的依從性未評估。",
+    "takeaway": "能走樓梯就走，零成本累積心肺訓練量。",
+    "sources": [
+      {
+        "label": "Boreham et al., British Journal of Sports Medicine 2005 — 爬樓梯介入與心肺適能 RCT（PMID 16118293）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/16118293/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "爬樓梯",
+      "心肺適能",
+      "VO2max",
+      "日常活動"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 2,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "晨間脊椎伸展操",
+    "title": "伸展改善脊椎姿勢？證據其實很有限",
+    "summary": "Sports Medicine – Open 2024 一篇納入 23 項研究、969 人的系統綜述發現：慢性伸展對脊椎姿勢的整體效果僅 d = −0.19（P=0.16），未達統計顯著；相較之下強化訓練效果明顯較好。且目前沒有任何研究專門檢驗「晨間」脊椎伸展方案，屬初步證據。",
+    "detail": "**研究設計**\nWarneke 等人（Sports Medicine – Open 2024）系統綜述暨統合分析，納入 23 項研究（969 人、48 個效果量），比較伸展與強化訓練對脊椎／骨盆腰椎姿勢的影響。\n\n**主要發現**\n- 慢性伸展對整體脊椎姿勢：d = −0.19（P=0.16），未顯著\n- 腰椎／骨盆亞組：d = −0.04，幾乎無效\n- 強化訓練對胸椎／頸椎則達大效果（d = −1.04，P=0.005）\n- 無任何研究專門檢驗「早晨」時間點的脊椎伸展\n\n**限制**\n腰椎相關研究極少、方法學品質中等；晨間僵硬雖常見，但其改善與伸展的因果關係尚無強證據。整體屬初步。",
+    "takeaway": "晨間伸展讓人舒服無妨，但別期待它能矯正姿勢。",
+    "sources": [
+      {
+        "label": "Warneke et al., Sports Medicine – Open 2024 — 伸展 vs 強化訓練對脊椎姿勢之系統綜述",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11150224/",
+        "type": "journal"
+      }
+    ],
+    "tags": [
+      "脊椎伸展",
+      "活動度",
+      "晨間運動",
+      "初步證據"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 1,
+      "causality": 0,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "睡前拉筋放鬆肌肉",
+    "title": "睡前伸展助眠？只有零星小研究支持",
+    "summary": "一篇 2024 範疇性綜述（16 項研究、1,281 人）指出，僅 5 項研究達顯著改善，作者結論為「伸展對睡眠障礙者睡眠品質有益的證據甚少」；雖有小型 RCT（28 人）顯示伸展組睡眠品質量表(PSQI)改善較多，但樣本太小、且無「睡前」特定時間點的設計。屬初步證據。",
+    "detail": "**研究設計**\nAlimoradi 等人（Eur J Appl Physiol 2024）範疇性綜述，納入 16 項研究（1,281 人）；另參考 D’Aurea 等人（2019）28 名慢性失眠者的小型對照試驗。\n\n**主要發現**\n- 綜述：16 項中僅 5 項（31%）達顯著改善；各研究方案（6–24 週）差異極大，無「睡前」特定設計\n- 小型試驗：伸展組 PSQI 改善 −3.9 分 vs 對照 −0.1，但每組僅約 10 人\n\n**限制**\n樣本小、方案異質性高、缺乏標準化「睡前伸展」方案；多為一般伸展介入而非睡前特定時間，因果推論需保留。整體屬初步。",
+    "takeaway": "睡前輕柔伸展當放鬆儀式可以，但別當成助眠特效藥。",
+    "sources": [
+      {
+        "label": "Alimoradi et al., Eur J Appl Physiol 2024 — 伸展與睡眠之範疇性綜述（PMID 38918221）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/38918221/",
+        "type": "pubmed"
+      },
+      {
+        "label": "D’Aurea et al., Braz J Psychiatry 2019 — 伸展／阻力訓練對慢性失眠之 RCT",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6781703/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "睡前伸展",
+      "睡眠品質",
+      "失眠",
+      "初步證據"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 1,
+      "causality": 1,
+      "replication": 0
+    }
+  },
+  {
+    "habitName": "上完廁所後伸展 10 分鐘",
+    "title": "規律伸展或有益血管，但這習慣是行為錨定",
+    "summary": "一篇 2020 統合分析（8 項研究、213 人）顯示，每週 3–7 次、每次 15–60 分鐘的靜態伸展可降低動脈僵硬指標（臂踝脈波速度降約 77.5 cm/s，P=0.009）。但「上完廁所後伸展」是把伸展錨定到既有日常的「習慣堆疊」技巧，這個特定行為本身沒有直接研究，效益純屬間接推論。",
+    "detail": "**研究設計**\nKato 等人（Int J Environ Res Public Health 2020）系統綜述暨統合分析，納入 8 項研究（6 RCT、2 非 RCT）、213 名 ≥40 歲受試者。\n\n**主要發現**\n- 伸展顯著降低動脈僵硬（SMD −1.00，P=0.0004）\n- 臂踝脈波速度降約 77.5 cm/s（P=0.009），幅度與有氧運動相當；舒張壓降約 2.72 mmHg\n- 介入頻率為每週 3–7 次、每次 15–60 分鐘\n\n**習慣堆疊說明**\n「廁後伸展」屬把新行為錨定於既有例行動作的策略，有助規律執行，但該特定觸發方式無臨床研究直接驗證，效益來自「若規律完成則等同一般伸展」的間接推論。\n\n**限制**\n研究數少（213 人）、測量方法不一、長期效果不明；日常廁後伸展能否累積到足夠訓練量，尚無驗證。屬初步。",
+    "takeaway": "把伸展綁在固定動作後面是好策略，但它的效果來自「規律伸展」本身。",
+    "sources": [
+      {
+        "label": "Kato et al., Int J Environ Res Public Health 2020 — 伸展訓練與動脈僵硬統合分析（DOI 10.3390/ijerph17165643）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7460052/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "伸展",
+      "動脈僵硬",
+      "習慣堆疊",
+      "間接推論",
+      "初步證據"
+    ],
+    "status": "draft",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 1,
+      "causality": 1,
+      "replication": 0
+    }
   }
 ]
