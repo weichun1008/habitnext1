@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { X, Save, Loader, Plus, Trash2 } from 'lucide-react';
+import { DIMENSIONS, scoreEvidence } from '@/lib/evidenceStrength';
 
 // HabitInsightFormModal — Slice N admin CRUD for a single insight row.
 //
@@ -32,6 +33,7 @@ const EMPTY_FORM = {
     tags: '',  // comma-separated in the form, split into array on save
     status: 'draft',
     order: 0,
+    evidence: { studyType: 2, scale: 1, causality: 1, replication: 1 }, // 預設一組中性值
 };
 
 function toFormShape(insight) {
@@ -45,6 +47,7 @@ function toFormShape(insight) {
         tags: Array.isArray(insight.tags) ? insight.tags.join(', ') : '',
         status: insight.status || 'draft',
         order: Number.isFinite(insight.order) ? insight.order : 0,
+        evidence: (insight && insight.evidence) ? insight.evidence : { studyType: 2, scale: 1, causality: 1, replication: 1 },
     };
 }
 
@@ -64,6 +67,7 @@ function toPayload(form) {
         tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
         status: form.status,
         order: Number.isFinite(form.order) ? form.order : 0,
+        evidence: form.evidence,
     };
 }
 
@@ -283,6 +287,41 @@ export default function HabitInsightFormModal({
                                 ))}
                             </div>
                         )}
+                    </div>
+
+                    {/* 證據力評分 — 4 面向下拉 + 即時 tier 預覽 */}
+                    <div className="pt-2 border-t border-gray-700">
+                        <div className="flex items-center justify-between mb-2">
+                            <label className="admin-label !mb-0">證據力評分</label>
+                            {(() => {
+                                const s = scoreEvidence(form.evidence);
+                                return (
+                                    <span className="text-xs font-bold text-emerald-300">
+                                        {s ? `${s.total} / 9 → 證據力 ${s.tierLabel}` : '未完整'}
+                                    </span>
+                                );
+                            })()}
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            {DIMENSIONS.map((dim) => (
+                                <div key={dim.key}>
+                                    <label className="text-[11px] text-gray-400 block mb-1">{dim.label}</label>
+                                    <select
+                                        className="admin-input admin-select w-full"
+                                        value={form.evidence[dim.key]}
+                                        onChange={e => setForm(f => ({
+                                            ...f,
+                                            evidence: { ...f.evidence, [dim.key]: Number(e.target.value) },
+                                        }))}
+                                    >
+                                        {dim.levels.map(l => (
+                                            <option key={l.value} value={l.value}>{l.label}（{l.points}）</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            ))}
+                        </div>
+                        <p className="text-[11px] text-gray-500 mt-1">分數衡量「證據有多硬」，非「習慣多好」。</p>
                     </div>
 
                     {/* Status + Order — sit side-by-side, both used by admin */}
