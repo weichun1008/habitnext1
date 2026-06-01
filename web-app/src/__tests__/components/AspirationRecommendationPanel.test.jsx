@@ -82,7 +82,10 @@ describe('AspirationRecommendationPanel — callbacks', () => {
         await waitFor(() => expect(onPickTemplate).toHaveBeenCalledWith(template, aspiration));
     });
 
-    test('clicking a habit card calls onPickHabit with (habit, aspiration)', async () => {
+    test('clicking 直接加入 fires onPickHabit with (habit, aspiration)', async () => {
+        // 2026-05-29: HabitCard now has two CTAs (加入候選 + 直接加入). The
+        // direct-add path is the green "直接加入" button; 加入候選 routes
+        // through onAddHabitAsCandidate instead. See sibling test below.
         const habit = { id: 'h1', name: '習慣一', description: '說明', difficulties: { beginner: { enabled: true } } };
         mockFetchOk({ templates: [], habits: [habit] });
         const onPickHabit = jest.fn(async () => {});
@@ -93,9 +96,52 @@ describe('AspirationRecommendationPanel — callbacks', () => {
                 onPickHabit={onPickHabit}
             />
         );
-        const card = await screen.findByText('習慣一');
-        fireEvent.click(card.closest('button'));
+        await screen.findByText('習慣一');
+        fireEvent.click(screen.getByRole('button', { name: /直接加入/ }));
         await waitFor(() => expect(onPickHabit).toHaveBeenCalledWith(habit, aspiration));
+    });
+
+    test('clicking 加入候選 fires onAddHabitAsCandidate, locks both buttons, shows sticky CTA', async () => {
+        const habit = { id: 'h1', name: '習慣一', description: '說明', difficulties: { beginner: { enabled: true } } };
+        mockFetchOk({ templates: [], habits: [habit] });
+        const onAddHabitAsCandidate = jest.fn(async () => {});
+        const onOpenFocusMap = jest.fn();
+        render(
+            <AspirationRecommendationPanel
+                aspiration={aspiration}
+                onBack={() => {}}
+                onPickHabit={() => {}}
+                onAddHabitAsCandidate={onAddHabitAsCandidate}
+                onOpenFocusMap={onOpenFocusMap}
+            />
+        );
+        await screen.findByText('習慣一');
+        fireEvent.click(screen.getByRole('button', { name: /加入候選/ }));
+        await waitFor(() => expect(onAddHabitAsCandidate).toHaveBeenCalledWith(habit, aspiration));
+        // Once added, both buttons are disabled and the 加入候選 label flips.
+        await waitFor(() => expect(screen.getByRole('button', { name: /已加入候選/ })).toBeDisabled());
+        expect(screen.getByRole('button', { name: /直接加入/ })).toBeDisabled();
+        // Sticky bottom CTA appears with running count.
+        const cta = screen.getByRole('button', { name: /開始評分/ });
+        expect(cta).toBeInTheDocument();
+        fireEvent.click(cta);
+        expect(onOpenFocusMap).toHaveBeenCalledTimes(1);
+    });
+
+    test('sticky 開始評分 CTA does not render until at least 1 candidate added', async () => {
+        const habit = { id: 'h2', name: '習慣二', description: '', difficulties: { beginner: { enabled: true } } };
+        mockFetchOk({ templates: [], habits: [habit] });
+        render(
+            <AspirationRecommendationPanel
+                aspiration={aspiration}
+                onBack={() => {}}
+                onPickHabit={() => {}}
+                onAddHabitAsCandidate={async () => {}}
+                onOpenFocusMap={() => {}}
+            />
+        );
+        await screen.findByText('習慣二');
+        expect(screen.queryByRole('button', { name: /開始評分/ })).not.toBeInTheDocument();
     });
 
     test('clicking back fires onBack', async () => {

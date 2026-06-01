@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw } from 'lucide-react';
 import SwipeReveal from './taskCard/SwipeReveal';
 import TaskHoverDots from './taskCard/TaskHoverDots';
 import TaskActionMenu from './taskCard/TaskActionMenu';
@@ -28,6 +28,22 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
     // remount) — keeping the card list visually tidy by default. Tapping the
     // chevron flips it; tapping the card body still opens the detail modal.
     const [subtasksExpanded, setSubtasksExpanded] = useState(false);
+
+    // Check-pulse trigger — when isCompleted transitions false → true we
+    // bump pulseKey, which re-mounts the Check icon and runs the
+    // animate-check-pop keyframe. Avoids needing imperative animation
+    // libraries. The ref tracks previous value across renders.
+    const [pulseKey, setPulseKey] = useState(0);
+    const prevCompletedRef = useRef(isCompletedOnDate(task, dateStr));
+    useEffect(() => {
+        const nowCompleted = isCompletedOnDate(task, dateStr);
+        if (!prevCompletedRef.current && nowCompleted) {
+            setPulseKey(k => k + 1);
+        }
+        prevCompletedRef.current = nowCompleted;
+        // task.history changing is the primary trigger; dateStr changes when
+        // user navigates the week strip so we reset baseline then too.
+    }, [task.history, dateStr, task]);
 
     let isCompleted, currentVal, targetVal, displayStatus, progressPercent;
 
@@ -82,10 +98,17 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
         }
     }
 
-    // Future-date guard: completion / quantity inputs are locked until that
-    // day arrives. Past-date is read-only too (no edits) but we still show
-    // the historical completion state via styling above.
-    const isLocked = isFuture || isPast;
+    // Only FUTURE dates lock input. Past dates stay editable so the user can
+    // retroactively complete a habit (catch-up streak) or un-toggle a past
+    // mistake — the spec calls this "preserving flexibility on history".
+    // Past styling (opacity-75) lives separately on the card border below.
+    const isLocked = isFuture;
+
+    // Suppress 暫停 / 隱藏 / 刪除 affordances except on today's incomplete
+    // cards. Completed cards (any day) and past-day cards (any state) should
+    // not offer them — those mutate the live habit definition, which makes
+    // little sense on historical snapshots or done-for-the-day instances.
+    const showActionMenu = !isPast && !isCompleted && !isFuture;
 
     const handleUpdate = (action, ...args) => {
         if (isLocked) return;
@@ -101,20 +124,14 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
             ? 'border-indigo-200 bg-indigo-50/20 border-dashed'
             : 'border-gray-100';
 
-    return (
-        <SwipeReveal
-            rightActions={
-                <TaskActionMenu
-                    taskId={task.id}
-                    taskTitle={task.title}
-                    variant="swipe"
-                    onAction={(action, success) => { if (success) onAfterAction?.(action); }}
-                />
-            }
-            onSwipeRight={() => {
-                if (!isLocked) handleUpdate('toggle');
-            }}
-        >
+    // Past/future days are read-only snapshots — 暫停 / 隱藏 / 刪除 only
+    // make sense on a live, active habit instance. Bypassing SwipeReveal +
+    // TaskHoverDots when isLocked also fixes the user-reported regression
+    // where the swipe layer's bg colors bled through the right edge of
+    // historical cards (the inner translate wrapper could end up with a
+    // residual offset across re-renders, leaving 暫停 / 刪除 visible behind
+    // every past-day card).
+    const cardBody = (
         <div
             onClick={onClick}
             className={`bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${borderCls} ${isPast && !isCompleted ? 'opacity-75' : ''}`}
@@ -126,15 +143,19 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                 <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-emerald-400" aria-hidden />
             )}
 
-            {/* Slice M — desktop hover dots top-right */}
-            <TaskHoverDots>
-                <TaskActionMenu
-                    taskId={task.id}
-                    taskTitle={task.title}
-                    variant="popover"
-                    onAction={(action, success) => { if (success) onAfterAction?.(action); }}
-                />
-            </TaskHoverDots>
+            {/* Slice M — desktop hover dots top-right. Only show on today's
+                incomplete cards; completed (any day) and past (any state)
+                hide them because 暫停 / 隱藏 / 刪除 don't apply there. */}
+            {showActionMenu && (
+                <TaskHoverDots>
+                    <TaskActionMenu
+                        taskId={task.id}
+                        taskTitle={task.title}
+                        variant="popover"
+                        onAction={(action, success) => { if (success) onAfterAction?.(action); }}
+                    />
+                </TaskHoverDots>
+            )}
 
             {/* Background Progress for Quant or Period Tasks */}
             {(isQuant || isPeriod) && (
@@ -215,7 +236,16 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                                     disabled={isLocked}
                                     className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-gray-200 hover:border-emerald-400'} ${isLocked ? 'opacity-60 cursor-not-allowed' : ''}`}
                                 >
-                                    {isCompleted && <Check size={14} className="text-white" strokeWidth={3} />}
+                                    {isCompleted && (
+                                        // key={pulseKey} re-mounts the Check on every
+                                        // false→true transition so animate-check-pop replays.
+                                        <Check
+                                            key={pulseKey}
+                                            size={14}
+                                            className="text-white animate-check-pop"
+                                            strokeWidth={3}
+                                        />
+                                    )}
                                 </button>
                             )}
                         </div>
@@ -301,6 +331,43 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                 </div>
             )}
         </div>
+    );
+
+    // Future-locked tasks render raw — no swipe at all (Lock badge already
+    // makes it clear the day hasn't arrived).
+    if (isFuture) return cardBody;
+
+    // SwipeReveal config branches by state:
+    //   - 暫停 / 刪除 (left swipe reveal) only on today's incomplete cards
+    //     via showActionMenu — past or completed cards get no leftActions,
+    //     which the wrapper interprets as "left swipe is disabled, no bg
+    //     bleeds through the card's right edge".
+    //   - Right swipe always available (past or today, complete or not)
+    //     for the corresponding action: 完成 if incomplete, 還原 if
+    //     already completed. The hint icon during the gesture tells the
+    //     user which action is about to fire.
+    const HintIcon = isCompleted ? RotateCcw : Check;
+    const hintColorClass = isCompleted ? 'text-amber-500' : 'text-emerald-500';
+    const rightHint = (
+        <div className={`flex items-center justify-center w-10 h-10 rounded-full bg-white shadow ${hintColorClass}`}>
+            <HintIcon size={20} strokeWidth={2.5} />
+        </div>
+    );
+
+    return (
+        <SwipeReveal
+            rightActions={showActionMenu ? (
+                <TaskActionMenu
+                    taskId={task.id}
+                    taskTitle={task.title}
+                    variant="swipe"
+                    onAction={(action, success) => { if (success) onAfterAction?.(action); }}
+                />
+            ) : null}
+            onSwipeRight={() => handleUpdate('toggle')}
+            rightHintIcon={rightHint}
+        >
+            {cardBody}
         </SwipeReveal>
     );
 };

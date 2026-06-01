@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3 } from 'lucide-react';
+import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp } from 'lucide-react';
 import AppHeader from './AppHeader';
+import WeekStrip from './WeekStrip';
 import TaskCard from './TaskCard';
+import UndoToast from './UndoToast';
 import TaskFormModal from './TaskFormModal';
 import TaskLibraryModal from './TaskLibraryModal';
 import DashboardSummaryCard from './DashboardSummaryCard';
@@ -15,7 +17,7 @@ import { generateId, getTodayStr, isTaskDueToday, isCompletedOnDate } from '@/li
 import { cueOrderFor } from '@/lib/anchors';
 import { USER_TYPE_PROFILES } from '@/lib/typeKeys';
 import { SLEEP_TYPE_PROFILES } from '@/lib/sleepTypeKeys';
-import { CATEGORY_CONFIG } from '@/lib/constants';
+import { CATEGORY_CONFIG, domainToIconKey } from '@/lib/constants';
 import { visibleSubtasks, computeChecklistValue } from '@/lib/subtasks';
 import PlanGroup from './PlanGroup';
 import TemplateExplorer from './TemplateExplorer';
@@ -78,6 +80,26 @@ const MainApp = () => {
     const [isFocusMapModalOpen, setIsFocusMapModalOpen] = useState(false);
     const [candidateCount, setCandidateCount] = useState(0);
     const [bannerDismissed, setBannerDismissed] = useState(false);
+    // Daily view — completed-section collapse state. Defaults to collapsed
+    // so the daily list visually focuses on incomplete tasks; users tap the
+    // divider row to peek at what they've already done. Session-only (resets
+    // on full page reload), no persistence needed.
+    const [completedExpanded, setCompletedExpanded] = useState(false);
+    // Completion-flow animation — when a binary task is toggled to complete
+    // we keep the card visible for ~700ms (so the check-pop animation reads),
+    // then collapse the row height for ~300ms, then re-fetch to remove it.
+    // During the window, the user sees a 還原 undo toast.
+    //   completingTaskIds: cards in the full t=0→1000ms completion window.
+    //     Keeps them pinned to the *incomplete* list (so the check shows +
+    //     pulses) even though their optimistic isCompleted already flipped.
+    //   exitingTaskIds:    subset in the t=700ms→1000ms collapse phase;
+    //     drives the max-height/opacity slide-out class.
+    //   undoToast:      the most-recent completion's undo snackbar payload
+    //   exitTimersRef:  cancellation handles, keyed by taskId
+    const [completingTaskIds, setCompletingTaskIds] = useState(() => new Set());
+    const [exitingTaskIds, setExitingTaskIds] = useState(() => new Set());
+    const [undoToast, setUndoToast] = useState(null);   // { taskId, message, date } | null
+    const exitTimersRef = useRef({});
     const [activeAspiration, setActiveAspiration] = useState(null);
     const [initialTemplateForExplorer, setInitialTemplateForExplorer] = useState(null);
     const [aspirationHabitForLibrary, setAspirationHabitForLibrary] = useState(null);
@@ -378,6 +400,131 @@ const MainApp = () => {
         }
     };
 
+    // ────────────────────────────────────────────────────────────────
+    // Completion-flow animation glue
+    //
+    // handleTaskUpdate wraps handleUpdateProgress: it runs the existing
+    // optimistic update + API call unchanged, then for a binary 'toggle'
+    // that transitioned the task to completed on the SELECTED date, it
+    // schedules a three-phase animation:
+    //   t=0      check-pop runs inside TaskCard (it detects the false→true
+    //            transition via its own useEffect)
+    //   t=700ms  add task.id to exitingTaskIds → wrapper collapses height
+    //   t=1000ms re-fetch tasks (server truth) → row leaves the DOM
+    // Undo toast shows for 5s; tapping it cancels the pending exit AND
+    // toggles the task back to incomplete via the same handleUpdateProgress
+    // path with action='toggle' (which flips it back since now completed).
+    // ────────────────────────────────────────────────────────────────
+
+    const clearExitTimersFor = (taskId) => {
+        const t = exitTimersRef.current[taskId];
+        if (!t) return;
+        clearTimeout(t.collapseAt);
+        clearTimeout(t.fetchAt);
+        delete exitTimersRef.current[taskId];
+    };
+
+    const scheduleCompletionExit = (task) => {
+        clearExitTimersFor(task.id);
+        // Phase 1 (t=0) — pin the card in the incomplete list so its check
+        // shows + pulses. Without this the optimistic isCompleted=true would
+        // make the partition filter drop the card immediately (vanish bug).
+        setCompletingTaskIds(prev => {
+            const next = new Set(prev);
+            next.add(task.id);
+            return next;
+        });
+        const collapseAt = setTimeout(() => {
+            // Phase 2 (t=700ms) — start the height-collapse animation. The
+            // check has now been visible ~700ms; the wrapper class transitions
+            // max-height + opacity over 300ms.
+            setExitingTaskIds(prev => {
+                const next = new Set(prev);
+                next.add(task.id);
+                return next;
+            });
+            const fetchAt = setTimeout(() => {
+                // Phase 3 (t=1000ms) — refresh from server and release both
+                // sets. The completed task now naturally sorts into the
+                // (collapsed) 已完成 N 個 section.
+                if (user?.id) fetchTasks(user.id);
+                setExitingTaskIds(prev => {
+                    const next = new Set(prev);
+                    next.delete(task.id);
+                    return next;
+                });
+                setCompletingTaskIds(prev => {
+                    const next = new Set(prev);
+                    next.delete(task.id);
+                    return next;
+                });
+                delete exitTimersRef.current[task.id];
+            }, 300);
+            exitTimersRef.current[task.id] = { collapseAt: null, fetchAt };
+        }, 700);
+        exitTimersRef.current[task.id] = { collapseAt, fetchAt: null };
+    };
+
+    const handleUndoCompletion = async () => {
+        if (!undoToast) return;
+        const { taskId } = undoToast;
+
+        // Cancel any pending exit animation + clear the row out of both sets
+        // immediately so the card snaps back to full height and full opacity.
+        clearExitTimersFor(taskId);
+        setExitingTaskIds(prev => {
+            const next = new Set(prev);
+            next.delete(taskId);
+            return next;
+        });
+        setCompletingTaskIds(prev => {
+            const next = new Set(prev);
+            next.delete(taskId);
+            return next;
+        });
+
+        // Flip completion off via the same handler the card uses.
+        const t = tasks.find(x => x.id === taskId);
+        if (t) {
+            // selectedDate is current view; if user navigated away meanwhile
+            // we still un-complete on the original date.
+            await handleUpdateProgress(t, 'toggle', null, null, undoToast.date || selectedDate);
+        }
+        setUndoToast(null);
+    };
+
+    const handleTaskUpdate = (task, action, value, subtaskId, dateStr) => {
+        const date = dateStr || selectedDate;
+        // Snapshot the pre-update completion state on the relevant date.
+        // We compare against this AFTER the underlying update to decide if
+        // this action moved the task from incomplete → complete.
+        const wasCompleted = isCompletedOnDate(task, date);
+
+        handleUpdateProgress(task, action, value, subtaskId, date);
+
+        // Only celebrate a binary 'toggle' that flipped false → true on the
+        // currently-viewed date. Subtask toggle completion happens via the
+        // inline accordion which has its own X/Y feedback; quantitative
+        // tasks have a progress bar. Layering a slide-out + toast on those
+        // would be noise.
+        if (action !== 'toggle' || wasCompleted) return;
+        if (date !== selectedDate) return;
+        if (task.type === 'quantitative') return;
+        if (task.type === 'checklist') return;   // checklist completes via subtasks
+
+        scheduleCompletionExit(task);
+        setUndoToast({
+            taskId: task.id,
+            date,
+            message: `完成「${task.title}」`,
+        });
+    };
+
+    // Clean up timers + toast on unmount.
+    useEffect(() => () => {
+        Object.keys(exitTimersRef.current).forEach(clearExitTimersFor);
+    }, []);   // eslint-disable-line react-hooks/exhaustive-deps
+
     const handleSaveTask = async (taskData) => {
         // Sanitize data before sending
         const sanitizedData = {
@@ -473,6 +620,75 @@ const MainApp = () => {
     // RecommendationPanel renders on top because it's gated by activeAspiration.
     const handleAspirationSelected = (aspiration) => {
         setActiveAspiration(aspiration);
+    };
+
+    // RecommendationPanel "加入候選": create a Task with status='candidate'
+    // from the OfficialHabit + its first enabled difficulty (typically
+    // beginner). The user defers difficulty / anchor / identity choices to
+    // the FocusMap rating step. We keep the panel open so the user can
+    // accumulate multiple candidates before evaluating.
+    const handleAddHabitAsCandidate = async (habit, aspiration) => {
+        if (!user?.id || !habit) {
+            console.warn('[MainApp] add candidate aborted — missing user or habit');
+            return;
+        }
+
+        const difficulties = habit.difficulties || {};
+        const firstEnabledKey = ['beginner', 'intermediate', 'challenge']
+            .find(k => difficulties[k]?.enabled);
+        const diffConfig = firstEnabledKey ? difficulties[firstEnabledKey] : {};
+
+        const taskPayload = {
+            userId: user.id,
+            title: habit.name,
+            details: habit.description || '',
+            type: diffConfig.type || 'binary',
+            category: habit.icon || domainToIconKey(habit.category),
+            frequency: diffConfig.recurrence?.type || 'daily',
+            recurrence: diffConfig.recurrence || { type: 'daily', interval: 1, endType: 'never' },
+            reminder: { enabled: false, offset: 0 },
+            dailyTarget: diffConfig.dailyTarget || 1,
+            unit: diffConfig.unit || '次',
+            stepValue: diffConfig.stepValue || 1,
+            subtasks: diffConfig.subtasks || [],
+            officialHabitId: habit.id,
+            status: 'candidate',
+        };
+
+        try {
+            const res = await fetch('/api/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(taskPayload),
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const created = await res.json();
+
+            setCandidateCount(c => c + 1);
+
+            // Tag with aspiration — best-effort, same pattern as handleSaveTask.
+            if (aspiration?.id) {
+                fetch(`/api/aspirations/${aspiration.id}/habits`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ taskId: created.id }),
+                }).catch(e => console.warn('[MainApp] aspiration habit tag failed:', e));
+            }
+        } catch (e) {
+            console.error('[MainApp] add candidate failed:', e);
+            alert('加入候選失敗，請再試一次');
+            throw e;  // let the panel's pickingId clear so the button can retry
+        }
+    };
+
+    // RecommendationPanel sticky-CTA "開始評分": tear down the aspiration
+    // chain (panel + picker) and open the focus-map modal directly. Bypasses
+    // the dashboard banner's 5+ threshold for users who want to evaluate
+    // mid-session.
+    const handleOpenFocusMapFromPanel = () => {
+        setIsAspirationPickerOpen(false);
+        setActiveAspiration(null);
+        setIsFocusMapModalOpen(true);
     };
 
     // RecommendationPanel back arrow → keep picker open, drop activeAspiration
@@ -593,6 +809,25 @@ const MainApp = () => {
             if (ao !== bo) return ao - bo;
             return new Date(a.createdAt) - new Date(b.createdAt);
         });
+    // Split into incomplete (rendered prominently above) + completed (rendered
+    // inside the collapsible '已完成 N 個' section below). The sort above
+    // already groups completed at the bottom, but we still need an explicit
+    // partition for the divider + collapse UI.
+    //
+    // IMPORTANT: a task that was JUST completed (and is mid exit-animation)
+    // must stay in the *incomplete* list, NOT immediately jump to completed —
+    // otherwise the optimistic update flips isCompletedOnDate→true, the
+    // filter drops the card on the very next render, and React unmounts it
+    // before the check-pulse + slide-out animation can run (the card just
+    // vanishes — exactly the "no checkmark dwell" the user reported).
+    // We keep exitingTaskIds in the incomplete bucket so the card lingers
+    // with its check showing, then the t=1000ms re-fetch finally moves it.
+    const incompleteDailyTasks = dailyTasks.filter(t =>
+        !isCompletedOnDate(t, selectedDate) || completingTaskIds.has(t.id)
+    );
+    const completedDailyTasks = dailyTasks.filter(t =>
+        isCompletedOnDate(t, selectedDate) && !completingTaskIds.has(t.id)
+    );
     const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
     const todayStr = getTodayStr();
     const isSelectedToday = selectedDate === todayStr;
@@ -794,6 +1029,18 @@ const MainApp = () => {
 
                         {currentView === 'daily' && (
                             <div className="animate-fade-in-up">
+                                {/* Desktop-only week strip — AppHeader (which
+                                    carries the mobile strip) is md:hidden, so
+                                    without this desktop users have no way to
+                                    switch dates. Hidden on mobile to avoid a
+                                    duplicate strip. */}
+                                <div className="hidden md:block mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                                    <WeekStrip
+                                        selectedDate={selectedDate}
+                                        onSelectDate={setSelectedDate}
+                                        className="px-3 py-1"
+                                    />
+                                </div>
                                 <div className="flex items-center justify-between gap-2 mb-3 px-1">
                                     <span className="text-sm text-gray-600">
                                         {isMenstrualMode
@@ -899,9 +1146,60 @@ const MainApp = () => {
                                             <span className="w-1 h-5 bg-emerald-500 rounded-full"></span> {dailySectionLabel}
                                         </h3>
                                         <div className="space-y-3">
-                                            {dailyTasks.map(task => (
-                                                <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} />
-                                            ))}
+                                            {/* Incomplete tasks — prominent, always visible.
+                                                Each card is wrapped in an exit-animation div so
+                                                that when a binary task is completed, the wrapper
+                                                collapses max-height + fades opacity → the cards
+                                                below naturally slide up (CSS layout reflow). */}
+                                            {incompleteDailyTasks.map(task => {
+                                                const isExiting = exitingTaskIds.has(task.id);
+                                                return (
+                                                    <div
+                                                        key={task.id}
+                                                        className={`overflow-hidden transition-all duration-300 ease-out ${
+                                                            isExiting
+                                                                ? 'max-h-0 opacity-0 pointer-events-none'
+                                                                : 'max-h-[640px] opacity-100'
+                                                        }`}
+                                                    >
+                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} />
+                                                    </div>
+                                                );
+                                            })}
+
+                                            {/* Divider + collapsible 已完成 section. Only renders when
+                                                there's at least one completed task; tap toggles expand.
+                                                Default state is collapsed (set via completedExpanded
+                                                useState above) so the daily list visually focuses on
+                                                what still needs doing. */}
+                                            {completedDailyTasks.length > 0 && (
+                                                <>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setCompletedExpanded(v => !v)}
+                                                        aria-expanded={completedExpanded}
+                                                        className="w-full flex items-center gap-3 py-2 px-2 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors"
+                                                    >
+                                                        <span className="flex-1 h-px bg-gray-200" />
+                                                        <span className="flex items-center gap-1 whitespace-nowrap">
+                                                            已完成 {completedDailyTasks.length} 個
+                                                            {completedExpanded
+                                                                ? <ChevronUp size={14} />
+                                                                : <ChevronDown size={14} />}
+                                                        </span>
+                                                        <span className="flex-1 h-px bg-gray-200" />
+                                                    </button>
+                                                    {completedExpanded && completedDailyTasks.map(task => (
+                                                        // Re-completing from the already-done section
+                                                        // un-toggles back to incomplete; no exit animation
+                                                        // needed (Task naturally jumps back into the list
+                                                        // above on re-fetch). Use handleUpdateProgress
+                                                        // directly to skip the toast / scheduled exit.
+                                                        <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} />
+                                                    ))}
+                                                </>
+                                            )}
+
                                             {dailyTasks.length === 0 && (
                                                 <p className="text-gray-400 text-sm col-span-full">
                                                     {isSelectedToday ? '今日無固定行程。' : '這天沒有安排任務。'}
@@ -1119,6 +1417,8 @@ const MainApp = () => {
                     onBack={handleRecommendationBack}
                     onPickTemplate={handlePickTemplateFromAspiration}
                     onPickHabit={handlePickHabitFromAspiration}
+                    onAddHabitAsCandidate={handleAddHabitAsCandidate}
+                    onOpenFocusMap={handleOpenFocusMapFromPanel}
                     onSkipToTemplates={handleSkipToTemplates}
                     onSkipToHabits={handleSkipToHabits}
                 />
@@ -1133,6 +1433,16 @@ const MainApp = () => {
                     setUser(updatedUser);
                     localStorage.setItem('habit_user', JSON.stringify(updatedUser));
                 }}
+            />
+
+            {/* Bottom undo snackbar — shown for 5s after a binary task is
+                completed via the daily list. Tapping 還原 cancels the
+                pending exit animation and toggles the task back. */}
+            <UndoToast
+                visible={!!undoToast}
+                message={undoToast?.message || ''}
+                onUndo={handleUndoCompletion}
+                onDismiss={() => setUndoToast(null)}
             />
         </>
     );

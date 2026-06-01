@@ -13,27 +13,26 @@ datasource db {
 // ============================================
 
 model User {
-  id          String       @id @default(cuid())
-  nickname    String
-  phone       String       @unique
-  countryCode String?      // e.g., +886
-  password    String?      // Hashed password
-  email       String?
-  avatar      String?      // ★ M3 Expressive avatar id ('sunrise', 'star', etc.) — see web-app/src/lib/avatars.jsx
-  typeKey     String?      // ★ 新增 — 'daisy' | 'rose' | 'orchid' | 'sunflower' (set by quiz module)
-  sleepTypeKey String?     // ★ 新增 — 'stress' | 'rhythm' | 'metabolic' | 'hormone'
-  identities  String[]     @default([])  // ★ Slice K — 多身分並存（手動 / Profile 加；v1 不自動加冕）
-  isActive    Boolean      @default(true)
-  createdAt   DateTime     @default(now())
-  tasks       Task[]
-  assignments Assignment[]
-  aspirations Aspiration[]                 // ★ Slice K
+  id           String       @id @default(cuid())
+  nickname     String
+  phone        String       @unique
+  countryCode  String? // e.g., +886
+  password     String? // Hashed password
+  email        String?
+  avatar       String? // ★ M3 Expressive avatar id ('sunrise', 'star', etc.) — see web-app/src/lib/avatars.jsx
+  typeKey      String? // ★ 新增 — 'daisy' | 'rose' | 'orchid' | 'sunflower' (set by quiz module)
+  sleepTypeKey String? // ★ 新增 — 'stress' | 'rhythm' | 'metabolic' | 'hormone'
+  identities   String[]     @default([]) // ★ Slice K — 多身分並存（手動 / Profile 加；v1 不自動加冕）
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  tasks        Task[]
+  assignments  Assignment[]
+  aspirations  Aspiration[] // ★ Slice K
 }
 
 // ============================================
 // 專家與模板系統
 // ============================================
-
 
 model ExpertTitle {
   id        String   @id @default(cuid())
@@ -47,16 +46,16 @@ model ExpertTitle {
 model Expert {
   id          String       @id @default(cuid())
   name        String
-  title       String?      // Legacy field, keep for migration or fallback
+  title       String? // Legacy field, keep for migration or fallback
   titleId     String?
   expertTitle ExpertTitle? @relation(fields: [titleId], references: [id])
   email       String       @unique // Login ID
-  password    String       // Hashed password
+  password    String // Hashed password
   avatar      String?
-  role        String       @default("expert")  // admin, expert, viewer
+  role        String       @default("expert") // admin, expert, viewer
   isActive    Boolean      @default(true)
-  isApproved  Boolean      @default(false)     // Admin approval required for public features
-  createdBy   String?      // 建立此帳號的管理員 ID
+  isApproved  Boolean      @default(false) // Admin approval required for public features
+  createdBy   String? // 建立此帳號的管理員 ID
   createdAt   DateTime     @default(now())
   templates   Template[]
   assignments Assignment[]
@@ -66,33 +65,33 @@ model Template {
   id             String       @id @default(cuid())
   expertId       String
   expert         Expert       @relation(fields: [expertId], references: [id], onDelete: Cascade)
-  name           String       // 模板名稱，如「減重 30 天計畫」
+  name           String // 模板名稱，如「減重 30 天計畫」
   description    String?
-  category       String       // health, fitness, nutrition, mental
+  category       String // health, fitness, nutrition, mental
   isPublic       Boolean      @default(false) // 是否公開讓所有用戶選用
   startDateType  String       @default("user_choice") // user_choice or fixed_date
-  fixedStartDate DateTime?    // Only used when startDateType === 'fixed_date'
-  tasks          Json         // 模板包含的任務清單
+  fixedStartDate DateTime? // Only used when startDateType === 'fixed_date'
+  tasks          Json // 模板包含的任務清單
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   assignments    Assignment[]
 }
 
 model Assignment {
-  id         String    @id @default(cuid())
-  userId     String
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  templateId String
-  template   Template  @relation(fields: [templateId], references: [id], onDelete: Cascade)
-  expertId   String
-  expert     Expert    @relation(fields: [expertId], references: [id], onDelete: Cascade)
-  status     String    @default("active") // active, completed, paused
-  startDate  DateTime  @default(now())
-  endDate    DateTime?
-  isMenstrual    Boolean   @default(false)  // ★ 新增
-  menstrualStart DateTime?                   // ★ 新增
-  notes      String?   // 專家備註
-  createdAt  DateTime  @default(now())
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  templateId     String
+  template       Template  @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  expertId       String
+  expert         Expert    @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  status         String    @default("active") // active, completed, paused
+  startDate      DateTime  @default(now())
+  endDate        DateTime?
+  isMenstrual    Boolean   @default(false) // ★ 新增
+  menstrualStart DateTime? // ★ 新增
+  notes          String? // 專家備註
+  createdAt      DateTime  @default(now())
 }
 
 // ============================================
@@ -100,63 +99,63 @@ model Assignment {
 // ============================================
 
 model Task {
-  id           String   @id @default(cuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title        String
-  details      String?
-  cue          String?  // 錨點，例「起床後」(BJ Fogg ABC anchor)
-  identity     String?  // ★ 新增 — 身分宣告「我是個照顧週期身體的人」
-  type         String   // binary, quantitative, checklist
-  category     String
-  frequency    String   // daily, weekly, monthly (Display Group)
-  
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  details   String?
+  cue       String? // 錨點，例「起床後」(BJ Fogg ABC anchor)
+  identity  String? // ★ 新增 — 身分宣告「我是個照顧週期身體的人」
+  type      String // binary, quantitative, checklist
+  category  String
+  frequency String // daily, weekly, monthly (Display Group)
+
   // JSON fields for complex objects
-  recurrence   Json     // { type, interval, mode, ... }
-  reminder     Json     // { enabled, offset }
-  subtasks     Json     // Array of subtask objects
-  
+  recurrence Json // { type, interval, mode, ... }
+  reminder   Json // { enabled, offset }
+  subtasks   Json // Array of subtask objects
+
   // Task specific settings
-  dailyTarget  Int?
-  unit         String?
-  stepValue    Int?
-  date         String?  // Start date
-  time         String?
-  
+  dailyTarget Int?
+  unit        String?
+  stepValue   Int?
+  date        String? // Start date
+  time        String?
+
   // Expert assignment fields
-  assignmentId String?  // 如果是專家指派的任務
-  isLocked     Boolean  @default(false) // 是否鎖定不可編輯
+  assignmentId String? // 如果是專家指派的任務
+  isLocked     Boolean @default(false) // 是否鎖定不可編輯
 
   // ★ Slice L — candidate pool + focus map
   // Tasks enter the system as candidates and only become active after the
   // user rates them on the focus map. Template-joined tasks bypass this
   // and write 'active' directly (策劃過的計畫不走候選池).
-  status       String   @default("candidate")  // candidate | active | paused | archived
-  userImpact   Int?                             // 1-5, user-rated (overrides OfficialHabit default)
-  userAbility  Int?                             // 1-5
-  ratedAt      DateTime?                        // last time the user rated this task
-  officialHabitId String?                       // FK fallback so slider can seed from OfficialHabit.impact/ability
+  status          String         @default("candidate") // candidate | active | paused | archived
+  userImpact      Int? // 1-5, user-rated (overrides OfficialHabit default)
+  userAbility     Int? // 1-5
+  ratedAt         DateTime? // last time the user rated this task
+  officialHabitId String? // FK fallback so slider can seed from OfficialHabit.impact/ability
   officialHabit   OfficialHabit? @relation(fields: [officialHabitId], references: [id], onDelete: SetNull)
   // ★ end Slice L
 
-  expertName   String?  // 指派專家名稱 (方便顯示)
-  metadata     Json?    // Phase info and other metadata
+  expertName String? // 指派專家名稱 (方便顯示)
+  metadata   Json? // Phase info and other metadata
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   history          TaskHistory[]
-  aspirationHabits AspirationHabit[]   // Slice K — reverse FK from join table
+  aspirationHabits AspirationHabit[] // Slice K — reverse FK from join table
 }
 
 model TaskHistory {
-  id        String   @id @default(cuid())
-  taskId    String
-  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  date      String   // YYYY-MM-DD
-  completed Boolean  @default(false)
-  value     Int      @default(0) // For quantitative or period count; also count of true subtaskCompletions
-  subtaskCompletions Json?   // { [subtaskId]: boolean } — per-date checklist state
+  id                 String  @id @default(cuid())
+  taskId             String
+  task               Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  date               String // YYYY-MM-DD
+  completed          Boolean @default(false)
+  value              Int     @default(0) // For quantitative or period count; also count of true subtaskCompletions
+  subtaskCompletions Json? // { [subtaskId]: boolean } — per-date checklist state
 
   @@unique([taskId, date])
 }
@@ -168,9 +167,9 @@ model TaskHistory {
 model HabitCategory {
   id        String   @id @default(cuid())
   name      String   @unique
-  color     String?  // Hex color for UI
+  color     String? // Hex color for UI
   order     Int      @default(0)
-  icon      String?  // Lucide icon name (e.g. "Dna", "Leaf")
+  icon      String? // Lucide icon name (e.g. "Dna", "Leaf")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -185,39 +184,74 @@ model HabitCategory {
 // Template.category stores the slug; lookups by slug @unique.
 model PlanCategory {
   id        String   @id @default(cuid())
-  slug      String?  @unique           // stable key — e.g. 'daisy', 'sleep_stress', '健康生活'. Nullable so we can backfill existing rows.
-  name      String                     // display label — e.g. 雛菊型, 睡眠 · 壓力
-  color     String?                    // Hex color for UI
-  icon      String?                    // Emoji or icon key
-  domain    String?                          // ★ Slice K — GENESIS+IO domain mapping
+  slug      String?  @unique // stable key — e.g. 'daisy', 'sleep_stress', '健康生活'. Nullable so we can backfill existing rows.
+  name      String // display label — e.g. 雛菊型, 睡眠 · 壓力
+  color     String? // Hex color for UI
+  icon      String? // Emoji or icon key
+  domain    String? // ★ Slice K — GENESIS+IO domain mapping
   order     Int      @default(0)
-  isSystem  Boolean  @default(false)   // true for lib-enumerated slugs; locked from rename/delete
+  isSystem  Boolean  @default(false) // true for lib-enumerated slugs; locked from rename/delete
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model OfficialHabit {
-  id          String   @id @default(cuid())
-  name        String   @unique  // 習慣集合名稱，如「每日喝水」（unique for idempotent seed upsert）
+  id          String  @id @default(cuid())
+  name        String  @unique // 習慣集合名稱，如「每日喝水」（unique for idempotent seed upsert）
   description String?
-  category    String   // Reference to category name
-  icon        String?  // Icon key or emoji
-  
+  category    String // Reference to category name
+  icon        String? // Icon key or emoji
+
   // NEW: Three difficulty levels (beginner/intermediate/challenge)
   // Each contains: { enabled, label, type, dailyTarget, unit, stepValue, subtasks, recurrence }
-  difficulties Json    // { beginner?: DifficultyConfig, intermediate?: DifficultyConfig, challenge?: DifficultyConfig }
+  difficulties Json // { beginner?: DifficultyConfig, intermediate?: DifficultyConfig, challenge?: DifficultyConfig }
 
   // Slice D — focus map coordinates. 1–5 integers per the rubric in
   // docs/superpowers/specs/2026-05-23-slice-d-focus-map-design.md §4.
   // Default 3 ("middle") so unscored habits land at the chart center.
-  impact      Int      @default(3)
-  ability     Int      @default(3)
+  impact  Int @default(3)
+  ability Int @default(3)
 
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  tasks       Task[]   // ★ Slice L — reverse relation for Task.officialHabitId FK
+  tasks    Task[] // ★ Slice L — reverse relation for Task.officialHabitId FK
+  insights HabitInsight[] // ★ Slice N — 科學佐證 / 為什麼這個習慣值得做
+}
+
+// ============================================
+// Slice N — 科學佐證 (Scientific Brief)
+// ============================================
+// Spec: docs/superpowers/specs/2026-05-26-slice-N-scientific-brief-design.md
+// One OfficialHabit can carry 0..N insights, each an independent angle on
+// "why this habit matters" (e.g. 戒糖 → 表觀遺傳老化 vs 戒糖 → 脂肪肝).
+// Drafted by an admin-facing AI workflow (Claude API) and gated by a
+// status field — only `published` rows are visible to end-users.
+
+model HabitInsight {
+  id      String        @id @default(cuid())
+  habitId String
+  habit   OfficialHabit @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  title    String // 12-20 chars, e.g. "添加糖加速生物老化"
+  summary  String // 80-150 chars, 2-3-sentence tldr, always shown
+  detail   String // 300-800 chars, markdown — folded behind 展開
+  takeaway String? // 15-40 chars, actionable single sentence (optional)
+
+  sources Json // [{ label, url, type?: 'pubmed' | 'journal' | 'book' | 'other' }]
+  tags    String[] @default([]) // freeform, e.g. ["營養素", "抗老", "添加糖"]
+
+  status String @default("draft") // draft | published | archived
+  order  Int    @default(0) // admin-controlled per-habit ordering
+
+  aiGenerated  Boolean @default(false) // for editorial QA stats
+  sourcePrompt String? // AI input audit trail (never user-visible)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([habitId, status, order])
 }
 
 // ============================================
@@ -225,38 +259,38 @@ model OfficialHabit {
 // ============================================
 
 model Aspiration {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  text        String              // "想要快速入睡、睡眠品質好"
-  domain      String?             // GENESIS+IO domain key — 推薦來源
+  text   String // "想要快速入睡、睡眠品質好"
+  domain String? // GENESIS+IO domain key — 推薦來源
 
-  status      String   @default("active")   // active | achieved | archived
-  achievedAt  DateTime?
+  status     String    @default("active") // active | achieved | archived
+  achievedAt DateTime?
 
-  source      String   @default("user")     // user | preset (v1 沒 ai)
+  source String @default("user") // user | preset (v1 沒 ai)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  habits      AspirationHabit[]
+  habits AspirationHabit[]
 
   @@index([userId, status])
 }
 
 model AspirationHabit {
-  id              String      @id @default(cuid())
-  aspirationId    String
-  aspiration      Aspiration  @relation(fields: [aspirationId], references: [id], onDelete: Cascade)
+  id           String     @id @default(cuid())
+  aspirationId String
+  aspiration   Aspiration @relation(fields: [aspirationId], references: [id], onDelete: Cascade)
 
   // Real FK to Task with SetNull so deleting the Task leaves the
   // AspirationHabit row intact (preserves "user once linked this aspiration
   // to a habit" history) but clears the dangling reference.
-  taskId          String?
-  task            Task?       @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  taskId String?
+  task   Task?   @relation(fields: [taskId], references: [id], onDelete: SetNull)
 
-  createdAt       DateTime    @default(now())
+  createdAt DateTime @default(now())
 
   // Prevent double-click duplicate joins (idempotent commit).
   @@unique([aspirationId, taskId])

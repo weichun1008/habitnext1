@@ -44,6 +44,19 @@ body {
   .animate-fade-in-up {
     animation: fadeInUp 0.3s ease-out forwards;
   }
+
+  /* TaskCard check-pulse — when a binary task transitions to completed,
+     the green check ring re-mounts with this animation: a quick scale
+     overshoot then settle. ~320ms total. */
+  .animate-check-pop {
+    animation: checkPop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  /* Undo toast — slides up from below the dashboard bottom edge.
+     Used by the snackbar shown after a task is completed. */
+  .animate-toast-up {
+    animation: toastUp 0.28s ease-out forwards;
+  }
 }
 
 @keyframes fadeInUp {
@@ -56,4 +69,15 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes checkPop {
+  0%   { transform: scale(0.4); opacity: 0; }
+  60%  { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1.0);  opacity: 1; }
+}
+
+@keyframes toastUp {
+  from { transform: translate(-50%, 100%); opacity: 0; }
+  to   { transform: translate(-50%, 0);    opacity: 1; }
 }
