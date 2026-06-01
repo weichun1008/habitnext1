@@ -1354,5 +1354,310 @@
       "causality": 1,
       "replication": 1
     }
+  },
+  {
+    "habitName": "每天攝取足夠膳食纖維",
+    "title": "高膳食纖維與較低死亡風險",
+    "summary": "The Lancet 2019 一篇納入 185 項前瞻研究、逾 1.35 億人年資料的統合分析發現：攝取最高量膳食纖維者比最低量者，全因與心血管死亡率低 15–30%，且每日 25–29 克時效益最顯著。屬觀察性相關，輔以臨床試驗證據。",
+    "detail": "**研究設計**\nReynolds 等人（The Lancet 2019）系統綜述暨統合分析，納入 185 項前瞻觀察研究 + 58 項臨床試驗（4,635 人），涵蓋約 1.35 億人年。\n\n**主要發現**\n- 最高 vs 最低纖維攝取：全因與心血管死亡率低 15–30%（觀察性）\n- 每日 25–29 克時，對死亡率、心血管、第二型糖尿病、大腸直腸癌的綜合效益最大；劑量反應顯示更高量可能更好\n- RCT 顯示高纖維有助降低體重、膽固醇與收縮壓\n\n**限制**\n觀察性研究無法排除整體健康飲食的混淆；纖維測量方式不一；族群多來自高收入國家。",
+    "takeaway": "每天吃到約 25–29 克纖維（多蔬果、全穀、豆類）。",
+    "sources": [
+      {
+        "label": "Reynolds et al., The Lancet 2019 — 碳水化合物品質與人類健康：系統綜述暨統合分析（PMID 30638909）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/30638909/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "膳食纖維",
+      "死亡率",
+      "心血管",
+      "統合分析"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "每日攝取益生菌/發酵食物",
+    "title": "發酵食物提升腸道菌多樣性、降發炎",
+    "summary": "Cell 2021 一項隨機前瞻研究（每組 18 人、17 週）發現：每日攝取約 6 份發酵食物者，腸道菌相多樣性顯著上升，且 93 種發炎相關蛋白中有 19 種（含 IL-6）濃度下降；同期高纖維組則未見相同的多樣性提升。",
+    "detail": "**研究設計**\nWastyk 等人（Cell 2021）17 週隨機前瞻研究，37 名健康成人分為高纖維組與高發酵食物組（各 n=18），結合腸道菌定序與免疫多組學。\n\n**主要發現**\n- 高發酵食物組（實際達每日 6.3±2.9 份，含優格、克菲爾、康普茶、發酵蔬菜等）菌相 α 多樣性顯著上升\n- 93 種血清發炎蛋白中 19 種顯著下降，含 IL-6、IL-10、IL-12b\n- 高纖維組未見相同的多樣性增加\n\n**限制**\n樣本小（每組 18 人）、對象為健康成人；無法區分哪種發酵食物貢獻最大；短期研究。",
+    "takeaway": "每天來點優格、泡菜、納豆等發酵食物，餵養腸道好菌。",
+    "sources": [
+      {
+        "label": "Wastyk et al., Cell 2021 — 針對腸道菌的飲食調節人體免疫狀態（PMID 34256014）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/34256014/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "發酵食物",
+      "腸道菌多樣性",
+      "發炎",
+      "RCT"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 2,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "攝取富含益生元的食物 (洋蔥/蒜)",
+    "title": "益生元促進雙歧桿菌增殖",
+    "summary": "Nutrients 2022 一篇統合 8 項 RCT（共 388 人）發現：補充果寡糖（FOS，洋蔥、大蒜等天然富含）可顯著增加腸道雙歧桿菌（效應量 0.579，95% CI 0.444–0.714），每日超過 5 克且持續 4 週以上效果更佳。",
+    "detail": "**研究設計**\nDou 等人（Nutrients 2022）系統綜述暨統合分析，納入 8 項 RCT（213 名 FOS 組、175 名對照）。\n\n**主要發現**\n- FOS 攝取顯著增加雙歧桿菌（SMD 0.579，p<0.001）\n- 每日 >5 克（SMD 1.116）優於 ≤5 克（0.521）；介入 >4 週（0.841）優於 ≤4 週（0.532）\n- FOS 被有益菌選擇性發酵、產生短鏈脂肪酸；未見顯著腸胃不適\n\n**限制**\n各研究 FOS 劑型／劑量差異大、樣本多偏小；天然食物（洋蔥、大蒜）與補充劑效果是否等同，仍待研究；終點為菌相指標而非臨床結局。",
+    "takeaway": "洋蔥、大蒜、蘆筍等富含益生元，能餵養腸道好菌。",
+    "sources": [
+      {
+        "label": "Dou et al., Nutrients 2022 — 果寡糖補充對人體腸道菌相影響之系統綜述暨統合分析（PMC9413759）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9413759/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "益生元",
+      "果寡糖",
+      "雙歧桿菌",
+      "統合分析"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 1,
+      "causality": 2,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "避免不必要的抗生素使用",
+    "title": "非必要抗生素會擾亂腸道菌相",
+    "summary": "Frontiers in Microbiology 2016 一篇回顧整合多項研究指出：廣效抗生素可影響腸道菌群中約 30% 細菌的豐度，造成菌種豐富度、多樣性與均勻度快速大幅下降，部分人的菌相失衡可持續數月至數年，並助長抗藥基因累積。",
+    "detail": "**研究設計**\nFrancino（Frontiers in Microbiology 2016）回顧，系統整理抗生素對腸道菌相影響的人體與動物研究，並引用 Dethlefsen 等人臨床研究作為定量依據。\n\n**主要發現**\n- 廣效抗生素可影響約 30% 腸道細菌的豐度，造成豐富度、多樣性、均勻度快速下降\n- 特徵：雙歧桿菌等有益菌減少、變形菌門增加、抗藥基因富集\n- 菌相失衡降低「定植抵抗力」，增加困難梭菌等伺機性感染風險；恢復時程可長達數月至數年\n- WHO 已將抗藥性列為全球重大公衛威脅\n\n**限制**\n「30%」來自特定情境研究、不同抗生素差異大；人體研究多為觀察性、個體差異顯著；長期因果鏈尚未完全釐清。",
+    "takeaway": "感冒等病毒感染別要求抗生素；該用才用、用就遵醫囑用完。",
+    "sources": [
+      {
+        "label": "Francino MP, Frontiers in Microbiology 2016 — 抗生素與人類腸道菌相：菌相失衡與抗藥性累積（PMC4709861）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4709861/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "抗生素",
+      "腸道菌相失衡",
+      "抗藥性",
+      "菌相多樣性"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 0,
+      "scale": 1,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "定期進行健康檢查",
+    "title": "一般性健檢並未降低死亡率",
+    "summary": "Cochrane 2019 系統綜述（17 項 RCT、251,891 人）發現：針對無症狀成人的「一般性健康檢查」對全因死亡率幾乎沒有影響（RR 1.00，95% CI 0.97–1.03，高確定性證據），對心血管與癌症死亡率也無顯著改善。但這不包含大腸癌、子宮頸癌等有實證的「針對性篩檢」。",
+    "detail": "**研究設計**\nCochrane 系統綜述暨統合分析（Krogsbøll 等人 2019），納入 17 項 RCT、251,891 人、21,535 例死亡，為此主題最高證據力綜述。\n\n**主要發現**\n- 全因死亡率 RR 1.00（95% CI 0.97–1.03，高確定性）——無效果\n- 癌症死亡率 RR 1.01、心血管死亡率 RR 1.05，皆無顯著改善\n- 結論：系統性提供一般健檢「不太可能有益，且可能導致不必要的檢查與治療」\n- 此結論針對無症狀者的廣泛健檢，不適用於大腸癌、子宮頸癌等實證篩檢\n\n**限制**\n納入試驗多來自北歐／英國，外推需謹慎；各試驗健檢內容異質；部分試驗為數十年前，與現代健檢項目組合可能不同。",
+    "takeaway": "與其做包山包海的全身健檢，不如做有實證的針對性篩檢（如大腸癌）。",
+    "sources": [
+      {
+        "label": "Krogsbøll et al., Cochrane 2019 — 成人一般性健康檢查（CD009009.pub3，PMID 30699470）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/30699470/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "健康檢查",
+      "死亡率",
+      "Cochrane",
+      "癌症篩檢"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 2,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "記錄家族病史風險",
+    "title": "家族病史大幅提升慢性病風險",
+    "summary": "JAMIA 2023 一項以父母病歷推估家族史的研究發現：父或母任一方有糖尿病，子女風險為 2.22 倍；若雙親都在 60 歲前確診，子女 40 歲前罹糖尿病風險高達 5.84 倍。父或母有心血管疾病者，子女風險約 1.92 倍。屬觀察性相關。",
+    "detail": "**研究設計**\nBarak-Corren 等人（JAMIA 2023）利用父母電子病歷作為家族史代理指標，建立糖尿病與動脈硬化性心血管疾病的風險預測模型，屬觀察性世代研究。\n\n**主要發現**\n- 糖尿病：父或母任一方 RR 2.22（95% CI 2.15–2.30）；雙親皆 60 歲前確診，子女 40 歲前風險 RR 5.84\n- 心血管疾病：父或母任一方 RR 1.92（95% CI 1.79–2.07）\n- 加入家族史顯著提升糖尿病預測模型效能（AUC 0.77→0.80）\n- 家族史同時反映遺傳與共同生活環境／行為\n\n**限制**\n觀察性設計、相關非因果；以父母病歷替代家族史可能漏報；遺傳與環境難完全拆分；受特定醫療體系就診模式影響。",
+    "takeaway": "把家族重大疾病史記下來，幫自己（與醫師）決定該提早做哪些篩檢。",
+    "sources": [
+      {
+        "label": "Barak-Corren et al., JAMIA 2023 — 以父母病歷預測糖尿病與心血管疾病風險（PMC10654871）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10654871/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "家族病史",
+      "糖尿病風險",
+      "心血管",
+      "預防醫學"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 2,
+      "causality": 1,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "避免攝取過敏原食物",
+    "title": "確診才迴避；自覺不耐別亂忌口",
+    "summary": "Clinical & Experimental Allergy 2023 指出：對「確診 IgE 食物過敏」者，嚴格迴避過敏原是標準且實證的處置；但歐洲自述食物過敏盛行率達 17.3%，經口服食物激發試驗確診者僅 0.9%——多數自覺不耐者若未確診就廣泛忌口，反而可能造成營養不均與生活品質下降。",
+    "detail": "**研究設計**\nCafarotti 等人（Clin Exp Allergy 2023）回顧，整合 IgE 介導食物過敏的處置實證與歐洲多國流行病學資料。\n\n**主要發現**\n- 確診 IgE 過敏：嚴格迴避＋備救急藥物（如腎上腺素筆）為實證標準\n- 診斷落差：自述盛行率 17.3%，口服激發試驗確診僅 0.9%（約 19 倍差距）\n- 不必要忌口的風險：飲食多樣性下降、兒童易營養缺乏、社交受限、持續焦慮\n- 建議由專科以口服激發試驗確診，而非單憑皮膚／血液檢測就長期忌口\n\n**限制**\n以歐洲族群為主；不同過敏原處置細節各異；非 IgE 的食物不耐（乳糖不耐、FODMAP 敏感）原則不同，不宜混淆。",
+    "takeaway": "真的過敏才嚴格避開；只是「好像不舒服」應先就醫確診，別自行長期忌口。",
+    "sources": [
+      {
+        "label": "Cafarotti et al., Clinical & Experimental Allergy 2023 — 21 世紀 IgE 介導食物過敏的處置（PMC10092460）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10092460/",
+        "type": "journal"
+      }
+    ],
+    "tags": [
+      "食物過敏",
+      "IgE過敏",
+      "迴避飲食",
+      "口服激發試驗"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 2,
+      "causality": 1,
+      "replication": 2
+    }
+  },
+  {
+    "habitName": "觀察並記錄每日排便狀況",
+    "title": "排便記錄是好用的腸道警示工具",
+    "summary": "布里斯托大便分類量表（BSFS）已通過信效度驗證：169 人的糞便型態評分與實測含水量顯著相關（rho 0.491，整體準確率 81%）。不過要誠實說——「記錄排便」本身能否改善健康沒有直接 RCT，它的價值在於當作評估與及早警示的工具。",
+    "detail": "**研究設計**\nBlake 等人（Aliment Pharmacol Ther 2016）信效度驗證研究，169 名健康者與 19 名腹瀉型腸躁症患者，對照 BSFS 評分與實測糞便含水量。\n\n**主要發現**\n- BSFS 評分與含水量顯著相關（rho 0.491，p<0.001），整體準確率 81%、重測信度 76%\n- 能區分健康組（平均約 3.7 型）與腹瀉型腸躁症組（約 5.0 型）\n\n**限制**\n「記錄排便」作為介入能否直接改善健康，缺乏直接 RCT；量表核心價值是評估工具，協助及早辨識異常（如持續第 1–2 型或 6–7 型、血便、型態驟變）並適時就醫。屬初步。",
+    "takeaway": "用大便型態（軟硬、顏色）當腸道儀表板，異常持續就該就醫。",
+    "sources": [
+      {
+        "label": "Blake et al., Aliment Pharmacol Ther 2016 — 布里斯托大便分類量表信效度驗證（PMID 27492648）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/27492648/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "腸道健康",
+      "自我監測",
+      "布里斯托量表",
+      "初步證據"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 1,
+      "scale": 1,
+      "causality": 0,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "餐前喝一杯溫水",
+    "title": "足量喝水配纖維有助改善便祕",
+    "summary": "一項 117 名慢性功能性便祕患者的 RCT 顯示：同樣每日攝取 25 克纖維，每日多補充到約 2 公升水者，排便頻率與瀉藥使用量的改善都優於自由飲水組（p<0.001）。但「溫」水特別優於常溫水、以及「餐前」這個時機，目前缺乏直接證據。",
+    "detail": "**研究設計**\nAnti 等人（Hepatogastroenterology 1998）RCT，117 名慢性功能性便祕患者，兩組均每日 25 克纖維，一組自由飲水、一組每日補充 2 公升礦泉水，為期 2 個月。\n\n**主要發現**\n- 兩組排便頻率與瀉藥使用量都改善；補水組（平均 2.1 L/天）優於對照（1.1 L/天），差異顯著（p<0.001）\n- 結論：每日 25 克纖維配合 1.5–2.0 公升水分，對功能性便祕效果最佳\n\n**限制**\n本研究比較的是「足量 vs 不足量補水」，並非「溫水 vs 常溫水」，也非「餐前」特定時機；「溫水排毒」等說法缺乏高品質證據。餐前一杯水主要幫助達成每日足量補水。",
+    "takeaway": "重點是「每天喝夠水＋吃夠纖維」，水溫不是關鍵。",
+    "sources": [
+      {
+        "label": "Anti et al., Hepatogastroenterology 1998 — 水分補充與高纖飲食對功能性便祕之 RCT（PMID 9684123）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/9684123/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "補水",
+      "便祕",
+      "膳食纖維",
+      "腸道健康"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 2,
+      "scale": 1,
+      "causality": 1,
+      "replication": 1
+    }
+  },
+  {
+    "habitName": "練習腹式呼吸按摩腸道",
+    "title": "腹部按摩與慢呼吸有助緩解便祕",
+    "summary": "腹部按摩的統合分析（13 項 RCT、830 人）顯示可顯著增加排便頻率（效應量 1.05）、改善糞便性狀與生活品質；一項 85 人的腸躁症（便祕型）小型 RCT 也顯示慢深呼吸 6 週後症狀嚴重度明顯低於對照組（p<0.001）。多為小型試驗，證據屬中等。",
+    "detail": "**研究設計**\n(1) Gu 等人（Heliyon 2023）統合分析，13 項 RCT、830 名功能性便祕患者；(2) Liu 等人（Front Neurosci 2022）小型 RCT，85 名便祕型腸躁症患者，每分鐘 6 次慢深呼吸介入 6 週。\n\n**主要發現**\n- 腹部按摩：排便頻率 SMD 1.05、排便困難改善 SMD −1.51、糞便性狀 SMD 0.95、生活品質改善\n- 慢深呼吸：腸躁症症狀嚴重度 195 vs 對照 319（p<0.001）、每週自主排便 2.14 vs 1.47 次\n\n**限制**\n腹部按摩各研究手法不一、異質性高；呼吸試驗樣本小、單中心；「自我按摩＋深呼吸」作為每日習慣的長期效果待更大規模研究。",
+    "takeaway": "便祕或腸躁時，順時針腹部按摩＋放慢呼吸可作為輔助。",
+    "sources": [
+      {
+        "label": "Gu et al., Heliyon 2023 — 腹部按摩與功能性便祕之統合分析（PMID 37496907）",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/37496907/",
+        "type": "pubmed"
+      },
+      {
+        "label": "Liu et al., Frontiers in Neuroscience 2022 — 慢深呼吸改善便祕型腸躁症之 RCT（PMC9673479）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9673479/",
+        "type": "pubmed"
+      }
+    ],
+    "tags": [
+      "腹式呼吸",
+      "腹部按摩",
+      "腸躁症",
+      "便祕"
+    ],
+    "status": "published",
+    "order": 0,
+    "aiGenerated": true,
+    "sourcePrompt": null,
+    "evidence": {
+      "studyType": 3,
+      "scale": 1,
+      "causality": 1,
+      "replication": 1
+    }
   }
 ]
