@@ -1382,6 +1382,7 @@ const MainApp = () => {
                 onEdit={(task) => { setIsDetailModalOpen(false); setEditingTask(task); setIsFormModalOpen(true); }}
                 onUpdate={handleUpdateProgress}
                 onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} // ★ Slice M
+                onPickLocation={handlePickLocation} // ★ Slice O
             />
 
             <TaskLibraryModal
