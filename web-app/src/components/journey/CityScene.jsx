@@ -28,6 +28,7 @@ export default function CityScene({ cityData }) {
       height="auto"
       preserveAspectRatio="xMidYMid meet"
       role="img"
+      aria-label={`${cityData.city} 的城市`}
     >
       <defs>
         <radialGradient id="cityscene-sky" cx="50%" cy="30%" r="80%">
@@ -78,7 +79,7 @@ export default function CityScene({ cityData }) {
       })}
 
       {pinNodes.map((p, i) => (
-        <g data-kind="pin" key={`pin-${i}`}>
+        <g data-kind="pin-slot" key={`pin-${i}`}>
           <MemoryPin x={p.x} y={p.y} />
         </g>
       ))}
