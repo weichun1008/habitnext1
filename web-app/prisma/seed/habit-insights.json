@@ -96,7 +96,7 @@
       "餐後血糖",
       "腸泌素"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -126,7 +126,7 @@
       "食慾",
       "腸道荷爾蒙"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -156,7 +156,7 @@
       "減重",
       "肌肉量"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -187,7 +187,7 @@
       "心血管",
       "魚油"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -217,7 +217,7 @@
       "統合分析",
       "劑量反應"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -247,7 +247,7 @@
       "以水替代",
       "世代研究"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -277,7 +277,7 @@
       "IARC",
       "植物性飲食"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -307,7 +307,7 @@
       "體重管理",
       "晝夜節律"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -337,7 +337,7 @@
       "能量攝取",
       "蛋白質槓桿"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -367,7 +367,7 @@
       "統合分析",
       "觀察性研究"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -402,7 +402,7 @@
       "RCT",
       "熱量攝取"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -432,7 +432,7 @@
       "初步證據",
       "系統性回顧"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -468,7 +468,7 @@
       "行為策略",
       "初步證據"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -498,7 +498,7 @@
       "觀察性研究",
       "系統性綜述"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -533,7 +533,7 @@
       "隨餐吸收",
       "初步證據"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -564,7 +564,7 @@
       "體外模型",
       "初步證據"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -600,7 +600,7 @@
       "脂溶性吸收",
       "初步證據"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -630,7 +630,7 @@
       "統合分析",
       "劑量反應"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -665,7 +665,7 @@
       "死亡率",
       "劑量反應"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -700,7 +700,7 @@
       "死亡率",
       "統合分析"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -730,7 +730,7 @@
       "RCT",
       "老年人"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -760,7 +760,7 @@
       "全因死亡率",
       "統合分析"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -790,7 +790,7 @@
       "全因死亡率",
       "前瞻世代"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -820,7 +820,7 @@
       "血壓",
       "統合分析"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -850,7 +850,7 @@
       "VO2max",
       "日常活動"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -880,7 +880,7 @@
       "晨間運動",
       "初步證據"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -915,7 +915,7 @@
       "失眠",
       "初步證據"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -946,7 +946,7 @@
       "間接推論",
       "初步證據"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
