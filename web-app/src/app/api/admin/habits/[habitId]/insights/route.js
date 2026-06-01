@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sanitizeEvidence } from '@/lib/evidenceStrength';
 
 // POST /api/admin/habits/:habitId/insights
 // Slice N — admin creates an insight (either from an AI draft after review,
@@ -23,6 +24,7 @@ export async function POST(request, { params }) {
             order,
             aiGenerated,
             sourcePrompt,
+            evidence,
         } = body;
 
         if (!habitId) {
@@ -58,6 +60,7 @@ export async function POST(request, { params }) {
                 order: Number.isFinite(order) ? order : 0,
                 aiGenerated: Boolean(aiGenerated),
                 sourcePrompt: sourcePrompt || null,
+                evidence: sanitizeEvidence(evidence),
             },
         });
         return NextResponse.json(created);

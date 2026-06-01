@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { BookOpen, ChevronDown, ChevronUp, ExternalLink, Loader } from 'lucide-react';
+import EvidenceBadge from './EvidenceBadge';
+import EvidenceScorePanel from './EvidenceScorePanel';
 
 // HabitInsightSection — Slice N user-facing surface for "為什麼這個習慣重要".
 //
@@ -41,6 +43,7 @@ function sourceTypeLabel(type) {
 function InsightCard({ insight }) {
     const [expanded, setExpanded] = useState(false);
     const [detailOpen, setDetailOpen] = useState(false);
+    const [scoreOpen, setScoreOpen] = useState(false);
     const sources = Array.isArray(insight.sources) ? insight.sources : [];
     const tags = Array.isArray(insight.tags) ? insight.tags : [];
 
@@ -52,26 +55,51 @@ function InsightCard({ insight }) {
 
     return (
         <article className={`border rounded-xl bg-white transition-all ${expanded ? 'border-emerald-200 shadow-sm' : 'border-gray-200 hover:border-emerald-200'}`}>
-            {/* Layer 1: headline row — always visible, clickable to expand */}
-            <button
-                type="button"
-                onClick={() => setExpanded(v => !v)}
-                aria-expanded={expanded}
-                className="w-full text-left p-3 flex items-start justify-between gap-2"
-            >
-                <p
-                    className={`text-sm leading-snug min-w-0 flex-1 ${
-                        hasTakeaway
-                            ? 'text-emerald-900 font-medium'
-                            : 'text-gray-800 font-bold'
-                    }`}
-                >
-                    {hasTakeaway ? `「${headline}」` : headline}
-                </p>
-                <span className="text-gray-400 flex-shrink-0 mt-0.5">
-                    {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </span>
-            </button>
+            {/* Layer 1: badge（獨立）+ headline row */}
+            <div className="p-3">
+                <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                        {insight.evidence && (
+                            <div className="mb-1.5">
+                                <EvidenceBadge
+                                    evidence={insight.evidence}
+                                    active={scoreOpen}
+                                    onClick={(e) => { e.stopPropagation(); setScoreOpen(v => !v); }}
+                                />
+                            </div>
+                        )}
+                        <button
+                            type="button"
+                            onClick={() => setExpanded(v => !v)}
+                            aria-expanded={expanded}
+                            className="w-full text-left"
+                        >
+                            <p
+                                className={`text-sm leading-snug ${
+                                    hasTakeaway ? 'text-emerald-900 font-medium' : 'text-gray-800 font-bold'
+                                }`}
+                            >
+                                {hasTakeaway ? `「${headline}」` : headline}
+                            </p>
+                        </button>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => setExpanded(v => !v)}
+                        aria-label={expanded ? '收合' : '展開'}
+                        className="text-gray-400 flex-shrink-0 mt-0.5"
+                    >
+                        {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    </button>
+                </div>
+
+                {/* 證據力評分面板 — 由 badge 切換，獨立於卡片展開狀態 */}
+                {scoreOpen && insight.evidence && (
+                    <div className="mt-2">
+                        <EvidenceScorePanel evidence={insight.evidence} />
+                    </div>
+                )}
+            </div>
 
             {/* Layer 2: title + summary + sources + tags */}
             {expanded && (

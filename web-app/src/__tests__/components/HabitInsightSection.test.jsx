@@ -178,3 +178,30 @@ describe('HabitInsightSection — endpoint', () => {
         );
     });
 });
+
+describe('HabitInsightSection — 證據力 badge', () => {
+  const withEvidence = (ev) => insight({ evidence: ev });
+
+  test('有 evidence 時顯示 badge', async () => {
+    mockFetchOnce([withEvidence({ studyType: 2, scale: 1, causality: 2, replication: 1 })]);
+    render(<HabitInsightSection habitId="h1" />);
+    expect(await screen.findByText(/證據力 中/)).toBeInTheDocument();
+  });
+
+  test('點 badge 展開評分面板，但不展開卡片摘要', async () => {
+    mockFetchOnce([withEvidence({ studyType: 2, scale: 1, causality: 2, replication: 1 })]);
+    render(<HabitInsightSection habitId="h1" />);
+    const badge = await screen.findByText(/證據力 中/);
+    expect(screen.queryByTestId('evidence-score-panel')).toBeNull();
+    fireEvent.click(badge);
+    expect(screen.getByTestId('evidence-score-panel')).toBeInTheDocument();
+    expect(screen.queryByText(/JAMA 2024 研究發現/)).toBeNull();
+  });
+
+  test('無 evidence 時不顯示 badge', async () => {
+    mockFetchOnce([insight()]);
+    render(<HabitInsightSection habitId="h1" />);
+    await screen.findByText(/減少讓細胞老化的飲食訊號/);
+    expect(screen.queryByText(/證據力/)).toBeNull();
+  });
+});

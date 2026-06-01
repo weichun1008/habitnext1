@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sanitizeEvidence } from '@/lib/evidenceStrength';
 
 // PATCH /api/admin/habits/insights/:id
 // Slice N — partial update on an insight. Any subset of fields can be
@@ -42,6 +43,10 @@ export async function PATCH(request, { params }) {
         }
         if (body.order !== undefined && Number.isFinite(body.order)) {
             data.order = body.order;
+        }
+        if (body.evidence !== undefined) {
+            // sanitizeEvidence 回 null 代表清除評分；合法物件則寫入。
+            data.evidence = sanitizeEvidence(body.evidence);
         }
         // aiGenerated is set at create-time; not editable later.
         // sourcePrompt is audit-trail; not editable later.
