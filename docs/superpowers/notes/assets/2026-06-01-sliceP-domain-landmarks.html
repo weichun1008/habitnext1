@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slice P — 9 領域建築原型 × 升級路線</title>
+<style>
+  :root{
+    --teal:#0d9488; --paper:#fdfbf7; --ink:#1f2937; --muted:#6b7280; --line:#e7e2d8;
+    --grass:#dff0cf; --grass-d:#b6d99e; --sky:#eef7f4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#f3efe7;color:var(--ink);
+    font-family:'Outfit','Noto Sans TC',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:32px 20px 90px}
+  h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:13.5px;margin:0;line-height:1.6}
+  .note{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12.5px;
+    padding:10px 14px;border-radius:12px;margin:16px 0 24px;line-height:1.6}
+  .row{display:grid;grid-template-columns:168px 1fr;gap:18px;align-items:center;
+    background:var(--paper);border:1px solid var(--line);border-radius:18px;
+    padding:14px 18px;margin-bottom:14px;box-shadow:0 4px 14px rgba(31,41,55,.05)}
+  @media(max-width:780px){.row{grid-template-columns:1fr}}
+  .dom{display:flex;flex-direction:column;gap:4px}
+  .dchip{display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:15px}
+  .swatch{width:14px;height:14px;border-radius:5px}
+  .dmeta{font-size:11.5px;color:var(--muted)}
+  .arche{font-size:12px;color:#374151;margin-top:3px;line-height:1.5}
+  .stages{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .cell{background:linear-gradient(180deg,var(--sky),#dcefe7);border:1px solid var(--line);
+    border-radius:13px;overflow:hidden;position:relative}
+  .cell .lvtag{position:absolute;top:7px;left:8px;font-size:9.5px;font-weight:800;color:#fff;
+    padding:1px 7px;border-radius:999px;background:rgba(31,41,55,.55)}
+  .cell .evo{position:absolute;bottom:0;left:0;right:0;font-size:10.5px;color:#374151;
+    background:rgba(255,255,255,.82);padding:5px 8px;line-height:1.35;text-align:center}
+  .cell svg{display:block;width:100%;height:104px}
+  .ground{fill:var(--grass)}
+  .gline{fill:none;stroke:var(--grass-d);stroke-width:2}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Slice P — 9 領域建築原型 × 升級路線 🏗️</h1>
+  <p class="sub">提案：造型綁「健康領域」（不綁單一習慣）。個別習慣完成 → 餵養所屬領域的建築 → 累積到里程碑就升 Lv1→2→3。每個領域有<b>自己主題化的升級故事</b>（不只是變大）。顏色＝各領域在 app 裡既有的代表色。</p>
+  <div class="note">這是「<b>建築種類＝領域</b>」的具體樣貌，最後會散落在「聚落自由生長」的城市裡（路線 2 的排法 + 路線 3 的語意）。個別習慣可另外用小招牌/旗呈現自己的 icon，保留個人感、不爆資產。</div>
+
+  <!-- 1 基因與腸道 -->
+  <div class="row">
+    <div class="dom"><span class="dchip"><span class="swatch" style="background:#6366F1"></span>基因與腸道</span>
+      <span class="dmeta">icon: Dna · #6366F1</span>
+      <span class="arche">原型：<b>花園溫室</b>（菌相＝花草）</span></div>
+    <div class="stages">
+      <div class="cell"><span class="lvtag">Lv1</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="54" y="64" width="5" height="14" fill="#8a6b46"/><circle cx="56" cy="60" r="7" fill="#7fc56b"/></svg><div class="evo">一株幼苗</div></div>
+      <div class="cell"><span class="lvtag">Lv2</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><circle cx="46" cy="64" r="9" fill="#7fc56b"/><circle cx="62" cy="58" r="11" fill="#6366F1" opacity=".85"/><circle cx="76" cy="66" r="8" fill="#7fc56b"/></svg><div class="evo">開滿花的花圃</div></div>
+      <div class="cell"><span class="lvtag">Lv3</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="88" rx="54" ry="14"/><ellipse class="gline" cx="60" cy="88" rx="54" ry="14"/><polygon points="40,72 60,46 80,72" fill="#c7d2fe"/><rect x="40" y="72" width="40" height="12" fill="#6366F1" opacity=".25"/><rect x="40" y="72" width="40" height="12" fill="none" stroke="#6366F1" stroke-width="1.5"/><circle cx="48" cy="68" r="5" fill="#7fc56b"/><circle cx="72" cy="68" r="5" fill="#7fc56b"/></svg><div class="evo">玻璃溫室果園</div></div>
+    </div>
+  </div>
+
+  <!-- 2 環境 -->
+  <div class="row">
+    <div class="dom"><span class="dchip"><span class="swatch" style="background:#10B981"></span>環境</span>
+      <span class="dmeta">icon: Leaf · #10B981</span>
+      <span class="arche">原型：<b>綠林公園</b></span></div>
+    <div class="stages">
+      <div class="cell"><span class="lvtag">Lv1</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><line x1="60" y1="80" x2="60" y2="64" stroke="#8a6b46" stroke-width="3"/><circle cx="60" cy="58" r="11" fill="#10B981"/></svg><div class="evo">一棵樹</div></div>
+      <div class="cell"><span class="lvtag">Lv2</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><circle cx="42" cy="60" r="10" fill="#10B981"/><circle cx="60" cy="54" r="13" fill="#0ea271"/><circle cx="80" cy="62" r="9" fill="#10B981"/></svg><div class="evo">小樹林</div></div>
+      <div class="cell"><span class="lvtag">Lv3</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="88" rx="54" ry="14"/><ellipse class="gline" cx="60" cy="88" rx="54" ry="14"/><path d="M30 80 Q60 70 90 80" fill="none" stroke="#9bd6ea" stroke-width="5" stroke-linecap="round"/><circle cx="38" cy="58" r="11" fill="#10B981"/><circle cx="58" cy="50" r="14" fill="#0ea271"/><circle cx="82" cy="60" r="10" fill="#10B981"/></svg><div class="evo">森林公園＋湖</div></div>
+    </div>
+  </div>
+
+  <!-- 3 飲食 -->
+  <div class="row">
+    <div class="dom"><span class="dchip"><span class="swatch" style="background:#F97316"></span>飲食</span>
+      <span class="dmeta">icon: Utensils · #F97316</span>
+      <span class="arche">原型：<b>市集/美食廣場</b>（接未來美食地圖）</span></div>
+    <div class="stages">
+      <div class="cell"><span class="lvtag">Lv1</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="48" y="66" width="24" height="12" fill="#fff" stroke="#e0b483" stroke-width="1.4"/><polygon points="46,66 60,58 74,66" fill="#F97316"/></svg><div class="evo">一個攤位</div></div>
+      <div class="cell"><span class="lvtag">Lv2</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="38" y="64" width="20" height="14" fill="#fff" stroke="#e0b483" stroke-width="1.3"/><polygon points="36,64 48,56 60,64" fill="#F97316"/><rect x="64" y="62" width="20" height="16" fill="#fff" stroke="#e0b483" stroke-width="1.3"/><polygon points="62,62 74,54 86,62" fill="#fb923c"/></svg><div class="evo">熱鬧市集</div></div>
+      <div class="cell"><span class="lvtag">Lv3</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="88" rx="54" ry="14"/><ellipse class="gline" cx="60" cy="88" rx="54" ry="14"/><rect x="34" y="58" width="52" height="22" fill="#fff" stroke="#e0b483" stroke-width="1.4"/><rect x="34" y="58" width="52" height="6" fill="#F97316"/><rect x="40" y="68" width="9" height="12" fill="#fb923c"/><rect x="56" y="68" width="9" height="12" fill="#fb923c"/><rect x="72" y="68" width="9" height="12" fill="#fb923c"/></svg><div class="evo">美食廣場</div></div>
+    </div>
+  </div>
+
+  <!-- 4 運動 -->
+  <div class="row">
+    <div class="dom"><span class="dchip"><span class="swatch" style="background:#EF4444"></span>運動</span>
+      <span class="dmeta">icon: Dumbbell · #EF4444</span>
+      <span class="arche">原型：<b>運動場/體育館</b></span></div>
+    <div class="stages">
+      <div class="cell"><span class="lvtag">Lv1</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><ellipse cx="60" cy="74" rx="22" ry="9" fill="none" stroke="#EF4444" stroke-width="3"/></svg><div class="evo">一圈跑道</div></div>
+      <div class="cell"><span class="lvtag">Lv2</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><ellipse cx="60" cy="74" rx="26" ry="11" fill="#fca5a5" opacity=".4"/><ellipse cx="60" cy="74" rx="26" ry="11" fill="none" stroke="#EF4444" stroke-width="3"/><rect x="40" y="58" width="40" height="6" fill="#EF4444" rx="2"/></svg><div class="evo">球場＋看台</div></div>
+      <div class="cell"><span class="lvtag">Lv3</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="88" rx="54" ry="14"/><ellipse class="gline" cx="60" cy="88" rx="54" ry="14"/><path d="M30 78 Q60 44 90 78 Z" fill="#fca5a5" opacity=".5"/><path d="M30 78 Q60 44 90 78" fill="none" stroke="#EF4444" stroke-width="3"/><ellipse cx="60" cy="78" rx="30" ry="6" fill="#EF4444" opacity=".25"/></svg><div class="evo">巨蛋體育館</div></div>
+    </div>
+  </div>
+
+  <!-- 5 壓力與睡眠 -->
+  <div class="row">
+    <div class="dom"><span class="dchip"><span class="swatch" style="background:#8B5CF6"></span>壓力與睡眠</span>
+      <span class="dmeta">icon: Moon · #8B5CF6</span>
+      <span class="arche">原型：<b>燈塔</b>（安歇/夜的指引）</span></div>
+    <div class="stages">
+      <div class="cell"><span class="lvtag">Lv1</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="54" y="58" width="12" height="22" fill="#ede9fe" stroke="#8B5CF6" stroke-width="1.4"/><polygon points="52,58 60,50 68,58" fill="#8B5CF6"/></svg><div class="evo">暗著的小塔</div></div>
+      <div class="cell"><span class="lvtag">Lv2</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="53" y="50" width="14" height="30" fill="#ede9fe" stroke="#8B5CF6" stroke-width="1.4"/><rect x="53" y="60" width="14" height="5" fill="#8B5CF6"/><polygon points="51,50 60,42 69,50" fill="#8B5CF6"/><circle cx="60" cy="47" r="3" fill="#fde68a"/></svg><div class="evo">點亮的燈塔</div></div>
+      <div class="cell"><span class="lvtag">Lv3</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="88" rx="54" ry="14"/><ellipse class="gline" cx="60" cy="88" rx="54" ry="14"/><rect x="52" y="44" width="16" height="38" fill="#ede9fe" stroke="#8B5CF6" stroke-width="1.5"/><rect x="52" y="56" width="16" height="6" fill="#8B5CF6"/><polygon points="50,44 60,35 70,44" fill="#8B5CF6"/><circle cx="60" cy="41" r="3.5" fill="#fde68a"/><path d="M60 41 L92 30 M60 41 L92 52" stroke="#fde68a" stroke-width="2.5" opacity=".7"/></svg><div class="evo">射出光束</div></div>
+    </div>
+  </div>
+
+  <!-- 6 社交互動 -->
+  <div class="row">
+    <div class="dom"><span class="dchip"><span class="swatch" style="background:#F43F5E"></span>社交互動</span>
+      <span class="dmeta">icon: Users · #F43F5E</span>
+      <span class="arche">原型：<b>咖啡館/廣場</b></span></div>
+    <div class="stages">
+      <div class="cell"><span class="lvtag">Lv1</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="48" y="70" width="24" height="6" rx="3" fill="#F43F5E"/><line x1="52" y1="76" x2="52" y2="80" stroke="#9a6b46" stroke-width="2"/><line x1="68" y1="76" x2="68" y2="80" stroke="#9a6b46" stroke-width="2"/></svg><div class="evo">一張長椅</div></div>
+      <div class="cell"><span class="lvtag">Lv2</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="44" y="60" width="32" height="18" fill="#fff" stroke="#e0b483" stroke-width="1.4"/><rect x="44" y="56" width="32" height="6" fill="#F43F5E"/><circle cx="52" cy="52" r="3" fill="#fda4af"/><circle cx="68" cy="52" r="3" fill="#fda4af"/></svg><div class="evo">小咖啡館＋陽傘</div></div>
+      <div class="cell"><span class="lvtag">Lv3</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="88" rx="54" ry="14"/><ellipse class="gline" cx="60" cy="88" rx="54" ry="14"/><ellipse cx="60" cy="80" rx="30" ry="8" fill="#fecdd3" opacity=".6"/><rect x="40" y="58" width="40" height="22" fill="#fff" stroke="#e0b483" stroke-width="1.4"/><rect x="40" y="54" width="40" height="6" fill="#F43F5E"/><circle cx="30" cy="74" r="3" fill="#F43F5E"/><circle cx="90" cy="74" r="3" fill="#F43F5E"/></svg><div class="evo">熱鬧廣場</div></div>
+    </div>
+  </div>
+
+  <!-- 7 心靈 -->
+  <div class="row">
+    <div class="dom"><span class="dchip"><span class="swatch" style="background:#0EA5E9"></span>心靈</span>
+      <span class="dmeta">icon: Sparkles · #0EA5E9</span>
+      <span class="arche">原型：<b>禪園/冥想塔</b></span></div>
+    <div class="stages">
+      <div class="cell"><span class="lvtag">Lv1</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="56" y="62" width="8" height="16" fill="#bae6fd" stroke="#0EA5E9" stroke-width="1.3"/><circle cx="60" cy="60" r="4" fill="#0EA5E9"/></svg><div class="evo">一盞石燈</div></div>
+      <div class="cell"><span class="lvtag">Lv2</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><ellipse cx="60" cy="76" rx="24" ry="8" fill="#e0f2fe"/><circle cx="48" cy="74" r="3" fill="#bae6fd"/><circle cx="72" cy="74" r="4" fill="#bae6fd"/><rect x="57" y="58" width="6" height="16" fill="#0EA5E9"/><circle cx="60" cy="56" r="4" fill="#7dd3fc"/></svg><div class="evo">枯山水禪園</div></div>
+      <div class="cell"><span class="lvtag">Lv3</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="88" rx="54" ry="14"/><ellipse class="gline" cx="60" cy="88" rx="54" ry="14"/><polygon points="48,80 60,40 72,80" fill="#bae6fd" stroke="#0EA5E9" stroke-width="1.5"/><line x1="48" y1="66" x2="72" y2="66" stroke="#0EA5E9" stroke-width="1.5"/><line x1="51" y1="54" x2="69" y2="54" stroke="#0EA5E9" stroke-width="1.5"/><circle cx="60" cy="34" r="4" fill="#7dd3fc"/></svg><div class="evo">冥想塔（散發光暈）</div></div>
+    </div>
+  </div>
+
+  <!-- 8 認知與智慧 -->
+  <div class="row">
+    <div class="dom"><span class="dchip"><span class="swatch" style="background:#3B82F6"></span>認知與智慧</span>
+      <span class="dmeta">icon: BrainCircuit · #3B82F6</span>
+      <span class="arche">原型：<b>圖書館/天文台</b></span></div>
+    <div class="stages">
+      <div class="cell"><span class="lvtag">Lv1</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="50" y="64" width="20" height="14" fill="#dbeafe" stroke="#3B82F6" stroke-width="1.3"/><line x1="56" y1="64" x2="56" y2="78" stroke="#3B82F6" stroke-width="1"/><line x1="64" y1="64" x2="64" y2="78" stroke="#3B82F6" stroke-width="1"/></svg><div class="evo">小書攤</div></div>
+      <div class="cell"><span class="lvtag">Lv2</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="44" y="56" width="32" height="22" fill="#dbeafe" stroke="#3B82F6" stroke-width="1.4"/><polygon points="42,56 60,46 78,56" fill="#3B82F6"/><rect x="50" y="64" width="5" height="14" fill="#3B82F6"/><rect x="65" y="64" width="5" height="14" fill="#3B82F6"/></svg><div class="evo">圖書館（列柱）</div></div>
+      <div class="cell"><span class="lvtag">Lv3</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="88" rx="54" ry="14"/><ellipse class="gline" cx="60" cy="88" rx="54" ry="14"/><rect x="48" y="58" width="24" height="22" fill="#dbeafe" stroke="#3B82F6" stroke-width="1.4"/><path d="M48 58 A12 12 0 0 1 72 58 Z" fill="#3B82F6"/><line x1="60" y1="46" x2="78" y2="38" stroke="#93c5fd" stroke-width="3"/></svg><div class="evo">天文台（望遠鏡）</div></div>
+    </div>
+  </div>
+
+  <!-- 9 職涯與平衡 -->
+  <div class="row">
+    <div class="dom"><span class="dchip"><span class="swatch" style="background:#64748B"></span>職涯與平衡</span>
+      <span class="dmeta">icon: Briefcase · #64748B</span>
+      <span class="arche">原型：<b>工坊→鐘樓</b></span></div>
+    <div class="stages">
+      <div class="cell"><span class="lvtag">Lv1</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="50" y="64" width="20" height="14" fill="#e2e8f0" stroke="#64748B" stroke-width="1.3"/><polygon points="48,64 60,56 72,64" fill="#64748B"/></svg><div class="evo">小工坊</div></div>
+      <div class="cell"><span class="lvtag">Lv2</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="86" rx="52" ry="14"/><ellipse class="gline" cx="60" cy="86" rx="52" ry="14"/><rect x="48" y="52" width="24" height="26" fill="#e2e8f0" stroke="#64748B" stroke-width="1.4"/><rect x="54" y="58" width="5" height="5" fill="#64748B"/><rect x="62" y="58" width="5" height="5" fill="#64748B"/><rect x="54" y="67" width="5" height="5" fill="#64748B"/><rect x="62" y="67" width="5" height="5" fill="#64748B"/></svg><div class="evo">辦公樓</div></div>
+      <div class="cell"><span class="lvtag">Lv3</span><svg viewBox="0 0 120 104"><ellipse class="ground" cx="60" cy="88" rx="54" ry="14"/><ellipse class="gline" cx="60" cy="88" rx="54" ry="14"/><rect x="52" y="44" width="16" height="38" fill="#e2e8f0" stroke="#64748B" stroke-width="1.5"/><polygon points="50,44 60,34 70,44" fill="#64748B"/><circle cx="60" cy="54" r="6" fill="#fff" stroke="#64748B" stroke-width="1.3"/><line x1="60" y1="54" x2="60" y2="50" stroke="#64748B" stroke-width="1.3"/><line x1="60" y1="54" x2="63" y2="55" stroke="#64748B" stroke-width="1.3"/></svg><div class="evo">鐘樓（平衡的時間）</div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
