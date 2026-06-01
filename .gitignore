@@ -1,0 +1,6 @@
+# Superpowers / AI 工具的本機狀態目錄 — 每台機器各自產生，不該進 repo
+.superpowers/
+
+# 作業系統雜項
+.DS_Store
+Thumbs.db
