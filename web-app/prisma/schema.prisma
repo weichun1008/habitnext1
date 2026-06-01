@@ -23,6 +23,9 @@ model User {
   typeKey      String? // ★ 新增 — 'daisy' | 'rose' | 'orchid' | 'sunflower' (set by quiz module)
   sleepTypeKey String? // ★ 新增 — 'stress' | 'rhythm' | 'metabolic' | 'hormone'
   identities   String[]     @default([]) // ★ Slice K — 多身分並存（手動 / Profile 加；v1 不自動加冕）
+  // ★ Slice O — 在此分支同步保留欄位，避免合併後 main 部署的 prisma db push
+  //   把 Slice O 加在共用 DB 的欄位砍掉（跨 session schema 協調，additive、安全）。
+  trackLocation Boolean     @default(false)
   isActive     Boolean      @default(true)
   createdAt    DateTime     @default(now())
   tasks        Task[]
@@ -156,6 +159,10 @@ model TaskHistory {
   completed          Boolean @default(false)
   value              Int     @default(0) // For quantitative or period count; also count of true subtaskCompletions
   subtaskCompletions Json? // { [subtaskId]: boolean } — per-date checklist state
+  // ★ Slice O — 同步保留欄位（見 User.trackLocation 註解）：記錄完成地點。
+  lat                Float?
+  lng                Float?
+  city               String?
 
   @@unique([taskId, date])
 }
