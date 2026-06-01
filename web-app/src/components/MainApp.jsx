@@ -426,6 +426,29 @@ const MainApp = () => {
         }
     };
 
+    // Slice O — manual city correction from a card's / detail's LocationChip.
+    // Persists city on the date's TaskHistory without disturbing completion value.
+    const handlePickLocation = async (task, dateStr, cityName) => {
+        setTasks(prev => prev.map(t => t.id === task.id
+            ? { ...t, locationByDate: { ...(t.locationByDate || {}), [dateStr]: cityName } }
+            : t));
+        const curVal = task.history?.[dateStr];
+        const valNum = typeof curVal === 'number' ? curVal
+            : (curVal && typeof curVal === 'object' ? (curVal.value || 0) : (curVal ? 1 : 0));
+        try {
+            await fetch(`/api/tasks/${task.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...task,
+                    historyUpdate: { date: dateStr, completed: true, value: valNum, city: cityName },
+                }),
+            });
+        } catch (e) {
+            console.error('pick location failed', e);
+        }
+    };
+
     // ────────────────────────────────────────────────────────────────
     // Completion-flow animation glue
     //
@@ -1188,7 +1211,7 @@ const MainApp = () => {
                                                                 : 'max-h-[640px] opacity-100'
                                                         }`}
                                                     >
-                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} />
+                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} />
                                                     </div>
                                                 );
                                             })}
@@ -1221,7 +1244,7 @@ const MainApp = () => {
                                                         // needed (Task naturally jumps back into the list
                                                         // above on re-fetch). Use handleUpdateProgress
                                                         // directly to skip the toast / scheduled exit.
-                                                        <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} />
+                                                        <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} />
                                                     ))}
                                                 </>
                                             )}
@@ -1242,7 +1265,7 @@ const MainApp = () => {
                                             </h3>
                                             <div className="space-y-3">
                                                 {flexibleTasks.map(task => (
-                                                    <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} />
+                                                    <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} />
                                                 ))}
                                             </div>
                                         </div>
@@ -1299,6 +1322,7 @@ const MainApp = () => {
                                             task={task}
                                             onClick={() => handleTaskClick(task)}
                                             onUpdate={handleUpdateProgress}
+                                            onPickLocation={handlePickLocation}
                                         />
                                     ))}
                                 </div>
