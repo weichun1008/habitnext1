@@ -1768,8 +1768,8 @@
     "takeaway": "每次對話中有意識地讓對方說完再回應，是強化關係品質最具可行性的日常練習之一，但需持續累積才能見效。",
     "sources": [
       {
-        "label": "Kluger et al. (2023). A Meta-analytic Systematic Review and Theory of the Effects of Perceived Listening on Work Outcomes. Journal of Business and Psychology, 39(2), 295–344.",
-        "url": "https://cris.haifa.ac.il/en/publications/a-meta-analytic-systematic-review-and-theory-of-the-effects-of-pe/",
+        "label": "Kluger et al. (2023) — 感知傾聽與工作成效的統合分析. Journal of Business and Psychology, 39, 295–344",
+        "url": "https://link.springer.com/article/10.1007/s10869-023-09897-5",
         "type": "journal"
       },
       {
@@ -1793,7 +1793,7 @@
       "統合分析",
       "社交連結"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -2860,6 +2860,11 @@
     "takeaway": "每天用文字記下今日所學，利用提取練習原理（g ≥ 0.50）強化長期記憶，是目前認知科學中證據最紮實的學習習慣之一。",
     "sources": [
       {
+        "label": "Adesope, Trevisan & Sundararajan (2017) — 練習測試的統合分析（188 實驗，g=0.51 vs 重讀）. Review of Educational Research, 87(3), 659–701",
+        "url": "https://journals.sagepub.com/doi/abs/10.3102/0034654316689306",
+        "type": "journal"
+      },
+      {
         "label": "Examining the Testing Effect in University Teaching (PMC6288371) — 引用 Rowland 2014 g=0.50–0.61 及 Adesope 2017 g=0.61–0.70",
         "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6288371/",
         "type": "pubmed"
@@ -2896,7 +2901,7 @@
       "學習策略",
       "記憶鞏固"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -3182,7 +3187,7 @@
       "績效提升",
       "習慣科學"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -3508,7 +3513,7 @@
       "時間管理",
       "工作負荷"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -3562,7 +3567,7 @@
       "學習曲線",
       "自我調節"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
@@ -3924,8 +3929,8 @@
   {
     "habitName": "種植室內植物淨化空氣",
     "title": "室內植物淨化空氣：效果被嚴重高估",
-    "summary": "2019 年德雷塞爾大學 Cummings 與 Waring 對 12 篇盆栽植物研究共 196 項實驗結果進行統合分析，將各實驗數據換算為標準化「潔淨空氣釋出率（CADR）」，發現單株植物中位數 CADR 僅約 0.023 m³/h，若要達到一般建築通風換氣相同的揮發性有機物（VOC）去除效率，需在每平方公尺地板放置 10 至 1,000 株植物，相當於一間 140 平方公尺住宅需種植約 680 株。NASA 1989 年原始研究在密封小型艙室（約 1 立方公尺）中進行，無法反映真實居家的通風條件，因此其結論長期遭到過度詮釋。",
-    "detail": "**研究設計**\n\n本簡報主要依據 Cummings & Waring（2019）發表於《Journal of Exposure Science & Environmental Epidemiology》的系統性回顧與分析。研究者蒐集橫跨 30 年、共 12 篇盆栽植物腔室實驗，將 196 筆 VOC 去除數據統一換算為 CADR（m³/h），使不同研究條件得以直接比較。此外，Dela Cruz 等人（2014）的回顧亦指出，在真實辦公室與居家環境中進行的研究「數量極少且結果分歧」。\n\n**主要發現**\n\n1. **CADR 數值極低**：單株植物中位數 CADR 約 0.023 m³/h，相比之下，一般空氣清淨機 CADR 約 100 m³/h，即便是植物表現最佳的實驗數據，也不及空氣清淨機的 1%。\n2. **需要天文數字植株**：在真實室內通風條件下，要達到相同 VOC 去除效率需 10–1,000 株/m²，一般家庭根本不可行。\n3. **NASA 研究的侷限**：Wolverton（1989）原始實驗在密封、約 1 立方公尺的小型艙室中施加單一 VOC，無持續換氣，條件與真實住宅差異極大，結論不可直接外推。\n4. **主動式植物牆系統（botanical biofilter）**在機械強制通氣輔助下，CADR 可提升至 17.6 m³/h，顯示被動盆栽與主動系統效果差異顯著，但主動系統需額外基礎設施。\n5. **心理健康附帶效益**：現有文獻對減壓、提升情緒、改善工作場所生產力等心理效益有較一致的觀察性支持，惟此與空氣淨化屬不同機制，不應混用。\n\n**誠實說明**\n\n「種植室內植物」作為「淨化空氣」的具體做法，迄今缺乏在真實居家環境中的隨機對照試驗直接驗證，現有人體試驗數量少且規模小。此習慣在改善心理狀態方面有更紮實的觀察性依據，但空氣淨化的直接效益在現有最強證據下應評為「微乎其微」。\n\n**限制**\n\n- 主要回顧研究為觀察性設計，不能排除發表偏誤（正面結果較易發表）。\n- 各研究植物品種、光照、空間大小差異大，難以標準化比較。\n- 主動式植物牆系統的研究對象多為商業建築，不能直接類推至一般家庭盆栽行為。",
+    "summary": "2019 年德雷塞爾大學 Cummings 與 Waring 對 12 篇盆栽植物研究共 196 項實驗結果進行統合分析，將各實驗數據換算為標準化「潔淨空氣釋出率（CADR）」，發現單株植物中位數 CADR 僅約 0.023 m³/h，若要達到一般建築通風換氣相同的揮發性有機物（VOC）去除效率，需在每平方公尺放置數百至上千株植物，一般居家根本不可行。NASA 1989 年原始研究在密封小型艙室（約 1 立方公尺）中進行，無法反映真實居家的通風條件，因此其結論長期遭到過度詮釋。",
+    "detail": "**研究設計**\n\n本簡報主要依據 Cummings & Waring（2019）發表於《Journal of Exposure Science & Environmental Epidemiology》的系統性回顧與分析。研究者蒐集橫跨 30 年、共 12 篇盆栽植物腔室實驗，將 196 筆 VOC 去除數據統一換算為 CADR（m³/h），使不同研究條件得以直接比較。此外，Dela Cruz 等人（2014）的回顧亦指出，在真實辦公室與居家環境中進行的研究「數量極少且結果分歧」。\n\n**主要發現**\n\n1. **CADR 數值極低**：單株植物中位數 CADR 約 0.023 m³/h，相比之下，一般空氣清淨機 CADR 約 100 m³/h，即便是植物表現最佳的實驗數據，也不及空氣清淨機的 1%。\n2. **需要天文數字植株**：在真實室內通風條件下，要達到相同 VOC 去除效率需數百至上千株/m²，一般家庭根本不可行。\n3. **NASA 研究的侷限**：Wolverton（1989）原始實驗在密封、約 1 立方公尺的小型艙室中施加單一 VOC，無持續換氣，條件與真實住宅差異極大，結論不可直接外推。\n4. **主動式植物牆系統（botanical biofilter）**在機械強制通氣輔助下，CADR 可提升至 17.6 m³/h，顯示被動盆栽與主動系統效果差異顯著，但主動系統需額外基礎設施。\n5. **心理健康附帶效益**：現有文獻對減壓、提升情緒、改善工作場所生產力等心理效益有較一致的觀察性支持，惟此與空氣淨化屬不同機制，不應混用。\n\n**誠實說明**\n\n「種植室內植物」作為「淨化空氣」的具體做法，迄今缺乏在真實居家環境中的隨機對照試驗直接驗證，現有人體試驗數量少且規模小。此習慣在改善心理狀態方面有更紮實的觀察性依據，但空氣淨化的直接效益在現有最強證據下應評為「微乎其微」。\n\n**限制**\n\n- 主要回顧研究為觀察性設計，不能排除發表偏誤（正面結果較易發表）。\n- 各研究植物品種、光照、空間大小差異大，難以標準化比較。\n- 主動式植物牆系統的研究對象多為商業建築，不能直接類推至一般家庭盆栽行為。",
     "takeaway": "種植室內植物有益心情與居家美感，但不宜以「淨化空氣」為核心健康訴求，通風換氣才是改善室內空氣品質最有效的方法。",
     "sources": [
       {
@@ -3965,7 +3970,7 @@
       "證據回顧",
       "過度詮釋"
     ],
-    "status": "draft",
+    "status": "published",
     "order": 0,
     "aiGenerated": true,
     "sourcePrompt": null,
