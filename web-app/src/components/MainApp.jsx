@@ -15,6 +15,8 @@ import TaskDetailModal from './TaskDetailModal';
 import LoginModal from './LoginModal';
 import { generateId, getTodayStr, isTaskDueToday, isCompletedOnDate } from '@/lib/utils';
 import { cueOrderFor } from '@/lib/anchors';
+import { getCachedPosition } from '@/lib/geolocation';
+import { nearestCity } from '@/lib/cities';
 import { USER_TYPE_PROFILES } from '@/lib/typeKeys';
 import { SLEEP_TYPE_PROFILES } from '@/lib/sleepTypeKeys';
 import { CATEGORY_CONFIG, domainToIconKey } from '@/lib/constants';
@@ -149,6 +151,7 @@ const MainApp = () => {
                 const formattedTasks = data.map(t => {
                     const historyMap = {};
                     const dailyProgressMap = {};
+                    const locationByDate = {};   // ★ Slice O — { 'yyyy-mm-dd': '台北' }
 
                     if (t.history) {
                         t.history.forEach(h => {
@@ -169,9 +172,11 @@ const MainApp = () => {
                                     completed: h.completed
                                 };
                             }
+
+                            if (h.city) locationByDate[h.date] = h.city;   // ★ Slice O
                         });
                     }
-                    return { ...t, history: historyMap, dailyProgress: dailyProgressMap };
+                    return { ...t, history: historyMap, dailyProgress: dailyProgressMap, locationByDate };
                 });
                 setTasks(formattedTasks);
             }
@@ -380,6 +385,27 @@ const MainApp = () => {
         setTasks(newTasks);
         if (viewingTask?.id === task.id && updatedTask) {
             setViewingTask(updatedTask);
+        }
+
+        // Slice O — capture city on a completion (not un-completion) when the
+        // user has opted in. Best-effort: failure / denial just skips location.
+        if (historyUpdate && historyUpdate.completed && user?.trackLocation) {
+            try {
+                const pos = await getCachedPosition({ maxAgeMs: 15 * 60 * 1000 });
+                if (pos) {
+                    const city = nearestCity(pos.lat, pos.lng);
+                    if (city) {
+                        historyUpdate.lat = pos.lat;
+                        historyUpdate.lng = pos.lng;
+                        historyUpdate.city = city;
+                        setTasks(prev => prev.map(t => t.id === task.id
+                            ? { ...t, locationByDate: { ...(t.locationByDate || {}), [dateStr]: city } }
+                            : t));
+                    }
+                }
+            } catch (e) {
+                console.warn('[Slice O] location capture skipped', e);
+            }
         }
 
         // API Call
