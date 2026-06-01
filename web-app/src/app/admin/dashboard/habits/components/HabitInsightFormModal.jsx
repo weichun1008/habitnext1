@@ -33,7 +33,9 @@ const EMPTY_FORM = {
     tags: '',  // comma-separated in the form, split into array on save
     status: 'draft',
     order: 0,
-    evidence: { studyType: 2, scale: 1, causality: 1, replication: 1 }, // 預設一組中性值
+    // 預設「未評分」：新建 insight 不會誤顯示 badge。打開開關後才送 evidence。
+    evidenceEnabled: false,
+    evidence: { studyType: 2, scale: 1, causality: 1, replication: 1 }, // 開關打開後的起始值
 };
 
 function toFormShape(insight) {
@@ -47,6 +49,7 @@ function toFormShape(insight) {
         tags: Array.isArray(insight.tags) ? insight.tags.join(', ') : '',
         status: insight.status || 'draft',
         order: Number.isFinite(insight.order) ? insight.order : 0,
+        evidenceEnabled: Boolean(insight && insight.evidence),
         evidence: (insight && insight.evidence) ? insight.evidence : { studyType: 2, scale: 1, causality: 1, replication: 1 },
     };
 }
@@ -67,7 +70,8 @@ function toPayload(form) {
         tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
         status: form.status,
         order: Number.isFinite(form.order) ? form.order : 0,
-        evidence: form.evidence,
+        // 未啟用評分 → 送 null（後端 sanitizeEvidence(null)=null）→ 不顯示 badge。
+        evidence: form.evidenceEnabled ? form.evidence : null,
     };
 }
 
@@ -289,11 +293,18 @@ export default function HabitInsightFormModal({
                         )}
                     </div>
 
-                    {/* 證據力評分 — 4 面向下拉 + 即時 tier 預覽 */}
+                    {/* 證據力評分 — 開關啟用後才送 evidence；未啟用 = 不顯示 badge */}
                     <div className="pt-2 border-t border-gray-700">
                         <div className="flex items-center justify-between mb-2">
-                            <label className="admin-label !mb-0">證據力評分</label>
-                            {(() => {
+                            <label className="admin-label !mb-0 flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    checked={form.evidenceEnabled}
+                                    onChange={e => setForm(f => ({ ...f, evidenceEnabled: e.target.checked }))}
+                                />
+                                啟用證據力評分
+                            </label>
+                            {form.evidenceEnabled && (() => {
                                 const s = scoreEvidence(form.evidence);
                                 return (
                                     <span className="text-xs font-bold text-emerald-300">
@@ -302,26 +313,32 @@ export default function HabitInsightFormModal({
                                 );
                             })()}
                         </div>
-                        <div className="grid grid-cols-2 gap-3">
-                            {DIMENSIONS.map((dim) => (
-                                <div key={dim.key}>
-                                    <label className="text-[11px] text-gray-400 block mb-1">{dim.label}</label>
-                                    <select
-                                        className="admin-input admin-select w-full"
-                                        value={form.evidence[dim.key]}
-                                        onChange={e => setForm(f => ({
-                                            ...f,
-                                            evidence: { ...f.evidence, [dim.key]: Number(e.target.value) },
-                                        }))}
-                                    >
-                                        {dim.levels.map(l => (
-                                            <option key={l.value} value={l.value}>{l.label}（{l.points}）</option>
-                                        ))}
-                                    </select>
+                        {form.evidenceEnabled ? (
+                            <>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {DIMENSIONS.map((dim) => (
+                                        <div key={dim.key}>
+                                            <label className="text-[11px] text-gray-400 block mb-1">{dim.label}</label>
+                                            <select
+                                                className="admin-input admin-select w-full"
+                                                value={form.evidence[dim.key]}
+                                                onChange={e => setForm(f => ({
+                                                    ...f,
+                                                    evidence: { ...f.evidence, [dim.key]: Number(e.target.value) },
+                                                }))}
+                                            >
+                                                {dim.levels.map(l => (
+                                                    <option key={l.value} value={l.value}>{l.label}（{l.points}）</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                        <p className="text-[11px] text-gray-500 mt-1">分數衡量「證據有多硬」，非「習慣多好」。</p>
+                                <p className="text-[11px] text-gray-500 mt-1">分數衡量「證據有多硬」，非「習慣多好」。</p>
+                            </>
+                        ) : (
+                            <p className="text-[11px] text-gray-500">未啟用 — 這則 insight 不會顯示證據力 badge。</p>
+                        )}
                     </div>
 
                     {/* Status + Order — sit side-by-side, both used by admin */}
