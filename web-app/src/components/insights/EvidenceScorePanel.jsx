@@ -28,12 +28,12 @@ export default function EvidenceScorePanel({ evidence }) {
               <span className="text-[11.5px] text-gray-600">{dim.label}</span>
               <span className="flex items-center gap-2">
                 <span className="text-[10px] text-gray-500">{d.label}</span>
-                <span className="inline-flex items-end gap-[2px] h-[11px]" aria-hidden="true">
-                  {[4, 7, 11].map((h, i) => (
+                <span className="inline-flex items-end" style={{ gap: 2, height: 11 }} aria-hidden="true">
+                  {[5, 8, 11].map((h, i) => (
                     <span
                       key={i}
-                      style={{ height: h }}
-                      className={`w-[3px] rounded-[1px] ${t.bar} ${i < d.filled ? 'opacity-100' : 'opacity-25'}`}
+                      style={{ width: 3, height: h, borderRadius: 1, display: 'block' }}
+                      className={i < d.filled ? t.bar : t.track}
                     />
                   ))}
                 </span>

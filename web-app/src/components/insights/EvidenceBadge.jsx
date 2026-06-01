@@ -18,12 +18,14 @@ export default function EvidenceBadge({ evidence, onClick, active = false }) {
       aria-expanded={active}
       className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-bold whitespace-nowrap transition-all hover:brightness-95 hover:shadow-sm ${tone.bg} ${tone.text} ${active ? 'ring-1 ring-inset ring-gray-400/40' : ''}`}
     >
-      <span className="inline-flex items-end gap-[2px] h-3" aria-hidden="true">
-        {[5, 8, 12].map((h, i) => (
+      {/* 訊號格：寬高用 inline style（不依賴 Tailwind 任意值生成）；
+          已填滿用實心 tone.bar、未填滿用可見的 tone.track 軌道。 */}
+      <span className="inline-flex items-end" style={{ gap: 2, height: 12 }} aria-hidden="true">
+        {[6, 9, 12].map((h, i) => (
           <span
             key={i}
-            style={{ height: h }}
-            className={`w-[3px] rounded-[1px] ${tone.bar} ${i < filled ? 'opacity-100' : 'opacity-25'}`}
+            style={{ width: 3, height: h, borderRadius: 1, display: 'block' }}
+            className={i < filled ? tone.bar : tone.track}
           />
         ))}
       </span>

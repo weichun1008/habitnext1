@@ -50,10 +50,11 @@ export const TIER_META = {
 };
 
 // 只是 class token 字串（資料，非 import Tailwind）；元件套用。
+// bar = 已填滿格子的顏色（實心、清楚）；track = 未填滿格子的軌道（淺灰、各底色上皆可見）。
 export const TONE_CLASSES = {
-  strong: { text: 'text-emerald-700', bg: 'bg-emerald-100', bar: 'bg-emerald-500' },
-  moderate: { text: 'text-amber-700', bg: 'bg-amber-100', bar: 'bg-amber-500' },
-  preliminary: { text: 'text-slate-600', bg: 'bg-slate-100', bar: 'bg-slate-400' },
+  strong: { text: 'text-emerald-700', bg: 'bg-emerald-100', bar: 'bg-emerald-500', track: 'bg-emerald-200' },
+  moderate: { text: 'text-amber-700', bg: 'bg-amber-100', bar: 'bg-amber-500', track: 'bg-amber-200' },
+  preliminary: { text: 'text-slate-700', bg: 'bg-slate-200', bar: 'bg-slate-500', track: 'bg-slate-300' },
 };
 
 function findDim(key) { return DIMENSIONS.find(d => d.key === key) || null; }
