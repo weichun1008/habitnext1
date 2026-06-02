@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slice P — 無止盡累積（旗艦深度 + 數量廣度）</title>
+<style>
+  :root{--teal:#0d9488;--paper:#fdfbf7;--ink:#1f2937;--muted:#6b7280;--line:#e7e2d8;
+    --grass:#cfe8bf;--grass-d:#a9d49a;--sky:#eef7f4;--red:#EF4444;}
+  *{box-sizing:border-box}
+  body{margin:0;background:#f3efe7;color:var(--ink);font-family:'Outfit','Noto Sans TC',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:32px 20px 90px}
+  h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}
+  h2{font-size:18px;margin:30px 0 4px}
+  .sub{color:var(--muted);font-size:13.5px;margin:0;line-height:1.6}
+  .lead{font-size:13px;color:#374151;line-height:1.7;margin:6px 0 0;max-width:780px}
+  .axes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 4px}
+  @media(max-width:780px){.axes{grid-template-columns:1fr}}
+  .axis{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .axis b{color:var(--teal)} .axis .h{font-weight:800;font-size:14px;margin-bottom:4px}
+  .axis .cap{font-size:11.5px;color:var(--muted);margin-top:6px}
+  .pill{display:inline-block;font-size:10px;font-weight:800;color:#fff;padding:1px 8px;border-radius:999px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+  @media(max-width:880px){.grid3{grid-template-columns:1fr}}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 6px 20px rgba(31,41,55,.06)}
+  .scene{height:230px;background:radial-gradient(120% 90% at 50% 0%,var(--sky) 0%,#dcefe7 70%,#cbe9e2 100%);border-bottom:1px solid var(--line)}
+  .cap{padding:12px 16px 16px}
+  .cap .t{font-weight:800;font-size:14px}
+  .cap .n{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .cap .d{font-size:11.5px;color:#4b5563;margin-top:7px;line-height:1.6}
+  .tiers{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;font-size:12px}
+  .tier{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+  .tier b{color:var(--teal)}
+  .note{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12.5px;padding:10px 14px;border-radius:12px;margin:22px 0 0;line-height:1.6}
+  .ground{fill:var(--grass)} .gline{fill:none;stroke:var(--grass-d);stroke-width:2}
+  .pin{filter:drop-shadow(0 2px 2px rgba(0,0,0,.18))}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Slice P — 無止盡累積：旗艦深度 + 數量廣度 🏟️🏟️🏟️</h1>
+  <p class="sub">回答「3 階一下用完？」：3 階只是<b>旗艦</b>的深度（封頂＝精通）；真正無止盡的是<b>建築數量</b>（像大富翁一直蓋）+ 城市階級延伸。全程 read-only，數字都從 TaskHistory 算。</p>
+
+  <div class="axes">
+    <div class="axis"><div class="h">垂直軸 · 旗艦地標 <span class="pill" style="background:var(--red)">會封頂</span></div>
+      每個領域<b>一座</b>旗艦（運動＝體育場），里程碑升 Lv1→Lv2→Lv3。封頂是好事＝「我精通運動了」的成就訊號。
+      <div class="cap">例：第 1 次→Lv1 跑道；第 10 次→Lv2 球場；第 30 次→Lv3 巨蛋。之後旗艦不再變，但…</div></div>
+    <div class="axis"><div class="h">水平軸 · 建築數量 <span class="pill" style="background:var(--teal)">不封頂</span></div>
+      同領域<b>一直長出更多</b>建築（一座座體育館、健身房、球場…）。每隔幾次完成就加蓋一棟，款式輪替避免重複，高數量偶爾解鎖稀有建築。
+      <div class="cap">例：每 5 次完成 → 該區 +1 棟。運動 70 次 ≈ 旗艦巨蛋 + 13 棟運動設施圍繞。</div></div>
+  </div>
+
+  <h2>運動區隨完成次數長大（同一個區）</h2>
+  <div class="grid3">
+    <!-- early -->
+    <div class="card">
+      <div class="scene"><svg viewBox="0 0 300 230" width="100%" height="100%">
+        <ellipse class="ground" cx="150" cy="150" rx="120" ry="56"/><ellipse class="gline" cx="150" cy="150" rx="120" ry="56"/>
+        <!-- flagship Lv1 track -->
+        <ellipse cx="150" cy="140" rx="30" ry="13" fill="none" stroke="var(--red)" stroke-width="3"/>
+        <g class="pin"><circle cx="170" cy="118" r="5.5" fill="#f97362"/><circle cx="170" cy="118" r="1.8" fill="#fff"/></g>
+      </svg></div>
+      <div class="cap"><div class="t">完成 3 次</div><div class="n">旗艦 Lv1 · 建築 0 棟</div>
+        <div class="d">運動區剛起步：一圈跑道（旗艦 Lv1）。</div></div>
+    </div>
+    <!-- mid -->
+    <div class="card">
+      <div class="scene"><svg viewBox="0 0 300 230" width="100%" height="100%">
+        <ellipse class="ground" cx="150" cy="156" rx="128" ry="60"/><ellipse class="gline" cx="150" cy="156" rx="128" ry="60"/>
+        <!-- flagship Lv2 stadium -->
+        <ellipse cx="150" cy="142" rx="32" ry="13" fill="#fca5a5" opacity=".4"/><ellipse cx="150" cy="142" rx="32" ry="13" fill="none" stroke="var(--red)" stroke-width="3"/><rect x="128" y="122" width="44" height="6" rx="2" fill="var(--red)"/>
+        <!-- surrounding buildings -->
+        <rect x="86" y="128" width="18" height="20" fill="#fca5a5" stroke="var(--red)" stroke-width="1.2"/>
+        <rect x="200" y="126" width="20" height="22" fill="#fff" stroke="#e0b483" stroke-width="1.2"/><polygon points="199,126 210,117 221,126" fill="var(--red)"/>
+        <rect x="226" y="150" width="16" height="16" fill="#fca5a5" stroke="var(--red)" stroke-width="1.2"/>
+        <circle cx="70" cy="150" r="8" fill="var(--grass-d)"/>
+        <g class="pin"><circle cx="110" cy="110" r="5.5" fill="#f97362"/><circle cx="110" cy="110" r="1.8" fill="#fff"/></g>
+        <g class="pin"><circle cx="186" cy="108" r="5.5" fill="#f97362"/><circle cx="186" cy="108" r="1.8" fill="#fff"/></g>
+      </svg></div>
+      <div class="cap"><div class="t">完成 25 次</div><div class="n">旗艦 Lv2 · 建築 3 棟</div>
+        <div class="d">旗艦升級成球場＋看台，周圍開始一座座加蓋運動設施。</div></div>
+    </div>
+    <!-- late -->
+    <div class="card">
+      <div class="scene"><svg viewBox="0 0 300 230" width="100%" height="100%">
+        <ellipse class="ground" cx="150" cy="162" rx="136" ry="62"/><ellipse class="gline" cx="150" cy="162" rx="136" ry="62"/>
+        <path d="M24 156 Q120 146 150 168 Q190 192 280 158" fill="none" stroke="#9bd6ea" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+        <!-- flagship Lv3 dome -->
+        <path d="M118 150 Q150 116 182 150 Z" fill="#fca5a5" opacity=".55"/><path d="M118 150 Q150 116 182 150" fill="none" stroke="var(--red)" stroke-width="3"/><ellipse cx="150" cy="150" rx="32" ry="6" fill="var(--red)" opacity=".3"/>
+        <!-- many surrounding sport buildings, varied -->
+        <rect x="64" y="128" width="16" height="22" fill="#fca5a5" stroke="var(--red)" stroke-width="1.1"/>
+        <rect x="84" y="118" width="14" height="32" fill="var(--red)" opacity=".85"/>
+        <rect x="200" y="120" width="18" height="30" fill="#fff" stroke="#e0b483" stroke-width="1.1"/><polygon points="199,120 209,112 219,120" fill="var(--red)"/>
+        <rect x="222" y="132" width="16" height="18" fill="#fca5a5" stroke="var(--red)" stroke-width="1.1"/>
+        <rect x="242" y="140" width="14" height="12" fill="var(--red)" opacity=".8"/>
+        <rect x="46" y="142" width="14" height="10" fill="#fca5a5" stroke="var(--red)" stroke-width="1.1"/>
+        <ellipse cx="104" cy="170" rx="14" ry="6" fill="none" stroke="var(--red)" stroke-width="2"/>
+        <ellipse cx="196" cy="172" rx="12" ry="5" fill="none" stroke="var(--red)" stroke-width="2"/>
+        <circle cx="40" cy="150" r="8" fill="var(--grass-d)"/><circle cx="262" cy="156" r="7" fill="var(--grass-d)"/>
+        <!-- rare special: golden torch -->
+        <g class="pin"><rect x="147" y="96" width="6" height="16" fill="#b45309"/><circle cx="150" cy="92" r="6" fill="#f59e0b"/><text x="146.5" y="95.5" font-size="8" fill="#fff">★</text></g>
+        <g class="pin"><circle cx="96" cy="104" r="5" fill="#f97362"/><circle cx="96" cy="104" r="1.6" fill="#fff"/></g>
+        <g class="pin"><circle cx="210" cy="102" r="5" fill="#f97362"/><circle cx="210" cy="102" r="1.6" fill="#fff"/></g>
+      </svg></div>
+      <div class="cap"><div class="t">完成 70+ 次</div><div class="n">旗艦 Lv3（封頂）· 建築 13 棟 + 稀有聖火 ★</div>
+        <div class="d">旗艦巨蛋封頂後，數量持續長：一整片運動園區。高數量解鎖稀有建築（聖火＝後面 Slice S 佔位）。</div></div>
+    </div>
+  </div>
+
+  <h2>城市整體階級也會延伸（不會「玩完」）</h2>
+  <div class="tiers">
+    <span class="tier">空地 <b>0</b></span>
+    <span class="tier">村莊 <b>1–9</b></span>
+    <span class="tier">城鎮 <b>10–29</b></span>
+    <span class="tier">都市 <b>30–79</b></span>
+    <span class="tier">大都會 <b>80–199</b></span>
+    <span class="tier">… 可續加 <b>200+</b></span>
+  </div>
+  <p class="lead" style="margin-top:8px">城市階級＝該城市總完成次數，門檻可一路往上加，地圖永遠有下一個目標。零懲罰：漏天只是不長新的，已蓋的不會消失。</p>
+
+  <div class="note">
+    數值（10/30 升級門檻、每 5 次 +1 棟、款式輪替、稀有解鎖條件）都先寫進 spec 當<b>可調參數</b>，之後憑真實資料微調。Slice P 只做渲染：給它一串該城市/該領域的完成次數 → 算出旗艦等級 + 建築數 + 城市階級 → 擺出來。
+  </div>
+</div>
+</body>
+</html>

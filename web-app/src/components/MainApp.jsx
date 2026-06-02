@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp } from 'lucide-react';
+import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp, Map } from 'lucide-react';
 import AppHeader from './AppHeader';
 import WeekStrip from './WeekStrip';
 import TaskCard from './TaskCard';
@@ -28,6 +28,7 @@ import Avatar from './Avatar';
 import AspirationPicker from './AspirationPicker';
 import AspirationRecommendationPanel from './AspirationRecommendationPanel';
 import FocusMapModal from './FocusMapModal';
+import JourneyView from './journey/JourneyView';
 
 // StatsView is dynamically imported to keep recharts (~96kb gzip) off the
 // `/` route's First Load JS — it only loads when the user opens the stats tab.
@@ -112,6 +113,11 @@ const MainApp = () => {
     const [viewingTask, setViewingTask] = useState(null);
     const [selectedDate, setSelectedDate] = useState(getTodayStr());
 
+    // Slice P — journey world. Fetched on-demand when the user opens the
+    // 旅程 view (click-triggered, see the sidebar button below).
+    const [journeyData, setJourneyData] = useState(null);
+    const [journeyLoading, setJourneyLoading] = useState(false);
+
     // 1. Check Auth on Load
     useEffect(() => {
         const storedUser = localStorage.getItem('habit_user');
@@ -138,6 +144,18 @@ const MainApp = () => {
         } catch (e) {
             console.error('Fetch candidate count error', e);
         }
+    };
+
+    // Slice P — fetch the journey world (read-only aggregation). Triggered
+    // by the 旅程 sidebar button; cheap enough to re-fetch on each open.
+    const fetchJourney = async (uid) => {
+        if (!uid) return;
+        setJourneyLoading(true);
+        try {
+            const res = await fetch(`/api/journey?userId=${uid}`);
+            if (res.ok) setJourneyData(await res.json());
+        } catch (e) { console.error('fetchJourney failed', e); }
+        finally { setJourneyLoading(false); }
     };
 
     // 2. Fetch Tasks
@@ -1049,6 +1067,13 @@ const MainApp = () => {
                             統計
                         </button>
                         <button
+                            onClick={() => { setCurrentView('journey'); fetchJourney(user?.id); }}
+                            className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'journey' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
+                        >
+                            <Map size={20} />
+                            旅程
+                        </button>
+                        <button
                             onClick={() => setCurrentView('badges')}
                             className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'badges' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
                         >
@@ -1331,6 +1356,15 @@ const MainApp = () => {
 
                         {currentView === 'stats' && (
                             <StatsView userId={user?.id} onBack={() => setCurrentView('daily')} />
+                        )}
+
+                        {currentView === 'journey' && (
+                            <JourneyView
+                                data={journeyData}
+                                trackLocationOn={!!user?.trackLocation}
+                                loading={journeyLoading}
+                                onOpenSettings={() => setIsProfileModalOpen(true)}
+                            />
                         )}
 
                         {currentView === 'badges' && (
