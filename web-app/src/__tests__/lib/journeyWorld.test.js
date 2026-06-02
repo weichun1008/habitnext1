@@ -45,11 +45,11 @@ describe('buildingStyleIndex 確定性', () => {
 });
 describe('aggregateJourney', () => {
   const rows = [
-    { city: '台北', domain: '運動', date: '2026-06-01', title: '跑步' },
-    { city: '台北', domain: '運動', date: '2026-06-02', title: '跑步' },
-    { city: '台北', domain: '飲食', date: '2026-06-02', title: '記錄午餐' },
-    { city: '台北', domain: 'other',  date: '2026-06-03', title: '雜項' },
-    { city: '東京', domain: '心靈', date: '2026-05-20', title: '冥想' },
+    { id: 'h1', city: '台北', domain: '運動', date: '2026-06-01', title: '跑步', hasPhoto: true },
+    { id: 'h2', city: '台北', domain: '運動', date: '2026-06-02', title: '跑步', hasPhoto: false },
+    { id: 'h3', city: '台北', domain: '飲食', date: '2026-06-02', title: '記錄午餐' },
+    { id: 'h4', city: '台北', domain: 'other',  date: '2026-06-03', title: '雜項' },
+    { id: 'h5', city: '東京', domain: '心靈', date: '2026-05-20', title: '冥想' },
   ];
   const out = aggregateJourney(rows);
   it('homeCity = 完成最多的城市', () => expect(out.homeCity).toBe('台北'));
@@ -66,12 +66,22 @@ describe('aggregateJourney', () => {
     expect(sport.count).toBe(2);
     expect(sport.flagshipLevel).toBe(1);
   });
-  it('pins 帶 date/domain/title，無座標', () => {
+  it('pins 帶 id/date/domain/title/hasPhoto，無座標、無 photoUrl', () => {
     const pin = out.cities[0].pins[0];
+    expect(pin).toHaveProperty('id');
     expect(pin).toHaveProperty('date');
     expect(pin).toHaveProperty('domain');
     expect(pin).toHaveProperty('title');
+    expect(pin).toHaveProperty('hasPhoto');
+    expect(pin).not.toHaveProperty('photoUrl');
     expect(pin).not.toHaveProperty('lat');
+  });
+  it('hasPhoto 反映輸入列的 hasPhoto（true/false/缺省）', () => {
+    const pinsById = {};
+    for (const c of out.cities) for (const p of c.pins) pinsById[p.id] = p;
+    expect(pinsById['h1'].hasPhoto).toBe(true);
+    expect(pinsById['h2'].hasPhoto).toBe(false);
+    expect(pinsById['h3'].hasPhoto).toBe(false);
   });
   it('空輸入 → homeCity null、cities []', () => {
     expect(aggregateJourney([])).toEqual({ homeCity: null, cities: [] });

@@ -12,13 +12,15 @@ export async function GET(request) {
 
     const histories = await prisma.taskHistory.findMany({
       where: { completed: true, city: { not: null }, task: { userId } },
-      select: { date: true, city: true, task: { select: { category: true, title: true } } },
+      select: { id: true, date: true, city: true, photoUrl: true, task: { select: { category: true, title: true } } },
     });
     const rows = histories.map((h) => ({
+      id: h.id,
       city: h.city,
       domain: categoryToDomain(h.task?.category),
       date: h.date,
       title: h.task?.title || '',
+      hasPhoto: !!h.photoUrl,
     }));
     return NextResponse.json(aggregateJourney(rows));
   } catch (error) {

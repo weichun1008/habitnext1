@@ -51,7 +51,7 @@ function aggregateJourney(rows) {
     c.total += 1;
     if (r.domain === 'other') c.otherCount += 1;
     else c.domainCounts[r.domain] = (c.domainCounts[r.domain] || 0) + 1;
-    c.pins.push({ date: r.date, domain: r.domain, title: r.title });
+    c.pins.push({ id: r.id, date: r.date, domain: r.domain, title: r.title, hasPhoto: !!r.hasPhoto });
   }
   const cities = [...byCity.values()].map((c) => {
     const domains = DOMAIN_NAMES
