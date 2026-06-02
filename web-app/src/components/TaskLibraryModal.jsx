@@ -132,7 +132,8 @@ const TaskLibraryModal = ({
             return;
         }
         setPendingHabit({ habit, diffKey });
-        setPendingCue(null);
+        // 預選官方習慣的預設錨點（若後台有設定）；使用者仍可在 AnchorPicker 改或清除。
+        setPendingCue(habit.defaultCue || null);
         setView('anchor');
     };
 
