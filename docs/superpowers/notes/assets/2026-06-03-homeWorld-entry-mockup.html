@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>進入居家世界 — 進場視覺（Home World Entry）</title>
+<style>
+  :root{
+    --teal:#0d9488; --teal-d:#0f766e; --teal-l:#34b3a6; --coral:#f97362; --amber:#f59e0b;
+    --paper:#fdfbf7; --ink:#1f2937; --muted:#6b7280; --line:#e7e2d8;
+    --warm:#f3ece0; --wood:#caa472; --wood-d:#a9824f; --wall:#efe6d6; --wall-d:#e3d6c0;
+    --floor:#f6ecd9; --floor-line:#e6d6ba; --sky:#eaf6f3;
+    --c-food:#ef4444; --c-move:#f97316; --c-sleep:#6366f1; --c-mind:#10b981; --c-social:#f43f5e;
+    --c-soul:#22c55e; --c-env:#84cc16; --c-gut:#a855f7; --c-work:#64748b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#f1ece2;color:var(--ink);
+    font-family:'Outfit','Noto Sans TC',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 20px 90px}
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:-.02em}
+  h2{font-size:18px;margin:42px 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px;margin:0;max-width:780px;line-height:1.6}
+  .lead{font-size:13.5px;color:#374151;line-height:1.75;margin:6px 0 0;max-width:800px}
+  .note{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12.5px;
+    padding:11px 15px;border-radius:13px;margin:16px 0 6px;line-height:1.65}
+  /* phone frame row */
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:18px}
+  @media(max-width:980px){.flow{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.flow{grid-template-columns:1fr}}
+  .step{display:flex;flex-direction:column}
+  .phone{background:#fff;border:1px solid var(--line);border-radius:26px;overflow:hidden;
+    box-shadow:0 12px 30px rgba(31,41,55,.10);aspect-ratio:9/17;position:relative}
+  .stepcap{margin-top:10px}
+  .stepcap .n{font-size:10.5px;font-weight:800;color:var(--teal-d);letter-spacing:.05em}
+  .stepcap .t{font-size:13.5px;font-weight:800;margin-top:1px}
+  .stepcap .d{font-size:11.5px;color:#4b5563;line-height:1.6;margin-top:4px}
+  .scene{width:100%;height:100%;display:block}
+  /* full-screen welcome (single, big) */
+  .welcome{margin-top:18px;background:var(--paper);border:1px solid var(--line);border-radius:24px;
+    overflow:hidden;box-shadow:0 10px 30px rgba(31,41,55,.08)}
+  .welcome .body{padding:0}
+  .arrowrow{display:flex;align-items:center;justify-content:center;gap:6px;color:#cbb893;font-size:20px;margin:8px 0 -4px}
+  .foot{margin-top:46px;font-size:11.5px;color:#9ca3af;line-height:1.7;border-top:1px solid var(--line);padding-top:16px}
+  .seq{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:6px;flex-wrap:wrap}
+  .seq b{color:var(--teal-d)}
+  .key{font-family:ui-monospace,monospace;font-size:11px;background:#fff;border:1px solid var(--line);padding:1px 6px;border-radius:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>進入居家世界 🚪🏡</h1>
+  <p class="sub">從「選世界」到第一次踏進家的進場儀式。四個關鍵畫面：迎賓選擇 → 開門過場 → 首次進入（空屋引導）→ 回訪進入（溫馨的家）。沿用居家世界調性。</p>
+  <div class="note">這是 <b>進場視覺提案</b>。對應 spec §1.3 世界選擇器。手機框示意，動畫（開門、家具浮現）以關鍵幀呈現。</div>
+
+  <div class="seq">流程：<b>迎賓</b> <span class="key">activeWorld=null</span> → <b>選居家</b> → <b>開門過場 ~600ms</b> → <b>首次：空屋 + CTA</b> ‧‧‧（日後回訪）‧‧‧ <b>溫馨的家 + 今日提示</b></div>
+
+  <div class="flow">
+
+    <!-- ① 迎賓選世界 -->
+    <div class="step">
+      <div class="phone">
+        <svg class="scene" viewBox="0 0 270 510">
+          <rect width="270" height="510" fill="#faf6ee"/>
+          <text x="135" y="58" text-anchor="middle" font-size="17" font-weight="800" fill="#1f2937">選一個世界開始</text>
+          <text x="135" y="80" text-anchor="middle" font-size="11" fill="#9ca3af">同時只玩一種 · 隨時可換 · 進度保留</text>
+          <!-- 居家卡（highlight） -->
+          <g>
+            <rect x="28" y="100" width="214" height="120" rx="18" fill="#fff" stroke="var(--teal)" stroke-width="2.5"/>
+            <rect x="44" y="116" width="182" height="62" rx="12" fill="var(--sky)"/>
+            <polygon points="135,128 188,156 188,170 135,142" fill="var(--wall-d)"/><polygon points="135,128 82,156 82,170 135,142" fill="var(--wall)"/>
+            <polygon points="135,142 196,176 135,210 74,176" fill="var(--floor)" stroke="var(--floor-line)"/>
+            <polygon points="126,160 156,176 126,192 96,176" fill="var(--c-social)"/><polygon points="166,156 190,170 166,184 142,170" fill="var(--c-food)"/>
+            <text x="44" y="200" font-size="14" font-weight="800" fill="#1f2937">🏡 居家世界</text>
+            <text x="44" y="214" font-size="10" fill="#6b7280">完成習慣佈置溫馨的家 · 零門檻</text>
+          </g>
+          <!-- 公仔卡 -->
+          <g opacity=".85">
+            <rect x="28" y="234" width="214" height="74" rx="16" fill="#fff" stroke="var(--line)"/>
+            <circle cx="64" cy="271" r="20" fill="#f9a8d4"/><circle cx="58" cy="266" r="3" fill="#7c2d4d"/><circle cx="70" cy="266" r="3" fill="#7c2d4d"/>
+            <text x="98" y="266" font-size="13.5" font-weight="800" fill="#1f2937">🧸 公仔世界</text>
+            <text x="98" y="282" font-size="10" fill="#6b7280">養成 / 收集角色</text>
+            <text x="98" y="296" font-size="9.5" fill="#cbb6c2">即將推出</text>
+          </g>
+          <!-- 旅程卡 -->
+          <g opacity=".85">
+            <rect x="28" y="322" width="214" height="74" rx="16" fill="#fff" stroke="var(--line)"/>
+            <ellipse cx="64" cy="362" rx="26" ry="11" fill="#cfe8bf"/>
+            <rect x="52" y="344" width="9" height="18" fill="var(--teal)"/><rect x="64" y="338" width="10" height="24" fill="var(--teal-d)"/>
+            <text x="98" y="354" font-size="13.5" font-weight="800" fill="#1f2937">🏙️ 旅程世界</text>
+            <text x="98" y="370" font-size="10" fill="#6b7280">在各地完成 → 蓋城市</text>
+            <text x="98" y="384" font-size="9.5" fill="#9ca3af">需開啟定位</text>
+          </g>
+          <!-- 序章提示 -->
+          <rect x="28" y="416" width="214" height="58" rx="14" fill="#f0fdfa" stroke="#99f6e4"/>
+          <text x="135" y="440" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--teal-d)">✨ 你目前的 38 次完成</text>
+          <text x="135" y="458" text-anchor="middle" font-size="10" fill="#0f766e">會成為共同序章 — 不管選哪個都帶著走</text>
+        </svg>
+      </div>
+      <div class="stepcap"><div class="n">STEP 1 · 首次</div><div class="t">迎賓選世界</div>
+        <div class="d">點「世界」入口、<span class="key">activeWorld=null</span> 時出現。居家卡 highlight。底部明說「選前的完成＝共同序章，選哪個都帶著走」——消除「太晚選會虧」的焦慮。</div></div>
+    </div>
+
+    <!-- ② 開門過場 -->
+    <div class="step">
+      <div class="phone">
+        <svg class="scene" viewBox="0 0 270 510">
+          <defs><radialGradient id="glow" cx="50%" cy="46%" r="55%"><stop offset="0%" stop-color="#fff7e6"/><stop offset="100%" stop-color="#f3ece0"/></radialGradient></defs>
+          <rect width="270" height="510" fill="url(#glow)"/>
+          <!-- 一扇半開的門 -->
+          <rect x="78" y="150" width="114" height="220" rx="6" fill="var(--wood)" stroke="var(--wood-d)" stroke-width="3"/>
+          <!-- 開啟的門扇（透視半開） -->
+          <polygon points="135,150 192,164 192,356 135,370" fill="var(--wood-d)"/>
+          <polygon points="135,150 192,164 192,356 135,370" fill="#000" opacity=".08"/>
+          <!-- 門縫透出的暖光 + 家具剪影 -->
+          <polygon points="135,156 135,364 168,352 168,168" fill="#fff3da"/>
+          <polygon points="146,300 160,308 146,316 132,308" fill="var(--c-social)" opacity=".5"/>
+          <circle cx="150" cy="250" r="6" fill="#fde68a"/>
+          <!-- 門把 -->
+          <circle cx="86" cy="262" r="4" fill="#7c5a2e"/>
+          <!-- 鑰匙圈漂浮 -->
+          <text x="210" y="140" font-size="20">🔑</text>
+          <text x="135" y="424" text-anchor="middle" font-size="15" font-weight="800" fill="#1f2937">歡迎回家</text>
+          <text x="135" y="446" text-anchor="middle" font-size="11" fill="#9ca3af">推開門，走進你的家…</text>
+        </svg>
+      </div>
+      <div class="stepcap"><div class="n">STEP 2 · 過場 ~600ms</div><div class="t">開門過場</div>
+        <div class="d">選定後一段短儀式：木門半開、門縫透暖光 + 家具剪影、鑰匙 🔑 收進口袋。輕、不打斷，給「踏進一個空間」的儀式感（≈ Slice P 沒有的、居家獨有的進場感）。</div></div>
+    </div>
+
+    <!-- ③ 首次進入：空屋 + CTA -->
+    <div class="step">
+      <div class="phone">
+        <svg class="scene" viewBox="0 0 270 510">
+          <rect width="270" height="510" fill="#faf6ee"/>
+          <!-- 頂部小列：世界名 + 切換 -->
+          <rect x="16" y="16" width="238" height="34" rx="12" fill="#fff" stroke="var(--line)"/>
+          <text x="30" y="38" font-size="12.5" font-weight="800" fill="#1f2937">🏡 居家世界</text>
+          <text x="240" y="38" text-anchor="end" font-size="11" fill="var(--teal-d)" font-weight="700">切換 ⇄</text>
+          <!-- 空房間 -->
+          <rect x="16" y="64" width="238" height="240" rx="18" fill="var(--sky)"/>
+          <polygon points="135,96 220,140 220,164 135,120" fill="var(--wall-d)"/><polygon points="135,96 50,140 50,164 135,120" fill="var(--wall)"/>
+          <polygon points="135,120 236,172 135,224 34,172" fill="var(--floor)" stroke="var(--floor-line)" stroke-width="2"/>
+          <g stroke="var(--floor-line)" stroke-width="1.4" stroke-dasharray="4 5" fill="none" opacity=".9">
+            <polygon points="135,150 170,168 135,186 100,168"/>
+            <polygon points="180,160 206,174 180,188 154,174"/>
+            <polygon points="90,160 116,174 90,188 64,174"/>
+          </g>
+          <text x="135" y="180" text-anchor="middle" font-size="22" opacity=".55">📦</text>
+          <!-- 引導卡 -->
+          <rect x="16" y="320" width="238" height="86" rx="16" fill="#fff" stroke="var(--line)"/>
+          <text x="32" y="348" font-size="14" font-weight="800" fill="#1f2937">搬進你的家</text>
+          <text x="32" y="368" font-size="11" fill="#6b7280">完成第一個習慣 → 解鎖第一件家具，</text>
+          <text x="32" y="383" font-size="11" fill="#6b7280">親手擺進房間，家開始長出來。</text>
+          <!-- CTA -->
+          <rect x="16" y="420" width="238" height="46" rx="14" fill="var(--teal)"/>
+          <text x="135" y="448" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fff">回今日 · 完成一個習慣 →</text>
+        </svg>
+      </div>
+      <div class="stepcap"><div class="n">STEP 3 · 首次進入</div><div class="t">空屋 + 搬家引導</div>
+        <div class="d">空地磚 + 搬家紙箱（即使有序章完成數，第一次也用「歡迎入住」框住）。CTA 把人帶回「今日」完成習慣——遊戲化不取代工具，而是回流動機。</div></div>
+    </div>
+
+    <!-- ④ 回訪進入：溫馨的家 -->
+    <div class="step">
+      <div class="phone">
+        <svg class="scene" viewBox="0 0 270 510">
+          <rect width="270" height="510" fill="#faf6ee"/>
+          <rect x="16" y="16" width="238" height="34" rx="12" fill="#fff" stroke="var(--line)"/>
+          <text x="30" y="38" font-size="12.5" font-weight="800" fill="#1f2937">🏡 居家世界</text>
+          <text x="240" y="38" text-anchor="end" font-size="11" fill="var(--teal-d)" font-weight="700">切換 ⇄</text>
+          <!-- 溫馨度條 -->
+          <text x="30" y="74" font-size="11" font-weight="700" fill="#6b7280">溫馨度</text>
+          <rect x="78" y="65" width="130" height="9" rx="5" fill="#eadfcb"/>
+          <rect x="78" y="65" width="86" height="9" rx="5" fill="var(--teal-l)"/>
+          <text x="216" y="74" font-size="10" font-weight="800" fill="var(--teal-d)">小窩</text>
+          <!-- 有家具的房間 -->
+          <rect x="16" y="86" width="238" height="248" rx="18" fill="var(--sky)"/>
+          <polygon points="135,116 220,160 220,184 135,140" fill="var(--wall-d)"/><polygon points="135,116 50,160 50,184 135,140" fill="var(--wall)"/>
+          <polygon points="92,150 120,164 120,184 92,170" fill="#cdeaf0" stroke="#fff" stroke-width="2"/>
+          <polygon points="135,140 236,192 135,244 34,192" fill="var(--floor)" stroke="var(--floor-line)" stroke-width="2"/>
+          <polygon points="124,168 162,188 124,208 86,188" fill="var(--c-social)" opacity=".9"/><polygon points="86,188 124,208 124,220 86,200" fill="#d6325a"/>
+          <polygon points="186,166 214,180 186,194 158,180" fill="var(--c-food)" opacity=".88"/>
+          <polygon points="92,160 132,180 92,200 52,180" fill="var(--c-sleep)" opacity=".85"/>
+          <polygon points="196,150 224,164 224,184 196,170" fill="var(--c-mind)" opacity=".9"/>
+          <text x="140" y="150" font-size="12">🧘</text><text x="206" y="200" font-size="12">🌿</text>
+          <!-- 今日提示卡 -->
+          <rect x="16" y="350" width="238" height="60" rx="16" fill="#fff" stroke="var(--line)"/>
+          <text x="32" y="375" font-size="12.5" font-weight="800" fill="#1f2937">今天還能讓家更溫馨</text>
+          <text x="32" y="394" font-size="10.5" fill="#6b7280">完成 2 個習慣 → 解鎖「書桌」(書房)</text>
+          <!-- 佈置 CTA -->
+          <rect x="16" y="424" width="238" height="44" rx="14" fill="#fff" stroke="var(--teal)" stroke-width="2"/>
+          <text x="135" y="451" text-anchor="middle" font-size="13" font-weight="800" fill="var(--teal-d)">🛋 進入佈置</text>
+        </svg>
+      </div>
+      <div class="stepcap"><div class="n">STEP 4 · 之後回訪</div><div class="t">溫馨的家 + 今日提示</div>
+        <div class="d">頂部溫馨度條（取代旅程世界的城市階級）。「今天完成 N 個 → 解鎖 XX」把遊戲化跟今日任務勾起來。主 CTA「進入佈置」進房間擺家具。回訪沒有開門過場（只首次有）。</div></div>
+    </div>
+  </div>
+
+  <!-- 進場節奏說明 -->
+  <h2>進場節奏（什麼時候看到什麼）</h2>
+  <p class="lead">三種進入情境共用同一個居家畫面，差別在「前面那一下」：</p>
+  <div class="welcome"><div class="body" style="padding:18px 20px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--teal-d)">A. 首次選定居家</div>
+        <div style="font-size:11.5px;color:#4b5563;line-height:1.7;margin-top:6px">迎賓選擇 → <b>開門過場</b> → 空屋 + 搬家引導。唯一有完整儀式的一次。</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--teal-d)">B. 平常點「居家」入口回訪</div>
+        <div style="font-size:11.5px;color:#4b5563;line-height:1.7;margin-top:6px">直接進溫馨的家（<b>不開門過場</b>，避免每次都儀式變囉嗦）。頂部溫馨度條 + 今日提示。</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--teal-d)">C. 從別的世界切回居家</div>
+        <div style="font-size:11.5px;color:#4b5563;line-height:1.7;margin-top:6px">短暫「歡迎回家」淡入（比首次輕），強調「你的家還在、進度沒掉」。呼應共同序章哲學。</div>
+      </div>
+    </div>
+  </div></div>
+
+  <div class="note">原則：<b>儀式感只給首次</b>（開門）。回訪 / 切換要快、不打斷——對齊「工具乾淨、收集分開、不潑灑不麻痺」。零懲罰：回訪永遠是溫馨的，不會因漏天而看到家變破敗。</div>
+
+  <div class="foot">
+    <b>實作備註</b>：開門過場＝一次性 CSS/SVG 過場（記 <code>localStorage</code> 或 <code>User</code> flag「已看過居家進場」避免重播）。溫馨度條＝完成數推算的階級（同 journeyWorld 的 tier 概念，純衍生）。「今日提示」＝算「離下一件家具解鎖還差幾次」。皆零額外 schema（除既有 <code>activeWorld</code>）。<br>
+    對應 spec：<code>docs/superpowers/specs/2026-06-03-home-world-design.md</code> §1.3 世界選擇器
+  </div>
+</div>
+</body>
+</html>
