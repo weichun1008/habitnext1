@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公仔 = 習慣肖像</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  body{ font-family:'Outfit','Noto Sans TC',sans-serif; background:#e7e2d8; }
+  .zh{ font-family:'Noto Sans TC','Outfit',sans-serif; }
+  .label{ font-size:10px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; }
+  .card{ background:#fdfbf7; border-radius:28px; box-shadow:0 14px 44px rgba(0,0,0,.08); }
+  @keyframes breathe{ 0%,100%{ transform:translateY(0) scale(1) } 50%{ transform:translateY(-5px) scale(1.02) } }
+  .breathe{ animation:breathe 3.4s ease-in-out infinite; transform-origin:center bottom; }
+  @keyframes blink{ 0%,94%,100%{ transform:scaleY(1) } 97%{ transform:scaleY(.1) } }
+  .blink{ animation:blink 4.6s infinite; transform-origin:center; }
+  /* domain bar */
+  .dbar{ height:6px; border-radius:3px; background:#e7e2d8; overflow:hidden; }
+  .dbar > i{ display:block; height:100%; border-radius:3px; }
+</style>
+</head>
+<body class="py-12 px-4">
+<div class="max-w-[1400px] mx-auto">
+  <div class="text-center mb-2"><h1 class="text-3xl font-extrabold text-stone-900 zh">公仔 = 你的習慣肖像</h1></div>
+  <p class="text-center text-stone-600 max-w-2xl mx-auto mb-3 zh text-sm leading-relaxed">
+    同一顆蛋 🥚 · 三種習慣模式 · 養出三種不同的成熟公仔。一眼看出「這個人怎麼生活」。
+  </p>
+  <div class="flex justify-center mb-10"><div class="text-5xl">🥚 <span class="text-stone-400 text-2xl">→ 養 30 天 →</span></div></div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-7 max-w-6xl mx-auto">
+
+    <!-- ============ A. 均衡發展 ============ -->
+    <div class="card p-7">
+      <p class="label text-emerald-600 mb-1">類型 A</p>
+      <h2 class="zh text-xl font-extrabold text-stone-900 mb-4">和諧型 · 均衡發展</h2>
+
+      <div class="flex justify-center mb-5" style="height:200px;">
+        <svg width="190" height="200" viewBox="0 0 190 200" class="breathe">
+          <ellipse cx="95" cy="186" rx="50" ry="9" fill="#000" opacity="0.07"/>
+          <!-- balanced: round, full, every feature present a bit -->
+          <!-- aura (心靈) -->
+          <circle cx="95" cy="110" r="74" fill="#a78bfa" opacity="0.10"/>
+          <!-- body -->
+          <ellipse cx="95" cy="115" rx="56" ry="54" fill="#a7e8c8"/>
+          <ellipse cx="95" cy="126" rx="35" ry="32" fill="#d6f5e6"/>
+          <!-- sprout full (飲食) -->
+          <path d="M95 64 Q92 40 103 33 Q98 50 107 52 Q95 57 98 67 Z" fill="#4ade80"/>
+          <path d="M95 64 Q98 42 87 36 Q93 52 84 54 Q94 58 92 67 Z" fill="#86efac"/>
+          <!-- sleep cap small (睡眠) -->
+          <path d="M70 72 Q95 56 120 72 L116 80 Q95 70 74 80 Z" fill="#818cf8"/>
+          <!-- arms (運動 medium) -->
+          <ellipse cx="40" cy="118" rx="11" ry="19" fill="#a7e8c8"/>
+          <ellipse cx="150" cy="118" rx="11" ry="19" fill="#a7e8c8"/>
+          <!-- glasses (認知) -->
+          <circle cx="78" cy="112" r="11" fill="none" stroke="#64748b" stroke-width="2"/>
+          <circle cx="112" cy="112" r="11" fill="none" stroke="#64748b" stroke-width="2"/>
+          <line x1="89" y1="112" x2="101" y2="112" stroke="#64748b" stroke-width="2"/>
+          <g class="blink">
+            <circle cx="78" cy="112" r="6" fill="#2d3a34"/><circle cx="112" cy="112" r="6" fill="#2d3a34"/>
+            <circle cx="80" cy="109" r="2" fill="#fff"/><circle cx="114" cy="109" r="2" fill="#fff"/>
+          </g>
+          <circle cx="64" cy="126" r="6" fill="#fca5a5" opacity="0.6"/>
+          <circle cx="126" cy="126" r="6" fill="#fca5a5" opacity="0.6"/>
+          <path d="M86 128 Q95 136 104 128" fill="none" stroke="#2d3a34" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- little friend (社交) -->
+          <circle cx="158" cy="150" r="12" fill="#fcd34d"/>
+          <circle cx="154" cy="148" r="2" fill="#2d3a34"/><circle cx="162" cy="148" r="2" fill="#2d3a34"/>
+        </svg>
+      </div>
+
+      <div class="space-y-2 mb-4">
+        <div class="flex items-center gap-2"><span class="text-base">🥗</span><div class="dbar flex-1"><i style="width:70%; background:#f97316"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">💪</span><div class="dbar flex-1"><i style="width:65%; background:#ef4444"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🌙</span><div class="dbar flex-1"><i style="width:72%; background:#818cf8"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🧘</span><div class="dbar flex-1"><i style="width:60%; background:#a78bfa"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🤝</span><div class="dbar flex-1"><i style="width:58%; background:#f43f5e"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🧠</span><div class="dbar flex-1"><i style="width:62%; background:#3b82f6"></i></div></div>
+      </div>
+      <p class="zh text-xs text-stone-500 leading-relaxed">每個領域都有餵 → 各部位齊全：嫩芽、睡帽、眼鏡、小夥伴、圓肚都有。<b class="text-stone-700">看起來最圓滿、最「健康」</b>。</p>
+    </div>
+
+    <!-- ============ B. 健身狂 ============ -->
+    <div class="card p-7">
+      <p class="label text-red-500 mb-1">類型 B</p>
+      <h2 class="zh text-xl font-extrabold text-stone-900 mb-4">運動型 · 健身主導</h2>
+
+      <div class="flex justify-center mb-5" style="height:200px;">
+        <svg width="190" height="200" viewBox="0 0 190 200" class="breathe">
+          <ellipse cx="95" cy="186" rx="54" ry="9" fill="#000" opacity="0.07"/>
+          <!-- athletic: bigger, strong limbs, headband, dumbbell, tiny sprout -->
+          <ellipse cx="95" cy="113" rx="60" ry="56" fill="#86d9b0"/>
+          <ellipse cx="95" cy="124" rx="34" ry="30" fill="#c4f0db"/>
+          <!-- abs hint -->
+          <line x1="95" y1="112" x2="95" y2="140" stroke="#5fc499" stroke-width="2" opacity="0.5"/>
+          <line x1="80" y1="124" x2="110" y2="124" stroke="#5fc499" stroke-width="2" opacity="0.5"/>
+          <!-- tiny sprout (飲食弱) -->
+          <path d="M95 60 Q94 50 99 47 Q96 55 101 56 Q95 58 97 63 Z" fill="#4ade80"/>
+          <!-- headband (運動) -->
+          <rect x="62" y="92" width="66" height="9" rx="4" fill="#ef4444"/>
+          <!-- big strong arms -->
+          <ellipse cx="34" cy="116" rx="15" ry="24" fill="#86d9b0"/>
+          <ellipse cx="156" cy="116" rx="15" ry="24" fill="#86d9b0"/>
+          <!-- dumbbell -->
+          <g transform="translate(150,150) rotate(15)">
+            <rect x="-3" y="-2" width="22" height="5" rx="2" fill="#f59e0b"/>
+            <circle cx="-3" cy="0.5" r="6" fill="#f59e0b"/><circle cx="19" cy="0.5" r="6" fill="#f59e0b"/>
+          </g>
+          <g class="blink">
+            <circle cx="78" cy="116" r="6" fill="#2d3a34"/><circle cx="112" cy="116" r="6" fill="#2d3a34"/>
+            <circle cx="80" cy="113" r="2" fill="#fff"/><circle cx="114" cy="113" r="2" fill="#fff"/>
+          </g>
+          <circle cx="64" cy="128" r="6" fill="#fca5a5" opacity="0.6"/><circle cx="126" cy="128" r="6" fill="#fca5a5" opacity="0.6"/>
+          <!-- confident grin -->
+          <path d="M84 130 Q95 140 106 130" fill="none" stroke="#2d3a34" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <div class="space-y-2 mb-4">
+        <div class="flex items-center gap-2"><span class="text-base">🥗</span><div class="dbar flex-1"><i style="width:22%; background:#f97316"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">💪</span><div class="dbar flex-1"><i style="width:95%; background:#ef4444"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🌙</span><div class="dbar flex-1"><i style="width:35%; background:#818cf8"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🧘</span><div class="dbar flex-1"><i style="width:18%; background:#a78bfa"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🤝</span><div class="dbar flex-1"><i style="width:30%; background:#f43f5e"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🧠</span><div class="dbar flex-1"><i style="width:25%; background:#3b82f6"></i></div></div>
+      </div>
+      <p class="zh text-xs text-stone-500 leading-relaxed">運動爆滿 → 壯碩、頭帶、啞鈴、腹肌。但嫩芽小小的（飲食弱）、沒睡帽沒光環。<b class="text-stone-700">一看就知道「重訓魔人，但別的偏食」</b>。</p>
+    </div>
+
+    <!-- ============ C. 養生睡眠派 ============ -->
+    <div class="card p-7">
+      <p class="label text-indigo-500 mb-1">類型 C</p>
+      <h2 class="zh text-xl font-extrabold text-stone-900 mb-4">靜養型 · 睡眠心靈主導</h2>
+
+      <div class="flex justify-center mb-5" style="height:200px;">
+        <svg width="190" height="200" viewBox="0 0 190 200" class="breathe">
+          <ellipse cx="95" cy="186" rx="48" ry="9" fill="#000" opacity="0.07"/>
+          <!-- serene: aura halo, big sleep cap, lotus, lidded calm eyes, full sprout -->
+          <!-- big aura (心靈) -->
+          <circle cx="95" cy="108" r="80" fill="#a78bfa" opacity="0.14"/>
+          <circle cx="95" cy="108" r="80" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0.3"/>
+          <ellipse cx="95" cy="118" rx="52" ry="50" fill="#a7e0e8"/>
+          <ellipse cx="95" cy="128" rx="32" ry="29" fill="#d6f0f5"/>
+          <!-- full sprout (飲食 ok) -->
+          <path d="M95 70 Q92 48 103 41 Q98 58 107 60 Q95 65 98 75 Z" fill="#4ade80"/>
+          <path d="M95 70 Q98 50 87 44 Q93 60 84 62 Q94 66 92 75 Z" fill="#86efac"/>
+          <!-- big sleep cap (睡眠) -->
+          <path d="M64 80 Q95 52 126 80 L120 92 Q95 74 70 92 Z" fill="#818cf8"/>
+          <circle cx="126" cy="78" r="6" fill="#c7d2fe"/>
+          <!-- lotus at base (心靈/meditation) -->
+          <g transform="translate(95,165)">
+            <ellipse cx="0" cy="0" rx="7" ry="13" fill="#f9a8d4"/>
+            <ellipse cx="-12" cy="2" rx="6" ry="11" fill="#fbcfe8" transform="rotate(-35)"/>
+            <ellipse cx="12" cy="2" rx="6" ry="11" fill="#fbcfe8" transform="rotate(35)"/>
+          </g>
+          <!-- thin arms relaxed -->
+          <ellipse cx="42" cy="122" rx="9" ry="16" fill="#a7e0e8"/>
+          <ellipse cx="148" cy="122" rx="9" ry="16" fill="#a7e0e8"/>
+          <!-- calm lidded eyes (^ ^) -->
+          <path d="M70 118 Q78 112 86 118" fill="none" stroke="#2d3a34" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M104 118 Q112 112 120 118" fill="none" stroke="#2d3a34" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="64" cy="130" r="6" fill="#fca5a5" opacity="0.5"/><circle cx="126" cy="130" r="6" fill="#fca5a5" opacity="0.5"/>
+          <!-- serene tiny mouth -->
+          <path d="M89 132 Q95 137 101 132" fill="none" stroke="#2d3a34" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <div class="space-y-2 mb-4">
+        <div class="flex items-center gap-2"><span class="text-base">🥗</span><div class="dbar flex-1"><i style="width:55%; background:#f97316"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">💪</span><div class="dbar flex-1"><i style="width:20%; background:#ef4444"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🌙</span><div class="dbar flex-1"><i style="width:92%; background:#818cf8"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🧘</span><div class="dbar flex-1"><i style="width:88%; background:#a78bfa"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🤝</span><div class="dbar flex-1"><i style="width:40%; background:#f43f5e"></i></div></div>
+        <div class="flex items-center gap-2"><span class="text-base">🧠</span><div class="dbar flex-1"><i style="width:45%; background:#3b82f6"></i></div></div>
+      </div>
+      <p class="zh text-xs text-stone-500 leading-relaxed">睡眠+心靈爆滿 → 大睡帽、光環、蓮花、瞇瞇眼、慵懶。但沒肌肉沒啞鈴。<b class="text-stone-700">一看就知道「養生系，但缺運動」</b>。</p>
+    </div>
+  </div>
+
+  <!-- mechanic recap -->
+  <div class="max-w-5xl mx-auto mt-12 card p-8">
+    <h2 class="text-2xl font-extrabold text-stone-900 mb-5 zh">機制重點（回答你的兩個問題）</h2>
+    <div class="grid md:grid-cols-2 gap-x-10 gap-y-5 text-sm zh">
+      <div><b class="text-emerald-700">Q1 · 一隻公仔，不是 9 隻</b><p class="text-stone-600 mt-1 leading-relaxed">9 領域 = 同一隻公仔的 9 個面向（部位/裝飾），不是 9 隻。情感集中、偏食看得出來（逼平衡）、美術成本低。</p></div>
+      <div><b class="text-emerald-700">Q2 · 餵養後沿三軸變化</b><p class="text-stone-600 mt-1 leading-relaxed">① 階段（蛋→成熟，總累積）② 部位（各領域長各自的裝飾）③ 形態（你的領域組成決定長成哪種公仔）。</p></div>
+      <div><b class="text-emerald-700">公仔 = 習慣的肖像</b><p class="text-stone-600 mt-1 leading-relaxed">同一顆蛋，因為你的習慣模式不同，長成完全不同的樣子。公仔是「你怎麼生活」的視覺證據 → 呼應身分宣告。</p></div>
+      <div><b class="text-emerald-700">行為科學上是對的</b><p class="text-stone-600 mt-1 leading-relaxed">偏食公仔長得歪 → 視覺上提示你補齊弱項。和諧型最圓滿好看 → 鼓勵全面健康（cofit 核心）。但不強迫、零懲罰。</p></div>
+    </div>
+    <div class="mt-6 pt-5 border-t border-stone-100 text-sm zh">
+      <p class="text-stone-500"><b class="text-stone-700">待定：</b>① 美術風格（這版 SVG 是 placeholder，正式需插畫師定調）② 形態進化是「主導領域決定」還是「平衡度決定」還是兩者混合 ③ 部位是「累積到門檻就長」還是「持續餵才維持」（建議長出後不收回＝零懲罰）。</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

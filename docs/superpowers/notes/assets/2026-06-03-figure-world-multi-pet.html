@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>養不一樣的萌寵</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  body{ font-family:'Outfit','Noto Sans TC',sans-serif; background:#ece7dd; }
+  .zh{ font-family:'Noto Sans TC','Outfit',sans-serif; }
+  .label{ font-size:10px; letter-spacing:.16em; text-transform:uppercase; font-weight:800; }
+  .card{ background:#fdfcf9; border-radius:30px; box-shadow:0 12px 36px rgba(0,0,0,.07); overflow:hidden; }
+  .bg-stage{ background:radial-gradient(circle at 50% 42%, #eafaf2 0%, #f6fbf8 60%, #fdfcf9 100%); }
+  .bg-stage-warm{ background:radial-gradient(circle at 50% 42%, #fdeee6 0%, #fdf6f1 60%, #fdfcf9 100%); }
+  .bg-stage-cool{ background:radial-gradient(circle at 50% 42%, #e4f3fb 0%, #eef8fc 60%, #fdfcf9 100%); }
+  @keyframes breathe{ 0%,100%{ transform:translateY(0) scale(1) } 50%{ transform:translateY(-5px) scale(1.025) } }
+  .breathe{ animation:breathe 3.6s ease-in-out infinite; transform-origin:center 88%; }
+  @keyframes wobble{ 0%,100%{ transform:scaleX(1) scaleY(1) } 50%{ transform:scaleX(1.04) scaleY(.96) } }
+  .wobble{ animation:wobble 2.8s ease-in-out infinite; transform-origin:center bottom; }
+  @keyframes blink{ 0%,93%,100%{ transform:scaleY(1) } 96%{ transform:scaleY(.08) } }
+  .blink{ animation:blink 5s infinite; transform-origin:center; }
+  @keyframes sway{ 0%,100%{ transform:rotate(-3deg) } 50%{ transform:rotate(3deg) } }
+  .sway{ animation:sway 4s ease-in-out infinite; transform-origin:center bottom; }
+  @keyframes tail{ 0%,100%{ transform:rotate(-8deg) } 50%{ transform:rotate(10deg) } }
+  .tail{ animation:tail 3s ease-in-out infinite; transform-origin:left center; }
+</style>
+</head>
+<body class="py-12 px-4">
+<div class="max-w-[1400px] mx-auto">
+  <div class="text-center mb-2"><h1 class="text-3xl font-extrabold text-stone-900 zh">養不一樣的萌寵</h1></div>
+  <p class="text-center text-stone-600 max-w-2xl mx-auto mb-10 zh text-sm leading-relaxed">
+    全部用同一套可組合 SVG（零插畫師）。不同物種、同一個引擎、同一套 6 階成長與領域配件。一次專心養一隻，想換隨時開新存檔、舊的不刪。
+  </p>
+
+  <!-- ============ 選擇你的萌寵 ============ -->
+  <p class="text-center label text-stone-500 mb-4">選擇你的萌寵 · 幼生期</p>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-7 max-w-5xl mx-auto mb-14">
+
+    <!-- SPROUT -->
+    <div class="card">
+      <div class="bg-stage flex items-center justify-center" style="height:240px;">
+        <svg width="180" height="190" viewBox="0 0 180 190" class="breathe">
+          <defs><radialGradient id="sp" cx="38%" cy="28%"><stop offset="0%" stop-color="#d6f7e4"/><stop offset="100%" stop-color="#92e2b6"/></radialGradient></defs>
+          <ellipse cx="90" cy="176" rx="46" ry="8" fill="#000" opacity="0.06"/>
+          <ellipse cx="90" cy="120" rx="48" ry="46" fill="url(#sp)"/>
+          <ellipse cx="90" cy="130" rx="29" ry="26" fill="#e3f9ee"/>
+          <g class="sway">
+            <path d="M90 78 Q86 52 99 44 Q92 66 103 67 Q90 72 94 82 Z" fill="#5fcf8a"/>
+            <path d="M90 78 Q94 54 81 47 Q88 67 77 68 Q89 73 86 82 Z" fill="#7ed99f"/>
+          </g>
+          <ellipse class="sway" cx="46" cy="124" rx="9" ry="15" fill="#92e2b6"/>
+          <ellipse cx="134" cy="124" rx="9" ry="15" fill="#92e2b6"/>
+          <g class="blink">
+            <ellipse cx="77" cy="118" rx="8" ry="9.5" fill="#2d4a3e"/><ellipse cx="103" cy="118" rx="8" ry="9.5" fill="#2d4a3e"/>
+            <circle cx="79.5" cy="114" r="3" fill="#fff"/><circle cx="105.5" cy="114" r="3" fill="#fff"/>
+          </g>
+          <circle cx="64" cy="132" r="6" fill="#fca5a5" opacity="0.55"/><circle cx="116" cy="132" r="6" fill="#fca5a5" opacity="0.55"/>
+          <path d="M83 134 Q90 141 97 134" fill="none" stroke="#2d4a3e" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-1"><p class="zh text-lg font-extrabold text-stone-900">小芽</p><span class="zh text-xs text-emerald-600 font-bold">嫩芽系</span></div>
+        <p class="zh text-xs text-stone-500 leading-relaxed">溫和、慢慢長。頭頂嫩芽會隨成長越來越茂盛，最後開出花冠。</p>
+      </div>
+    </div>
+
+    <!-- CAT -->
+    <div class="card">
+      <div class="bg-stage-warm flex items-center justify-center" style="height:240px;">
+        <svg width="180" height="190" viewBox="0 0 180 190" class="breathe">
+          <defs><radialGradient id="ct" cx="38%" cy="26%"><stop offset="0%" stop-color="#fef0e2"/><stop offset="100%" stop-color="#f6c89a"/></radialGradient></defs>
+          <ellipse cx="90" cy="176" rx="46" ry="8" fill="#000" opacity="0.06"/>
+          <!-- tail -->
+          <path class="tail" d="M132 142 Q160 138 156 110 Q154 96 144 100 Q152 116 138 128 Z" fill="#f6c89a"/>
+          <!-- ears -->
+          <path d="M58 86 L52 56 L82 78 Z" fill="#f6c89a"/>
+          <path d="M122 86 L128 56 L98 78 Z" fill="#f6c89a"/>
+          <path d="M60 80 L57 64 L74 77 Z" fill="#fbcfe8"/>
+          <path d="M120 80 L123 64 L106 77 Z" fill="#fbcfe8"/>
+          <!-- body/head -->
+          <ellipse cx="90" cy="120" rx="48" ry="45" fill="url(#ct)"/>
+          <ellipse cx="90" cy="132" rx="27" ry="23" fill="#fff6ee"/>
+          <!-- stripes -->
+          <path d="M72 84 Q76 92 72 98" stroke="#eab06f" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+          <path d="M108 84 Q104 92 108 98" stroke="#eab06f" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+          <!-- paws -->
+          <ellipse cx="68" cy="158" rx="11" ry="8" fill="#f6c89a"/><ellipse cx="112" cy="158" rx="11" ry="8" fill="#f6c89a"/>
+          <g class="blink">
+            <ellipse cx="76" cy="118" rx="8" ry="9.5" fill="#3a2d2d"/><ellipse cx="104" cy="118" rx="8" ry="9.5" fill="#3a2d2d"/>
+            <circle cx="78.5" cy="114" r="3" fill="#fff"/><circle cx="106.5" cy="114" r="3" fill="#fff"/>
+          </g>
+          <!-- nose + mouth -->
+          <path d="M86 126 L94 126 L90 131 Z" fill="#f472b6"/>
+          <path d="M90 131 Q85 137 80 133 M90 131 Q95 137 100 133" stroke="#3a2d2d" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <!-- whiskers -->
+          <path d="M58 122 L40 118 M58 128 L40 130" stroke="#e0bfa0" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M122 122 L140 118 M122 128 L140 130" stroke="#e0bfa0" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="64" cy="130" r="5.5" fill="#fca5a5" opacity="0.5"/><circle cx="116" cy="130" r="5.5" fill="#fca5a5" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-1"><p class="zh text-lg font-extrabold text-stone-900">奶茶</p><span class="zh text-xs text-amber-600 font-bold">貓系</span></div>
+        <p class="zh text-xs text-stone-500 leading-relaxed">傲嬌、愛撒嬌。成長會長出更蓬的毛、更長的尾巴；達標時會「呼嚕呼嚕」。</p>
+      </div>
+    </div>
+
+    <!-- SLIME -->
+    <div class="card">
+      <div class="bg-stage-cool flex items-center justify-center" style="height:240px;">
+        <svg width="180" height="190" viewBox="0 0 180 190" class="wobble">
+          <defs>
+            <radialGradient id="sl" cx="40%" cy="30%"><stop offset="0%" stop-color="#cdeefb"/><stop offset="100%" stop-color="#7fc8ec"/></radialGradient>
+          </defs>
+          <ellipse cx="90" cy="174" rx="50" ry="8" fill="#000" opacity="0.06"/>
+          <!-- jelly dome with wobbly base -->
+          <path d="M40 132 Q40 78 90 78 Q140 78 140 132 Q140 158 120 158 Q112 150 104 158 Q96 150 88 158 Q80 150 72 158 Q64 150 56 158 Q40 158 40 132 Z" fill="url(#sl)"/>
+          <!-- inner shine -->
+          <ellipse cx="68" cy="104" rx="16" ry="22" fill="#fff" opacity="0.5"/>
+          <ellipse cx="108" cy="142" rx="8" ry="6" fill="#fff" opacity="0.35"/>
+          <!-- inner bubbles -->
+          <circle cx="112" cy="108" r="5" fill="#eaf8ff" opacity="0.7"/>
+          <circle cx="98" cy="96" r="3" fill="#eaf8ff" opacity="0.7"/>
+          <!-- droplet antenna -->
+          <circle cx="90" cy="64" r="6" fill="#7fc8ec"/>
+          <path d="M90 70 Q88 76 90 80" stroke="#7fc8ec" stroke-width="3" fill="none"/>
+          <g class="blink">
+            <ellipse cx="78" cy="120" rx="7" ry="9" fill="#1e3a4a"/><ellipse cx="102" cy="120" rx="7" ry="9" fill="#1e3a4a"/>
+            <circle cx="80" cy="116" r="2.6" fill="#fff"/><circle cx="104" cy="116" r="2.6" fill="#fff"/>
+          </g>
+          <circle cx="66" cy="132" r="5.5" fill="#fca5a5" opacity="0.45"/><circle cx="114" cy="132" r="5.5" fill="#fca5a5" opacity="0.45"/>
+          <path d="M84 132 Q90 138 96 132" fill="none" stroke="#1e3a4a" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-1"><p class="zh text-lg font-extrabold text-stone-900">啵啵</p><span class="zh text-xs text-sky-600 font-bold">史萊姆系</span></div>
+        <p class="zh text-xs text-stone-500 leading-relaxed">Q 彈、好奇。成長會變大變透亮、裡面浮出更多泡泡；達標時會抖一下。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 同一套系統 ============ -->
+  <div class="max-w-5xl mx-auto card p-8 mb-10">
+    <p class="label text-emerald-600 mb-1">同一套引擎、每隻都適用</p>
+    <h2 class="zh text-xl font-extrabold text-stone-900 mb-6">物種不同，但成長 & 配件系統共用</h2>
+
+    <div class="grid md:grid-cols-2 gap-8 items-center">
+      <!-- same 3-stage growth on cat -->
+      <div>
+        <p class="zh text-xs font-bold text-stone-500 mb-3">▍同一套 6 階成長（以奶茶為例）</p>
+        <div class="flex items-end justify-around bg-stage-warm rounded-2xl py-4">
+          <!-- egg -->
+          <div class="text-center">
+            <svg width="60" height="70" viewBox="0 0 60 70"><defs><radialGradient id="e2" cx="40%" cy="32%"><stop offset="0%" stop-color="#fffef9"/><stop offset="100%" stop-color="#f3ead4"/></radialGradient></defs>
+              <ellipse cx="30" cy="64" rx="16" ry="4" fill="#000" opacity="0.06"/>
+              <path d="M30 18 C44 18 50 44 50 54 C50 64 41 68 30 68 C19 68 10 64 10 54 C10 44 16 18 30 18Z" fill="url(#e2)" stroke="#e7dcbf" stroke-width="1"/>
+              <path d="M22 78 L26 56 L34 56 L38 78" fill="none"/>
+              <path d="M22 56 L26 46 L30 56 L34 46 L38 56" fill="none" stroke="#dcae7a" stroke-width="1.5" opacity="0.5"/>
+            </svg>
+            <p class="zh text-[10px] text-stone-400 mt-1">蛋</p>
+          </div>
+          <span class="text-stone-300 pb-6">›</span>
+          <!-- young cat -->
+          <div class="text-center">
+            <svg width="74" height="78" viewBox="0 0 74 78">
+              <ellipse cx="37" cy="72" rx="20" ry="4" fill="#000" opacity="0.06"/>
+              <path d="M24 34 L21 20 L34 31 Z" fill="#f6c89a"/><path d="M50 34 L53 20 L40 31 Z" fill="#f6c89a"/>
+              <ellipse cx="37" cy="50" rx="22" ry="20" fill="#f6c89a"/>
+              <ellipse cx="37" cy="56" rx="12" ry="10" fill="#fff6ee"/>
+              <circle cx="31" cy="49" r="3.6" fill="#3a2d2d"/><circle cx="43" cy="49" r="3.6" fill="#3a2d2d"/>
+              <path d="M35 54 L39 54 L37 57 Z" fill="#f472b6"/>
+            </svg>
+            <p class="zh text-[10px] text-stone-400 mt-1">幼生</p>
+          </div>
+          <span class="text-stone-300 pb-6">›</span>
+          <!-- mature cat -->
+          <div class="text-center">
+            <svg width="92" height="86" viewBox="0 0 92 86">
+              <ellipse cx="46" cy="80" rx="26" ry="5" fill="#000" opacity="0.06"/>
+              <path class="tail" d="M70 60 Q92 56 88 34 Q86 24 78 28 Q84 40 72 50 Z" fill="#f6c89a"/>
+              <path d="M28 36 L23 14 L44 32 Z" fill="#f6c89a"/><path d="M64 36 L69 14 L48 32 Z" fill="#f6c89a"/>
+              <path d="M30 31 L28 20 L40 30Z" fill="#fbcfe8"/><path d="M62 31 L64 20 L52 30Z" fill="#fbcfe8"/>
+              <ellipse cx="46" cy="54" rx="28" ry="25" fill="#f6c89a"/>
+              <ellipse cx="46" cy="62" rx="15" ry="12" fill="#fff6ee"/>
+              <circle cx="38" cy="52" r="4.4" fill="#3a2d2d"/><circle cx="54" cy="52" r="4.4" fill="#3a2d2d"/>
+              <circle cx="39.5" cy="50" r="1.6" fill="#fff"/><circle cx="55.5" cy="50" r="1.6" fill="#fff"/>
+              <path d="M43 58 L49 58 L46 62 Z" fill="#f472b6"/>
+              <!-- crown bloom accessory to hint mastery -->
+              <g transform="translate(46,20) scale(0.55)"><circle cx="0" cy="-6" r="5" fill="#fbcfe8"/><circle cx="6" cy="-1" r="5" fill="#fbcfe8"/><circle cx="-6" cy="-1" r="5" fill="#fbcfe8"/><circle cx="0" cy="0" r="3.5" fill="#f472b6"/></g>
+            </svg>
+            <p class="zh text-[10px] text-stone-400 mt-1">成熟</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- accessory layer works on any species -->
+      <div>
+        <p class="zh text-xs font-bold text-stone-500 mb-3">▍領域配件可疊在任何萌寵上（以啵啵為例）</p>
+        <div class="flex items-center justify-around bg-stage-cool rounded-2xl py-4">
+          <div class="text-center">
+            <svg width="86" height="88" viewBox="0 0 86 88">
+              <ellipse cx="43" cy="80" rx="24" ry="5" fill="#000" opacity="0.06"/>
+              <path d="M18 60 Q18 30 43 30 Q68 30 68 60 Q68 74 58 74 Q53 68 48 74 Q43 68 38 74 Q33 68 28 74 Q18 74 18 60Z" fill="#7fc8ec"/>
+              <ellipse cx="33" cy="46" rx="8" ry="11" fill="#fff" opacity="0.45"/>
+              <!-- 睡帽 sleep cap accessory -->
+              <path d="M26 32 Q43 16 60 32 L56 40 Q43 30 30 40 Z" fill="#818cf8"/>
+              <circle cx="60" cy="30" r="4" fill="#c7d2fe"/>
+              <circle cx="36" cy="52" r="3.4" fill="#1e3a4a"/><circle cx="50" cy="52" r="3.4" fill="#1e3a4a"/>
+              <path d="M39 58 Q43 62 47 58" fill="none" stroke="#1e3a4a" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <p class="zh text-[10px] text-indigo-500 mt-1">睡眠 → 睡帽</p>
+          </div>
+          <div class="text-center">
+            <svg width="86" height="88" viewBox="0 0 86 88">
+              <ellipse cx="43" cy="80" rx="24" ry="5" fill="#000" opacity="0.06"/>
+              <path d="M18 60 Q18 30 43 30 Q68 30 68 60 Q68 74 58 74 Q53 68 48 74 Q43 68 38 74 Q33 68 28 74 Q18 74 18 60Z" fill="#7fc8ec"/>
+              <ellipse cx="33" cy="46" rx="8" ry="11" fill="#fff" opacity="0.45"/>
+              <circle cx="36" cy="50" r="3.4" fill="#1e3a4a"/><circle cx="50" cy="50" r="3.4" fill="#1e3a4a"/>
+              <path d="M39 56 Q43 60 47 56" fill="none" stroke="#1e3a4a" stroke-width="1.8" stroke-linecap="round"/>
+              <!-- 啞鈴 dumbbell accessory -->
+              <g transform="translate(60,64) rotate(15)"><rect x="-2" y="-1.5" width="16" height="4" rx="2" fill="#f59e0b"/><circle cx="-2" cy="0.5" r="4.5" fill="#f59e0b"/><circle cx="14" cy="0.5" r="4.5" fill="#f59e0b"/></g>
+            </svg>
+            <p class="zh text-[10px] text-red-500 mt-1">運動 → 啞鈴</p>
+          </div>
+          <div class="text-center">
+            <svg width="86" height="88" viewBox="0 0 86 88">
+              <ellipse cx="43" cy="80" rx="24" ry="5" fill="#000" opacity="0.06"/>
+              <path d="M18 60 Q18 30 43 30 Q68 30 68 60 Q68 74 58 74 Q53 68 48 74 Q43 68 38 74 Q33 68 28 74 Q18 74 18 60Z" fill="#7fc8ec"/>
+              <ellipse cx="33" cy="46" rx="8" ry="11" fill="#fff" opacity="0.45"/>
+              <!-- 眼鏡 認知 accessory -->
+              <circle cx="36" cy="52" r="9" fill="none" stroke="#64748b" stroke-width="2"/>
+              <circle cx="56" cy="52" r="9" fill="none" stroke="#64748b" stroke-width="2"/>
+              <line x1="45" y1="52" x2="47" y2="52" stroke="#64748b" stroke-width="2"/>
+              <circle cx="36" cy="52" r="3" fill="#1e3a4a"/><circle cx="56" cy="52" r="3" fill="#1e3a4a"/>
+            </svg>
+            <p class="zh text-[10px] text-blue-500 mt-1">認知 → 眼鏡</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="zh text-xs text-stone-500 mt-6 leading-relaxed text-center max-w-3xl mx-auto">
+      關鍵：成長階段（蛋→成熟）和領域配件（睡帽/啞鈴/眼鏡…）都是<b class="text-stone-700">獨立的「零件層」</b>，疊在任何物種的基底上。多一隻萌寵 = 多畫一個基底，階段與配件框架全部重用 → 沒插畫師也能慢慢長出一櫃萌寵。
+    </p>
+  </div>
+
+  <!-- ============ 平行存檔 ============ -->
+  <div class="max-w-md mx-auto card p-7 mb-10">
+    <p class="label text-stone-500 mb-1">我的萌寵 · 平行存檔</p>
+    <p class="zh text-xs text-stone-500 mb-4">一次專心養一隻。想換隨時切，舊的不刪、進度都在。</p>
+    <div class="space-y-3">
+      <div class="flex items-center gap-3 p-3 rounded-2xl border-2 border-emerald-300 bg-emerald-50/50">
+        <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-2xl">🌱</div>
+        <div class="flex-1"><p class="zh font-bold text-stone-800">小芽 <span class="text-xs text-emerald-600">· 養育中</span></p><p class="zh text-[11px] text-stone-500">Lv.5 · 23 天</p></div>
+        <span class="material-symbols-rounded text-emerald-500" style="font-family:'Material Symbols Rounded'">✓</span>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-2xl border border-stone-200 bg-white">
+        <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-2xl">🐱</div>
+        <div class="flex-1"><p class="zh font-bold text-stone-700">奶茶</p><p class="zh text-[11px] text-stone-400">貓系 · 可開始養</p></div>
+        <button class="text-xs zh text-emerald-600 font-bold px-3 py-1.5 rounded-full bg-emerald-50">養這隻</button>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-2xl border border-dashed border-stone-200 bg-stone-50 opacity-70">
+        <div class="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center text-2xl">🫧</div>
+        <div class="flex-1"><p class="zh font-bold text-stone-500">啵啵</p><p class="zh text-[11px] text-stone-400">史萊姆系 · 連續 7 天解鎖</p></div>
+        <span class="zh text-[11px] text-stone-400">🔒</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- notes -->
+  <div class="max-w-4xl mx-auto card p-8">
+    <h2 class="text-2xl font-extrabold text-stone-900 mb-5 zh">重點</h2>
+    <div class="grid md:grid-cols-2 gap-x-10 gap-y-5 text-sm zh">
+      <div><b class="text-emerald-700">沒插畫師也行</b><p class="text-stone-600 mt-1 leading-relaxed">3 隻全是可組合 SVG、我手刻。基底 + 階段層 + 配件層三層獨立，組合出所有變化，不用畫每種組合。</p></div>
+      <div><b class="text-emerald-700">不一樣的萌寵</b><p class="text-stone-600 mt-1 leading-relaxed">小芽(嫩芽) / 奶茶(貓) / 啵啵(史萊姆)，物種不同、個性不同、成長外型不同，但跑同一引擎。</p></div>
+      <div><b class="text-emerald-700">平行存檔</b><p class="text-stone-600 mt-1 leading-relaxed">一次專心養一隻（情感集中）；換萌寵＝開新存檔，舊的不刪可切回。新隻可用「連續天數/里程碑」解鎖，給長期動機。</p></div>
+      <div><b class="text-emerald-700">v1 建議</b><p class="text-stone-600 mt-1 leading-relaxed">先把小芽一隻 + 三層系統做好，奶茶/啵啵當「之後解鎖」。系統一旦成立，加新萌寵成本很低。</p></div>
+    </div>
+    <div class="mt-6 pt-5 border-t border-stone-100 text-sm zh">
+      <p class="text-stone-500"><b class="text-stone-700">待定：</b>① 新萌寵的解鎖條件（連續天數 / 里程碑 / 季節活動）② 一次只能養一隻、還是可同時養多隻 ③ 是否要讓萌寵也能像之前說的「依習慣組成進化不同形態」（可疊加在物種之上）。</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

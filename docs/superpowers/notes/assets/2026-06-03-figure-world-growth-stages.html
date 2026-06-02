@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公仔成長階段 — 從蛋開始</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  body{ font-family:'Outfit','Noto Sans TC',sans-serif; background:#ece7dd; }
+  .zh{ font-family:'Noto Sans TC','Outfit',sans-serif; }
+  .label{ font-size:10px; letter-spacing:.16em; text-transform:uppercase; font-weight:800; }
+  .stagecard{ background:#fdfcf9; border-radius:30px; box-shadow:0 12px 36px rgba(0,0,0,.07); overflow:hidden; }
+  .stagebg{ background:radial-gradient(circle at 50% 42%, #eafaf2 0%, #f6fbf8 60%, #fdfcf9 100%); }
+  @keyframes breathe{ 0%,100%{ transform:translateY(0) scale(1) } 50%{ transform:translateY(-5px) scale(1.025) } }
+  .breathe{ animation:breathe 3.6s ease-in-out infinite; transform-origin:center 88%; }
+  @keyframes blink{ 0%,93%,100%{ transform:scaleY(1) } 96%{ transform:scaleY(.08) } }
+  .blink{ animation:blink 5s infinite; transform-origin:center; }
+  @keyframes sway{ 0%,100%{ transform:rotate(-3deg) } 50%{ transform:rotate(3deg) } }
+  .sway{ animation:sway 4s ease-in-out infinite; transform-origin:center bottom; }
+  @keyframes floaty{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-8px) } }
+  .floaty{ animation:floaty 5s ease-in-out infinite; }
+  @keyframes rot{ from{ transform:rotate(0) } to{ transform:rotate(360deg) } }
+  .auraspin{ animation:rot 40s linear infinite; transform-origin:center; }
+</style>
+</head>
+<body class="py-12 px-4">
+<div class="max-w-[1500px] mx-auto">
+  <div class="text-center mb-2"><h1 class="text-3xl font-extrabold text-stone-900 zh">小芽的一生 · 6 個成長階段</h1></div>
+  <p class="text-center text-stone-600 max-w-2xl mx-auto mb-10 zh text-sm leading-relaxed">
+    同一隻嫩芽系小生物，從蛋一路養大。每升一階：更大、嫩芽更茂盛、長出新特徵。零懲罰 — 沒餵只是不長，不會死。
+  </p>
+
+  <!-- ============ silhouette timeline ============ -->
+  <div class="max-w-5xl mx-auto mb-12 stagecard p-6">
+    <div class="flex items-end justify-between gap-2">
+      <!-- mini silhouettes -->
+      <div class="flex flex-col items-center flex-1">
+        <span style="font-size:26px">🥚</span><span class="zh text-[10px] text-stone-400 mt-1">Lv.1</span>
+      </div>
+      <span class="material-icons text-stone-300 pb-3">›</span>
+      <div class="flex flex-col items-center flex-1"><span style="font-size:30px">🌱</span><span class="zh text-[10px] text-stone-400 mt-1">Lv.2</span></div>
+      <span class="text-stone-300 pb-3">›</span>
+      <div class="flex flex-col items-center flex-1"><span style="font-size:36px">🐣</span><span class="zh text-[10px] text-stone-400 mt-1">Lv.5</span></div>
+      <span class="text-stone-300 pb-3">›</span>
+      <div class="flex flex-col items-center flex-1"><span style="font-size:42px">🌿</span><span class="zh text-[10px] text-stone-400 mt-1">Lv.10</span></div>
+      <span class="text-stone-300 pb-3">›</span>
+      <div class="flex flex-col items-center flex-1"><span style="font-size:48px">🌳</span><span class="zh text-[10px] text-stone-400 mt-1">Lv.15</span></div>
+      <span class="text-stone-300 pb-3">›</span>
+      <div class="flex flex-col items-center flex-1"><span style="font-size:52px">🌸</span><span class="zh text-[10px] text-emerald-500 font-bold mt-1">Lv.20+</span></div>
+    </div>
+    <p class="text-center zh text-[11px] text-stone-400 mt-3">↑ emoji 只是節奏示意；下方是實際公仔美術</p>
+  </div>
+
+  <!-- ============ detailed stages ============ -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 max-w-6xl mx-auto">
+
+    <!-- ===== STAGE 1: EGG ===== -->
+    <div class="stagecard">
+      <div class="stagebg flex items-center justify-center" style="height:260px;">
+        <svg width="160" height="200" viewBox="0 0 160 200" class="breathe">
+          <defs>
+            <radialGradient id="egg1" cx="40%" cy="32%"><stop offset="0%" stop-color="#fffef9"/><stop offset="100%" stop-color="#f3ead4"/></radialGradient>
+          </defs>
+          <ellipse cx="80" cy="185" rx="42" ry="8" fill="#000" opacity="0.06"/>
+          <!-- egg -->
+          <path d="M80 56 C112 56 124 108 124 134 C124 166 104 184 80 184 C56 184 36 166 36 134 C36 108 48 56 80 56 Z" fill="url(#egg1)" stroke="#e7dcbf" stroke-width="1.5"/>
+          <!-- speckles -->
+          <circle cx="64" cy="120" r="3" fill="#dcae7a" opacity="0.5"/>
+          <circle cx="96" cy="138" r="2.4" fill="#dcae7a" opacity="0.5"/>
+          <circle cx="78" cy="152" r="2" fill="#dcae7a" opacity="0.4"/>
+          <circle cx="92" cy="108" r="1.8" fill="#dcae7a" opacity="0.4"/>
+          <!-- tiny sprout hinting life -->
+          <g class="sway">
+            <path d="M80 60 Q78 44 88 38 Q83 52 91 53 Q81 57 84 64 Z" fill="#7ed99f"/>
+          </g>
+          <!-- highlight -->
+          <ellipse cx="64" cy="92" rx="12" ry="18" fill="#fff" opacity="0.45"/>
+        </svg>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-1">
+          <p class="zh text-lg font-extrabold text-stone-900">蛋</p>
+          <span class="zh text-xs font-bold text-stone-400">Lv.1</span>
+        </div>
+        <p class="zh text-xs text-stone-500 leading-relaxed">剛開始。完成前幾個習慣就會孵化。頂端冒出一點小芽，預告生命。</p>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 2: SPROUT (hatchling) ===== -->
+    <div class="stagecard">
+      <div class="stagebg flex items-center justify-center" style="height:260px;">
+        <svg width="170" height="200" viewBox="0 0 170 200" class="breathe">
+          <defs>
+            <radialGradient id="body2" cx="38%" cy="30%"><stop offset="0%" stop-color="#d6f7e4"/><stop offset="100%" stop-color="#9ce6bd"/></radialGradient>
+            <radialGradient id="shell2" cx="40%" cy="35%"><stop offset="0%" stop-color="#fffef9"/><stop offset="100%" stop-color="#f0e6cf"/></radialGradient>
+          </defs>
+          <ellipse cx="85" cy="186" rx="40" ry="8" fill="#000" opacity="0.06"/>
+          <!-- bottom shell -->
+          <path d="M50 150 Q52 178 85 178 Q118 178 120 150 Q103 160 85 158 Q67 160 50 150 Z" fill="url(#shell2)" stroke="#e7dcbf" stroke-width="1.2"/>
+          <!-- tiny body peeking -->
+          <ellipse cx="85" cy="138" rx="34" ry="32" fill="url(#body2)"/>
+          <ellipse cx="85" cy="146" rx="20" ry="18" fill="#e3f9ee"/>
+          <!-- single sprout -->
+          <g class="sway">
+            <path d="M85 110 Q82 86 94 79 Q88 98 98 99 Q86 104 89 114 Z" fill="#5fcf8a"/>
+          </g>
+          <!-- big eyes -->
+          <g class="blink">
+            <ellipse cx="74" cy="138" rx="7" ry="8" fill="#2d4a3e"/>
+            <ellipse cx="96" cy="138" rx="7" ry="8" fill="#2d4a3e"/>
+            <circle cx="76" cy="135" r="2.6" fill="#fff"/><circle cx="98" cy="135" r="2.6" fill="#fff"/>
+            <circle cx="72" cy="140" r="1.2" fill="#fff" opacity="0.7"/><circle cx="94" cy="140" r="1.2" fill="#fff" opacity="0.7"/>
+          </g>
+          <circle cx="64" cy="148" r="5" fill="#fca5a5" opacity="0.55"/>
+          <circle cx="106" cy="148" r="5" fill="#fca5a5" opacity="0.55"/>
+          <path d="M81 150 Q85 154 89 150" fill="none" stroke="#2d4a3e" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-1">
+          <p class="zh text-lg font-extrabold text-stone-900">萌芽</p>
+          <span class="zh text-xs font-bold text-stone-400">Lv.2–4</span>
+        </div>
+        <p class="zh text-xs text-stone-500 leading-relaxed">破殼了！圓圓的小身體、一片嫩芽、水汪汪大眼。還躲在蛋殼裡探頭。</p>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 3: CHILD (小芽) ===== -->
+    <div class="stagecard">
+      <div class="stagebg flex items-center justify-center" style="height:260px;">
+        <svg width="180" height="200" viewBox="0 0 180 200" class="breathe">
+          <defs><radialGradient id="body3" cx="38%" cy="28%"><stop offset="0%" stop-color="#d6f7e4"/><stop offset="100%" stop-color="#92e2b6"/></radialGradient></defs>
+          <ellipse cx="90" cy="188" rx="46" ry="8" fill="#000" opacity="0.06"/>
+          <!-- body -->
+          <ellipse cx="90" cy="128" rx="48" ry="46" fill="url(#body3)"/>
+          <ellipse cx="90" cy="138" rx="29" ry="26" fill="#e3f9ee"/>
+          <!-- two-leaf sprout -->
+          <g class="sway">
+            <path d="M90 86 Q86 60 99 52 Q92 74 103 75 Q90 80 94 90 Z" fill="#5fcf8a"/>
+            <path d="M90 86 Q94 62 81 55 Q88 75 77 76 Q89 81 86 90 Z" fill="#7ed99f"/>
+          </g>
+          <!-- stubby arms -->
+          <ellipse class="sway" cx="46" cy="132" rx="9" ry="15" fill="#92e2b6"/>
+          <ellipse cx="134" cy="132" rx="9" ry="15" fill="#92e2b6"/>
+          <!-- eyes -->
+          <g class="blink">
+            <ellipse cx="77" cy="126" rx="8" ry="9.5" fill="#2d4a3e"/>
+            <ellipse cx="103" cy="126" rx="8" ry="9.5" fill="#2d4a3e"/>
+            <circle cx="79.5" cy="122" r="3" fill="#fff"/><circle cx="105.5" cy="122" r="3" fill="#fff"/>
+            <circle cx="75" cy="129" r="1.4" fill="#fff" opacity="0.7"/><circle cx="101" cy="129" r="1.4" fill="#fff" opacity="0.7"/>
+          </g>
+          <circle cx="64" cy="140" r="6" fill="#fca5a5" opacity="0.55"/>
+          <circle cx="116" cy="140" r="6" fill="#fca5a5" opacity="0.55"/>
+          <path d="M83 142 Q90 149 97 142" fill="none" stroke="#2d4a3e" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-1">
+          <p class="zh text-lg font-extrabold text-stone-900">幼生 · 小芽</p>
+          <span class="zh text-xs font-bold text-stone-400">Lv.5–9</span>
+        </div>
+        <p class="zh text-xs text-stone-500 leading-relaxed">離開蛋殼，會走會揮手。雙葉嫩芽、短短手臂、愛笑。開始長出領域裝飾。</p>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 4: TEEN ===== -->
+    <div class="stagecard">
+      <div class="stagebg flex items-center justify-center" style="height:260px;">
+        <svg width="190" height="210" viewBox="0 0 190 210" class="breathe">
+          <defs><radialGradient id="body4" cx="38%" cy="26%"><stop offset="0%" stop-color="#d6f7e4"/><stop offset="100%" stop-color="#88dcae"/></radialGradient></defs>
+          <ellipse cx="95" cy="198" rx="50" ry="9" fill="#000" opacity="0.06"/>
+          <!-- taller body -->
+          <ellipse cx="95" cy="130" rx="52" ry="56" fill="url(#body4)"/>
+          <ellipse cx="95" cy="142" rx="31" ry="32" fill="#e3f9ee"/>
+          <!-- bushier sprout + bud -->
+          <g class="sway">
+            <path d="M95 78 Q90 48 105 39 Q96 66 110 67 Q94 73 99 84 Z" fill="#5fcf8a"/>
+            <path d="M95 78 Q100 50 84 42 Q93 66 78 68 Q95 74 91 84 Z" fill="#7ed99f"/>
+            <path d="M95 76 Q95 56 95 48" stroke="#4eb87a" stroke-width="3" fill="none"/>
+            <circle cx="95" cy="46" r="6" fill="#f9a8d4"/>
+          </g>
+          <!-- arms longer -->
+          <ellipse class="sway" cx="44" cy="132" rx="10" ry="20" fill="#88dcae"/>
+          <ellipse cx="146" cy="132" rx="10" ry="20" fill="#88dcae"/>
+          <!-- little legs -->
+          <ellipse cx="80" cy="184" rx="9" ry="12" fill="#88dcae"/>
+          <ellipse cx="110" cy="184" rx="9" ry="12" fill="#88dcae"/>
+          <g class="blink">
+            <ellipse cx="81" cy="130" rx="8.5" ry="10" fill="#2d4a3e"/>
+            <ellipse cx="109" cy="130" rx="8.5" ry="10" fill="#2d4a3e"/>
+            <circle cx="83.5" cy="126" r="3.2" fill="#fff"/><circle cx="111.5" cy="126" r="3.2" fill="#fff"/>
+          </g>
+          <circle cx="67" cy="144" r="6.5" fill="#fca5a5" opacity="0.55"/>
+          <circle cx="123" cy="144" r="6.5" fill="#fca5a5" opacity="0.55"/>
+          <path d="M86 146 Q95 154 104 146" fill="none" stroke="#2d4a3e" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-1">
+          <p class="zh text-lg font-extrabold text-stone-900">成長期</p>
+          <span class="zh text-xs font-bold text-stone-400">Lv.10–14</span>
+        </div>
+        <p class="zh text-xs text-stone-500 leading-relaxed">抽高、長出小腳能站。嫩芽更茂盛、冒出第一朵花苞。各領域裝飾明顯起來。</p>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 5: ADULT ===== -->
+    <div class="stagecard">
+      <div class="stagebg flex items-center justify-center" style="height:260px;">
+        <svg width="200" height="210" viewBox="0 0 200 210" class="breathe">
+          <defs>
+            <radialGradient id="body5" cx="38%" cy="26%"><stop offset="0%" stop-color="#d9f8e7"/><stop offset="100%" stop-color="#7fd6a6"/></radialGradient>
+          </defs>
+          <ellipse cx="100" cy="198" rx="54" ry="9" fill="#000" opacity="0.06"/>
+          <!-- floating leaves -->
+          <g class="floaty"><path d="M40 90 Q34 82 42 78 Q40 88 48 87 Q41 90 40 95 Z" fill="#a7e8c8"/></g>
+          <g class="floaty" style="animation-delay:1.5s"><path d="M162 100 Q170 92 162 88 Q166 98 158 99 Q165 100 162 105 Z" fill="#a7e8c8"/></g>
+          <ellipse cx="100" cy="132" rx="56" ry="58" fill="url(#body5)"/>
+          <ellipse cx="100" cy="144" rx="33" ry="34" fill="#e3f9ee"/>
+          <!-- lush sprout w bloomed flower -->
+          <g class="sway">
+            <path d="M100 74 Q94 42 110 32 Q100 62 116 63 Q98 70 104 80 Z" fill="#5fcf8a"/>
+            <path d="M100 74 Q106 44 88 34 Q98 62 80 64 Q100 70 96 80 Z" fill="#7ed99f"/>
+            <path d="M100 72 Q100 50 100 40" stroke="#4eb87a" stroke-width="3.5" fill="none"/>
+            <!-- bloom -->
+            <g transform="translate(100,34)">
+              <circle cx="0" cy="-7" r="6" fill="#fbcfe8"/><circle cx="7" cy="-2" r="6" fill="#fbcfe8"/>
+              <circle cx="-7" cy="-2" r="6" fill="#fbcfe8"/><circle cx="4" cy="6" r="6" fill="#fbcfe8"/><circle cx="-4" cy="6" r="6" fill="#fbcfe8"/>
+              <circle cx="0" cy="0" r="4.5" fill="#f9a8d4"/>
+            </g>
+          </g>
+          <ellipse class="sway" cx="44" cy="134" rx="11" ry="22" fill="#7fd6a6"/>
+          <ellipse cx="156" cy="134" rx="11" ry="22" fill="#7fd6a6"/>
+          <ellipse cx="84" cy="186" rx="10" ry="13" fill="#7fd6a6"/>
+          <ellipse cx="116" cy="186" rx="10" ry="13" fill="#7fd6a6"/>
+          <g class="blink">
+            <ellipse cx="85" cy="132" rx="9" ry="11" fill="#2d4a3e"/>
+            <ellipse cx="115" cy="132" rx="9" ry="11" fill="#2d4a3e"/>
+            <circle cx="88" cy="128" r="3.4" fill="#fff"/><circle cx="118" cy="128" r="3.4" fill="#fff"/>
+          </g>
+          <circle cx="70" cy="146" r="7" fill="#fca5a5" opacity="0.55"/>
+          <circle cx="130" cy="146" r="7" fill="#fca5a5" opacity="0.55"/>
+          <path d="M90 148 Q100 158 110 148" fill="none" stroke="#2d4a3e" stroke-width="2.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-1">
+          <p class="zh text-lg font-extrabold text-stone-900">成熟</p>
+          <span class="zh text-xs font-bold text-stone-400">Lv.15–19</span>
+        </div>
+        <p class="zh text-xs text-stone-500 leading-relaxed">完全長大。茂密嫩芽 + 綻放的花、身邊飄著葉子。這時的外型已經充分反映你的習慣組成。</p>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 6: BLOOM / MASTERY ===== -->
+    <div class="stagecard">
+      <div class="stagebg flex items-center justify-center relative" style="height:260px;">
+        <!-- aura ring -->
+        <svg width="240" height="240" viewBox="0 0 240 240" class="absolute auraspin" style="opacity:0.5">
+          <circle cx="120" cy="120" r="96" fill="none" stroke="#86efac" stroke-width="2" stroke-dasharray="4 12"/>
+        </svg>
+        <svg width="210" height="220" viewBox="0 0 210 220" class="breathe">
+          <defs>
+            <radialGradient id="body6" cx="38%" cy="24%"><stop offset="0%" stop-color="#defaeb"/><stop offset="100%" stop-color="#76d2a0"/></radialGradient>
+            <radialGradient id="halo6" cx="50%" cy="50%"><stop offset="0%" stop-color="#fde68a" stop-opacity="0.5"/><stop offset="100%" stop-color="#fde68a" stop-opacity="0"/></radialGradient>
+          </defs>
+          <circle cx="105" cy="120" r="92" fill="url(#halo6)"/>
+          <ellipse cx="105" cy="206" rx="56" ry="9" fill="#000" opacity="0.06"/>
+          <!-- floating petals -->
+          <g class="floaty"><circle cx="42" cy="86" r="5" fill="#fbcfe8"/></g>
+          <g class="floaty" style="animation-delay:1s"><circle cx="170" cy="96" r="5" fill="#fbcfe8"/></g>
+          <g class="floaty" style="animation-delay:2s"><circle cx="56" cy="150" r="4" fill="#fde68a"/></g>
+          <ellipse cx="105" cy="134" rx="58" ry="60" fill="url(#body6)"/>
+          <ellipse cx="105" cy="146" rx="34" ry="35" fill="#e8fbf1"/>
+          <!-- flower crown -->
+          <g class="sway">
+            <path d="M105 76 Q99 42 116 32 Q105 64 122 65 Q103 72 109 82 Z" fill="#5fcf8a"/>
+            <path d="M105 76 Q111 44 92 34 Q103 64 85 66 Q105 72 101 82 Z" fill="#7ed99f"/>
+            <!-- 3 blooms crown -->
+            <g transform="translate(105,32)"><circle cx="0" cy="-6" r="5.5" fill="#fbcfe8"/><circle cx="6" cy="-1" r="5.5" fill="#fbcfe8"/><circle cx="-6" cy="-1" r="5.5" fill="#fbcfe8"/><circle cx="3" cy="6" r="5.5" fill="#fbcfe8"/><circle cx="-3" cy="6" r="5.5" fill="#fbcfe8"/><circle cx="0" cy="0" r="4" fill="#f472b6"/></g>
+            <g transform="translate(80,46) scale(0.7)"><circle cx="0" cy="-6" r="5.5" fill="#fde68a"/><circle cx="6" cy="-1" r="5.5" fill="#fde68a"/><circle cx="-6" cy="-1" r="5.5" fill="#fde68a"/><circle cx="3" cy="6" r="5.5" fill="#fde68a"/><circle cx="-3" cy="6" r="5.5" fill="#fde68a"/><circle cx="0" cy="0" r="4" fill="#fbbf24"/></g>
+            <g transform="translate(130,46) scale(0.7)"><circle cx="0" cy="-6" r="5.5" fill="#c4b5fd"/><circle cx="6" cy="-1" r="5.5" fill="#c4b5fd"/><circle cx="-6" cy="-1" r="5.5" fill="#c4b5fd"/><circle cx="3" cy="6" r="5.5" fill="#c4b5fd"/><circle cx="-3" cy="6" r="5.5" fill="#c4b5fd"/><circle cx="0" cy="0" r="4" fill="#a78bfa"/></g>
+          </g>
+          <ellipse class="sway" cx="46" cy="138" rx="12" ry="24" fill="#76d2a0"/>
+          <ellipse cx="164" cy="138" rx="12" ry="24" fill="#76d2a0"/>
+          <ellipse cx="88" cy="194" rx="11" ry="14" fill="#76d2a0"/>
+          <ellipse cx="122" cy="194" rx="11" ry="14" fill="#76d2a0"/>
+          <g class="blink">
+            <ellipse cx="89" cy="136" rx="9.5" ry="11.5" fill="#2d4a3e"/>
+            <ellipse cx="121" cy="136" rx="9.5" ry="11.5" fill="#2d4a3e"/>
+            <circle cx="92" cy="131" r="3.6" fill="#fff"/><circle cx="124" cy="131" r="3.6" fill="#fff"/>
+          </g>
+          <circle cx="73" cy="150" r="7.5" fill="#fca5a5" opacity="0.55"/>
+          <circle cx="137" cy="150" r="7.5" fill="#fca5a5" opacity="0.55"/>
+          <path d="M93 152 Q105 163 117 152" fill="none" stroke="#2d4a3e" stroke-width="2.8" stroke-linecap="round"/>
+          <!-- sparkles -->
+          <text x="50" y="120" font-size="14" opacity="0.7">✦</text>
+          <text x="158" y="170" font-size="12" opacity="0.6">✦</text>
+        </svg>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-1">
+          <p class="zh text-lg font-extrabold text-stone-900">綻放 · 精通</p>
+          <span class="zh text-xs font-bold text-emerald-500">Lv.20+</span>
+        </div>
+        <p class="zh text-xs text-stone-500 leading-relaxed">花冠盛開、柔光環繞、花瓣飄散。但成長無上限 ✦ — 之後還有季節限定型態、稀有裝飾持續解鎖。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- notes -->
+  <div class="max-w-5xl mx-auto mt-12 stagecard p-8">
+    <h2 class="text-2xl font-extrabold text-stone-900 mb-5 zh">美術 & 階段設計重點</h2>
+    <div class="grid md:grid-cols-2 gap-x-10 gap-y-5 text-sm zh">
+      <div><b class="text-emerald-700">一致的角色身份</b><p class="text-stone-600 mt-1 leading-relaxed">同一隻嫩芽生物從頭到尾：薄荷綠漸層身體、大眼+雙高光、腮紅、頭頂嫩芽。每階只是「長大 + 嫩芽更茂盛 + 多新特徵」，認得出是同一隻。</p></div>
+      <div><b class="text-emerald-700">美術質感升級</b><p class="text-stone-600 mt-1 leading-relaxed">徑向漸層做出立體感、柔和投影、無生硬黑邊、大眼雙高光（kawaii 關鍵）、idle 呼吸/眨眼/搖擺動畫。比上一版扁平 placeholder 精緻很多。</p></div>
+      <div><b class="text-emerald-700">6 階成長弧</b><p class="text-stone-600 mt-1 leading-relaxed">蛋 → 萌芽（破殼）→ 幼生（會走）→ 成長（抽高長腳+花苞）→ 成熟（綻放+飄葉）→ 精通（花冠+光環）。無上限，後面接季節型態。</p></div>
+      <div><b class="text-emerald-700">這還是 SVG placeholder</b><p class="text-stone-600 mt-1 leading-relaxed">已經比上版好，但正式上線建議請插畫師把這套「成長弧 + 領域裝飾系統」畫成完整角色設定（含表情包、各領域配件）。這版可當給插畫師的 brief。</p></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
