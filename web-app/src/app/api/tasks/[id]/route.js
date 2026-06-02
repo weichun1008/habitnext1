@@ -39,7 +39,7 @@ export async function PUT(request, { params }) {
         // 2. Handle History Update (if provided)
         // historyUpdate format: { date: '2023-01-01', completed: true, value: 10 }
         if (historyUpdate) {
-            const { date, completed, value, subtaskCompletions, lat, lng, city } = historyUpdate;
+            const { date, completed, value, subtaskCompletions, lat, lng, city, photoUrl, memoNote } = historyUpdate;
 
             // Slice O — only write location fields when provided. A normal
             // completion without location (feature off / denied) leaves any
@@ -48,6 +48,13 @@ export async function PUT(request, { params }) {
             if (lat !== undefined) locWrite.lat = lat;
             if (lng !== undefined) locWrite.lng = lng;
             if (city !== undefined) locWrite.city = city;
+
+            // Slice Q — mirror locWrite for photo/memo. Omitting these fields
+            // leaves any existing values untouched; passing null explicitly
+            // clears them (intended "remove photo" path).
+            const memWrite = {};
+            if (photoUrl !== undefined) memWrite.photoUrl = photoUrl;
+            if (memoNote !== undefined) memWrite.memoNote = memoNote;
 
             // Upsert history record
             await prisma.taskHistory.upsert({
@@ -61,7 +68,8 @@ export async function PUT(request, { params }) {
                     completed,
                     value,
                     subtaskCompletions: subtaskCompletions ?? null,
-                    ...locWrite
+                    ...locWrite,
+                    ...memWrite
                 },
                 create: {
                     taskId: id,
@@ -69,7 +77,8 @@ export async function PUT(request, { params }) {
                     completed,
                     value,
                     subtaskCompletions: subtaskCompletions ?? null,
-                    ...locWrite
+                    ...locWrite,
+                    ...memWrite
                 }
             });
         }

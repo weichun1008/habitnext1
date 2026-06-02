@@ -4,6 +4,7 @@ import SwipeReveal from './taskCard/SwipeReveal';
 import TaskHoverDots from './taskCard/TaskHoverDots';
 import TaskActionMenu from './taskCard/TaskActionMenu';
 import LocationChip from './taskCard/LocationChip';
+import MemoryCapture from './journey/MemoryCapture';
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import {
@@ -19,7 +20,7 @@ import { visibleSubtasks } from '@/lib/subtasks';
 // `viewingDate` (yyyy-mm-dd) lets the card render any day's state — used by
 // the daily view's interactive week strip. Defaults to today so existing
 // callers that don't pass it (other views) behave unchanged.
-const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction, onPickLocation }) => {
+const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction, onPickLocation, onAttachPhoto, attachingKey }) => {
     const todayStr = getTodayStr();
     const dateStr = viewingDate || todayStr;
     const isFuture = isFutureDate(dateStr, todayStr);
@@ -192,11 +193,17 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                         </p>
                         {/* Slice O — completion location chip (where the user did it) */}
                         {isCompleted && (
-                            <div className="mt-0.5" onClick={(e) => e.stopPropagation()}>
+                            <div className="mt-0.5 flex items-center gap-3 flex-wrap" onClick={(e) => e.stopPropagation()}>
                                 <LocationChip
                                     city={task.locationByDate?.[dateStr] || null}
                                     recentCities={Object.values(task.locationByDate || {}).slice(-3)}
                                     onPick={(cityName) => onPickLocation?.(task, dateStr, cityName)}
+                                />
+                                {/* Slice Q — meal-photo capture (Blob upload guarded) */}
+                                <MemoryCapture
+                                    hasPhoto={!!task.photoByDate?.[dateStr]}
+                                    busy={attachingKey === `${task.id}:${dateStr}`}
+                                    onAttach={(file) => onAttachPhoto?.(task, dateStr, file)}
                                 />
                             </div>
                         )}

@@ -118,6 +118,10 @@ const MainApp = () => {
     const [journeyData, setJourneyData] = useState(null);
     const [journeyLoading, setJourneyLoading] = useState(false);
 
+    // Slice Q — photo capture. attachingKey = `${taskId}:${dateStr}` while a
+    // single row's compress/upload is in flight (drives MemoryCapture busy).
+    const [attachingKey, setAttachingKey] = useState(null);
+
     // 1. Check Auth on Load
     useEffect(() => {
         const storedUser = localStorage.getItem('habit_user');
@@ -170,6 +174,7 @@ const MainApp = () => {
                     const historyMap = {};
                     const dailyProgressMap = {};
                     const locationByDate = {};   // ★ Slice O — { 'yyyy-mm-dd': '台北' }
+                    const photoByDate = {};      // ★ Slice Q — { 'yyyy-mm-dd': true }
 
                     if (t.history) {
                         t.history.forEach(h => {
@@ -192,9 +197,10 @@ const MainApp = () => {
                             }
 
                             if (h.city) locationByDate[h.date] = h.city;   // ★ Slice O
+                            if (h.photoUrl) photoByDate[h.date] = true;    // ★ Slice Q
                         });
                     }
-                    return { ...t, history: historyMap, dailyProgress: dailyProgressMap, locationByDate };
+                    return { ...t, history: historyMap, dailyProgress: dailyProgressMap, locationByDate, photoByDate };
                 });
                 setTasks(formattedTasks);
             }
@@ -464,6 +470,50 @@ const MainApp = () => {
             });
         } catch (e) {
             console.error('pick location failed', e);
+        }
+    };
+
+    // Slice Q — attach a meal photo to a completed+located row. Compresses
+    // client-side (strips EXIF/GPS), then the actual Blob upload is GUARDED:
+    // Vercel Blob isn't provisioned yet, so the dynamic @vercel/blob/client
+    // import is expected to fail and we surface a "coming soon" notice rather
+    // than throwing. Q1b wires the real mod.upload(...) + PUT photoUrl here.
+    const handleAttachPhoto = async (task, dateStr, file) => {
+        if (!file) return;
+        setAttachingKey(`${task.id}:${dateStr}`);
+        try {
+            const { compressImage } = await import('@/lib/imageCompress');
+            await compressImage(file);
+            // ★ Blob 上傳 guard：Vercel Blob 尚未供應（Q1b 接線）
+            let uploaded = null;
+            try {
+                // webpackIgnore: @vercel/blob/client 尚未安裝，避免 bundler 在
+                // build 期靜態解析失敗；Q1b 安裝套件後此匯入才會真正成立。
+                await import(/* webpackIgnore: true */ '@vercel/blob/client');
+                // Q1b 會在這裡呼叫 mod.upload(...)；目前無 token，視為未供應
+                uploaded = null;
+            } catch {
+                uploaded = null;
+            }
+            if (!uploaded) {
+                console.info('[Slice Q] 美食回憶即將推出（Blob 尚未供應）');
+                return;
+            }
+            // 有上傳結果（Q1b）→ PUT photoUrl（鏡像 handlePickLocation 的 PUT 形狀）
+            // const curVal = task.history?.[dateStr];
+            // const valNum = typeof curVal === 'number' ? curVal
+            //     : (curVal && typeof curVal === 'object' ? (curVal.value || 0) : (curVal ? 1 : 0));
+            // await fetch(`/api/tasks/${task.id}`, {
+            //     method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ ...task, historyUpdate: { date: dateStr, completed: true, value: valNum, photoUrl: uploaded.url } }),
+            // });
+            // setTasks(prev => prev.map(t => t.id === task.id
+            //     ? { ...t, photoByDate: { ...(t.photoByDate || {}), [dateStr]: true } } : t));
+            // if (user?.id) fetchTasks(user.id);
+        } catch (err) {
+            console.error('attach photo failed', err);
+        } finally {
+            setAttachingKey(null);
         }
     };
 
@@ -1236,7 +1286,7 @@ const MainApp = () => {
                                                                 : 'max-h-[640px] opacity-100'
                                                         }`}
                                                     >
-                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} />
+                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} />
                                                     </div>
                                                 );
                                             })}
@@ -1269,7 +1319,7 @@ const MainApp = () => {
                                                         // needed (Task naturally jumps back into the list
                                                         // above on re-fetch). Use handleUpdateProgress
                                                         // directly to skip the toast / scheduled exit.
-                                                        <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} />
+                                                        <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} />
                                                     ))}
                                                 </>
                                             )}
@@ -1290,7 +1340,7 @@ const MainApp = () => {
                                             </h3>
                                             <div className="space-y-3">
                                                 {flexibleTasks.map(task => (
-                                                    <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} />
+                                                    <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} />
                                                 ))}
                                             </div>
                                         </div>
@@ -1348,6 +1398,8 @@ const MainApp = () => {
                                             onClick={() => handleTaskClick(task)}
                                             onUpdate={handleUpdateProgress}
                                             onPickLocation={handlePickLocation}
+                                            onAttachPhoto={handleAttachPhoto}
+                                            attachingKey={attachingKey}
                                         />
                                     ))}
                                 </div>
@@ -1364,6 +1416,7 @@ const MainApp = () => {
                                 trackLocationOn={!!user?.trackLocation}
                                 loading={journeyLoading}
                                 onOpenSettings={() => setIsProfileModalOpen(true)}
+                                userId={user?.id}
                             />
                         )}
 
