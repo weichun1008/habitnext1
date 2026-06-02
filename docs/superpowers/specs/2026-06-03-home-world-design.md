@@ -33,11 +33,42 @@ model TaskHistory {
 ```
 
 - 每次習慣完成寫 TaskHistory 時，順手記下當時的 `user.activeWorld`。
-- 居家世界的完成數 = `count(TaskHistory where world='home' AND completed)`，依 domain 分組——**與旅程世界用 `city` 衍生完全同模式**，只是 group key 從 city 換成 world+domain。
 - 切換世界 = 改 `User.activeWorld`；不回溯改舊紀錄。
-- **舊資料（world IS NULL）的歸屬**：v1 一次性 backfill 成預設世界（見 §9 開放問題 1），或視為「共同序章」全部世界都看得到——待定。
 
-> 旅程世界（Slice P）目前是「不分世界、看所有有 city 的完成」。導入 world attribution 後，旅程世界可選擇性地也只算 `world='journey'` 的——但那是旅程世界的事，本 spec 不改它。**居家世界只讀 `world='home'`。**
+### 1.2 共同序章（Prologue）— 舊資料 / 選世界前累積的歸屬【定案 2026-06-03】
+
+選世界**之前**完成的所有習慣（`TaskHistory.world IS NULL`）＝**共同序章**：所有世界共享的起步基礎，每個世界第一次進去都拿它當起步資本。選定世界**之後**的新完成才「分流」給當前 active 世界。
+
+```
+某世界的完成數 = 序章(world IS NULL) + 該世界 active 期間(world = 該世界)
+              = count(world IS NULL)  +  count(world = '該世界')
+```
+
+- 居家世界飲食區的完成數 = `count(world IS NULL AND domain=飲食) + count(world='home' AND domain=飲食)`。
+- **三個效果**：(1) 選世界前的努力不白費、不被某世界獨佔；(2) 晚選不吃虧 → 首次選擇可以「不強迫」（§1.3）；(3) 切到新世界從「序章規模」起步、非繼承舊世界當前規模 → 仍像重新經營。
+- `activeWorld` 預設值改為 **`null`（未選）**，而非 `'home'`——讓「首次未選」是一個明確狀態（驅動 §1.3 的迎賓選擇）。完成數計算時 `world IS NULL` 一律算序章，與「使用者還沒選世界」自然吻合。
+
+```diff
+model User {
+- activeWorld String @default("home")
++ activeWorld String?   // null = 還沒選世界（首次迎賓）。選後為 'home' | 'figure' | 'journey'
+}
+```
+
+### 1.3 世界選擇器（World Picker）— 共用元件
+
+同一個選擇器、兩種進入情境：
+
+| 情境 | 觸發 | 樣式 |
+|---|---|---|
+| **首次選擇** | 點「世界」入口時 `activeWorld` 為 null | 全屏迎賓：並排呈現可玩世界（居家 / 公仔 / 旅程），各一句介紹 + 預覽縮圖，選一個 → 寫入 `activeWorld` |
+| **之後切換** | 任何時候從世界畫面內的切換控制叫出 | 同元件、較輕量（清單 / 膠囊），顯示各世界當前規模，**隨時可切、不限頻、零確認**（§9 開放問題 4 定案：不限） |
+
+- **首次不強迫**：註冊 / 打第一個卡都不強逼選世界（工具優先哲學）。使用者主動點「世界」側邊欄入口，才出現迎賓選擇。因為有共同序章（§1.2），晚選不吃虧——這讓「不強迫」變安全。
+- 選擇器是**跨 session 共用元件**（公仔世界也是選項之一）——需與公仔世界 session 對齊選單資料介面（每個世界提供：key、名稱、一句話、預覽縮圖、當前規模摘要）。
+- 切換是純改 `User.activeWorld` 的單一 API；選擇器本身不含各世界的渲染邏輯。
+
+> 旅程世界（Slice P）目前是「不分世界、看所有有 city 的完成」。導入 world attribution 後，旅程世界可選擇性地也只算 `world='journey' OR world IS NULL`——但那是旅程世界的事，本 spec 不改它。**居家世界讀 `world='home' OR world IS NULL`（序章＋居家）。**
 
 ## 2. 範圍
 
@@ -155,14 +186,14 @@ const DECOR_EVERY = 8;   // 「other」完成每 8 次解鎖 1 件通用裝飾
 | **H3 — 手動佈置** | `HomeFurniturePlacement` schema + 佈置模式 UI（抽屜＋格位）+ 擺/移 API | 加 1 表 | 完整可佈置 |
 | **H4 — 打磨** | 解鎖恭喜動畫、區域放大過場、變體皮膚、空狀態文案、bundle 預算 | 零 | polish |
 
-H1 是跟公仔世界 session 共用的基礎——**H1 動工前必須先與該 session 對齊**（§9）。H2 起是居家世界專屬，可獨立推進。
+H1 是跟公仔世界 session 共用的基礎——**H1 動工前必須先與該 session 對齊**（§9）。H1 涵蓋 `activeWorld`(nullable) + `TaskHistory.world` + 完成時寫入 + **世界選擇器（§1.3，首次迎賓 + 之後切換，跨 session 共用元件）**。H2 起是居家世界專屬，可獨立推進。
 
 ## 9. 開放問題（待 review / 跨 session 協調）
 
-1. **舊資料（`world IS NULL`）歸屬** — 機制上線前的完成數算哪個世界？選項：(a) 全部 backfill 給預設世界 `home`；(b) 視為「共同序章」三世界都看得到；(c) 不算進任何世界（只有上線後的新完成才計分）。我傾向 (b)——最不會讓使用者覺得「我的努力被分走了」。
-2. **World 切換基礎由誰實作** — 居家 + 公仔都需要 `activeWorld` + `TaskHistory.world`。應由**先動工的一方實作 H1、另一方共用**，或抽成獨立 PR 兩方都依賴。需與公仔世界 session 對齊 schema 命名（`activeWorld` 的 enum 值、`world` 欄位）。**這份 spec 先把契約定下來當對齊基準。**
+1. ~~**舊資料歸屬**~~ **【定案 2026-06-03 — 共同序章】** `world IS NULL` 的完成＝所有世界共享的起步序章；選後新完成才分流給 active 世界。見 §1.2。
+2. **World 切換基礎由誰實作** — 居家 + 公仔都需要 `activeWorld` + `TaskHistory.world` + 世界選擇器。應由**先動工的一方實作 H1、另一方共用**，或抽成獨立 PR 兩方都依賴。需與公仔世界 session 對齊 schema 命名（`activeWorld` nullable、`world` 欄位）+ 選擇器資料介面。**這份 spec 先把契約定下來當對齊基準。**
 3. **公仔 ↔ 居家整合** — 未來公仔是否站在居家房間裡？若是，公仔世界的角色資產要能 render 進 `home` 房間。v1 不做，但 schema / 渲染留擴充餘地（房間 SVG 預留一個「角色層」）。
-4. **切換頻率限制** — 要不要防止使用者一天狂切世界刷分？我傾向不限（零懲罰哲學、且完成數本來就慢）。
+4. ~~**切換頻率限制**~~ **【定案 2026-06-03 — 不限】** 隨時可切、不限頻、零確認（零懲罰哲學 + 完成數本來就慢）。見 §1.3。
 5. **區域格位數量** — 各區幾格？影響「填滿感」節奏。需配 furnitureCatalog 件數定。spec 先不寫死，H2 調。
 
 ## 10. 與既有系統的一致性檢查
