@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slice Q · 吃引擎 / 美食回憶 pin — Mockup</title>
+<style>
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --coral: #f97362;
+    --amber: #f59e0b;
+    --paper: #fdfbf7;
+    --grass: #cfe8bf;
+    --ink: #1f2d2c;
+    --ink-soft: #4b5d5b;
+    --line: #e7e1d6;
+    --shadow: 0 10px 30px -12px rgba(15,118,110,.28), 0 4px 10px -6px rgba(0,0,0,.12);
+    --shadow-sm: 0 4px 14px -8px rgba(0,0,0,.25);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Outfit','Noto Sans TC',system-ui,-apple-system,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #f0fbf6 0%, transparent 55%),
+      radial-gradient(900px 500px at -5% 110%, #fef3e8 0%, transparent 50%),
+      var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 40px 28px 72px; }
+
+  /* ---------- header ---------- */
+  .topbar {
+    display:flex; align-items:center; gap:12px; margin-bottom: 22px;
+  }
+  .logo-dot {
+    width: 38px; height: 38px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    display:grid; place-items:center; box-shadow: var(--shadow-sm);
+  }
+  .slice-tag {
+    font-size: 12px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--teal-dark);
+    background: #e3f5ef; padding: 5px 11px; border-radius: 999px;
+  }
+  header.hero {
+    background: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    padding: 34px 38px;
+    box-shadow: var(--shadow);
+    margin-bottom: 34px;
+    position: relative;
+    overflow: hidden;
+  }
+  header.hero::after {
+    content:""; position:absolute; right:-60px; top:-60px;
+    width: 260px; height: 260px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #d9f5ec, transparent 70%);
+    opacity:.7;
+  }
+  header.hero h1 {
+    margin: 14px 0 8px; font-size: 30px; letter-spacing: -.02em; font-weight: 800;
+  }
+  header.hero h1 .accent { color: var(--coral); }
+  header.hero p.lead {
+    margin: 0; max-width: 720px; color: var(--ink-soft); font-size: 15.5px; position:relative; z-index:1;
+  }
+  .pills { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; position:relative; z-index:1; }
+  .pill {
+    font-size: 12.5px; font-weight: 600; color: var(--teal-dark);
+    background: #eef9f4; border: 1px solid #d6efe6;
+    padding: 6px 12px; border-radius: 999px;
+    display:inline-flex; align-items:center; gap:7px;
+  }
+  .pill svg { display:block; }
+
+  /* ---------- grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px;
+  }
+  @media (max-width: 880px){ .grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 26px 26px 24px;
+    box-shadow: var(--shadow);
+    display:flex; flex-direction:column;
+  }
+  .panel .pnum {
+    display:inline-flex; align-items:center; gap:9px; margin-bottom: 12px;
+  }
+  .panel .pnum b {
+    width: 26px; height: 26px; border-radius: 8px; display:grid; place-items:center;
+    font-size: 13px; font-weight: 800; color:#fff;
+    background: linear-gradient(135deg,var(--teal),var(--teal-dark));
+  }
+  .panel .pnum span {
+    font-size: 13px; font-weight: 700; letter-spacing:.04em; color: var(--teal-dark);
+    text-transform: uppercase;
+  }
+  .panel h2 { margin: 0 0 6px; font-size: 19px; font-weight: 800; letter-spacing:-.01em; }
+  .panel .cap { margin: 0 0 18px; font-size: 13.5px; color: var(--ink-soft); }
+
+  .scene {
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    flex: 1;
+  }
+
+  .footnote {
+    margin-top: 16px;
+    font-size: 12.5px; color: var(--ink-soft);
+    display:flex; gap:8px; align-items:flex-start;
+    background: #faf7f0; border:1px dashed var(--line);
+    padding: 10px 12px; border-radius: 12px;
+  }
+  .footnote svg { flex-shrink:0; margin-top:1px; }
+
+  /* mock phone elements drawn in HTML over an SVG-ish styled card */
+  .phone {
+    background: linear-gradient(180deg,#ffffff,#fbfaf6);
+    margin: 14px;
+    border-radius: 22px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+    overflow:hidden;
+  }
+  .phone-bar {
+    background: var(--teal-dark);
+    color:#eafff8; padding: 11px 16px; font-size:13px; font-weight:700;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .phone-bar .t { display:flex; align-items:center; gap:8px; }
+
+  .meal-row {
+    display:flex; align-items:center; gap:12px; padding: 14px 16px;
+    border-bottom:1px solid var(--line);
+  }
+  .meal-check {
+    width: 26px; height:26px; border-radius:50%;
+    background: linear-gradient(135deg,var(--teal),var(--teal-dark));
+    display:grid; place-items:center; flex-shrink:0;
+  }
+  .meal-row .info { flex:1; }
+  .meal-row .info .title { font-weight:700; font-size:14.5px; }
+  .meal-row .info .sub { font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:5px; margin-top:2px; }
+  .capture-btn {
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:12.5px; font-weight:700; color: var(--teal-dark);
+    background:#e9f7f1; border:1px solid #cfeee2;
+    padding:7px 12px; border-radius: 999px;
+    flex-shrink:0;
+  }
+  .toast {
+    margin: 14px 16px; padding: 12px 14px; border-radius: 14px;
+    background: #f1fbf6; border:1px solid #d4efe4;
+    display:flex; align-items:center; gap:10px; font-size:13px; color:var(--teal-dark); font-weight:600;
+  }
+
+  /* polaroid drop celebration */
+  .celebrate {
+    padding: 26px 18px 24px; text-align:center;
+    background:
+      radial-gradient(420px 200px at 50% 0%, #eafaf3 0%, transparent 70%),
+      var(--paper);
+  }
+  .polaroid {
+    display:inline-block; background:#fff; padding: 10px 10px 0; border-radius:6px;
+    box-shadow: 0 18px 36px -16px rgba(15,118,110,.45), 0 6px 14px -8px rgba(0,0,0,.2);
+    transform: rotate(-4deg);
+    position: relative;
+  }
+  .polaroid .photo {
+    width: 168px; height: 130px; border-radius: 3px; display:block; overflow:hidden;
+  }
+  .polaroid .pcap {
+    font-family:'Outfit',system-ui; font-size:13px; font-weight:700; color:var(--ink);
+    padding: 10px 4px 12px; letter-spacing:.01em;
+  }
+  .count-line {
+    margin-top: 20px; display:inline-flex; align-items:center; gap:9px;
+    background:#fff; border:1px solid var(--line); border-radius:999px;
+    padding: 9px 16px; font-size:13.5px; font-weight:700; color:var(--teal-dark);
+    box-shadow: var(--shadow-sm);
+  }
+  .count-line .n { color: var(--coral); }
+  .spark { position:absolute; }
+
+  .legend {
+    display:flex; gap:18px; flex-wrap:wrap; padding: 14px 16px 0; margin-bottom:6px;
+  }
+  .legend .item { display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-soft); font-weight:600; }
+  .swatch-coral { width:14px; height:14px; border-radius:50%; background:var(--coral); box-shadow:0 0 0 4px #fde3df; }
+  .swatch-pol { width:18px; height:16px; border-radius:3px; background:#fff; border:2px solid var(--teal); }
+
+  .granular {
+    display:grid; grid-template-columns: 1fr auto 1fr; align-items:center; gap:8px;
+    padding: 10px 14px 16px;
+  }
+  @media (max-width:520px){ .granular{ grid-template-columns:1fr; } .granular .arrow{ transform:rotate(90deg); justify-self:center; } }
+  .gcard { background:#fff; border:1px solid var(--line); border-radius:16px; padding:10px; box-shadow:var(--shadow-sm); }
+  .gcard .glabel { font-size:11.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--teal-dark); margin:8px 4px 2px; display:flex; align-items:center; gap:6px;}
+  .gcard .gsub { font-size:11.5px; color:var(--ink-soft); margin:0 4px 6px; }
+  .arrow { display:grid; place-items:center; color:var(--amber); }
+
+  footer.note {
+    margin-top: 38px; font-size: 12.5px; color: var(--ink-soft);
+    border-top: 1px solid var(--line); padding-top: 18px;
+    display:flex; flex-wrap:wrap; gap: 18px;
+  }
+  footer.note b { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ HEADER ============ -->
+  <div class="topbar">
+    <span class="logo-dot">
+      <!-- camera glyph -->
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#eafff8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3.5"/></svg>
+    </span>
+    <span class="slice-tag">Slice Q · Mockup</span>
+  </div>
+
+  <header class="hero">
+    <span class="slice-tag" style="background:#fdeee9;color:var(--coral);">吃引擎 / 美食回憶 pin</span>
+    <h1>把「我有好好吃飯」錨定成一張<span class="accent">真實的回憶照片</span></h1>
+    <p class="lead">
+      Slice Q 讓使用者在完成飲食習慣時，<b>自願</b>補上一張當餐照片。這張照片以拼貼（polaroid）回憶的形式，落在
+      Slice P 的城市地圖上，成為地圖裡最豐富的收藏物。本 mockup 展示<b>推薦的 phased（C · Q1）路線</b>：照片先落地成城市級 pin、安靜零懲罰的捕捉、克制的「第 N 個回憶」計數慶祝；圖層與餐廳級粒度留到 Q2。
+    </p>
+    <div class="pills">
+      <span class="pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>選擇加入 · 零懲罰</span>
+      <span class="pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>城市級定位 · 座標不出前端</span>
+      <span class="pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8L12 14.6 7 18.2l1.9-5.8L4 8.8h6.1z"/></svg>身份錨定 &gt; 遊戲化</span>
+    </div>
+  </header>
+
+  <!-- ============ GRID ============ -->
+  <div class="grid">
+
+    <!-- PANEL 1 : capture moment -->
+    <section class="panel">
+      <div class="pnum"><b>1</b><span>捕捉時刻</span></div>
+      <h2>完成飲食習慣後，安靜地問一句「記錄這餐？」</h2>
+      <p class="cap">只有在已定位的完成列上才出現次要的相機 affordance。原生檔案選擇器、無自訂相機、跳過零成本——未拍照的完成仍是完整完成。</p>
+
+      <div class="scene">
+        <div class="phone">
+          <div class="phone-bar">
+            <span class="t">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#eafff8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+              今天的習慣
+            </span>
+            <span style="font-weight:600;opacity:.85;">台北 · 中午</span>
+          </div>
+
+          <div class="meal-row">
+            <span class="meal-check">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </span>
+            <span class="info">
+              <span class="title">好好吃一頓午餐</span>
+              <span class="sub">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
+                已標記於 台北
+              </span>
+            </span>
+            <span class="capture-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="12" r="3.5"/><path d="M16.5 7.5h.01"/></svg>
+              記錄這餐
+            </span>
+          </div>
+
+          <div class="meal-row" style="opacity:.6;">
+            <span class="meal-check" style="background:#e4e0d6;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9a9384" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/></svg>
+            </span>
+            <span class="info">
+              <span class="title">補充早餐蔬菜</span>
+              <span class="sub">尚未完成 · 無相機提示</span>
+            </span>
+          </div>
+
+          <div class="toast">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            已收進你的旅程 — 隨時可移除，不計分。
+          </div>
+        </div>
+      </div>
+
+      <div class="footnote">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--teal-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <span>客戶端縮圖到 ~1280px 並重新編碼，順手剝除所有 EXIF（含精確 GPS），延續 Slice O 的「座標只到城市級」紅線。</span>
+      </div>
+    </section>
+
+    <!-- PANEL 2 : polaroid drop celebration -->
+    <section class="panel">
+      <div class="pnum"><b>2</b><span>回憶掉落</span></div>
+      <h2>「第 N 個回憶 · N／總數」的拼貼掉落</h2>
+      <p class="cap">照片落地時，旅程頁出現一張掉落的 polaroid 與一行安靜計數。Q1 先用克制的計數行驗證需求；spring 慶祝動畫配給到 Q2，避免過早遊戲化。</p>
+
+      <div class="scene">
+        <div class="celebrate">
+          <div class="polaroid">
+            <!-- sparkle glyphs -->
+            <svg class="spark" style="top:-14px;left:-12px;" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>
+            <svg class="spark" style="top:-8px;right:-16px;" width="16" height="16" viewBox="0 0 24 24" fill="var(--coral)" stroke="none"><path d="M12 3l1.5 5L19 9.5 14 12l-2 6-2-6L5 9.5 10.5 8z"/></svg>
+            <span class="photo">
+              <!-- inline SVG "food photo" -->
+              <svg width="168" height="130" viewBox="0 0 168 130">
+                <defs>
+                  <linearGradient id="bowl" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#fff6ec"/><stop offset="1" stop-color="#fde7cf"/>
+                  </linearGradient>
+                </defs>
+                <rect width="168" height="130" fill="url(#bowl)"/>
+                <rect x="0" y="92" width="168" height="38" fill="#f4d8b3"/>
+                <ellipse cx="84" cy="74" rx="58" ry="40" fill="#ffffff" stroke="#e7d7be" stroke-width="2"/>
+                <path d="M40 74 a44 30 0 0 0 88 0 z" fill="#fbeede"/>
+                <circle cx="70" cy="64" r="13" fill="var(--coral)"/>
+                <circle cx="98" cy="62" r="10" fill="var(--amber)"/>
+                <path d="M58 78 q14 -10 30 -2 q14 8 26 -2" fill="none" stroke="var(--teal)" stroke-width="5" stroke-linecap="round"/>
+                <ellipse cx="84" cy="62" rx="9" ry="6" fill="var(--grass)"/>
+                <path d="M118 30 q6 -14 0 -24" fill="none" stroke="#e7d7be" stroke-width="3" stroke-linecap="round"/>
+                <path d="M126 32 q8 -16 1 -26" fill="none" stroke="#e7d7be" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <div class="pcap">台北 · 好好吃的午餐</div>
+          </div>
+
+          <div class="count-line">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8L12 14.6 7 18.2l1.9-5.8L4 8.8h6.1z"/></svg>
+            這是你在台北的第 <span class="n">&nbsp;8&nbsp;</span> 個回憶 · 8／15
+          </div>
+        </div>
+      </div>
+
+      <div class="footnote">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--teal-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <span>計數幾乎免費：<code style="background:#f0ede5;padding:1px 5px;border-radius:5px;">pins.filter(p =&gt; p.hasPhoto).length</code>。沒有 streak、沒有點數、不提「你昨天漏了」。</span>
+      </div>
+    </section>
+
+    <!-- PANEL 3 : pin on the city map -->
+    <section class="panel">
+      <div class="pnum"><b>3</b><span>城市地圖</span></div>
+      <h2>回憶 pin 在 Slice P 城市裡，比素色珊瑚點更豐富</h2>
+      <p class="cap">食物回憶以一張小 polaroid 釘在城市裡，與既有的素色珊瑚 MemoryPin 並存。位置仍是確定性裝飾散佈，從不使用 lat／lng。</p>
+
+      <div class="scene">
+        <div class="legend">
+          <span class="item"><span class="swatch-coral"></span>一般完成 pin（MemoryPin）</span>
+          <span class="item"><span class="swatch-pol"></span>食物回憶 pin（PolaroidPin）</span>
+        </div>
+
+        <svg viewBox="0 0 480 280" width="100%" style="display:block;">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#eafaf3"/><stop offset="1" stop-color="#fdfbf7"/>
+            </linearGradient>
+            <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#dff0d3"/><stop offset="1" stop-color="#cfe8bf"/>
+            </linearGradient>
+            <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#0f766e" flood-opacity="0.25"/>
+            </filter>
+          </defs>
+
+          <rect width="480" height="280" fill="url(#sky)"/>
+          <path d="M0 150 Q120 120 240 150 T480 150 V280 H0 Z" fill="url(#ground)"/>
+          <path d="M0 178 Q140 160 480 182" fill="none" stroke="#bcdcaa" stroke-width="3"/>
+
+          <!-- city buildings (Slice P style settlement) -->
+          <g filter="url(#soft)">
+            <rect x="86" y="96" width="34" height="76" rx="5" fill="#ffffff" stroke="#e7e1d6"/>
+            <rect x="124" y="74" width="40" height="98" rx="5" fill="#f4fbf8" stroke="#dcebe5"/>
+            <rect x="168" y="110" width="30" height="62" rx="5" fill="#ffffff" stroke="#e7e1d6"/>
+            <rect x="300" y="104" width="34" height="68" rx="5" fill="#ffffff" stroke="#e7e1d6"/>
+            <rect x="338" y="86" width="38" height="86" rx="5" fill="#f4fbf8" stroke="#dcebe5"/>
+            <rect x="98" y="106" width="8" height="8" rx="1.5" fill="var(--grass)"/>
+            <rect x="134" y="88" width="8" height="8" rx="1.5" fill="var(--grass)"/>
+            <rect x="146" y="104" width="8" height="8" rx="1.5" fill="var(--grass)"/>
+            <rect x="312" y="118" width="8" height="8" rx="1.5" fill="var(--grass)"/>
+            <rect x="350" y="100" width="8" height="8" rx="1.5" fill="var(--grass)"/>
+          </g>
+
+          <!-- plain coral memory pins -->
+          <g>
+            <circle cx="232" cy="206" r="7" fill="var(--coral)"/><circle cx="232" cy="206" r="13" fill="var(--coral)" opacity="0.18"/>
+            <circle cx="392" cy="196" r="7" fill="var(--coral)"/><circle cx="392" cy="196" r="13" fill="var(--coral)" opacity="0.18"/>
+            <circle cx="64" cy="216" r="7" fill="var(--coral)"/><circle cx="64" cy="216" r="13" fill="var(--coral)" opacity="0.18"/>
+          </g>
+
+          <!-- polaroid food pin A -->
+          <g transform="translate(150 178) rotate(-7)" filter="url(#soft)">
+            <rect x="-26" y="-30" width="52" height="58" rx="3" fill="#ffffff" stroke="#e7e1d6"/>
+            <rect x="-21" y="-25" width="42" height="34" rx="2" fill="#fde7cf"/>
+            <circle cx="-5" cy="-9" r="8" fill="var(--coral)"/>
+            <circle cx="9" cy="-7" r="6" fill="var(--amber)"/>
+            <path d="M-15 1 q12 -7 30 0" fill="none" stroke="var(--teal)" stroke-width="3" stroke-linecap="round"/>
+            <line x1="0" y1="-30" x2="0" y2="-40" stroke="var(--teal-dark)" stroke-width="2"/>
+            <circle cx="0" cy="-42" r="3.5" fill="var(--teal-dark)"/>
+          </g>
+
+          <!-- polaroid food pin B -->
+          <g transform="translate(346 188) rotate(6)" filter="url(#soft)">
+            <rect x="-24" y="-28" width="48" height="54" rx="3" fill="#ffffff" stroke="#e7e1d6"/>
+            <rect x="-19" y="-23" width="38" height="31" rx="2" fill="#eef9f1"/>
+            <ellipse cx="0" cy="-7" rx="14" ry="9" fill="#ffffff" stroke="#d9ead9"/>
+            <ellipse cx="0" cy="-8" rx="9" ry="5" fill="var(--grass)"/>
+            <circle cx="-4" cy="-9" r="3" fill="var(--coral)"/>
+            <line x1="0" y1="-28" x2="0" y2="-37" stroke="var(--teal-dark)" stroke-width="2"/>
+            <circle cx="0" cy="-39" r="3.5" fill="var(--teal-dark)"/>
+          </g>
+
+          <!-- city label -->
+          <g transform="translate(240 246)">
+            <rect x="-44" y="-13" width="88" height="26" rx="13" fill="#ffffff" stroke="#e7e1d6" filter="url(#soft)"/>
+            <text x="0" y="5" text-anchor="middle" font-family="Outfit,system-ui" font-size="13" font-weight="700" fill="#0f766e">台北 · 8 回憶</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="footnote">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--teal-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15l-5-5L5 21"/><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/></svg>
+        <span>讀取路徑已端到端接好：journey select → aggregateJourney（pin 帶 <code style="background:#f0ede5;padding:1px 5px;border-radius:5px;">id</code>+<code style="background:#f0ede5;padding:1px 5px;border-radius:5px;">hasPhoto</code>）→ CityScene 分支出 PolaroidPin。圖片 bytes 走授權端點，不進公開彙整。</span>
+      </div>
+    </section>
+
+    <!-- PANEL 4 : city vs restaurant granularity -->
+    <section class="panel">
+      <div class="pnum"><b>4</b><span>粒度 · Q2 預留</span></div>
+      <h2>城市級（今天）vs 餐廳級（日後可展開）</h2>
+      <p class="cap">今天落在城市級散佈。raw lat／lng 早已存在伺服器但從未呈現；日後點一座城市，可在「美食圖層」展開到真實餐廳級 pin——這是唯一會開座標閘門的功能，故留待 Q2 與 PM 簽核。</p>
+
+      <div class="scene">
+        <div class="granular">
+          <!-- city level card -->
+          <div class="gcard">
+            <svg viewBox="0 0 150 96" width="100%" style="display:block;border-radius:10px;">
+              <rect width="150" height="96" fill="#eafaf3"/>
+              <path d="M0 60 Q75 46 150 60 V96 H0 Z" fill="#cfe8bf"/>
+              <rect x="40" y="34" width="22" height="34" rx="3" fill="#fff" stroke="#e7e1d6"/>
+              <rect x="64" y="26" width="26" height="42" rx="3" fill="#f4fbf8" stroke="#dcebe5"/>
+              <rect x="92" y="38" width="18" height="30" rx="3" fill="#fff" stroke="#e7e1d6"/>
+              <g transform="translate(75 70)">
+                <rect x="-15" y="-16" width="30" height="32" rx="2" fill="#fff" stroke="#e7e1d6"/>
+                <rect x="-11" y="-12" width="22" height="17" rx="1" fill="#fde7cf"/>
+                <circle cx="-2" cy="-4" r="4" fill="var(--coral)"/>
+              </g>
+              <circle cx="36" cy="78" r="4" fill="var(--coral)" opacity="0.8"/>
+              <circle cx="116" cy="74" r="4" fill="var(--coral)" opacity="0.8"/>
+            </svg>
+            <div class="glabel">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l5-4 5 4M9 21v-4h2v4"/><path d="M15 21V11l4-2v12"/></svg>
+              城市級 · 今天
+            </div>
+            <p class="gsub">確定性裝飾散佈，從不用座標。整座城市 = 一個聚落。</p>
+          </div>
+
+          <!-- arrow / tap -->
+          <div class="arrow">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+            <span style="font-size:11px;font-weight:700;color:var(--amber);">點城市</span>
+          </div>
+
+          <!-- restaurant level card -->
+          <div class="gcard">
+            <svg viewBox="0 0 150 96" width="100%" style="display:block;border-radius:10px;">
+              <rect width="150" height="96" fill="#fdfbf7"/>
+              <!-- street grid -->
+              <path d="M0 38 H150 M0 66 H150 M52 0 V96 M100 0 V96" stroke="#e7e1d6" stroke-width="2" fill="none"/>
+              <rect x="6" y="6" width="40" height="26" rx="2" fill="#f4fbf8"/>
+              <rect x="58" y="6" width="36" height="26" rx="2" fill="#f4fbf8"/>
+              <rect x="106" y="42" width="38" height="18" rx="2" fill="#f4fbf8"/>
+              <!-- restaurant polaroid pins -->
+              <g transform="translate(40 40)">
+                <rect x="-12" y="-14" width="24" height="26" rx="2" fill="#fff" stroke="#e7e1d6"/>
+                <rect x="-9" y="-11" width="18" height="14" rx="1" fill="#fde7cf"/>
+                <circle cx="-1" cy="-5" r="3.5" fill="var(--coral)"/>
+                <line x1="0" y1="-14" x2="0" y2="-20" stroke="var(--teal-dark)" stroke-width="1.6"/>
+                <circle cx="0" cy="-21" r="2.4" fill="var(--teal-dark)"/>
+              </g>
+              <g transform="translate(112 72)">
+                <rect x="-11" y="-13" width="22" height="24" rx="2" fill="#fff" stroke="#e7e1d6"/>
+                <rect x="-8" y="-10" width="16" height="12" rx="1" fill="#eef9f1"/>
+                <ellipse cx="0" cy="-4" rx="6" ry="3.5" fill="var(--grass)"/>
+                <line x1="0" y1="-13" x2="0" y2="-19" stroke="var(--teal-dark)" stroke-width="1.6"/>
+                <circle cx="0" cy="-20" r="2.4" fill="var(--teal-dark)"/>
+              </g>
+              <circle cx="78" cy="80" r="3.5" fill="var(--coral)" opacity="0.7"/>
+            </svg>
+            <div class="glabel">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
+              餐廳級 · Q2 願景
+            </div>
+            <p class="gsub">展開美食圖層，真實 lat／lng 落到街區。需開座標閘門 + 隱私簽核。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footnote">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.2 1.8 17.5A2 2 0 0 0 3.5 20.5h17a2 2 0 0 0 1.7-3L13.7 3.2a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+        <span><b>風險旗標：</b>餐廳級與 Slice O 的「Zero map API · 座標只到城市級」紅線抵觸。預設不開，列為 §5 開放問題，僅在 PM 明確簽核公開／簽章存取後進入 Q2。</span>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="note">
+    <span><b>推薦路線：</b>方案 C（phased）· 交付 Q1 範圍 — 幾乎等同方案 A 的交付，但對好兩道承重縫（公開彙整只帶 <code style="background:#f0ede5;padding:1px 5px;border-radius:5px;">hasPhoto</code> 布林 · pin 帶穩定 <code style="background:#f0ede5;padding:1px 5px;border-radius:5px;">id</code>），讓 Q2 吃引擎無重工接上。</span>
+    <span><b>守則：</b>選擇加入隱私 · 座標不出前端（城市級）· 無 emoji 用 lucide 風格 glyph · 零懲罰 · 行為科學（身份錨定／可見進度／自主性）優先於遊戲化。</span>
+  </footer>
+
+</div>
+</body>
+</html>
