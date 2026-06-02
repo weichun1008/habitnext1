@@ -433,6 +433,15 @@ const MainApp = () => {
             }
         }
 
+        // World Switch — stamp the active world onto a completion so the
+        // gamification worlds can attribute it. user.activeWorld may be null
+        // (hasn't picked a world yet) → writes null = shared prologue, which
+        // is exactly right. Only stamp on a real completion, mirroring the
+        // location capture above.
+        if (historyUpdate && historyUpdate.completed) {
+            historyUpdate.world = user?.activeWorld ?? null;
+        }
+
         // API Call
         try {
             if (updatedTask) {
