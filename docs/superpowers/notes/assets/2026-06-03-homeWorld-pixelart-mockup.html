@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>居家世界 — Pixel-art 風目標質感示意</title>
+<style>
+  :root{
+    --bg:#1c2233; --bg2:#262d42; --paper:#fffdf8; --ink:#e8e0d0; --muted:#9aa2b8; --line:#313a4d;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#161b29;color:#e8e0d0;
+    font-family:'Outfit','Noto Sans TC',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:34px 20px 90px}
+  h1{font-size:26px;margin:0 0 4px;font-weight:800;color:#fff}
+  h2{font-size:17px;margin:40px 0 4px;font-weight:800;color:#fff}
+  .sub{color:#9aa2b8;font-size:14px;margin:0;max-width:780px;line-height:1.7}
+  .lead{font-size:13.5px;color:#c3c9da;line-height:1.8;margin:6px 0 0;max-width:800px}
+  .note{background:#2a2f1e;border:1px solid #5c6b2e;color:#d4e08a;font-size:12.5px;
+    padding:12px 16px;border-radius:14px;margin:16px 0 6px;line-height:1.7}
+  .warn{background:#33241e;border:1px solid #7a4a2e;color:#f0b88a;font-size:12.5px;
+    padding:12px 16px;border-radius:14px;margin:14px 0 6px;line-height:1.7}
+  .frame{margin-top:18px;background:#11161f;border:1px solid #2b3242;border-radius:20px;overflow:hidden;
+    box-shadow:0 18px 50px rgba(0,0,0,.5)}
+  /* pixel crispness */
+  .px{image-rendering:pixelated;image-rendering:crisp-edges;display:block;width:100%}
+  svg.px{shape-rendering:crispEdges}
+  .cap{padding:13px 18px 16px;font-size:12px;color:#9aa2b8;line-height:1.7}
+  .cap b{color:#e8e0d0}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .lz{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#c3c9da;
+    background:#1e2433;border:1px solid #313a4d;padding:4px 10px;border-radius:999px}
+  .lz i{width:10px;height:10px;border-radius:2px;image-rendering:pixelated}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+  @media(max-width:760px){.cols{grid-template-columns:1fr}}
+  .panel{background:#1a202e;border:1px solid #2b3242;border-radius:16px;padding:15px 17px}
+  .panel h3{margin:0 0 6px;font-size:14px;color:#fff;font-weight:800}
+  .panel p{font-size:11.5px;color:#aeb6c9;line-height:1.7;margin:4px 0 0}
+  .foot{margin-top:44px;font-size:11.5px;color:#6b748a;color:#74809a;line-height:1.8;border-top:1px solid #2b3242;padding-top:18px}
+  code{background:#222a3a;padding:1px 6px;border-radius:6px;font-size:11px;color:#cdd6ea}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>居家世界 — Pixel-art 風「目標質感」示意 🏡🌙</h1>
+  <p class="sub">參照你給的 cozy 等距 pixel-art 截圖，模擬居家世界用 AI 素材整合後想達到的方向：暖夜燈光、限色盤、等距堆疊、深色描邊。</p>
+  <div class="warn">⚠️ <b>誠實標注</b>：這張是用 <code>SVG + crispEdges</code> 純程式「模擬」pixel-art 質感、傳達<b>方向</b>——不是真 AI sprite，精細度遠不及截圖那種手繪／AI 生成的成品。真品質靠後續 AI 素材生產線（固定 prompt + 限色 + 去背對齊）。</div>
+
+  <!-- ============ HERO pixel-art room ============ -->
+  <h2>① 目標質感：暖夜的家（pixel-art 等距）</h2>
+  <p class="lead">一個 cozy 夜晚的家一角。地毯、木地板、暖燈、藥草／保健架、植栽、書牆——對應 9 健康面向的物件散落其中。</p>
+  <div class="frame">
+    <svg class="px" viewBox="0 0 320 200" width="100%" preserveAspectRatio="xMidYMid meet" style="background:#0e1320">
+      <!-- 暖光暈 -->
+      <defs>
+        <radialGradient id="lamp" cx="50%" cy="42%" r="58%">
+          <stop offset="0%" stop-color="#3a3526"/><stop offset="55%" stop-color="#23202f"/><stop offset="100%" stop-color="#0e1320"/>
+        </radialGradient>
+      </defs>
+      <rect width="320" height="200" fill="url(#lamp)"/>
+      <!-- 雪花點（cozy 夜） -->
+      <g fill="#cfd8ec" opacity=".5">
+        <rect x="30" y="22" width="2" height="2"/><rect x="70" y="14" width="2" height="2"/><rect x="250" y="20" width="2" height="2"/>
+        <rect x="290" y="40" width="2" height="2"/><rect x="20" y="60" width="2" height="2"/><rect x="300" y="90" width="2" height="2"/>
+      </g>
+
+      <!-- ===== 等距地板（木紋，菱形）===== -->
+      <!-- 後牆 -->
+      <polygon points="160,40 280,100 280,118 160,58" fill="#5a4636"/>
+      <polygon points="160,40 40,100 40,118 160,58" fill="#6b5440"/>
+      <!-- 牆裙線 -->
+      <polygon points="160,52 278,111 278,114 160,55" fill="#7a6048"/>
+      <polygon points="160,52 42,111 42,114 160,55" fill="#8a6c50"/>
+      <!-- 木地板 -->
+      <polygon points="160,58 296,126 160,194 24,126" fill="#a87c4e"/>
+      <!-- 木紋條 -->
+      <g stroke="#946a40" stroke-width="1">
+        <line x1="100" y1="91" x2="236" y2="159"/><line x1="130" y1="76" x2="266" y2="144"/>
+        <line x1="190" y1="76" x2="54" y2="144"/><line x1="220" y1="91" x2="84" y2="159"/>
+      </g>
+      <!-- 紅地毯（中央走道） -->
+      <polygon points="160,84 214,111 160,138 106,111" fill="#a83a3a"/>
+      <polygon points="160,90 204,112 160,134 116,112" fill="#c24a4a"/>
+      <g fill="#e0b85a"><rect x="158" y="98" width="4" height="2"/><rect x="158" y="120" width="4" height="2"/></g>
+
+      <!-- ===== 後牆物件 ===== -->
+      <!-- 書牆（認知，左後） -->
+      <g>
+        <rect x="70" y="62" width="30" height="26" fill="#4a3826"/>
+        <g><rect x="73" y="65" width="4" height="9" fill="#7fd6c5"/><rect x="78" y="64" width="4" height="10" fill="#ffa6c4"/><rect x="83" y="65" width="4" height="9" fill="#a8b2f0"/><rect x="88" y="64" width="4" height="10" fill="#ffc266"/><rect x="93" y="65" width="4" height="9" fill="#a8e6a3"/></g>
+        <g><rect x="73" y="76" width="4" height="9" fill="#ffc266"/><rect x="78" y="77" width="4" height="8" fill="#7fd6c5"/><rect x="83" y="76" width="4" height="9" fill="#ff9e8a"/><rect x="88" y="77" width="4" height="8" fill="#a8b2f0"/></g>
+      </g>
+      <!-- 保健藥草架（腸道，右後）— 像截圖的藥水瓶 -->
+      <g>
+        <rect x="206" y="60" width="34" height="28" fill="#4a3826"/>
+        <g><rect x="210" y="64" width="5" height="8" fill="#d9b0ef"/><rect x="218" y="63" width="5" height="9" fill="#a8e6a3"/><rect x="226" y="64" width="5" height="8" fill="#ff9e8a"/><rect x="234" y="63" width="4" height="9" fill="#a8b2f0"/></g>
+        <g><rect x="210" y="76" width="5" height="8" fill="#ffc266"/><rect x="219" y="76" width="5" height="8" fill="#7fd6c5"/><rect x="228" y="75" width="5" height="9" fill="#d9b0ef"/></g>
+      </g>
+      <!-- 窗（睡眠暖意，中後上） -->
+      <g><rect x="150" y="46" width="20" height="14" fill="#2a3a52"/><rect x="152" y="48" width="7" height="10" fill="#9fc6e8"/><rect x="161" y="48" width="7" height="10" fill="#8ab8e0"/><rect x="149" y="45" width="22" height="2" fill="#caa472"/></g>
+
+      <!-- ===== 地面家具（等距像素方塊：頂面+左面+右面+描邊）===== -->
+      <!-- 沙發（社交，左前） -->
+      <g>
+        <polygon points="88,118 112,130 88,142 64,130" fill="#ffa6c4"/>
+        <polygon points="64,130 88,142 88,152 64,140" fill="#e07ba0"/>
+        <polygon points="112,130 88,142 88,152 112,140" fill="#ff8fb5"/>
+        <polygon points="70,123 84,130 84,134 70,127" fill="#ffc2da"/>
+      </g>
+      <!-- 餐桌（飲食，右前） -->
+      <g>
+        <polygon points="226,120 250,132 226,144 202,132" fill="#ff9e8a"/>
+        <polygon points="202,132 226,144 226,150 202,138" fill="#d97a64"/>
+        <polygon points="250,132 226,144 226,150 250,138" fill="#ff856e"/>
+        <rect x="220" y="126" width="6" height="4" fill="#fff" opacity=".6"/>
+      </g>
+      <!-- 床（睡眠，中後） -->
+      <g>
+        <polygon points="150,98 178,112 150,126 122,112" fill="#a8b2f0"/>
+        <polygon points="122,112 150,126 150,134 122,120" fill="#8e9bea"/>
+        <polygon points="178,112 150,126 150,134 178,120" fill="#9fa8f5"/>
+        <polygon points="130,107 142,113 142,116 130,110" fill="#eef"/>
+      </g>
+      <!-- 健身啞鈴（運動，左前更前） -->
+      <g>
+        <polygon points="108,150 124,158 108,166 92,158" fill="#ffc266"/>
+        <rect x="100" y="154" width="3" height="4" fill="#c98f3a"/><rect x="113" y="154" width="3" height="4" fill="#c98f3a"/><rect x="103" y="155" width="10" height="2" fill="#c98f3a"/>
+      </g>
+      <!-- 盆栽（環境，右前） -->
+      <g>
+        <rect x="236" y="146" width="8" height="8" fill="#b9783f"/>
+        <rect x="234" y="138" width="12" height="9" fill="#a8e6a3"/><rect x="237" y="134" width="6" height="6" fill="#8fd98a"/>
+      </g>
+      <!-- 工作桌（職涯，左） -->
+      <g>
+        <polygon points="62,146 82,156 62,166 42,156" fill="#aebfcc"/>
+        <rect x="56" y="148" width="10" height="6" fill="#5a6b7a"/><rect x="57" y="149" width="8" height="4" fill="#7fa8d6"/>
+      </g>
+      <!-- 冥想坐墊（心靈，中） -->
+      <g>
+        <polygon points="172,138 188,146 172,154 156,146" fill="#a8e6a3"/>
+        <rect x="168" y="139" width="8" height="3" fill="#8fd98a"/>
+      </g>
+
+      <!-- 暖燈（右側落地燈，像截圖的暖光源） -->
+      <g>
+        <rect x="270" y="120" width="3" height="22" fill="#7a6048"/>
+        <polygon points="266,116 277,116 274,124 269,124" fill="#ffd98a"/>
+        <circle cx="271" cy="120" r="14" fill="#ffd98a" opacity=".14"/>
+      </g>
+
+      <!-- 可愛角色佔位（暖光下的小身影，未來公仔） -->
+      <g opacity=".9">
+        <rect x="157" y="104" width="6" height="9" fill="#3a3550"/>
+        <rect x="158" y="100" width="4" height="4" fill="#e8c9a0"/>
+      </g>
+
+      <!-- 暗角 vignette -->
+      <rect width="320" height="200" fill="url(#vig)" opacity=".0"/>
+    </svg>
+    <div class="cap">
+      <b>場景元素 → 9 面向</b>：書牆=認知 · 藥草架=腸道 · 窗=睡眠 · 沙發=社交 · 餐桌=飲食 · 床=睡眠 · 啞鈴=運動 · 盆栽=環境 · 工作桌=職涯 · 坐墊=心靈。暖燈夜色＝cozy 氛圍（學截圖）。中央暖光下的小身影＝未來公仔站位。
+      <div class="legend">
+        <span class="lz"><i style="background:#ff9e8a"></i>飲食</span><span class="lz"><i style="background:#ffc266"></i>運動</span>
+        <span class="lz"><i style="background:#a8b2f0"></i>睡眠</span><span class="lz"><i style="background:#7fd6c5"></i>認知</span>
+        <span class="lz"><i style="background:#ffa6c4"></i>社交</span><span class="lz"><i style="background:#a8e6a3"></i>心靈</span>
+        <span class="lz"><i style="background:#cfe88e"></i>環境</span><span class="lz"><i style="background:#d9b0ef"></i>腸道</span>
+        <span class="lz"><i style="background:#aebfcc"></i>職涯</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ honest comparison + path ============ -->
+  <h2>② 這張示意 vs 截圖的真品質：差在哪</h2>
+  <div class="cols">
+    <div class="panel">
+      <h3>截圖（手繪 / AI pixel art）有的</h3>
+      <p>· 每件物件多色階 + 細緻陰影、反光<br>· 統一光源、暖燈打在所有表面<br>· 大量裝飾密度（雜物、植栽、人物）<br>· 像素邊緣乾淨、限色盤一致<br>· 角色動畫、環境粒子（雪、光）</p>
+    </div>
+    <div class="panel">
+      <h3>這張 SVG 示意只能到</h3>
+      <p>· 等距結構、配色方向、暖夜氛圍對<br>· 物件是簡化方塊、色階少、無細緻陰影<br>· 密度低、無動畫<br>· 「看得出想做什麼」但非成品<br>· 用來對齊方向、不是最終美術</p>
+    </div>
+  </div>
+
+  <div class="note">📌 <b>結論</b>：方向（cozy 暖夜等距、9 面向物件、暖光）可行且好看。要真的長成截圖那樣，下一步＝<b>AI 素材生產線</b>：固定 prompt 骨架生「等距家具 sprite」→ 限色盤量化 + 去背 + 對齊 grid → Next.js canvas/tile 渲染。我可再交付那份 pipeline 規格。</div>
+
+  <div class="foot">
+    對應 spec：<code>docs/superpowers/specs/2026-06-03-home-world-design.md</code> · 參考：使用者提供的 cozy 等距 pixel-art 截圖（4 張）<br>
+    技術：純 SVG <code>shape-rendering:crispEdges</code> 模擬像素，零外部資產。真 pixel art 需 AI/手繪 sprite + tile renderer（PixiJS / canvas）。
+  </div>
+</div>
+</body>
+</html>
