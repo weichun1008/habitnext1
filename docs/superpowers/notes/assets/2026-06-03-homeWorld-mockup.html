@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>居家世界 — 視覺提案（Home World）</title>
+<style>
+  :root{
+    /* 沿用 Slice P 調性 + 室內暖色擴充 */
+    --teal:#0d9488; --teal-d:#0f766e; --teal-l:#34b3a6; --coral:#f97362; --amber:#f59e0b;
+    --paper:#fdfbf7; --ink:#1f2937; --muted:#6b7280; --line:#e7e2d8;
+    --warm:#f3ece0; --wood:#caa472; --wood-d:#a9824f; --wall:#efe6d6; --wall-d:#e3d6c0;
+    --floor:#f6ecd9; --floor-line:#e6d6ba; --sky:#eaf6f3;
+    /* 9 domain 色（對齊 CATEGORY_CONFIG 的精神） */
+    --c-food:#ef4444; --c-move:#f97316; --c-sleep:#6366f1; --c-mind:#10b981; --c-social:#f43f5e;
+    --c-soul:#22c55e; --c-env:#84cc16; --c-gut:#a855f7; --c-work:#64748b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#f1ece2;color:var(--ink);
+    font-family:'Outfit','Noto Sans TC',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 20px 90px}
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:-.02em}
+  h2{font-size:18px;margin:42px 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px;margin:0;max-width:760px;line-height:1.6}
+  .lead{font-size:13.5px;color:#374151;line-height:1.75;margin:6px 0 0;max-width:780px}
+  .note{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12.5px;
+    padding:11px 15px;border-radius:13px;margin:16px 0 6px;line-height:1.65}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:22px;overflow:hidden;
+    box-shadow:0 8px 26px rgba(31,41,55,.07)}
+  .scene{background:radial-gradient(130% 100% at 50% 0%,var(--sky) 0%,#e8f1ea 55%,#e3ead f 100%)}
+  /* hero */
+  .hero{margin-top:18px;padding:0}
+  .hero .lab{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px 0}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
+    padding:3px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:#374151}
+  .chip i{width:9px;height:9px;border-radius:3px;display:inline-block}
+  .herometa{padding:12px 18px 18px;font-size:12.5px;color:#4b5563;line-height:1.7}
+  /* progression */
+  .prog{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+  @media(max-width:900px){.prog{grid-template-columns:1fr}}
+  .stage .ttl{padding:13px 16px 2px;font-size:14px;font-weight:800;letter-spacing:-.01em;display:flex;justify-content:space-between;align-items:center}
+  .stage .d{font-size:11.5px;color:#4b5563;padding:0 16px 16px;line-height:1.65;margin-top:6px}
+  .rank{display:inline-block;font-size:10px;font-weight:800;padding:2px 9px;border-radius:999px;color:#fff}
+  .r0{background:#9ca3af}.r1{background:#a9d49a}.r2{background:var(--teal-l)}.r3{background:var(--teal-d)}
+  /* zone map */
+  .zones{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  @media(max-width:900px){.zones{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.zones{grid-template-columns:1fr}}
+  .zone{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:14px 15px;
+    box-shadow:0 4px 16px rgba(31,41,55,.05)}
+  .zone .zh{display:flex;align-items:center;gap:9px}
+  .zone .zi{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .zone .zt{font-size:13.5px;font-weight:800}
+  .zone .zd{font-size:11px;color:var(--muted);margin-top:1px}
+  .ladder{display:flex;gap:6px;margin-top:11px}
+  .rung{flex:1;text-align:center;font-size:9.5px;color:#6b7280;line-height:1.3}
+  .rung .b{height:34px;border-radius:8px;border:1px solid var(--line);background:#fbf7ef;
+    display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;font-size:15px;margin-bottom:3px;position:relative}
+  .rung .thr{position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:8px;color:#9ca3af;font-weight:700}
+  /* world switcher */
+  .switch{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+  .wcard{flex:1;min-width:200px;background:var(--paper);border:2px solid var(--line);border-radius:20px;
+    overflow:hidden;box-shadow:0 6px 20px rgba(31,41,55,.06);position:relative}
+  .wcard.active{border-color:var(--teal)}
+  .wcard.dim{opacity:.62}
+  .wbadge{position:absolute;top:10px;right:10px;font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;background:var(--teal);color:#fff}
+  .wprev{height:118px}
+  .wmeta{padding:11px 15px 15px}
+  .wmeta .wt{font-size:14.5px;font-weight:800}
+  .wmeta .wd{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.55}
+  .wmeta .wstat{font-size:11px;color:var(--teal-d);font-weight:700;margin-top:8px}
+  /* interaction strip */
+  .ix{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-top:18px}
+  @media(max-width:820px){.ix{grid-template-columns:1fr}}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:16px 17px;box-shadow:0 5px 18px rgba(31,41,55,.05)}
+  .panel h3{margin:0 0 4px;font-size:14px}
+  .panel p{font-size:11.5px;color:#4b5563;line-height:1.6;margin:4px 0 0}
+  .toast{display:inline-flex;align-items:center;gap:9px;background:#1f2937;color:#fff;
+    padding:9px 14px;border-radius:999px;font-size:12.5px;margin-top:12px;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+  .toast .e{font-size:15px}
+  .drawer{margin-top:14px;background:#fbf7ef;border:1px dashed var(--wood);border-radius:14px;padding:11px 12px}
+  .drawer .dl{font-size:10.5px;font-weight:800;color:var(--wood-d);letter-spacing:.04em}
+  .tray{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+  .item{width:42px;height:42px;border-radius:11px;background:#fff;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+  .item.locked{opacity:.32;filter:grayscale(1)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:14px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .foot{margin-top:46px;font-size:11.5px;color:#9ca3af;line-height:1.7;border-top:1px solid var(--line);padding-top:16px}
+  .roomlbl{font:800 11px 'Outfit',sans-serif;fill:#7c6a4d}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>居家世界 🏡 視覺提案</h1>
+  <p class="sub">純習慣完成數驅動（零 location／零拍照／零隱私門檻——人人開箱即玩）。9 大健康面向各對應家裡一個區域，完成那面向的習慣就解鎖家具，你親手擺進房間，家越住越溫馨。調性沿用旅程世界（純 SVG、紙感暖色、零懲罰）。</p>
+  <div class="note">這是 <b>視覺提案</b>，非定稿。對應 spec <code>2026-06-03-home-world-design.md</code>。等距房間、家具、成長階段都是手繪 SVG 示意，實作時細修。</div>
+
+  <!-- ============ HERO：完整的家 ============ -->
+  <h2>① 核心畫面：你的家（一個等距房間，分 9 區）</h2>
+  <p class="lead">俯視 2.5D 等距房間。各區依該面向完成數長出家具；點某區可放大進入「佈置模式」。下圖為住了一陣子、各區都有東西的溫馨狀態。</p>
+  <div class="card hero">
+    <div class="lab">
+      <span class="chip"><i style="background:var(--c-food)"></i>廚房·飲食</span>
+      <span class="chip"><i style="background:var(--c-sleep)"></i>臥室·睡眠</span>
+      <span class="chip"><i style="background:var(--c-mind)"></i>書房·認知</span>
+      <span class="chip"><i style="background:var(--c-social)"></i>客廳·社交</span>
+      <span class="chip"><i style="background:var(--c-move)"></i>健身角·運動</span>
+      <span class="chip"><i style="background:var(--c-soul)"></i>冥想角·心靈</span>
+      <span class="chip"><i style="background:var(--c-env)"></i>玄關植栽·環境</span>
+      <span class="chip"><i style="background:var(--c-gut)"></i>保健櫃·腸道</span>
+      <span class="chip"><i style="background:var(--c-work)"></i>工作桌·職涯</span>
+    </div>
+    <div class="scene">
+      <svg viewBox="0 0 920 540" width="100%" height="100%" style="display:block">
+        <!-- 後牆（等距兩面） -->
+        <polygon points="460,70 830,260 830,320 460,130" fill="var(--wall-d)"/>
+        <polygon points="460,70 90,260 90,320 460,130" fill="var(--wall)"/>
+        <!-- 窗（左牆） -->
+        <polygon points="220,205 300,246 300,300 220,259" fill="#cdeaf0" stroke="#fff" stroke-width="3"/>
+        <!-- 掛畫（右牆） -->
+        <polygon points="600,210 660,241 660,289 600,258" fill="#fff" stroke="var(--wood)" stroke-width="3"/>
+        <!-- 地板大菱形 -->
+        <polygon points="460,130 850,330 460,530 70,330" fill="var(--floor)" stroke="var(--floor-line)" stroke-width="2"/>
+        <!-- 9 區地磚分隔（等距格線） -->
+        <g stroke="var(--floor-line)" stroke-width="1.4" opacity=".85">
+          <line x1="200" y1="200" x2="590" y2="400"/>
+          <line x1="330" y1="265" x2="720" y2="465"/>
+          <line x1="720" y1="265" x2="330" y2="465"/>
+          <line x1="590" y1="200" x2="200" y2="400"/>
+        </g>
+
+        <!-- ===== 家具（等距盒子 helper：top 菱形 + 左右側面） ===== -->
+        <!-- 客廳沙發（社交）中央偏前 -->
+        <g>
+          <polygon points="430,360 500,396 430,432 360,396" fill="var(--c-social)" opacity=".9"/>
+          <polygon points="360,396 430,432 430,452 360,416" fill="#d6325a"/>
+          <polygon points="500,396 430,432 430,452 500,416" fill="#e8537a"/>
+          <text x="430" y="470" text-anchor="middle" class="roomlbl">客廳</text>
+        </g>
+        <!-- 餐桌（飲食）右前 -->
+        <g>
+          <polygon points="610,330 660,356 610,382 560,356" fill="var(--c-food)" opacity=".88"/>
+          <polygon points="560,356 610,382 610,398 560,372" fill="#c33"/>
+          <polygon points="660,356 610,382 610,398 660,372" fill="#e25"/>
+          <text x="612" y="414" text-anchor="middle" class="roomlbl">廚房</text>
+        </g>
+        <!-- 床（睡眠）左後 -->
+        <g>
+          <polygon points="300,250 380,290 300,330 220,290" fill="var(--c-sleep)" opacity=".85"/>
+          <polygon points="220,290 300,330 300,346 220,306" fill="#4f46e5"/>
+          <polygon points="380,290 300,330 300,346 380,306" fill="#6d68f0"/>
+          <rect x="262" y="248" width="22" height="14" rx="3" transform="skewX(-26)" fill="#eef" opacity=".9"/>
+          <text x="300" y="362" text-anchor="middle" class="roomlbl">臥室</text>
+        </g>
+        <!-- 書牆（認知）右後 -->
+        <g>
+          <polygon points="640,250 700,280 700,330 640,300" fill="var(--c-mind)" opacity=".9"/>
+          <g fill="#fff" opacity=".55"><rect x="650" y="262" width="40" height="6"/><rect x="650" y="276" width="40" height="6"/><rect x="650" y="290" width="40" height="6"/></g>
+          <text x="668" y="350" text-anchor="middle" class="roomlbl">書房</text>
+        </g>
+        <!-- 健身角（運動）左前 -->
+        <g>
+          <polygon points="250,360 300,386 250,412 200,386" fill="var(--c-move)" opacity=".9"/>
+          <circle cx="232" cy="384" r="7" fill="#9a3412"/><circle cx="268" cy="384" r="7" fill="#9a3412"/>
+          <text x="250" y="428" text-anchor="middle" class="roomlbl">健身角</text>
+        </g>
+        <!-- 冥想角（心靈）中後 -->
+        <g>
+          <polygon points="470,250 510,270 470,290 430,270" fill="var(--c-soul)" opacity=".9"/>
+          <text x="470" y="246" text-anchor="middle" font-size="15">🧘</text>
+        </g>
+        <!-- 玄關植栽（環境）右側盆栽 -->
+        <g>
+          <ellipse cx="730" cy="380" rx="16" ry="8" fill="var(--c-env)" opacity=".5"/>
+          <rect x="724" y="356" width="12" height="20" rx="3" fill="#b45309"/>
+          <text x="730" y="350" text-anchor="middle" font-size="16">🌿</text>
+        </g>
+        <!-- 工作桌（職涯）左側 -->
+        <g>
+          <polygon points="175,330 215,350 175,370 135,350" fill="var(--c-work)" opacity=".9"/>
+          <rect x="156" y="320" width="16" height="11" rx="2" transform="skewX(-26)" fill="#334155"/>
+          <text x="172" y="388" text-anchor="middle" class="roomlbl">工作桌</text>
+        </g>
+        <!-- 保健櫃（腸道）右後角 -->
+        <g>
+          <polygon points="540,232 580,252 540,272 500,252" fill="var(--c-gut)" opacity=".88"/>
+          <text x="540" y="230" text-anchor="middle" font-size="13">💊</text>
+        </g>
+
+        <!-- 角色層佔位（未來公仔整合處） -->
+        <g opacity=".4"><circle cx="455" cy="320" r="9" fill="#fff" stroke="#94a3b8" stroke-dasharray="3 3"/></g>
+      </svg>
+    </div>
+    <div class="herometa">虛線小圈＝<b>未來公仔站位（角色層佔位）</b>：居家世界 v1 不畫公仔，但房間 SVG 預留一層，之後公仔世界整合時角色可走進房間。</div>
+  </div>
+
+  <!-- ============ PROGRESSION ============ -->
+  <h2>② 越住越溫馨：同一個家的成長</h2>
+  <p class="lead">完成習慣 → 家長出東西。漏天不會掉家具（零懲罰），只是今天沒解鎖新的。城市階級的對應＝家的「溫馨度」。</p>
+  <div class="prog">
+    <!-- empty -->
+    <div class="card stage">
+      <div class="scene" style="height:190px"><svg viewBox="0 0 320 190" width="100%" height="100%">
+        <polygon points="160,30 270,90 270,120 160,60" fill="var(--wall-d)"/>
+        <polygon points="160,30 50,90 50,120 160,60" fill="var(--wall)"/>
+        <polygon points="160,60 300,135 160,210 20,135" fill="var(--floor)" stroke="var(--floor-line)" stroke-width="2"/>
+        <g stroke="var(--floor-line)" stroke-width="1.4" stroke-dasharray="4 5" fill="none" opacity=".9">
+          <polygon points="160,95 200,117 160,139 120,117"/>
+          <polygon points="220,110 250,127 220,144 190,127"/>
+          <polygon points="100,110 130,127 100,144 70,127"/>
+        </g>
+        <text x="160" y="120" text-anchor="middle" font-size="22" opacity=".5">📦</text>
+      </svg></div>
+      <div class="ttl">剛搬進來 <span class="rank r0">空屋</span></div>
+      <div class="d">還沒完成任何習慣。空地磚 + 一個搬家紙箱。「完成第一個習慣，搬進你的家。」</div>
+    </div>
+    <!-- mid -->
+    <div class="card stage">
+      <div class="scene" style="height:190px"><svg viewBox="0 0 320 190" width="100%" height="100%">
+        <polygon points="160,30 270,90 270,120 160,60" fill="var(--wall-d)"/>
+        <polygon points="160,30 50,90 50,120 160,60" fill="var(--wall)"/>
+        <polygon points="160,60 300,135 160,210 20,135" fill="var(--floor)" stroke="var(--floor-line)" stroke-width="2"/>
+        <polygon points="150,118 195,141 150,164 105,141" fill="var(--c-social)" opacity=".9"/>
+        <polygon points="105,141 150,164 150,178 105,155" fill="#d6325a"/>
+        <polygon points="210,108 245,126 210,144 175,126" fill="var(--c-food)" opacity=".88"/>
+        <polygon points="110,104 138,118 110,132 82,118" fill="var(--c-move)" opacity=".9"/>
+        <circle cx="100" cy="116" r="4" fill="#9a3412"/><circle cx="120" cy="116" r="4" fill="#9a3412"/>
+      </svg></div>
+      <div class="ttl">住了一陣 <span class="rank r2">溫馨小窩</span></div>
+      <div class="d">幾個面向有進度：客廳有沙發、廚房有餐桌、健身角有啞鈴。其他區還是空地磚，等你補完成。</div>
+    </div>
+    <!-- rich -->
+    <div class="card stage">
+      <div class="scene" style="height:190px"><svg viewBox="0 0 320 190" width="100%" height="100%">
+        <polygon points="160,30 270,90 270,120 160,60" fill="var(--wall-d)"/>
+        <polygon points="160,30 50,90 50,120 160,60" fill="var(--wall)"/>
+        <polygon points="100,72 138,92 138,116 100,96" fill="#cdeaf0" stroke="#fff" stroke-width="2"/>
+        <polygon points="160,60 300,135 160,210 20,135" fill="var(--floor)" stroke="var(--floor-line)" stroke-width="2"/>
+        <polygon points="150,118 195,141 150,164 105,141" fill="var(--c-social)" opacity=".9"/>
+        <polygon points="105,141 150,164 150,178 105,155" fill="#d6325a"/>
+        <polygon points="215,118 250,136 215,154 180,136" fill="var(--c-food)" opacity=".88"/>
+        <polygon points="108,118 152,140 108,162 64,140" fill="var(--c-sleep)" opacity=".85"/>
+        <polygon points="226,98 262,116 262,140 226,122" fill="var(--c-mind)" opacity=".9"/>
+        <polygon points="100,108 128,122 100,136 72,122" fill="var(--c-move)" opacity=".9"/>
+        <text x="160" y="100" text-anchor="middle" font-size="13">🧘</text>
+        <text x="246" y="150" font-size="13">🌿</text>
+      </svg></div>
+      <div class="ttl">住得很滿 <span class="rank r3">理想之家</span></div>
+      <div class="d">9 區都長出東西、窗景植栽俱全。封頂後持續完成 → 解鎖「變體／升級皮膚」(換款式)，無限成長、不會玩完。</div>
+    </div>
+  </div>
+
+  <!-- ============ ZONE MAP ============ -->
+  <h2>③ 9 大面向 → 9 居家區域（含家具解鎖階梯）</h2>
+  <p class="lead">每區依「該面向完成數」解鎖 4 件核心家具，門檻 1／5／15／40——第一次完成就解鎖第一件，即時回饋。封頂後解鎖變體皮膚。</p>
+  <div class="zones">
+    <div class="zone"><div class="zh"><div class="zi" style="background:#fee2e2">🍽</div><div><div class="zt">廚房 / 餐廳</div><div class="zd">飲食</div></div></div>
+      <div class="ladder">
+        <div class="rung"><div class="b"><span class="thr">1</span>🥛</div>水杯</div>
+        <div class="rung"><div class="b"><span class="thr">5</span>🍽</div>餐桌</div>
+        <div class="rung"><div class="b"><span class="thr">15</span>🔪</div>開放廚房</div>
+        <div class="rung"><div class="b"><span class="thr">40</span>🍷</div>中島吧台</div>
+      </div></div>
+    <div class="zone"><div class="zh"><div class="zi" style="background:#ffedd5">🏋</div><div><div class="zt">健身角 / 陽台</div><div class="zd">運動</div></div></div>
+      <div class="ladder">
+        <div class="rung"><div class="b"><span class="thr">1</span>🧘</div>瑜伽墊</div>
+        <div class="rung"><div class="b"><span class="thr">5</span>🏋</div>啞鈴架</div>
+        <div class="rung"><div class="b"><span class="thr">15</span>🏃</div>跑步機</div>
+        <div class="rung"><div class="b"><span class="thr">40</span>💪</div>健身房</div>
+      </div></div>
+    <div class="zone"><div class="zh"><div class="zi" style="background:#e0e7ff">🛏</div><div><div class="zt">臥室</div><div class="zd">壓力與睡眠</div></div></div>
+      <div class="ladder">
+        <div class="rung"><div class="b"><span class="thr">1</span>🛌</div>枕頭</div>
+        <div class="rung"><div class="b"><span class="thr">5</span>🛏</div>床</div>
+        <div class="rung"><div class="b"><span class="thr">15</span>🕯</div>香氛機</div>
+        <div class="rung"><div class="b"><span class="thr">40</span>🌙</div>四柱床</div>
+      </div></div>
+    <div class="zone"><div class="zh"><div class="zi" style="background:#d1fae5">📚</div><div><div class="zt">書房 / 書牆</div><div class="zd">認知與智慧</div></div></div>
+      <div class="ladder">
+        <div class="rung"><div class="b"><span class="thr">1</span>📖</div>一本書</div>
+        <div class="rung"><div class="b"><span class="thr">5</span>📚</div>書架</div>
+        <div class="rung"><div class="b"><span class="thr">15</span>🖋</div>書桌</div>
+        <div class="rung"><div class="b"><span class="thr">40</span>🪑</div>閱讀椅</div>
+      </div></div>
+    <div class="zone"><div class="zh"><div class="zi" style="background:#ffe4e6">🛋</div><div><div class="zt">客廳</div><div class="zd">社交互動</div></div></div>
+      <div class="ladder">
+        <div class="rung"><div class="b"><span class="thr">1</span>🪑</div>椅子</div>
+        <div class="rung"><div class="b"><span class="thr">5</span>🛋</div>沙發</div>
+        <div class="rung"><div class="b"><span class="thr">15</span>📺</div>茶几電視</div>
+        <div class="rung"><div class="b"><span class="thr">40</span>🎉</div>待客廳</div>
+      </div></div>
+    <div class="zone"><div class="zh"><div class="zi" style="background:#dcfce7">🧘</div><div><div class="zt">冥想角 / 窗邊</div><div class="zd">心靈</div></div></div>
+      <div class="ladder">
+        <div class="rung"><div class="b"><span class="thr">1</span>🟫</div>坐墊</div>
+        <div class="rung"><div class="b"><span class="thr">5</span>🪴</div>蒲團盆栽</div>
+        <div class="rung"><div class="b"><span class="thr">15</span>🌅</div>窗邊禪座</div>
+        <div class="rung"><div class="b"><span class="thr">40</span>☸️</div>冥想室</div>
+      </div></div>
+    <div class="zone"><div class="zh"><div class="zi" style="background:#ecfccb">🌿</div><div><div class="zt">玄關 / 植栽</div><div class="zd">環境</div></div></div>
+      <div class="ladder">
+        <div class="rung"><div class="b"><span class="thr">1</span>🌱</div>小盆栽</div>
+        <div class="rung"><div class="b"><span class="thr">5</span>🌿</div>落地植物</div>
+        <div class="rung"><div class="b"><span class="thr">15</span>🚪</div>玄關櫃</div>
+        <div class="rung"><div class="b"><span class="thr">40</span>🌳</div>綠意中庭</div>
+      </div></div>
+    <div class="zone"><div class="zh"><div class="zi" style="background:#f3e8ff">💊</div><div><div class="zt">保健櫃 / 浴室</div><div class="zd">基因與腸道</div></div></div>
+      <div class="ladder">
+        <div class="rung"><div class="b"><span class="thr">1</span>🥛</div>水杯</div>
+        <div class="rung"><div class="b"><span class="thr">5</span>💊</div>保健櫃</div>
+        <div class="rung"><div class="b"><span class="thr">15</span>⚖️</div>體重計</div>
+        <div class="rung"><div class="b"><span class="thr">40</span>📋</div>健康牆</div>
+      </div></div>
+    <div class="zone"><div class="zh"><div class="zi" style="background:#f1f5f9">💼</div><div><div class="zt">工作桌</div><div class="zd">職涯與平衡</div></div></div>
+      <div class="ladder">
+        <div class="rung"><div class="b"><span class="thr">1</span>💻</div>筆電</div>
+        <div class="rung"><div class="b"><span class="thr">5</span>🖥</div>升降桌</div>
+        <div class="rung"><div class="b"><span class="thr">15</span>🖥🖥</div>雙螢幕</div>
+        <div class="rung"><div class="b"><span class="thr">40</span>🏢</div>home office</div>
+      </div></div>
+  </div>
+  <div class="note">對不到面向的完成（other）＝累積「裝飾雜物」池（地毯／燈／小擺設），任意區可用。重用既有 <code>categoryToDomain()</code>。</div>
+
+  <!-- ============ WORLD SWITCHER ============ -->
+  <h2>④ 世界選擇器（首次迎賓 + 之後切換，跨 session 共用）</h2>
+  <p class="lead">同時只玩一種世界。首次點「世界」入口時迎賓選一個（不在註冊強迫）；之後隨時可切、不限頻、零確認。切換後新世界從「共同序章」起步累積，舊世界不歸零。</p>
+  <div class="switch">
+    <div class="wcard active">
+      <div class="wbadge">遊玩中</div>
+      <div class="wprev scene"><svg viewBox="0 0 240 118" width="100%" height="100%">
+        <polygon points="120,18 200,60 200,80 120,38" fill="var(--wall-d)"/><polygon points="120,18 40,60 40,80 120,38" fill="var(--wall)"/>
+        <polygon points="120,38 215,90 120,142 25,90" fill="var(--floor)" stroke="var(--floor-line)"/>
+        <polygon points="110,70 150,90 110,110 70,90" fill="var(--c-social)"/><polygon points="160,66 190,82 160,98 130,82" fill="var(--c-food)"/>
+      </svg></div>
+      <div class="wmeta"><div class="wt">🏡 居家世界</div><div class="wd">完成習慣佈置溫馨的家。人人可玩、零門檻。</div><div class="wstat">目前：溫馨小窩 · 24 件家具</div></div>
+    </div>
+    <div class="wcard dim">
+      <div class="wprev scene" style="background:radial-gradient(120% 100% at 50% 0%,#fef3f8,#fde4ef)"><svg viewBox="0 0 240 118" width="100%" height="100%">
+        <circle cx="120" cy="78" r="30" fill="#f9a8d4"/><circle cx="110" cy="70" r="4" fill="#7c2d4d"/><circle cx="130" cy="70" r="4" fill="#7c2d4d"/>
+        <path d="M108 88 Q120 98 132 88" stroke="#7c2d4d" stroke-width="3" fill="none"/>
+        <text x="195" y="40" font-size="18">✨</text>
+      </svg></div>
+      <div class="wmeta"><div class="wt">🧸 公仔世界</div><div class="wd">（另一 session 設計中）養成 / 收集角色。</div><div class="wstat" style="color:#9ca3af">上次：Lv.3 · 進度保留</div></div>
+    </div>
+    <div class="wcard dim">
+      <div class="wprev scene"><svg viewBox="0 0 240 118" width="100%" height="100%">
+        <ellipse cx="120" cy="86" rx="92" ry="26" fill="#cfe8bf"/>
+        <rect x="96" y="58" width="14" height="28" fill="var(--teal)"/><rect x="120" y="50" width="16" height="36" fill="var(--teal-d)"/><rect x="142" y="62" width="12" height="24" fill="var(--teal-l)"/>
+        <path d="M30 88 Q120 70 210 88" stroke="#fff" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+      </svg></div>
+      <div class="wmeta"><div class="wt">🏙️ 旅程世界</div><div class="wd">在不同地點完成 → 蓋你的城市。需開啟定位。</div><div class="wstat" style="color:#9ca3af">上次：小鎮 · 進度保留</div></div>
+    </div>
+  </div>
+
+  <!-- ============ INTERACTION ============ -->
+  <h2>⑤ 互動：解鎖 → 待擺抽屜 → 格位佈置</h2>
+  <div class="ix">
+    <div class="panel">
+      <h3>佈置模式（slot-based）</h3>
+      <p>點某區放大 → 進佈置模式。左側「待擺抽屜」列出已解鎖未擺的家具；點家具 → 點房間空格位放入；點已擺的 → 移回抽屜。<b>不做像素級自由拖拉</b>（手機難用），用固定格位：乾淨、確定、好測。</p>
+      <div class="scene" style="border-radius:14px;border:1px solid var(--line);margin-top:12px;height:170px"><svg viewBox="0 0 360 170" width="100%" height="100%">
+        <polygon points="180,20 320,90 180,160 40,90" fill="var(--floor)" stroke="var(--floor-line)" stroke-width="2"/>
+        <!-- filled slots -->
+        <polygon points="150,72 190,92 150,112 110,92" fill="var(--c-social)" opacity=".9"/>
+        <polygon points="210,80 245,98 210,116 175,98" fill="var(--c-social)" opacity=".7"/>
+        <!-- empty slots (dashed) -->
+        <g stroke="var(--floor-line)" stroke-width="1.6" stroke-dasharray="4 5" fill="none">
+          <polygon points="160,52 192,68 160,84 128,68"/>
+          <polygon points="230,108 258,122 230,136 202,122"/>
+          <polygon points="118,108 146,122 118,136 90,122"/>
+        </g>
+        <text x="160" y="56" font-size="11" text-anchor="middle" fill="#9ca3af">＋</text>
+        <text x="230" y="126" font-size="11" text-anchor="middle" fill="#9ca3af">＋</text>
+      </svg></div>
+      <div class="drawer">
+        <div class="dl">待擺抽屜 · 客廳（已解鎖）</div>
+        <div class="tray">
+          <div class="item">🛋</div><div class="item">📺</div><div class="item">🪑</div>
+          <div class="item locked">🎉</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>解鎖回饋</h3>
+      <p>完成習慣使某面向跨過門檻 → 解鎖新家具。<b>解鎖即恭喜、不強制擺</b>：自動進「待擺抽屜」第一個空格先放著（不逼使用者一定要手動才看得到），之後可自由調整。</p>
+      <div class="toast"><span class="e">🎉</span> 解鎖新家具：沙發（客廳）</div>
+      <p style="margin-top:14px">零懲罰：漏天不掉家具，只是今天沒解鎖新的。<b>珍惜驅動 ≠ 恐懼驅動。</b></p>
+      <div class="legend">
+        <span><span class="rank r0" style="width:auto;padding:2px 8px">空屋</span></span>
+        <span><span class="rank r1" style="width:auto;padding:2px 8px">起步</span></span>
+        <span><span class="rank r2" style="width:auto;padding:2px 8px">溫馨小窩</span></span>
+        <span><span class="rank r3" style="width:auto;padding:2px 8px">理想之家</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>實作備註</b>：等距房間＝純 SVG（零外部資產或最小化），確定性佈局（seed = hash(zone+slot)，禁 render 期 Math.random）。家具解鎖純從完成數衍生（零 schema，學旅程世界）；只有「擺位」存 DB（<code>HomeFurniturePlacement</code>，slot-based）。色票重用 <code>CATEGORY_CONFIG</code>（lib 已納入 tailwind content 掃描）。分階段 H1（世界切換基礎＋選擇器，跨 session 共用，須先對齊）→ H2（唯讀房間）→ H3（手動佈置）→ H4（打磨）。<br>
+    對應 spec：<code>docs/superpowers/specs/2026-06-03-home-world-design.md</code>
+  </div>
+</div>
+</body>
+</html>
