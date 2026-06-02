@@ -27,6 +27,7 @@ import ProfileModal from './ProfileModal';
 import Avatar from './Avatar';
 import AspirationPicker from './AspirationPicker';
 import AspirationRecommendationPanel from './AspirationRecommendationPanel';
+import { groupTasksByAspiration } from '@/lib/aspirations';
 import FocusMapModal from './FocusMapModal';
 import JourneyView from './journey/JourneyView';
 
@@ -945,6 +946,10 @@ const MainApp = () => {
     const completedDailyTasks = dailyTasks.filter(t =>
         isCompletedOnDate(t, selectedDate) && !completingTaskIds.has(t.id)
     );
+    // 2026-06-03 — group the incomplete list by aspiration so each group can
+    // show the aspiration's identity ("我是個…") as its header. Only the
+    // incomplete tasks are grouped; the completed collapsible stays flat.
+    const incompleteGroups = groupTasksByAspiration(incompleteDailyTasks);
     const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
     const todayStr = getTodayStr();
     const isSelectedToday = selectedDate === todayStr;
@@ -1271,23 +1276,53 @@ const MainApp = () => {
                                             <span className="w-1 h-5 bg-emerald-500 rounded-full"></span> {dailySectionLabel}
                                         </h3>
                                         <div className="space-y-3">
-                                            {/* Incomplete tasks — prominent, always visible.
-                                                Each card is wrapped in an exit-animation div so
-                                                that when a binary task is completed, the wrapper
-                                                collapses max-height + fades opacity → the cards
-                                                below naturally slide up (CSS layout reflow). */}
-                                            {incompleteDailyTasks.map(task => {
-                                                const isExiting = exitingTaskIds.has(task.id);
+                                            {/* Incomplete tasks — grouped by aspiration (2026-06-03).
+                                                Each group shows the aspiration's identity ("我是個…")
+                                                as a header above its habits. The unlinked group
+                                                (aspiration === null) renders 其他習慣 with no identity.
+                                                When there's only the single unlinked group we skip
+                                                the header entirely so the flat list looks unchanged.
+                                                Each card keeps its exit-animation wrapper so a
+                                                completed binary task collapses + the rest slide up. */}
+                                            {incompleteGroups.map((group, gi) => {
+                                                const showHeader = !(incompleteGroups.length === 1 && !group.aspiration);
                                                 return (
-                                                    <div
-                                                        key={task.id}
-                                                        className={`overflow-hidden transition-all duration-300 ease-out ${
-                                                            isExiting
-                                                                ? 'max-h-0 opacity-0 pointer-events-none'
-                                                                : 'max-h-[640px] opacity-100'
-                                                        }`}
-                                                    >
-                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} />
+                                                    <div key={group.key} className={gi > 0 ? 'pt-2' : ''}>
+                                                        {showHeader && (
+                                                            <div className="mb-2 px-0.5">
+                                                                {group.aspiration?.identity ? (
+                                                                    <>
+                                                                        <p className="text-sm font-bold text-emerald-700 leading-tight">
+                                                                            {group.aspiration.identity}
+                                                                        </p>
+                                                                        <p className="text-[11px] text-gray-400 leading-tight mt-0.5">
+                                                                            為了「{group.aspiration.text}」
+                                                                        </p>
+                                                                    </>
+                                                                ) : (
+                                                                    <p className="text-xs font-bold text-gray-400 tracking-wide">
+                                                                        {group.aspiration ? group.aspiration.text : '其他習慣'}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                        <div className="space-y-3">
+                                                            {group.tasks.map(task => {
+                                                                const isExiting = exitingTaskIds.has(task.id);
+                                                                return (
+                                                                    <div
+                                                                        key={task.id}
+                                                                        className={`overflow-hidden transition-all duration-300 ease-out ${
+                                                                            isExiting
+                                                                                ? 'max-h-0 opacity-0 pointer-events-none'
+                                                                                : 'max-h-[640px] opacity-100'
+                                                                        }`}
+                                                                    >
+                                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} />
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
                                                     </div>
                                                 );
                                             })}

@@ -132,7 +132,6 @@ export async function POST(request) {
                             title: t.title,
                             details: t.details || '',
                             cue: t.defaultCue || t.cue || null,
-                            identity: t.defaultIdentity || t.identity || null,
                             type: t.type || 'binary',
                             frequency: t.frequency || 'daily',
                             time: '09:00',

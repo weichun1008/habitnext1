@@ -2,13 +2,17 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 // PATCH /api/aspirations/:id
-// body: { status?, achievedAt? }
+// body: { status?, achievedAt?, identity? }
 export async function PATCH(request, { params }) {
     try {
         const body = await request.json();
-        const { status, achievedAt } = body;
+        const { status, achievedAt, identity } = body;
 
         const data = {};
+        // identity (2026-06-03) — empty string / whitespace clears it.
+        if (identity !== undefined) {
+            data.identity = typeof identity === 'string' && identity.trim() ? identity.trim() : null;
+        }
         if (status !== undefined) {
             if (!['active', 'achieved', 'archived'].includes(status)) {
                 return NextResponse.json({ error: 'invalid status' }, { status: 400 });

@@ -107,6 +107,10 @@ describe('AspirationPicker — preset POST', () => {
         );
         const btn = await screen.findByText('想要 Y');
         fireEvent.click(btn.closest('button'));
+        // 2026-06-03 — selecting a NEW aspiration advances to the identity
+        // sub-step; the POST only fires after the user commits it.
+        const skipBtn = await screen.findByText('跳過');
+        fireEvent.click(skipBtn);
         await waitFor(() => expect(onSelectAspiration).toHaveBeenCalledWith(created));
         // Second fetch was the POST.
         const postCall = global.fetch.mock.calls[1];
@@ -158,6 +162,8 @@ describe('AspirationPicker — preset POST', () => {
         );
         const btn = await screen.findByText('想要 X');
         fireEvent.click(btn.closest('button'));
+        // Advance through the identity sub-step to trigger the (failing) POST.
+        fireEvent.click(await screen.findByText('跳過'));
         expect(await screen.findByText(/新增嚮往失敗/)).toBeInTheDocument();
     });
 });
@@ -187,6 +193,8 @@ describe('AspirationPicker — custom mode', () => {
         fireEvent.change(screen.getByRole('combobox'), { target: { value: '心靈' } });
         expect(goBtn).not.toBeDisabled();
         fireEvent.click(goBtn);
+        // Custom create also passes through the identity sub-step before POST.
+        fireEvent.click(await screen.findByText('跳過'));
         await waitFor(() => expect(onSelectAspiration).toHaveBeenCalledWith(created));
         const postCall = global.fetch.mock.calls[1];
         const body = JSON.parse(postCall[1].body);

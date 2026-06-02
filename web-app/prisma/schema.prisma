@@ -106,7 +106,8 @@ model Task {
   title     String
   details   String?
   cue       String? // 錨點，例「起床後」(BJ Fogg ABC anchor)
-  identity  String? // ★ 新增 — 身分宣告「我是個照顧週期身體的人」
+  // identity removed (2026-06-03) — moved to Aspiration.identity. Identity is
+  // an aspiration-level commitment, surfaced as a daily-view group header.
   type      String // binary, quantitative, checklist
   category  String
   frequency String // daily, weekly, monthly (Display Group)
@@ -281,6 +282,10 @@ model Aspiration {
 
   text   String // "想要快速入睡、睡眠品質好"
   domain String? // GENESIS+IO domain key — 推薦來源
+
+  // ★ 2026-06-03 — identity moved here from Task. Set once at aspiration
+  // creation, surfaced as the daily-view group header above its habits.
+  identity String? // "我是個重視睡眠的人"
 
   status     String    @default("active") // active | achieved | archived
   achievedAt DateTime?

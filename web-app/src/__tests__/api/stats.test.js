@@ -51,7 +51,7 @@ describe('GET /api/stats', () => {
             { taskId: 'A', date: '2026-05-20', completed: true },
         ]);
         prisma.task.findMany.mockResolvedValue([
-            { id: 'A', title: 'Drink water', category: '飲食', identity: '我是個照顧自己身體的人' },
+            { id: 'A', title: 'Drink water', category: '飲食' },
         ]);
         prisma.habitCategory.findMany.mockResolvedValue([
             { name: '飲食', color: '#0ea5e9', icon: 'Apple', order: 4 },
@@ -77,7 +77,8 @@ describe('GET /api/stats', () => {
         expect(body.overall.todayCompleted).toBe(true);
         expect(body.topTaskStreaks).toHaveLength(1);
         expect(body.topTaskStreaks[0].taskId).toBe('A');
-        expect(body.topTaskStreaks[0].identity).toBe('我是個照顧自己身體的人');
+        // identity removed from the streak payload 2026-06-03 (moved to Aspiration)
+        expect(body.topTaskStreaks[0].identity).toBeUndefined();
     });
 
     test('queries DB scoped to userId with HEATMAP_DAYS cutoff', async () => {

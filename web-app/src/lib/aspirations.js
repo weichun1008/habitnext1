@@ -59,10 +59,45 @@ function getPersonalisedPresets(presets, user) {
   return result;
 }
 
+// Daily-view grouping (2026-06-03). Identity moved Task → Aspiration, so the
+// daily list groups habits under their aspiration and shows the aspiration's
+// identity as the group header. A task's "primary" aspiration is the earliest
+// link (the API returns task.aspirationHabits ordered by createdAt asc).
+//
+// Input: an array of tasks, each optionally carrying
+//   task.aspirationHabits: [{ aspiration: { id, text, identity, ... } }, ...]
+// Output: an ordered array of groups
+//   [{ key, aspiration: {id,text,identity}|null, tasks: [...] }, ...]
+// Group order = first appearance while scanning the (already-sorted) task
+// list, so groups follow the caller's task ordering. The unlinked bucket
+// (aspiration === null, key === '__none__') is always pushed last.
+function groupTasksByAspiration(tasks) {
+  if (!Array.isArray(tasks)) return [];
+  const NONE = '__none__';
+  const order = [];
+  const byKey = new Map();
+
+  for (const task of tasks) {
+    const primary = task?.aspirationHabits?.[0]?.aspiration || null;
+    const key = primary?.id || NONE;
+    if (!byKey.has(key)) {
+      byKey.set(key, { key, aspiration: primary, tasks: [] });
+      order.push(key);
+    }
+    byKey.get(key).tasks.push(task);
+  }
+
+  // Stable order, but the unlinked bucket always trails the named aspirations.
+  const named = order.filter(k => k !== NONE).map(k => byKey.get(k));
+  const none = byKey.has(NONE) ? [byKey.get(NONE)] : [];
+  return [...named, ...none];
+}
+
 module.exports = {
   GENESIS_DOMAINS,
   findDuplicateAspiration,
   filterRecommendedTemplates,
   filterRecommendedHabits,
   getPersonalisedPresets,
+  groupTasksByAspiration,
 };
