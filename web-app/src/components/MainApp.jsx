@@ -1039,6 +1039,7 @@ const MainApp = () => {
                     }}
                     onOpenBadges={() => setCurrentView('badges')}
                     onOpenExplore={() => setIsTemplateExplorerOpen(true)}
+                    onOpenJourney={() => { setCurrentView('journey'); fetchJourney(user?.id); }}
                     user={user}
                     onOpenProfile={() => setIsProfileModalOpen(true)}
                     selectedDate={selectedDate}

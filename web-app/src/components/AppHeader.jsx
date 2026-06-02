@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Calendar, Award, Plus, X, BookOpen, BarChart3 } from 'lucide-react';
+import { Calendar, Award, Plus, X, BookOpen, BarChart3, Map } from 'lucide-react';
 import Avatar from './Avatar';
 import WeekStrip from './WeekStrip';
 
@@ -11,6 +11,7 @@ const AppHeader = ({
     onOpenAddFlow,
     onOpenBadges,
     onOpenExplore,
+    onOpenJourney,
     user,
     onOpenProfile,
     className,
@@ -68,6 +69,9 @@ const AppHeader = ({
                             </button>
                             <button onClick={() => onViewChange('stats')} className="w-8 h-8 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center hover:bg-purple-100 transition-colors">
                                 <BarChart3 size={20} />
+                            </button>
+                            <button onClick={onOpenJourney} className="w-8 h-8 bg-teal-50 text-teal-600 rounded-lg flex items-center justify-center hover:bg-teal-100 transition-colors" aria-label="旅程">
+                                <Map size={20} />
                             </button>
                             <button onClick={onOpenBadges} className="w-8 h-8 bg-gray-100 text-yellow-600 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors">
                                 <Award size={20} />
