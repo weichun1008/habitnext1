@@ -7,7 +7,26 @@ export function cn(...inputs) {
 }
 
 export const generateId = () => Math.random().toString(36).substr(2, 9);
-export const getTodayStr = () => new Date().toISOString().split('T')[0];
+
+// Format a Date as a LOCAL calendar day 'yyyy-mm-dd'.
+//
+// ⚠️ Do NOT use `date.toISOString().split('T')[0]` for "what day is it for
+// the user" — toISOString is UTC, so for UTC+8 (Taiwan) the date is wrong for
+// the 8 hours after local midnight (00:00–08:00 local still reads as the
+// previous UTC day). That caused completions made late in the evening to look
+// like they'd "jumped to today" after crossing midnight (2026-06-03 bug).
+// History dates are the user's LOCAL calendar days, so every "today / yesterday
+// / this day" derivation must be local too.
+export const toLocalDateStr = (date) => {
+    const d = date instanceof Date ? date : new Date(date);
+    if (isNaN(d.getTime())) return '';
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+};
+
+export const getTodayStr = () => toLocalDateStr(new Date());
 
 // Date comparison helpers for the date-navigation feature on the daily view.
 // Both args are 'yyyy-mm-dd' strings; string comparison is reliable because
@@ -49,13 +68,13 @@ export const getWeekRange = (dateStr) => {
     const curr = new Date(dateStr);
     const firstDay = new Date(curr.setDate(curr.getDate() - curr.getDay())); // Sunday
     const lastDay = new Date(curr.setDate(curr.getDate() + 6));
-    return { start: firstDay.toISOString().split('T')[0], end: lastDay.toISOString().split('T')[0] };
+    return { start: toLocalDateStr(firstDay), end: toLocalDateStr(lastDay) };
 }
 
 export const getMonthRange = (dateStr) => {
     const curr = new Date(dateStr);
-    const firstDay = new Date(curr.getFullYear(), curr.getMonth(), 1).toISOString().split('T')[0];
-    const lastDay = new Date(curr.getFullYear(), curr.getMonth() + 1, 0).toISOString().split('T')[0];
+    const firstDay = toLocalDateStr(new Date(curr.getFullYear(), curr.getMonth(), 1));
+    const lastDay = toLocalDateStr(new Date(curr.getFullYear(), curr.getMonth() + 1, 0));
     return { start: firstDay, end: lastDay };
 }
 
@@ -132,7 +151,7 @@ export const calculateStats = (task) => {
     // Current Streak
     let streak = 0;
     const today = getTodayStr();
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    const yesterday = toLocalDateStr(new Date(Date.now() - 86400000));
 
     // Check if completed today or yesterday to keep streak alive
     let currentCheck = today;
@@ -145,7 +164,7 @@ export const calculateStats = (task) => {
         let checkDate = new Date(currentCheck);
         while (true) {
             checkDate.setDate(checkDate.getDate() - 1);
-            const dateStr = checkDate.toISOString().split('T')[0];
+            const dateStr = toLocalDateStr(checkDate);
             if (history[dateStr]) {
                 streak++;
             } else {
@@ -181,7 +200,7 @@ export const calculateStats = (task) => {
     }
 
     while (true) {
-        const dStr = cursor.toISOString().split('T')[0];
+        const dStr = toLocalDateStr(cursor);
         if (history[dStr]) {
             streak++;
             cursor.setDate(cursor.getDate() - 1);

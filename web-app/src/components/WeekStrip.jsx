@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { getTodayStr } from '@/lib/utils';
+import { getTodayStr, toLocalDateStr } from '@/lib/utils';
 
 // WeekStrip — the Mon-Sun date selector shown on the daily view.
 //
@@ -33,7 +33,7 @@ const computeWeek = (anchorDate) => {
     return WEEK_DAY_LABELS.map((label, i) => {
         const d = new Date(monday);
         d.setDate(monday.getDate() + i);
-        const dateStr = d.toISOString().split('T')[0];
+        const dateStr = toLocalDateStr(d); // local, not UTC — see utils.toLocalDateStr
         return {
             label,
             dateStr,

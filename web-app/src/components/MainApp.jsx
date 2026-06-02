@@ -13,7 +13,7 @@ import DashboardSummaryCard from './DashboardSummaryCard';
 import HabitCalendar from './HabitCalendar';
 import TaskDetailModal from './TaskDetailModal';
 import LoginModal from './LoginModal';
-import { generateId, getTodayStr, isTaskDueToday, isCompletedOnDate } from '@/lib/utils';
+import { generateId, getTodayStr, toLocalDateStr, isTaskDueToday, isCompletedOnDate } from '@/lib/utils';
 import { cueOrderFor } from '@/lib/anchors';
 import { getCachedPosition } from '@/lib/geolocation';
 import { nearestCity } from '@/lib/cities';
@@ -965,8 +965,8 @@ const MainApp = () => {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const ds = selectedDate;
-        if (ds === tomorrow.toISOString().split('T')[0]) return '明日行程';
-        if (ds === yesterday.toISOString().split('T')[0]) return '昨日行程';
+        if (ds === toLocalDateStr(tomorrow)) return '明日行程';
+        if (ds === toLocalDateStr(yesterday)) return '昨日行程';
         return `${m}/${day} 行程`;
     })();
 
