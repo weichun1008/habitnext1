@@ -2,11 +2,12 @@ import { layoutCity, VIEW_W, VIEW_H } from '@/lib/journeyWorld';
 import DomainLandmark, { LANDMARKS } from '@/components/journey/landmarks/DomainLandmark';
 import GenericBuilding from '@/components/journey/landmarks/GenericBuilding';
 import MemoryPin from '@/components/journey/landmarks/MemoryPin';
+import PolaroidPin from '@/components/journey/landmarks/PolaroidPin';
 
 const CX = 160, CY = 134;
 const RIVER_TIERS = new Set(['city', 'metropolis', 'megacity']);
 
-export default function CityScene({ cityData }) {
+export default function CityScene({ cityData, userId }) {
   const nodes = layoutCity(cityData);
   const sorted = [...nodes].sort((a, b) => a.y - b.y);
 
@@ -16,9 +17,9 @@ export default function CityScene({ cityData }) {
   const pinNodes = pins.slice(0, 5).map((pin, i) => {
     const anchor = flagships[i % Math.max(1, flagships.length)];
     if (anchor) {
-      return { x: anchor.x + (i % 2 === 0 ? -14 : 14), y: anchor.y - 30 };
+      return { pin, x: anchor.x + (i % 2 === 0 ? -14 : 14), y: anchor.y - 30 };
     }
-    return { x: CX - 48 + i * 24, y: CY - 50 };
+    return { pin, x: CX - 48 + i * 24, y: CY - 50 };
   });
 
   return (
@@ -78,9 +79,13 @@ export default function CityScene({ cityData }) {
         );
       })}
 
-      {pinNodes.map((p, i) => (
+      {pinNodes.map(({ pin, x, y }, i) => (
         <g data-kind="pin-slot" key={`pin-${i}`}>
-          <MemoryPin x={p.x} y={p.y} />
+          {pin.hasPhoto ? (
+            <PolaroidPin id={pin.id} userId={userId} x={x} y={y} scale={1} />
+          ) : (
+            <MemoryPin x={x} y={y} />
+          )}
         </g>
       ))}
     </svg>

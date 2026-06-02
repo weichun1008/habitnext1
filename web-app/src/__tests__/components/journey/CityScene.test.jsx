@@ -7,3 +7,8 @@ it('渲染地面 + flagship + building 數量正確', () => {
   expect(container.querySelectorAll('[data-kind="flagship"]').length).toBe(1);
   expect(container.querySelectorAll('[data-kind="building"]').length).toBe(2);
 });
+it('hasPhoto pin → 渲染 PolaroidPin', () => {
+  const withPhoto = { ...cityData, pins:[{ id:'h1', date:'06-01', domain:'飲食', title:'拉麵', hasPhoto:true }] };
+  const { container } = render(<CityScene cityData={withPhoto} userId="u1" />);
+  expect(container.querySelectorAll('[data-kind="polaroid-pin"]').length).toBe(1);
+});

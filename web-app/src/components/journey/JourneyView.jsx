@@ -6,20 +6,20 @@ import CityInfoPanel from '@/components/journey/CityInfoPanel';
 import WorldOverview from '@/components/journey/WorldOverview';
 import JourneyEmptyState from '@/components/journey/JourneyEmptyState';
 
-function CityDetail({ cityData }) {
+function CityDetail({ cityData, userId }) {
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-start">
       <div className="w-full md:flex-1">
-        <CityScene cityData={cityData} />
+        <CityScene cityData={cityData} userId={userId} />
       </div>
       <div className="w-full md:w-80 md:shrink-0">
-        <CityInfoPanel cityData={cityData} />
+        <CityInfoPanel cityData={cityData} userId={userId} />
       </div>
     </div>
   );
 }
 
-export default function JourneyView({ data, trackLocationOn, loading, onOpenSettings }) {
+export default function JourneyView({ data, trackLocationOn, loading, onOpenSettings, userId }) {
   const cities = data?.cities || [];
   const [selectedCity, setSelectedCity] = useState(data?.homeCity || cities[0]?.city);
 
@@ -40,7 +40,7 @@ export default function JourneyView({ data, trackLocationOn, loading, onOpenSett
   if (cities.length === 1) {
     return (
       <div className="p-4">
-        <CityDetail cityData={cities[0]} />
+        <CityDetail cityData={cities[0]} userId={userId} />
       </div>
     );
   }
@@ -71,7 +71,7 @@ export default function JourneyView({ data, trackLocationOn, loading, onOpenSett
 
       <WorldOverview cities={cities} onSelectCity={setSelectedCity} />
 
-      <CityDetail cityData={active} />
+      <CityDetail cityData={active} userId={userId} />
     </div>
   );
 }
