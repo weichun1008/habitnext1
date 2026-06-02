@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Search, Edit2, Trash2, Archive, RotateCcw, X, Save, Settings, FolderOpen, Link, BookOpen } from 'lucide-react';
 import IconRenderer from '@/components/IconRenderer';
 import { CATEGORY_CONFIG, domainToIconKey } from '@/lib/constants';
+import { LIFE_MOMENTS_GROUPED } from '@/lib/anchors';
 import HabitInsightsModal from './components/HabitInsightsModal';
 
 const TASK_TYPES = [
@@ -40,6 +41,7 @@ const defaultFormData = {
     description: '',
     category: '',
     icon: 'star',
+    defaultCue: '',
     difficulties: {
         beginner: { ...defaultDifficultyConfig },
         intermediate: { ...defaultDifficultyConfig },
@@ -116,6 +118,7 @@ export default function HabitsPage() {
             description: habit.description || '',
             category: habit.category || '',
             icon: habit.icon || domainToIconKey(habit.category),
+            defaultCue: habit.defaultCue || '',
             difficulties: {
                 beginner: { ...defaultDifficultyConfig, ...difficulties.beginner },
                 intermediate: { ...defaultDifficultyConfig, ...difficulties.intermediate },
@@ -395,6 +398,26 @@ export default function HabitsPage() {
                                         value={formData.description}
                                         onChange={e => setFormData({ ...formData, description: e.target.value })}
                                     />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="admin-label">預設錨點（建議的養成時機）</label>
+                                    <select
+                                        className="admin-input"
+                                        value={formData.defaultCue}
+                                        onChange={e => setFormData({ ...formData, defaultCue: e.target.value })}
+                                    >
+                                        <option value="">（無預設 — 由使用者自選）</option>
+                                        {LIFE_MOMENTS_GROUPED.map(group => (
+                                            <optgroup key={group.key} label={group.title}>
+                                                {group.items.map(m => (
+                                                    <option key={m.id} value={m.label}>{m.label}</option>
+                                                ))}
+                                            </optgroup>
+                                        ))}
+                                    </select>
+                                    <p className="text-[11px] text-gray-500 mt-1">
+                                        使用者加入此習慣時，錨點選擇器會預選此值（仍可自行更改）。
+                                    </p>
                                 </div>
                             </div>
 
