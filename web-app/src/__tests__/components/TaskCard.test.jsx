@@ -4,6 +4,12 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TaskCard from '@/components/TaskCard';
+import { getTodayStr } from '@/lib/utils';
+
+// Key history/progress by the SAME local-date the component reads (getTodayStr
+// is local as of the 2026-06-03 timezone fix). Using new Date().toISOString()
+// here would key by UTC and diverge from the component in any non-UTC tz.
+const TODAY = getTodayStr();
 
 describe('TaskCard', () => {
     const mockBinaryTask = {
@@ -54,7 +60,7 @@ describe('TaskCard', () => {
         const taskWithProgress = {
             ...mockQuantitativeTask,
             dailyProgress: {
-                [new Date().toISOString().split('T')[0]]: { value: 800, completed: false },
+                [TODAY]: { value: 800, completed: false },
             },
         };
 
@@ -173,7 +179,7 @@ describe('TaskCard', () => {
             const partial = {
                 ...mockChecklistTask,
                 history: {
-                    [new Date().toISOString().split('T')[0]]: {
+                    [TODAY]: {
                         subtaskCompletions: { s1: true, s2: true },
                     },
                 },
