@@ -4,6 +4,12 @@ module.exports = {
         "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+        // lib/ holds class-token strings consumed by components (e.g.
+        // evidenceStrength.js TONE_CLASSES → bg-slate-500 / bg-slate-300 …).
+        // Without this glob those classes are purged and render transparent —
+        // the "證據力 初步" badge's signal bars vanished because the slate
+        // tokens appeared nowhere a .jsx scan would catch.
+        "./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     theme: {
         extend: {
