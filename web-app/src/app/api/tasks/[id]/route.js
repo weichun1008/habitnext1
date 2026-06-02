@@ -38,7 +38,7 @@ export async function PUT(request, { params }) {
         // 2. Handle History Update (if provided)
         // historyUpdate format: { date: '2023-01-01', completed: true, value: 10 }
         if (historyUpdate) {
-            const { date, completed, value, subtaskCompletions, lat, lng, city, photoUrl, memoNote } = historyUpdate;
+            const { date, completed, value, subtaskCompletions, lat, lng, city, photoUrl, memoNote, world } = historyUpdate;
 
             // Slice O — only write location fields when provided. A normal
             // completion without location (feature off / denied) leaves any
@@ -55,6 +55,13 @@ export async function PUT(request, { params }) {
             if (photoUrl !== undefined) memWrite.photoUrl = photoUrl;
             if (memoNote !== undefined) memWrite.memoNote = memoNote;
 
+            // World Switch — stamp the active world at completion time. Mirror
+            // locWrite/memWrite: only write when provided. world may be null
+            // (user hasn't picked a world yet) → that's the shared prologue,
+            // a valid value, so we still write it through.
+            const worldWrite = {};
+            if (world !== undefined) worldWrite.world = world;
+
             // Upsert history record
             await prisma.taskHistory.upsert({
                 where: {
@@ -68,7 +75,8 @@ export async function PUT(request, { params }) {
                     value,
                     subtaskCompletions: subtaskCompletions ?? null,
                     ...locWrite,
-                    ...memWrite
+                    ...memWrite,
+                    ...worldWrite
                 },
                 create: {
                     taskId: id,
@@ -77,7 +85,8 @@ export async function PUT(request, { params }) {
                     value,
                     subtaskCompletions: subtaskCompletions ?? null,
                     ...locWrite,
-                    ...memWrite
+                    ...memWrite,
+                    ...worldWrite
                 }
             });
         }

@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 export async function PUT(request) {
     try {
         const body = await request.json();
-        const { userId, nickname, phone, avatar, oldPassword, newPassword, trackLocation } = body;
+        const { userId, nickname, phone, avatar, oldPassword, newPassword, trackLocation, activeWorld } = body;
 
         if (!userId) {
             return NextResponse.json({ error: 'User ID required' }, { status: 400 });
@@ -27,6 +27,18 @@ export async function PUT(request) {
         // Slice O — opt-in location tracking flag
         if (trackLocation !== undefined) {
             updateData.trackLocation = !!trackLocation;
+        }
+
+        // World Switch — set the active gamification world. Accept the 3 valid
+        // keys, or null (reset to "unpicked" → first-time welcome). Reject
+        // anything else so a typo can't strand the user in a non-rendering world.
+        if (activeWorld !== undefined) {
+            const VALID_WORLDS = ['home', 'figure', 'journey'];
+            if (activeWorld === null || VALID_WORLDS.includes(activeWorld)) {
+                updateData.activeWorld = activeWorld;
+            } else {
+                return NextResponse.json({ error: 'invalid activeWorld' }, { status: 400 });
+            }
         }
 
         // Update nickname

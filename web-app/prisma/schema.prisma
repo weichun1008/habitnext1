@@ -24,6 +24,7 @@ model User {
   sleepTypeKey String? // ★ 新增 — 'stress' | 'rhythm' | 'metabolic' | 'hormone'
   identities   String[]     @default([]) // ★ Slice K — 多身分並存（手動 / Profile 加；v1 不自動加冕）
   trackLocation Boolean     @default(false) // ★ Slice O — opt-in 記錄完成地點
+  activeWorld  String?      // ★ World Switch — null=還沒選世界（首次迎賓）；選後 'home' | 'figure' | 'journey'
   isActive     Boolean      @default(true)
   createdAt    DateTime     @default(now())
   tasks        Task[]
@@ -165,6 +166,8 @@ model TaskHistory {
   // ★ Slice Q — 美食回憶照片（opt-in）。存 Vercel Blob URL 字串；bytes 不在 DB。null = 未附。
   photoUrl           String?
   memoNote           String?  // 選填短 caption
+  // ★ World Switch — 完成當下 user.activeWorld 的快照；null = 此機制上線前 / 選世界前（＝共同序章）。
+  world              String?
 
   @@unique([taskId, date])
 }
