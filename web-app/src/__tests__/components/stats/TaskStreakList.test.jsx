@@ -19,9 +19,11 @@ describe('TaskStreakList', () => {
         expect(screen.getByText('最長 12')).toBeInTheDocument();
     });
 
-    test('renders identity subtitle when provided', () => {
+    // identity subtitle removed 2026-06-03 (identity moved to Aspiration); the
+    // streak list now shows title + streak only.
+    test('does not render a per-task identity subtitle', () => {
         render(<TaskStreakList topTaskStreaks={sample} />);
-        expect(screen.getByText('我是個照顧自己身體的人')).toBeInTheDocument();
+        expect(screen.queryByText('我是個照顧自己身體的人')).not.toBeInTheDocument();
     });
 
     test('renders nothing when list is empty', () => {

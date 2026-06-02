@@ -37,7 +37,7 @@ export async function GET(request) {
             }),
             prisma.task.findMany({
                 where: { userId },
-                select: { id: true, title: true, category: true, identity: true },
+                select: { id: true, title: true, category: true },
             }),
             prisma.habitCategory.findMany({
                 select: { name: true, color: true, icon: true, order: true },

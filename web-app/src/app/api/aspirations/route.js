@@ -35,7 +35,7 @@ export async function GET(request) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { userId, text, domain, source } = body;
+        const { userId, text, domain, source, identity } = body;
 
         if (!userId || !text || typeof text !== 'string' || !text.trim()) {
             return NextResponse.json({ error: 'userId + text required' }, { status: 400 });
@@ -47,6 +47,8 @@ export async function POST(request) {
                 text: text.trim(),
                 domain: domain || null,
                 source: source === 'preset' ? 'preset' : 'user',
+                // identity moved here from Task (2026-06-03); optional.
+                identity: typeof identity === 'string' && identity.trim() ? identity.trim() : null,
             },
         });
         return NextResponse.json(created);

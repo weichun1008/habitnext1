@@ -166,7 +166,6 @@ function computeTopTaskStreaks(history, tasks, todayStr) {
     results.push({
       taskId: task.id,
       title: task.title,
-      identity: task.identity || null,
       currentStreak: cur,
       longestStreak: lon,
     });

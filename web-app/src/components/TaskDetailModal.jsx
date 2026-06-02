@@ -97,11 +97,7 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 ${config.bg}`}>
                             <IconRenderer category={task.category} size={28} />
                         </div>
-                        {task.identity && (
-                            <p className="text-xs font-medium text-gray-500 mb-1">
-                                {task.identity}
-                            </p>
-                        )}
+                        {/* identity removed 2026-06-03 — moved to aspiration */}
                         {task.cue && (
                             <p className="text-sm font-medium text-emerald-600 mb-1 flex items-center gap-1">
                                 <span>{task.cue}</span>

@@ -1,7 +1,11 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { Loader, Check, Archive, Trash2 } from 'lucide-react';
+import { Loader, Check, Archive, Trash2, Pencil, X } from 'lucide-react';
+
+// identity is now an aspiration-level field (2026-06-03). Cap matches the
+// per-habit IdentityPicker's old limit so the data shape stays consistent.
+const IDENTITY_MAX = 40;
 
 // MyAspirationsTab — Slice K Task 8.
 // Spec: docs/superpowers/specs/2026-05-23-slice-K-aspiration-system-design.md §7
@@ -47,6 +51,9 @@ export default function MyAspirationsTab({ userId }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [pendingId, setPendingId] = useState(null); // aspirationId of in-flight PATCH/DELETE
+    // identity inline edit (2026-06-03)
+    const [editingId, setEditingId] = useState(null);   // aspirationId being edited
+    const [editingText, setEditingText] = useState('');
 
     const load = useCallback(async () => {
         if (!userId) return;
@@ -83,6 +90,38 @@ export default function MyAspirationsTab({ userId }) {
         } catch (err) {
             console.error('[MyAspirationsTab] patch failed:', err);
             setError('更新嚮往失敗');
+        } finally {
+            setPendingId(null);
+        }
+    };
+
+    const beginEditIdentity = (a) => {
+        setEditingId(a.id);
+        setEditingText(a.identity || '');
+        setError(null);
+    };
+
+    const cancelEditIdentity = () => {
+        setEditingId(null);
+        setEditingText('');
+    };
+
+    const saveIdentity = async (id) => {
+        setPendingId(id);
+        setError(null);
+        try {
+            const res = await fetch(`/api/aspirations/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ identity: editingText.trim() }),
+            });
+            if (!res.ok) throw new Error(`status ${res.status}`);
+            setEditingId(null);
+            setEditingText('');
+            await load();
+        } catch (err) {
+            console.error('[MyAspirationsTab] save identity failed:', err);
+            setError('更新身分失敗');
         } finally {
             setPendingId(null);
         }
@@ -144,6 +183,55 @@ export default function MyAspirationsTab({ userId }) {
                                 <p className="text-sm font-bold text-gray-800 leading-snug break-words">
                                     {a.text}
                                 </p>
+                                {/* Identity — the daily-view group header. Inline-editable. */}
+                                {editingId === a.id ? (
+                                    <div className="mt-1.5 flex items-center gap-1.5">
+                                        <input
+                                            type="text"
+                                            autoFocus
+                                            maxLength={IDENTITY_MAX}
+                                            value={editingText}
+                                            onChange={(e) => setEditingText(e.target.value.slice(0, IDENTITY_MAX))}
+                                            placeholder={`例：我是個重視睡眠的人（最多 ${IDENTITY_MAX} 字）`}
+                                            className="flex-1 min-w-0 px-2 py-1 border border-emerald-300 rounded-lg text-xs focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') saveIdentity(a.id);
+                                                if (e.key === 'Escape') cancelEditIdentity();
+                                            }}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => saveIdentity(a.id)}
+                                            disabled={isPending}
+                                            className="p-1 rounded-lg bg-emerald-500 text-white hover:bg-emerald-600 disabled:opacity-50"
+                                            aria-label="儲存身分"
+                                        >
+                                            <Check size={14} />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={cancelEditIdentity}
+                                            disabled={isPending}
+                                            className="p-1 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 disabled:opacity-50"
+                                            aria-label="取消"
+                                        >
+                                            <X size={14} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={() => beginEditIdentity(a)}
+                                        className="mt-1 flex items-center gap-1 text-left group"
+                                    >
+                                        {a.identity ? (
+                                            <span className="text-xs font-medium text-emerald-700">{a.identity}</span>
+                                        ) : (
+                                            <span className="text-xs text-gray-400">＋ 設定身分認同</span>
+                                        )}
+                                        <Pencil size={11} className="text-gray-300 group-hover:text-gray-500" />
+                                    </button>
+                                )}
                                 <p className="text-[11px] text-gray-500 mt-1 flex items-center gap-1.5 flex-wrap">
                                     {statusBadge(a.status)}
                                     <span>{a.domain || '未分類'}</span>

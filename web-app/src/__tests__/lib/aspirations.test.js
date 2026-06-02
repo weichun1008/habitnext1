@@ -4,6 +4,7 @@ const {
   filterRecommendedTemplates,
   filterRecommendedHabits,
   getPersonalisedPresets,
+  groupTasksByAspiration,
 } = require('../../lib/aspirations');
 
 describe('GENESIS_DOMAINS', () => {
@@ -109,5 +110,55 @@ describe('getPersonalisedPresets', () => {
   it('caps result at 5 entries', () => {
     const many = Array.from({ length: 20 }, (_, i) => ({ text: `t${i}`, domain: '壓力與睡眠' }));
     expect(getPersonalisedPresets(many, { sleepTypeKey: 'stress', typeKey: null }).length).toBeLessThanOrEqual(5);
+  });
+});
+
+describe('groupTasksByAspiration', () => {
+  const asp = (id, identity) => ({ id, text: `text-${id}`, identity });
+  const task = (id, aspiration) => ({
+    id,
+    aspirationHabits: aspiration ? [{ aspiration }] : [],
+  });
+
+  it('groups tasks under their primary (earliest-linked) aspiration', () => {
+    const a = asp('a1', '我是個重視睡眠的人');
+    const groups = groupTasksByAspiration([
+      task('t1', a),
+      task('t2', a),
+    ]);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].aspiration.id).toBe('a1');
+    expect(groups[0].tasks.map(t => t.id)).toEqual(['t1', 't2']);
+  });
+
+  it('uses the FIRST aspirationHabits entry as primary when a task has several', () => {
+    const a1 = asp('a1', 'id-1');
+    const a2 = asp('a2', 'id-2');
+    const t = { id: 't1', aspirationHabits: [{ aspiration: a1 }, { aspiration: a2 }] };
+    const groups = groupTasksByAspiration([t]);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].aspiration.id).toBe('a1');
+  });
+
+  it('preserves first-appearance order for named groups', () => {
+    const a1 = asp('a1', 'i1');
+    const a2 = asp('a2', 'i2');
+    const groups = groupTasksByAspiration([task('t1', a2), task('t2', a1), task('t3', a2)]);
+    expect(groups.map(g => g.aspiration.id)).toEqual(['a2', 'a1']);
+    expect(groups[0].tasks.map(t => t.id)).toEqual(['t1', 't3']);
+  });
+
+  it('puts unlinked tasks in a trailing __none__ group', () => {
+    const a1 = asp('a1', 'i1');
+    const groups = groupTasksByAspiration([task('t1', null), task('t2', a1), task('t3', null)]);
+    // named group first, unlinked bucket last regardless of input order
+    expect(groups.map(g => g.key)).toEqual(['a1', '__none__']);
+    expect(groups[1].aspiration).toBeNull();
+    expect(groups[1].tasks.map(t => t.id)).toEqual(['t1', 't3']);
+  });
+
+  it('returns [] for non-array input', () => {
+    expect(groupTasksByAspiration(null)).toEqual([]);
+    expect(groupTasksByAspiration(undefined)).toEqual([]);
   });
 });

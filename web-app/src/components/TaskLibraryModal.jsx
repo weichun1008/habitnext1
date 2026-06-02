@@ -7,7 +7,6 @@ import DomainGrid from './explore/DomainGrid';
 import HabitListView from './explore/HabitListView';
 import CategoryIcon from './explore/CategoryIcon';
 import AnchorPicker from './explore/AnchorPicker';
-import IdentityPicker from './explore/IdentityPicker';
 
 // Slice K (2026-05-26): added two optional props.
 //   - onOpenAspirationPicker: when set, an "✨ 從嚮往開始" entry button
@@ -18,6 +17,9 @@ import IdentityPicker from './explore/IdentityPicker';
 //     difficulty picker). After the user picks difficulty, the existing
 //     anchor → identity → emit flow runs unchanged. Used when the user
 //     picked a habit card from AspirationRecommendationPanel.
+//
+// 2026-06-03 — the per-habit identity step was removed; identity now lives on
+// the aspiration. The add flow is now domain → list → anchor → emit.
 const TaskLibraryModal = ({
     isOpen,
     onClose,
@@ -32,12 +34,11 @@ const TaskLibraryModal = ({
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
-    const [view, setView] = useState('domain');           // 'domain' | 'list' | 'search' | 'anchor' | 'identity'
+    const [view, setView] = useState('domain');           // 'domain' | 'list' | 'search' | 'anchor'
     const [selectedDomain, setSelectedDomain] = useState(null);
     const [selectedDifficulty, setSelectedDifficulty] = useState({});
     const [pendingHabit, setPendingHabit] = useState(null);    // { habit, diffKey } when entering anchor view
     const [pendingCue, setPendingCue] = useState(null);        // chosen anchor string (null = skip)
-    const [identityChoice, setIdentityChoice] = useState(null);
 
     // Slice L — candidate-pool feedback: after each save we keep the modal
     // open and show a transient toast + a persistent footer count. The
@@ -69,7 +70,6 @@ const TaskLibraryModal = ({
             setSearch('');
             setPendingHabit(null);
             setPendingCue(null);
-            setIdentityChoice(null);
             // Slice L — reset session-only feedback on each fresh open
             setToast(null);
             setSavedThisSession(0);
@@ -99,15 +99,10 @@ const TaskLibraryModal = ({
     };
 
     const handleBack = () => {
-        if (view === 'identity') {
-            setView('anchor');
-            return;
-        }
         if (view === 'anchor') {
             setView('list');
             setPendingHabit(null);
             setPendingCue(null);
-            setIdentityChoice(null);
             return;
         }
         setView('domain');
@@ -137,7 +132,7 @@ const TaskLibraryModal = ({
         setView('anchor');
     };
 
-    const emitPendingTask = (cue, identity) => {
+    const emitPendingTask = (cue) => {
         if (!pendingHabit) return;
         const { habit, diffKey } = pendingHabit;
         const config = habit.difficulties[diffKey];
@@ -145,7 +140,6 @@ const TaskLibraryModal = ({
             title: habit.name,
             details: habit.description || '',
             cue: cue || null,
-            identity: identity || null,
             type: config.type || 'binary',
             category: habit.category || 'star',
             frequency: config.recurrence?.type || 'daily',
@@ -165,7 +159,6 @@ const TaskLibraryModal = ({
         // re-opening the modal. Show a transient toast confirming the save.
         setPendingHabit(null);
         setPendingCue(null);
-        setIdentityChoice(null);
         setView('domain');
         setSelectedDomain(null);
         setSearch('');
@@ -209,9 +202,7 @@ const TaskLibraryModal = ({
             ? '搜尋結果'
             : view === 'anchor'
                 ? '選擇錨點'
-                : view === 'identity'
-                    ? '選擇身份'
-                    : '選擇習慣';
+                : '選擇習慣';
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">
@@ -242,7 +233,7 @@ const TaskLibraryModal = ({
                 </div>
 
                 {/* Search */}
-                {view !== 'anchor' && view !== 'identity' && (
+                {view !== 'anchor' && (
                     <div className="p-4 border-b border-gray-100">
                         <div className="relative">
                             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -278,7 +269,7 @@ const TaskLibraryModal = ({
                             <ChevronRight size={16} className="text-gray-400 flex-shrink-0" />
                         </button>
                     )}
-                    {view !== 'anchor' && view !== 'identity' && (
+                    {view !== 'anchor' && (
                         <button
                             onClick={onOpenCustomForm}
                             className="w-full bg-gray-800 text-white text-base font-bold py-3 rounded-xl shadow-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2"
@@ -311,20 +302,13 @@ const TaskLibraryModal = ({
                             />
                             <div className="flex gap-2 pt-2 border-t border-gray-100">
                                 <button
-                                    onClick={() => {
-                                        setPendingCue(null);
-                                        setIdentityChoice(null);
-                                        setView('identity');
-                                    }}
+                                    onClick={() => emitPendingTask(null)}
                                     className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition-colors"
                                 >
-                                    跳過此步驟
+                                    略過錨點，直接加入
                                 </button>
                                 <button
-                                    onClick={() => {
-                                        setIdentityChoice(null);
-                                        setView('identity');
-                                    }}
+                                    onClick={() => emitPendingTask(pendingCue)}
                                     disabled={!pendingCue}
                                     className={`flex-1 py-3 rounded-xl font-bold text-sm transition-colors ${
                                         pendingCue
@@ -332,39 +316,7 @@ const TaskLibraryModal = ({
                                             : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                                     }`}
                                 >
-                                    {pendingCue ? `確認（錨點：${pendingCue}）` : '請先選一個錨點'}
-                                </button>
-                            </div>
-                        </>
-                    ) : view === 'identity' ? (
-                        <>
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                                為什麼做這個習慣？(可跳過)
-                            </p>
-                            <IdentityPicker
-                                value={identityChoice}
-                                onChange={setIdentityChoice}
-                                userTypeKey={userTypeKey}
-                            />
-                            <div className="flex gap-3 pt-3 border-t border-gray-100">
-                                <button
-                                    type="button"
-                                    onClick={() => emitPendingTask(pendingCue, null)}
-                                    className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors"
-                                >
-                                    跳過
-                                </button>
-                                <button
-                                    type="button"
-                                    disabled={!identityChoice}
-                                    onClick={() => emitPendingTask(pendingCue, identityChoice)}
-                                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-colors ${
-                                        identityChoice
-                                            ? 'bg-emerald-500 text-white hover:bg-emerald-600'
-                                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                    }`}
-                                >
-                                    確認
+                                    {pendingCue ? `加入（錨點：${pendingCue}）` : '請先選一個錨點'}
                                 </button>
                             </div>
                         </>

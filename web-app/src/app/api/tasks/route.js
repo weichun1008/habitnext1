@@ -19,7 +19,20 @@ export async function GET(request) {
         if (status !== 'all') where.status = status;
         const tasks = await prisma.task.findMany({
             where,
-            include: { history: true },
+            include: {
+                history: true,
+                // 2026-06-03 — carry the aspiration link(s) so the daily view
+                // can group habits under their aspiration's identity header.
+                // ordered by createdAt so the client can pick the earliest as
+                // the task's "primary" aspiration deterministically.
+                aspirationHabits: {
+                    orderBy: { createdAt: 'asc' },
+                    select: {
+                        aspirationId: true,
+                        aspiration: { select: { id: true, text: true, identity: true, domain: true, status: true } },
+                    },
+                },
+            },
             orderBy: { createdAt: 'asc' }
         });
         return NextResponse.json(tasks);
@@ -46,7 +59,6 @@ export async function POST(request) {
                 title: taskData.title,
                 details: taskData.details,
                 cue: taskData.cue?.trim() || null,
-                identity: taskData.identity?.trim() || null,
                 type: taskData.type,
                 category: taskData.category,
                 frequency: taskData.frequency,

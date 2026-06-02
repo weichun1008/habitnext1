@@ -17,9 +17,6 @@ const TaskStreakList = ({ topTaskStreaks }) => {
                     <li key={item.taskId} className="py-2.5 flex items-center justify-between gap-3">
                         <div className="min-w-0">
                             <p className="text-sm font-medium text-gray-800 truncate">{item.title}</p>
-                            {item.identity && (
-                                <p className="text-xs text-gray-400 truncate">{item.identity}</p>
-                            )}
                         </div>
                         <div className="text-right shrink-0">
                             <p className="text-sm font-semibold text-emerald-600">
