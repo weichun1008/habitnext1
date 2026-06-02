@@ -161,6 +161,9 @@ model TaskHistory {
   lat                Float?
   lng                Float?
   city               String?
+  // ★ Slice Q — 美食回憶照片（opt-in）。存 Vercel Blob URL 字串；bytes 不在 DB。null = 未附。
+  photoUrl           String?
+  memoNote           String?  // 選填短 caption
 
   @@unique([taskId, date])
 }
