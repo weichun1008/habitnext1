@@ -1,13 +1,16 @@
 # Slice Q — 吃引擎 / 美食回憶 pin（Food Engine · Memory Photos）
 
-> ⚠️ **DRAFT — 待 PM 核准方案後才定案；若 PM 選擇其他方案此 spec 作廢**
+> ✅ **已定案（2026-06-02 PM 拍板）** — 方案 **C-Q1**。
 >
-> 本 spec 只規格化**設計探索文件推薦的方案 C 的「Q1 範圍」**（= 方案 A 的交付物 + 兩道對 v2 友善的承重縫）。
-> 方案 A（全烤進公開彙整、無授權端點）與方案 B（圖層 + spring 慶祝 + 餐廳級座標）**不在本 spec 內**。
-> 探索文件 §5 的開放問題若 PM 有不同決定，本 spec 需重寫或作廢。這只是讓 PM 能「核准或丟棄」的 head-start。
+> PM 決策鎖定：方向 **C-Q1** · 儲存 **Vercel Blob 公開不可猜 URL（經 `/api/memory` 授權端點）** · 粒度 **城市級** · 慶祝 **只安靜計數行（掉落慶祝留 Q2）** · caption **`memoNote` 做（選填）** · **單張/完成** · **不加 profile 全域開關**（逐次 opt-in）· dev=prod **key 前綴 + teardown 腳本清理**。
+> 探索 §5 / 本文 §11 的開放問題據此全數答畢。
+
+> **執行分界（因 Blob token 尚未供應）：**
+> - **Q1a（token-無關，先做）**：schema (`photoUrl`/`memoNote`)、`imageCompress` lib (TDD)、journey 讀取改動（pin 帶 `id`+`hasPhoto`、公開彙整不帶 `photoUrl`）、`GET /api/memory/[id]` 授權端點、`PolaroidPin`、`CityInfoPanel` 縮圖+計數行、`MemoryCapture` UI 殼（檔案選擇+客戶端縮圖剝 EXIF+預覽）、`PUT /api/tasks/:id` 鏡像 `memWrite`。**實際 Blob 上傳呼叫先 guard（無 token 時友善停用）。**
+> - **Q1b（token-相關，待 PM 開 Vercel Blob store）**：`@vercel/blob` 客戶端直傳 handler 接線、真機上傳 smoke、生命週期刪 blob、部署。
 
 **Date:** 2026-06-02
-**Status:** DRAFT design — 待 PM 決策（探索文件 §5 全數待答）
+**Status:** APPROVED (C-Q1) — 執行中（Q1a 先行；Q1b 待 Blob token）
 **Scope:** habitnext1 web-app — 在「已記錄地點的完成」上，讓使用者**自願**補一張當餐照片；照片以 polaroid 回憶 pin 落在 Slice P 的 CityScene 城市地圖，並在 CityInfoPanel 顯示縮圖。**城市級呈現、零地圖 API、座標不出前端。**
 
 **上層脈絡：** Journey World v2（§12.5 拆 O→P→**Q**→R→S）。Slice Q = 該系列第三個 slice，讀取路徑端到端已由 Slice P 建好（[`api/journey`](../../../web-app/src/app/api/journey/route.js) → [`journeyWorld.aggregateJourney`](../../../web-app/src/lib/journeyWorld.js) → [`CityScene`](../../../web-app/src/components/journey/CityScene.jsx) → [`MemoryPin`](../../../web-app/src/components/journey/landmarks/MemoryPin.jsx)），目前只是餵空資料。
