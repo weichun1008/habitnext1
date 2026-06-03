@@ -53,6 +53,7 @@ const AppHeader = ({
                         {currentView === 'manage' ? '任務管理'
                             : currentView === 'dashboard_detail' ? '洞察報告'
                             : currentView === 'stats' ? '統計'
+                            : currentView === 'world' ? '世界'
                             : currentView === 'journey' ? '旅程'
                             : '成就中心'}
                     </span>
