@@ -100,4 +100,4 @@ function layoutCity(cityData) {
   return nodes;
 }
 
-module.exports = { cityTier, flagshipLevel, buildingCount, buildingStyleIndex, aggregateJourney, layoutCity, nextTierProgress, VIEW_W, VIEW_H };
+module.exports = { cityTier, flagshipLevel, buildingCount, buildingStyleIndex, aggregateJourney, layoutCity, nextTierProgress, VIEW_W, VIEW_H, CX, CY };
