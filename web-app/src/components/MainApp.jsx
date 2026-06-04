@@ -31,6 +31,7 @@ import { groupTasksByAspiration } from '@/lib/aspirations';
 import FocusMapModal from './FocusMapModal';
 import JourneyView from './journey/JourneyView';
 import WorldPicker from './WorldPicker';
+import FigureWorldView from './worlds/FigureWorldView';
 
 // StatsView is dynamically imported to keep recharts (~96kb gzip) off the
 // `/` route's First Load JS — it only loads when the user opens the stats tab.
@@ -120,6 +121,10 @@ const MainApp = () => {
     const [journeyData, setJourneyData] = useState(null);
     const [journeyLoading, setJourneyLoading] = useState(false);
 
+    // Slice F — figure world. Fetched on-demand when the user enters 公仔.
+    const [figureData, setFigureData] = useState(null);
+    const [figureLoading, setFigureLoading] = useState(false);
+
     // Slice Q — photo capture. attachingKey = `${taskId}:${dateStr}` while a
     // single row's compress/upload is in flight (drives MemoryCapture busy).
     const [attachingKey, setAttachingKey] = useState(null);
@@ -162,6 +167,18 @@ const MainApp = () => {
             if (res.ok) setJourneyData(await res.json());
         } catch (e) { console.error('fetchJourney failed', e); }
         finally { setJourneyLoading(false); }
+    };
+
+    // Slice F — fetch the figure world (read-only count + derived stage).
+    // Triggered when the user enters 公仔 from the world picker.
+    const fetchFigure = async (uid) => {
+        if (!uid) return;
+        setFigureLoading(true);
+        try {
+            const res = await fetch(`/api/figure?userId=${uid}`);
+            if (res.ok) setFigureData(await res.json());
+        } catch (e) { console.error('fetchFigure failed', e); }
+        finally { setFigureLoading(false); }
     };
 
     // 2. Fetch Tasks
@@ -1483,8 +1500,16 @@ const MainApp = () => {
                             <WorldPicker
                                 activeWorld={user?.activeWorld ?? null}
                                 onSelectWorld={handleSelectWorld}
-                                onEnterJourney={() => { handleSelectWorld('journey'); setCurrentView('journey'); fetchJourney(user?.id); }}
+                                onEnterWorld={(key) => {
+                                    handleSelectWorld(key);
+                                    if (key === 'journey') { setCurrentView('journey'); fetchJourney(user?.id); }
+                                    else if (key === 'figure') { setCurrentView('figure'); fetchFigure(user?.id); }
+                                }}
                             />
+                        )}
+
+                        {currentView === 'figure' && (
+                            <FigureWorldView data={figureData} loading={figureLoading} />
                         )}
 
                         {currentView === 'journey' && (

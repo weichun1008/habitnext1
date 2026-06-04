@@ -13,10 +13,10 @@ describe('worlds registry', () => {
         }
     });
 
-    test('journey is available; home and figure are soon', () => {
+    test('journey and figure are available; home is soon', () => {
         expect(getWorld('journey').status).toBe('available');
+        expect(getWorld('figure').status).toBe('available');
         expect(getWorld('home').status).toBe('soon');
-        expect(getWorld('figure').status).toBe('soon');
     });
 
     test('WORLD_KEYS lists the three keys', () => {
