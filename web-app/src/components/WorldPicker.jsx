@@ -3,9 +3,12 @@
 import React from 'react';
 import { Map, Home, Sparkles, Check, ArrowRight } from 'lucide-react';
 import { WORLDS } from '@/lib/worlds';
+import FigureCreature from '@/components/worlds/FigureCreature';
 
 // Map the registry's icon string → the actual lucide component.
 const ICONS = { Map, Home, Sparkles };
+// Worlds with a bespoke illustration instead of a flat lucide icon.
+const CUSTOM_ART = { figure: FigureCreature };
 
 const WorldPicker = ({ activeWorld, onSelectWorld, onEnterJourney }) => {
     return (
@@ -20,6 +23,7 @@ const WorldPicker = ({ activeWorld, onSelectWorld, onEnterJourney }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {WORLDS.map((w) => {
                     const Icon = ICONS[w.icon] || Map;
+                    const Art = CUSTOM_ART[w.key];
                     const isActive = w.key === activeWorld;
                     const isSoon = w.status === 'soon';
                     const isJourney = w.key === 'journey';
@@ -50,12 +54,12 @@ const WorldPicker = ({ activeWorld, onSelectWorld, onEnterJourney }) => {
                                 )}
                             </div>
 
-                            {/* Icon in accent-tinted circle */}
+                            {/* Bespoke illustration (figure creature) or accent-tinted lucide icon */}
                             <div
                                 className="flex h-14 w-14 items-center justify-center rounded-2xl transition-transform duration-200 group-hover:scale-105"
                                 style={{ backgroundColor: `${w.accent}1A`, color: w.accent }}
                             >
-                                <Icon size={28} />
+                                {Art ? <Art size={46} /> : <Icon size={28} />}
                             </div>
 
                             <h2 className="mt-4 text-lg font-bold text-gray-900">{w.name}</h2>
