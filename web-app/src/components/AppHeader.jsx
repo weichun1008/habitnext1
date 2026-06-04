@@ -55,6 +55,7 @@ const AppHeader = ({
                             : currentView === 'stats' ? '統計'
                             : currentView === 'world' ? '世界'
                             : currentView === 'journey' ? '旅程'
+                            : currentView === 'figure' ? '公仔'
                             : '成就中心'}
                     </span>
                 )}

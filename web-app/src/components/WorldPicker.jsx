@@ -10,7 +10,7 @@ const ICONS = { Map, Home, Sparkles };
 // Worlds with a bespoke illustration instead of a flat lucide icon.
 const CUSTOM_ART = { figure: FigureCreature };
 
-const WorldPicker = ({ activeWorld, onSelectWorld, onEnterJourney }) => {
+const WorldPicker = ({ activeWorld, onSelectWorld, onEnterWorld }) => {
     return (
         <div className="max-w-4xl mx-auto animate-fade-in-up">
             <div className="text-center mb-8">
@@ -26,7 +26,7 @@ const WorldPicker = ({ activeWorld, onSelectWorld, onEnterJourney }) => {
                     const Art = CUSTOM_ART[w.key];
                     const isActive = w.key === activeWorld;
                     const isSoon = w.status === 'soon';
-                    const isJourney = w.key === 'journey';
+                    const isAvailable = w.status === 'available';
 
                     const handleCardSelect = () => onSelectWorld(w.key);
 
@@ -67,12 +67,13 @@ const WorldPicker = ({ activeWorld, onSelectWorld, onEnterJourney }) => {
 
                             {/* Primary action */}
                             <div className="mt-5" onClick={(e) => e.stopPropagation()}>
-                                {isJourney ? (
+                                {isAvailable ? (
                                     <button
-                                        onClick={() => onEnterJourney()}
-                                        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-teal-700 hover:gap-3"
+                                        onClick={() => onEnterWorld(w.key)}
+                                        className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:gap-3 hover:brightness-95"
+                                        style={{ backgroundColor: w.accent }}
                                     >
-                                        進入旅程世界
+                                        進入{w.name}世界
                                         <ArrowRight size={16} />
                                     </button>
                                 ) : isActive ? (
