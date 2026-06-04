@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Calendar, Award, Plus, X, BookOpen, BarChart3, Map } from 'lucide-react';
+import { Calendar, Award, Plus, X, BookOpen, BarChart3, Map, Globe } from 'lucide-react';
 import Avatar from './Avatar';
 import WeekStrip from './WeekStrip';
 
@@ -38,7 +38,7 @@ const AppHeader = ({
                     aria-label="開啟個人資料"
                 >
                     <Avatar user={user} size="w-8 h-8" />
-                    <span className="font-bold text-gray-800 text-sm md:text-base">{user?.nickname || user?.name || '訪客'}</span>
+                    <span className="font-bold text-gray-800 text-sm md:text-base truncate max-w-[4.5rem] sm:max-w-none">{user?.nickname || user?.name || '訪客'}</span>
                 </button>
 
                 {currentView === 'daily' ? (
@@ -70,6 +70,9 @@ const AppHeader = ({
                             </button>
                             <button onClick={() => onViewChange('stats')} className="w-8 h-8 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center hover:bg-purple-100 transition-colors">
                                 <BarChart3 size={20} />
+                            </button>
+                            <button onClick={() => onViewChange('world')} className="w-8 h-8 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center hover:bg-amber-100 transition-colors" aria-label="世界">
+                                <Globe size={20} />
                             </button>
                             <button onClick={onOpenJourney} className="w-8 h-8 bg-teal-50 text-teal-600 rounded-lg flex items-center justify-center hover:bg-teal-100 transition-colors" aria-label="旅程">
                                 <Map size={20} />
