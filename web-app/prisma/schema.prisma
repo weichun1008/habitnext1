@@ -207,6 +207,22 @@ model PlanCategory {
   updatedAt DateTime @updatedAt
 }
 
+// 計畫家族 — 探索計畫第一層的三大分類（flower/sleep/other）。固定 3 筆、只編輯顯示；
+// 「哪個模板屬於哪個家族」由 lib/templateRecommendation.js 依 category 判定，不存這裡。
+model PlanFamily {
+  id              String   @id @default(cuid())
+  slug            String   @unique // 'flower' | 'sleep' | 'other'（鎖定）
+  title           String
+  intro           String
+  icon            String? // Lucide icon 名稱
+  color           String? // hex
+  quizPendingCopy String? // 未完成分型測驗的提示（other 為 null）
+  order           Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
 model OfficialHabit {
   id          String  @id @default(cuid())
   name        String  @unique // 習慣集合名稱，如「每日喝水」（unique for idempotent seed upsert）
