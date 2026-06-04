@@ -1,10 +1,11 @@
-import { layoutCity, VIEW_W, VIEW_H } from '@/lib/journeyWorld';
+import { layoutCity, VIEW_W, VIEW_H, CX, CY } from '@/lib/journeyWorld';
 import DomainLandmark, { LANDMARKS } from '@/components/journey/landmarks/DomainLandmark';
 import GenericBuilding from '@/components/journey/landmarks/GenericBuilding';
 import MemoryPin from '@/components/journey/landmarks/MemoryPin';
 import PolaroidPin from '@/components/journey/landmarks/PolaroidPin';
 
-const CX = 160, CY = 134;
+// CX/CY single source of truth = journeyWorld (layoutCity centers on them); imported so
+// the pin-fallback arc below can never drift from the layout center.
 const RIVER_TIERS = new Set(['city', 'metropolis', 'megacity']);
 
 export default function CityScene({ cityData, userId }) {

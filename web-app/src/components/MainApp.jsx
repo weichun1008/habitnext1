@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp, Map } from 'lucide-react';
+import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp, Map, Globe } from 'lucide-react';
 import AppHeader from './AppHeader';
 import WeekStrip from './WeekStrip';
 import TaskCard from './TaskCard';
@@ -30,6 +30,8 @@ import AspirationRecommendationPanel from './AspirationRecommendationPanel';
 import { groupTasksByAspiration } from '@/lib/aspirations';
 import FocusMapModal from './FocusMapModal';
 import JourneyView from './journey/JourneyView';
+import WorldPicker from './WorldPicker';
+import FigureWorldView from './worlds/FigureWorldView';
 
 // StatsView is dynamically imported to keep recharts (~96kb gzip) off the
 // `/` route's First Load JS — it only loads when the user opens the stats tab.
@@ -119,6 +121,10 @@ const MainApp = () => {
     const [journeyData, setJourneyData] = useState(null);
     const [journeyLoading, setJourneyLoading] = useState(false);
 
+    // Slice F — figure world. Fetched on-demand when the user enters 公仔.
+    const [figureData, setFigureData] = useState(null);
+    const [figureLoading, setFigureLoading] = useState(false);
+
     // Slice Q — photo capture. attachingKey = `${taskId}:${dateStr}` while a
     // single row's compress/upload is in flight (drives MemoryCapture busy).
     const [attachingKey, setAttachingKey] = useState(null);
@@ -161,6 +167,18 @@ const MainApp = () => {
             if (res.ok) setJourneyData(await res.json());
         } catch (e) { console.error('fetchJourney failed', e); }
         finally { setJourneyLoading(false); }
+    };
+
+    // Slice F — fetch the figure world (read-only count + derived stage).
+    // Triggered when the user enters 公仔 from the world picker.
+    const fetchFigure = async (uid) => {
+        if (!uid) return;
+        setFigureLoading(true);
+        try {
+            const res = await fetch(`/api/figure?userId=${uid}`);
+            if (res.ok) setFigureData(await res.json());
+        } catch (e) { console.error('fetchFigure failed', e); }
+        finally { setFigureLoading(false); }
     };
 
     // 2. Fetch Tasks
@@ -249,6 +267,22 @@ const MainApp = () => {
         const days = (Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24);
         return days > 5;
     })();
+
+    // World Switch — persist the picked world. The profile PUT response does NOT
+    // echo activeWorld back, so we update user state + localStorage optimistically
+    // and revert on failure rather than reading from the response.
+    const handleSelectWorld = async (worldKey) => {
+        if (!user?.id) return;
+        const prev = user.activeWorld;
+        setUser(u => { const nu = { ...u, activeWorld: worldKey }; try { localStorage.setItem('habit_user', JSON.stringify(nu)); } catch (e) {} return nu; }); // optimistic
+        try {
+            const res = await fetch('/api/user/profile', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id, activeWorld: worldKey }) });
+            if (!res.ok) throw new Error('save failed');
+        } catch (e) {
+            console.error('setActiveWorld failed', e);
+            setUser(u => { const nu = { ...u, activeWorld: prev }; try { localStorage.setItem('habit_user', JSON.stringify(nu)); } catch (_) {} return nu; }); // revert
+        }
+    };
 
     const handleLogin = (userData) => {
         setUser(userData);
@@ -1132,6 +1166,13 @@ const MainApp = () => {
                             統計
                         </button>
                         <button
+                            onClick={() => setCurrentView('world')}
+                            className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'world' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
+                        >
+                            <Globe size={20} />
+                            世界
+                        </button>
+                        <button
                             onClick={() => { setCurrentView('journey'); fetchJourney(user?.id); }}
                             className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'journey' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
                         >
@@ -1453,6 +1494,22 @@ const MainApp = () => {
 
                         {currentView === 'stats' && (
                             <StatsView userId={user?.id} onBack={() => setCurrentView('daily')} />
+                        )}
+
+                        {currentView === 'world' && (
+                            <WorldPicker
+                                activeWorld={user?.activeWorld ?? null}
+                                onSelectWorld={handleSelectWorld}
+                                onEnterWorld={(key) => {
+                                    handleSelectWorld(key);
+                                    if (key === 'journey') { setCurrentView('journey'); fetchJourney(user?.id); }
+                                    else if (key === 'figure') { setCurrentView('figure'); fetchFigure(user?.id); }
+                                }}
+                            />
+                        )}
+
+                        {currentView === 'figure' && (
+                            <FigureWorldView data={figureData} loading={figureLoading} />
                         )}
 
                         {currentView === 'journey' && (
