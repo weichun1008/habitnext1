@@ -86,9 +86,14 @@ export default function TemplatesPage() {
                     <h1 className="admin-title">計畫模板管理</h1>
                     <p className="admin-subtitle">建立和管理使用者可訂閱的計畫模板</p>
                 </div>
-                <Link href="/admin/dashboard/templates/new" className="admin-btn admin-btn-primary no-underline">
-                    <Plus size={18} /> 新增模板
-                </Link>
+                <div className="flex items-center gap-2">
+                    <Link href="/admin/dashboard/templates/families" className="admin-btn admin-btn-secondary no-underline">
+                        計畫家族
+                    </Link>
+                    <Link href="/admin/dashboard/templates/new" className="admin-btn admin-btn-primary no-underline">
+                        <Plus size={18} /> 新增模板
+                    </Link>
+                </div>
             </div>
 
             {/* Templates Grid */}
