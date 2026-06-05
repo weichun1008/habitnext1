@@ -1004,8 +1004,13 @@ const MainApp = () => {
         .filter(t => isTaskDueToday(t, selectedDate))
         .filter(t => !t.status || t.status === 'active')  // safety: hide paused/archived
         .sort((a, b) => {
-            const ac = isCompletedOnDate(a, selectedDate) ? 1 : 0;
-            const bc = isCompletedOnDate(b, selectedDate) ? 1 : 0;
+            // A task mid completion-linger (in completingTaskIds) is treated as
+            // STILL incomplete for ordering, so it dwells IN PLACE with its check
+            // showing for ~1.5s instead of instantly jumping to the bottom (which
+            // read as "no dwell / jumped away"). It sorts down only once the
+            // linger ends and it leaves completingTaskIds.
+            const ac = (isCompletedOnDate(a, selectedDate) && !completingTaskIds.has(a.id)) ? 1 : 0;
+            const bc = (isCompletedOnDate(b, selectedDate) && !completingTaskIds.has(b.id)) ? 1 : 0;
             if (ac !== bc) return ac - bc;
             const ao = cueOrderFor(a.cue);
             const bo = cueOrderFor(b.cue);
