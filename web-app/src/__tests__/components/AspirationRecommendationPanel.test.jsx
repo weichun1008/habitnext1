@@ -25,14 +25,13 @@ describe('AspirationRecommendationPanel — initial render', () => {
         expect(container.firstChild).toBeNull();
     });
 
-    test('shows loading then renders header with aspiration text + domain', async () => {
+    test('shows loading then renders header with aspiration text', async () => {
         mockFetchOk({ templates: [], habits: [] });
         render(
             <AspirationRecommendationPanel aspiration={aspiration} onBack={() => {}} />
         );
         expect(screen.getByText(/載入推薦中/)).toBeInTheDocument();
         expect(await screen.findByText('想要好好睡覺')).toBeInTheDocument();
-        expect(screen.getByText('壓力與睡眠')).toBeInTheDocument();
     });
 });
 
@@ -182,5 +181,32 @@ describe('AspirationRecommendationPanel — error handling', () => {
             <AspirationRecommendationPanel aspiration={aspiration} onBack={() => {}} />
         );
         expect(await screen.findByText(/取得推薦失敗/)).toBeInTheDocument();
+    });
+});
+
+const ASP = { id: 'a1', text: '我想睡得更好', domain: '壓力與睡眠', identity: '早睡的人' };
+const PAYLOAD = {
+    aspiration: ASP, templates: [],
+    habits: [
+        { id: 'h1', name: '睡前 1 小時不看手機', category: '壓力與睡眠', difficulties: {}, insights: [{ evidence: { studyType: 2, scale: 1, causality: 2, replication: 2 } }] },
+        { id: 'h2', name: '泡熱水澡', category: '壓力與睡眠', difficulties: {}, insights: [] },
+    ],
+};
+
+describe('AspirationRecommendationPanel — Task 4 header + evidence badge', () => {
+    beforeEach(() => { global.fetch = jest.fn(() => Promise.resolve({ ok: true, json: async () => PAYLOAD })); });
+    afterEach(() => jest.restoreAllMocks());
+
+    it('header 顯示嚮往與身分', async () => {
+        render(<AspirationRecommendationPanel aspiration={ASP} onBack={() => {}} />);
+        expect(await screen.findByText('我想睡得更好')).toBeInTheDocument();
+        expect(screen.getByText(/早睡的人/)).toBeInTheDocument();
+    });
+
+    it('有已發布佐證的習慣顯示證據力 badge、無佐證的不顯示', async () => {
+        render(<AspirationRecommendationPanel aspiration={ASP} onBack={() => {}} />);
+        expect(await screen.findByText(/證據力/)).toBeInTheDocument();
+        expect(screen.getByText('泡熱水澡')).toBeInTheDocument();
+        expect(screen.getAllByText(/證據力/).length).toBe(1);
     });
 });

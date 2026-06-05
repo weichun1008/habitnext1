@@ -2,6 +2,20 @@
 
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Sparkles, Leaf, Loader, ChevronRight, Plus, Check, Target } from 'lucide-react';
+import EvidenceBadge from './insights/EvidenceBadge';
+import { scoreEvidence } from '@/lib/evidenceStrength';
+import IconRenderer from './IconRenderer';
+
+// 從習慣的已發布 insights 取「最高 total」的 evidence；無則 null。
+function topEvidenceOf(habit) {
+    const list = Array.isArray(habit?.insights) ? habit.insights : [];
+    let best = null, bestTotal = -1;
+    for (const ins of list) {
+        const s = scoreEvidence(ins?.evidence);
+        if (s && s.total > bestTotal) { best = ins.evidence; bestTotal = s.total; }
+    }
+    return best;
+}
 
 // AspirationRecommendationPanel — Slice K, Step 2 of the new-add flow.
 // Spec: docs/superpowers/specs/2026-05-23-slice-K-aspiration-system-design.md §3.3
@@ -83,6 +97,8 @@ function HabitCard({ habit, onPick, onAddCandidate, picking, addedAsCandidate })
     // dropped into both 'active' and 'candidate' status from two clicks.
     const locked = addedAsCandidate || picking;
 
+    const topEvidence = topEvidenceOf(habit);
+
     return (
         <div className={`p-3 rounded-xl border transition-all ${
             addedAsCandidate
@@ -93,6 +109,9 @@ function HabitCard({ habit, onPick, onAddCandidate, picking, addedAsCandidate })
                 <h5 className="font-bold text-sm text-gray-800 leading-snug">
                     {habit.name}
                 </h5>
+                {topEvidence && (
+                    <div className="mt-1"><EvidenceBadge evidence={topEvidence} /></div>
+                )}
                 {habit.description && (
                     <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
                         {habit.description}
@@ -239,23 +258,20 @@ export default function AspirationRecommendationPanel({
             className="fixed inset-0 z-[10000] bg-black bg-opacity-50 flex items-end md:items-center justify-center"
         >
             <div className="bg-white w-full md:max-w-md h-[85dvh] md:h-auto md:max-h-[85dvh] md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up">
-                {/* Header: back arrow + the aspiration text */}
-                <div className="px-5 py-4 border-b border-gray-100 flex items-start gap-3 bg-white rounded-t-2xl">
-                    <button
-                        type="button"
-                        onClick={onBack}
-                        aria-label="返回"
-                        className="p-1 -m-1 text-gray-400 hover:text-gray-600 flex-shrink-0 mt-0.5"
-                    >
-                        <ArrowLeft size={22} />
-                    </button>
-                    <div className="min-w-0 flex-1">
-                        <h3 id="aspiration-rec-title" className="font-bold text-base text-gray-800 leading-snug break-words">
-                            {aspiration.text}
-                        </h3>
-                        {aspiration.domain && (
-                            <p className="text-[11px] text-gray-400 mt-0.5">{aspiration.domain}</p>
-                        )}
+                {/* Header: 情境漸層條 + 返回 + 身分 */}
+                <div className="relative overflow-hidden bg-gradient-to-br from-emerald-400 to-emerald-600 text-white px-5 py-4 rounded-t-2xl">
+                    <span className="absolute -right-3 -bottom-4 opacity-15" aria-hidden><IconRenderer category={aspiration.domain} size={64} /></span>
+                    <div className="relative flex items-start gap-3">
+                        <button type="button" onClick={onBack} aria-label="返回" className="p-1 -m-1 text-white/90 hover:text-white flex-shrink-0 mt-0.5">
+                            <ArrowLeft size={22} />
+                        </button>
+                        <div className="min-w-0 flex-1">
+                            <p className="text-[10px] font-bold opacity-85 tracking-wider">你的嚮往</p>
+                            <h3 id="aspiration-rec-title" className="font-extrabold text-base leading-snug break-words mt-0.5">{aspiration.text}</h3>
+                            {aspiration.identity && (
+                                <span className="inline-block mt-2 bg-white/90 text-emerald-700 text-[10px] font-extrabold rounded-full px-2.5 py-0.5">成為「{aspiration.identity}」</span>
+                            )}
+                        </div>
                     </div>
                 </div>
 
