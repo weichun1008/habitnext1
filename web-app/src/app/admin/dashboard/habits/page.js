@@ -227,11 +227,11 @@ export default function HabitsPage() {
                 <div className="flex gap-3">
                     <a
                         href="/admin/dashboard/habits/categories"
-                        className="admin-button-secondary flex items-center gap-2"
+                        className="admin-btn admin-btn-secondary flex items-center gap-2"
                     >
                         <FolderOpen size={16} /> 分類管理
                     </a>
-                    <button onClick={openAddModal} className="admin-button-primary flex items-center gap-2">
+                    <button onClick={openAddModal} className="admin-btn admin-btn-primary flex items-center gap-2">
                         <Plus size={16} /> 新增習慣
                     </button>
                 </div>
@@ -682,13 +682,13 @@ export default function HabitsPage() {
                         <div className="px-6 py-4 border-t border-gray-700 flex justify-end gap-3">
                             <button
                                 onClick={() => setIsModalOpen(false)}
-                                className="admin-button-secondary"
+                                className="admin-btn admin-btn-secondary"
                             >
                                 取消
                             </button>
                             <button
                                 onClick={handleSave}
-                                className="admin-button-primary flex items-center gap-2"
+                                className="admin-btn admin-btn-primary flex items-center gap-2"
                             >
                                 <Save size={16} /> 儲存
                             </button>
