@@ -2,11 +2,28 @@
 // Pure helpers for Slice L — no Prisma, no I/O.
 // Spec: docs/superpowers/specs/2026-05-27-slice-L-focus-map-candidate-pool-design.md
 
+// 四象限定義（label/advice 為使用者可見白話文，無 BJ Fogg 字樣）。
+// iconKey 對應 lucide-react 元件名；color 為點/主色。
 const QUADRANTS = {
-  golden:     { label: '🌟 黃金行為', tone: 'amber', rec: 'recommended', advice: '推薦啟用 — 高影響又易做到' },
-  background: { label: '🌱 順手習慣', tone: 'gray',  rec: 'optional',    advice: '可加可不加 — 容易做但影響有限' },
-  big_fish:   { label: '⏳ 大魚',     tone: 'gray',  rec: 'park',        advice: 'Fogg：先建立基本技能再來' },
-  skip:       { label: '🗑️ 跳過',     tone: 'gray',  rec: 'skip',        advice: 'Fogg：別耗 willpower 在這上' },
+  golden:     { label: '值得優先做', iconKey: 'Star',        color: '#ea580c', tone: 'amber', rec: 'recommended', advice: '高影響又容易做到 — 最划算，建議先加入。' },
+  big_fish:   { label: '值得挑戰',   iconKey: 'Mountain',    color: '#7c3aed', tone: 'violet', rec: 'park',       advice: '影響大但目前不易做到 — 可先從更簡單的版本開始，別逼太緊。' },
+  background: { label: '順手加碼',   iconKey: 'Sprout',      color: '#0891b2', tone: 'cyan',  rec: 'optional',    advice: '容易做但影響有限 — 行有餘力再加。' },
+  skip:       { label: '建議先跳過', iconKey: 'SkipForward', color: '#94a3b8', tone: 'gray',  rec: 'skip',        advice: '影響有限又不易做 — 建議先擱著；但你仍可自行加入。' },
+};
+
+// 養成期間選項（給 DurationSheet）。value 為天數；null = 不設限（沒有終止日）。
+const DURATION_OPTIONS = [
+  { value: 21,   label: '21 天',  sub: '起步嘗試' },
+  { value: 66,   label: '66 天',  sub: '養成自動化', recommended: true },
+  { value: 90,   label: '90 天',  sub: '鞏固成形' },
+  { value: null, label: '不設限', sub: '沒有終止日，持續追蹤' },
+];
+
+// 習慣養成的科學依據（漸進揭露用，不在主畫面寫全文）。數字不誇大。
+const HABIT_FORMATION_SCIENCE = {
+  medianDays: 66,
+  rangeDays: [18, 254],
+  summary: '研究發現，新行為要變成「不太需要意志力的自動反應」，平均約需 66 天（會因人和習慣難度而異，落在 18–254 天）。所以我們把預設放在 66 天。',
 };
 
 // Map an (impact, ability) pair to its quadrant key.
@@ -47,9 +64,28 @@ function sliderSeedFor(candidate) {
   return { impact, ability };
 }
 
+// 依使用者在焦點地圖的選擇，組出 batch-rate 的 payload。
+// 已加入(addedSet) → activate（帶 targetDays）；其餘 → keep_candidate（保留候選、不刪除）。
+// ratings: Map<taskId, { impact, ability }>。targetDays: number | null。
+function buildBatchPayload(candidates, ratings, addedSet, targetDays) {
+  if (!Array.isArray(candidates)) return [];
+  return candidates.map(c => {
+    const r = ratings.get(c.id) || { impact: 3, ability: 3 };
+    const impact = typeof r.impact === 'number' ? r.impact : 3;
+    const ability = typeof r.ability === 'number' ? r.ability : 3;
+    if (addedSet && addedSet.has(c.id)) {
+      return { taskId: c.id, userImpact: impact, userAbility: ability, action: 'activate', targetDays: targetDays ?? null };
+    }
+    return { taskId: c.id, userImpact: impact, userAbility: ability, action: 'keep_candidate' };
+  });
+}
+
 module.exports = {
   QUADRANTS,
+  DURATION_OPTIONS,
+  HABIT_FORMATION_SCIENCE,
   quadrantOf,
   recommendDefaults,
   sliderSeedFor,
+  buildBatchPayload,
 };
