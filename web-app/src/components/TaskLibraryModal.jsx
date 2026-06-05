@@ -257,16 +257,17 @@ const TaskLibraryModal = ({
                         <button
                             type="button"
                             onClick={onOpenAspirationPicker}
-                            className="w-full p-3 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white hover:from-emerald-100 hover:to-emerald-50 transition-all text-left flex items-center gap-3"
+                            className="group relative w-full overflow-hidden rounded-2xl p-4 text-left flex items-center gap-3 bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-200 hover:shadow-emerald-300 hover:-translate-y-0.5 transition-all"
                         >
-                            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
-                                <Sparkles size={18} className="text-emerald-600" />
+                            <Sparkles size={68} className="absolute -right-3 -bottom-4 opacity-20 group-hover:opacity-30 group-hover:scale-110 transition-all" aria-hidden />
+                            <div className="relative flex-shrink-0 w-11 h-11 rounded-xl bg-white/25 flex items-center justify-center">
+                                <Sparkles size={20} className="text-white" />
                             </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-bold text-gray-800">從嚮往開始</p>
-                                <p className="text-xs text-gray-500 leading-snug">不確定要做什麼？從你想要的目標找推薦</p>
+                            <div className="relative flex-1 min-w-0">
+                                <p className="text-base font-extrabold">從嚮往開始</p>
+                                <p className="text-xs text-white/90 leading-snug mt-0.5">不知從何下手？從你想成為的樣子出發，我們幫你配習慣</p>
                             </div>
-                            <ChevronRight size={16} className="text-gray-400 flex-shrink-0" />
+                            <ChevronRight size={18} className="relative text-white/90 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" />
                         </button>
                     )}
                     {view !== 'anchor' && (
