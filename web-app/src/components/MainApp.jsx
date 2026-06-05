@@ -106,6 +106,12 @@ const MainApp = () => {
     const [exitingTaskIds, setExitingTaskIds] = useState(() => new Set());
     const [undoToast, setUndoToast] = useState(null);   // { taskId, message, date } | null
     const exitTimersRef = useRef({});
+    // Coalesced post-completion server refresh. Each completion's exit phase
+    // requests a refresh; rapid completions debounce into ONE fetch after the
+    // last one settles — so an early task's fetch can't overwrite a later
+    // task's still-in-flight optimistic completion (which killed the linger on
+    // rapid sequential taps).
+    const refreshTimerRef = useRef(null);
     const [activeAspiration, setActiveAspiration] = useState(null);
     const [initialTemplateForExplorer, setInitialTemplateForExplorer] = useState(null);
     const [aspirationHabitForLibrary, setAspirationHabitForLibrary] = useState(null);
@@ -449,8 +455,11 @@ const MainApp = () => {
         // Fire the completion-computed hook synchronously, BEFORE any async work
         // (the location capture below can take seconds). Lets the caller react to
         // the just-computed completion immediately — e.g. the linger animation —
-        // for ANY task type (binary / quantitative / checklist / period).
-        if (onComputed) onComputed(historyUpdate);
+        // for ANY task type (binary / quantitative / checklist / period). Pass
+        // updatedTask so the caller can use isCompletedOnDate() (the SAME authority
+        // the list partition uses) instead of historyUpdate.completed, which for
+        // checklists uses a degenerate dailyTarget gate and can diverge.
+        if (onComputed) onComputed(historyUpdate, updatedTask);
 
         // Slice O — capture city on a completion (not un-completion) when the
         // user has opted in. Best-effort: failure / denial just skips location.
@@ -583,6 +592,19 @@ const MainApp = () => {
     // path with action='toggle' (which flips it back since now completed).
     // ────────────────────────────────────────────────────────────────
 
+    // Debounced server refresh — coalesce many rapid completions into one fetch
+    // that runs only after the burst settles (so it can't clobber siblings'
+    // in-flight optimistic completions). The optimistic `tasks` state already
+    // shows each completion correctly; this only reconciles server-derived
+    // fields (streaks etc.).
+    const scheduleTasksRefresh = (delay = 700) => {
+        if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+        refreshTimerRef.current = setTimeout(() => {
+            refreshTimerRef.current = null;
+            if (user?.id) fetchTasks(user.id);
+        }, delay);
+    };
+
     const clearExitTimersFor = (taskId) => {
         const t = exitTimersRef.current[taskId];
         if (!t) return;
@@ -612,10 +634,13 @@ const MainApp = () => {
                 return next;
             });
             const fetchAt = setTimeout(() => {
-                // Phase 3 (t=1800ms) — refresh from server and release both
-                // sets. The completed task now naturally sorts into the
-                // (collapsed) 已完成 N 個 section.
-                if (user?.id) fetchTasks(user.id);
+                // Phase 3 (t=1800ms) — release both sets so the completed task
+                // sorts (via optimistic state) into the collapsed 已完成 section,
+                // and request a DEBOUNCED server refresh. Using the coalesced
+                // refresh (not an immediate per-task fetch) prevents an early
+                // task's fetch from overwriting a later task's still-in-flight
+                // optimistic completion during rapid sequential taps.
+                scheduleTasksRefresh();
                 setExitingTaskIds(prev => {
                     const next = new Set(prev);
                     next.delete(task.id);
@@ -669,14 +694,21 @@ const MainApp = () => {
         // Run the update; react to the freshly-computed completion synchronously
         // (the callback fires before any async location work, so the linger
         // starts the instant the user taps).
-        handleUpdateProgress(task, action, value, subtaskId, date, (historyUpdate) => {
+        handleUpdateProgress(task, action, value, subtaskId, date, (historyUpdate, updatedTask) => {
             // Linger only when THIS action flipped the task incomplete → complete
             // on the currently-viewed date — for EVERY task type (binary tick,
             // quantitative hitting target, checklist's final subtask). This keeps
             // the just-completed card visible long enough to read before it
-            // collapses into the 已完成 section. (Previously only binary toggles
-            // lingered, so quantitative/checklist completions vanished instantly.)
-            if (!historyUpdate || !historyUpdate.completed || wasCompleted) return;
+            // collapses into the 已完成 section.
+            //
+            // Use isCompletedOnDate(updatedTask) — the SAME authority the list
+            // partition uses — NOT historyUpdate.completed, which for checklists
+            // is gated by a degenerate dailyTarget and can fire after a single
+            // subtask (so the card would try to leave before all items are done).
+            const nowCompleted = updatedTask
+                ? isCompletedOnDate(updatedTask, date)
+                : !!(historyUpdate && historyUpdate.completed);
+            if (!nowCompleted || wasCompleted) return;
             if (date !== selectedDate) return;
 
             scheduleCompletionExit(task);
@@ -693,6 +725,7 @@ const MainApp = () => {
     // Clean up timers + toast on unmount.
     useEffect(() => () => {
         Object.keys(exitTimersRef.current).forEach(clearExitTimersFor);
+        if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
     }, []);   // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleSaveTask = async (taskData) => {

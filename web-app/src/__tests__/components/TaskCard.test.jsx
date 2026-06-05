@@ -130,25 +130,22 @@ describe('TaskCard', () => {
             expect(screen.queryByRole('button', { name: /完成任務/ })).not.toBeInTheDocument();
         });
 
-        it('expands inline subtask list when chevron clicked', async () => {
+        it('shows inline subtask list expanded by default; chevron collapses it', async () => {
             render(<TaskCard task={mockChecklistTask} onClick={mockOnClick} onUpdate={mockOnUpdate} />);
 
-            // Subtasks NOT visible initially
-            expect(screen.queryByText('早餐')).not.toBeInTheDocument();
-
-            // Click chevron
-            const chevron = screen.getByLabelText('展開子任務');
-            await userEvent.click(chevron);
-
-            // Subtasks now visible
+            // Subtasks visible by default (checklist defaults to expanded)
             expect(screen.getByText('早餐')).toBeInTheDocument();
             expect(screen.getByText('午餐')).toBeInTheDocument();
             expect(screen.getByText('晚餐')).toBeInTheDocument();
+
+            // Click chevron → collapse
+            await userEvent.click(screen.getByLabelText('收合子任務'));
+            expect(screen.queryByText('早餐')).not.toBeInTheDocument();
         });
 
-        it('tapping a subtask fires toggle_subtask with the subtask id', async () => {
+        it('tapping a subtask fires toggle_subtask with the subtask id (no expand needed)', async () => {
             render(<TaskCard task={mockChecklistTask} onClick={mockOnClick} onUpdate={mockOnUpdate} />);
-            await userEvent.click(screen.getByLabelText('展開子任務'));
+            // Subtasks are visible by default — tap directly.
             await userEvent.click(screen.getByText('午餐'));
             expect(mockOnUpdate).toHaveBeenCalledWith(
                 mockChecklistTask,
@@ -159,20 +156,23 @@ describe('TaskCard', () => {
             );
         });
 
-        it('expanding does NOT fire onClick (no detail modal popup)', async () => {
+        it('toggling the chevron does NOT fire onClick (no detail modal popup)', async () => {
             render(<TaskCard task={mockChecklistTask} onClick={mockOnClick} onUpdate={mockOnUpdate} />);
-            await userEvent.click(screen.getByLabelText('展開子任務'));
+            await userEvent.click(screen.getByLabelText('收合子任務'));
             expect(mockOnClick).not.toHaveBeenCalled();
         });
 
-        it('chevron toggles between expanded and collapsed', async () => {
+        it('chevron toggles between collapsed and expanded', async () => {
             render(<TaskCard task={mockChecklistTask} onClick={mockOnClick} onUpdate={mockOnUpdate} />);
 
-            await userEvent.click(screen.getByLabelText('展開子任務'));
+            // Default expanded.
             expect(screen.getByText('早餐')).toBeInTheDocument();
 
             await userEvent.click(screen.getByLabelText('收合子任務'));
             expect(screen.queryByText('早餐')).not.toBeInTheDocument();
+
+            await userEvent.click(screen.getByLabelText('展開子任務'));
+            expect(screen.getByText('早餐')).toBeInTheDocument();
         });
 
         it('X/Y badge reflects current completion count', () => {
