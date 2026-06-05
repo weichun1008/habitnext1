@@ -134,7 +134,7 @@ export default function HabitInsightsModal({ isOpen, onClose, habit }) {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={handleAdd}
-                            className="admin-button-primary flex items-center gap-2 text-sm"
+                            className="admin-btn admin-btn-primary flex items-center gap-2 text-sm"
                         >
                             <Plus size={14} /> 新增
                         </button>

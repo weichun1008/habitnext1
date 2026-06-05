@@ -120,7 +120,7 @@ export default function CategoriesPage() {
                         <p className="text-gray-400 text-sm">管理習慣庫的分類</p>
                     </div>
                 </div>
-                <button onClick={openAddModal} className="admin-button-primary flex items-center gap-2">
+                <button onClick={openAddModal} className="admin-btn admin-btn-primary flex items-center gap-2">
                     <Plus size={16} /> 新增分類
                 </button>
             </div>
@@ -251,13 +251,13 @@ export default function CategoriesPage() {
                         <div className="px-6 py-4 border-t border-gray-700 flex justify-end gap-3">
                             <button
                                 onClick={() => setIsModalOpen(false)}
-                                className="admin-button-secondary"
+                                className="admin-btn admin-btn-secondary"
                             >
                                 取消
                             </button>
                             <button
                                 onClick={handleSave}
-                                className="admin-button-primary flex items-center gap-2"
+                                className="admin-btn admin-btn-primary flex items-center gap-2"
                             >
                                 <Save size={16} /> 儲存
                             </button>

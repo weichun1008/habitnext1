@@ -386,14 +386,14 @@ export default function HabitInsightFormModal({
                     <button
                         onClick={onClose}
                         disabled={saving}
-                        className="admin-button-secondary"
+                        className="admin-btn admin-btn-secondary"
                     >
                         取消
                     </button>
                     <button
                         onClick={submit}
                         disabled={saving}
-                        className="admin-button-primary flex items-center gap-2"
+                        className="admin-btn admin-btn-primary flex items-center gap-2"
                     >
                         {saving ? <Loader size={16} className="animate-spin" /> : <Save size={16} />}
                         {isEdit ? '儲存' : '建立'}
