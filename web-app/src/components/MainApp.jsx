@@ -340,7 +340,7 @@ const MainApp = () => {
         setIsLoginModalOpen(true);
     };
 
-    const handleUpdateProgress = async (task, action, value, subtaskId, dateStr = getTodayStr()) => {
+    const handleUpdateProgress = async (task, action, value, subtaskId, dateStr = getTodayStr(), onComputed) => {
         // Optimistic Update
         const prevTasks = [...tasks];
 
@@ -445,6 +445,12 @@ const MainApp = () => {
         if (viewingTask?.id === task.id && updatedTask) {
             setViewingTask(updatedTask);
         }
+
+        // Fire the completion-computed hook synchronously, BEFORE any async work
+        // (the location capture below can take seconds). Lets the caller react to
+        // the just-computed completion immediately — e.g. the linger animation —
+        // for ANY task type (binary / quantitative / checklist / period).
+        if (onComputed) onComputed(historyUpdate);
 
         // Slice O — capture city on a completion (not un-completion) when the
         // user has opted in. Best-effort: failure / denial just skips location.
@@ -658,27 +664,29 @@ const MainApp = () => {
     const handleTaskUpdate = (task, action, value, subtaskId, dateStr) => {
         const date = dateStr || selectedDate;
         // Snapshot the pre-update completion state on the relevant date.
-        // We compare against this AFTER the underlying update to decide if
-        // this action moved the task from incomplete → complete.
         const wasCompleted = isCompletedOnDate(task, date);
 
-        handleUpdateProgress(task, action, value, subtaskId, date);
+        // Run the update; react to the freshly-computed completion synchronously
+        // (the callback fires before any async location work, so the linger
+        // starts the instant the user taps).
+        handleUpdateProgress(task, action, value, subtaskId, date, (historyUpdate) => {
+            // Linger only when THIS action flipped the task incomplete → complete
+            // on the currently-viewed date — for EVERY task type (binary tick,
+            // quantitative hitting target, checklist's final subtask). This keeps
+            // the just-completed card visible long enough to read before it
+            // collapses into the 已完成 section. (Previously only binary toggles
+            // lingered, so quantitative/checklist completions vanished instantly.)
+            if (!historyUpdate || !historyUpdate.completed || wasCompleted) return;
+            if (date !== selectedDate) return;
 
-        // Only celebrate a binary 'toggle' that flipped false → true on the
-        // currently-viewed date. Subtask toggle completion happens via the
-        // inline accordion which has its own X/Y feedback; quantitative
-        // tasks have a progress bar. Layering a slide-out + toast on those
-        // would be noise.
-        if (action !== 'toggle' || wasCompleted) return;
-        if (date !== selectedDate) return;
-        if (task.type === 'quantitative') return;
-        if (task.type === 'checklist') return;   // checklist completes via subtasks
+            scheduleCompletionExit(task);
 
-        scheduleCompletionExit(task);
-        setUndoToast({
-            taskId: task.id,
-            date,
-            message: `完成「${task.title}」`,
+            // Undo toast only for a binary 'toggle' — the one path where a single
+            // re-toggle cleanly reverts. Quantitative/checklist "undo" isn't a
+            // simple flip, so they get the linger without the toast.
+            if (action === 'toggle') {
+                setUndoToast({ taskId: task.id, date, message: `完成「${task.title}」` });
+            }
         });
     };
 
