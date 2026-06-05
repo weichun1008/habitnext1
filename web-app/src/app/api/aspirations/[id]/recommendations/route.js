@@ -19,7 +19,10 @@ export async function GET(request, { params }) {
                     _count: { select: { assignments: true } },
                 },
             }),
-            prisma.officialHabit.findMany({ where: { isActive: true } }),
+            prisma.officialHabit.findMany({
+                where: { isActive: true },
+                include: { insights: { where: { status: 'published' }, select: { evidence: true } } },
+            }),
             prisma.planCategory.findMany({ select: { slug: true, domain: true, name: true, color: true, icon: true } }),
         ]);
 
