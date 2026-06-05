@@ -9,6 +9,22 @@ import {
 } from '@/lib/aspirations';
 import IdentityPicker from './explore/IdentityPicker';
 import PRESET_ASPIRATIONS from '../../prisma/seed/preset-aspirations.json';
+import IconRenderer from './IconRenderer';
+import { CATEGORY_CONFIG, domainToIconKey } from '@/lib/constants';
+
+// Hex tints for inline gradient cards (CATEGORY_CONFIG.color stores Tailwind class names,
+// not hex, so we maintain a separate domain→hex map for CSS-in-JS usage).
+const DOMAIN_HEX = {
+    '基因與腸道': '#a855f7',
+    '環境':       '#eab308',
+    '飲食':       '#ef4444',
+    '運動':       '#f97316',
+    '壓力與睡眠': '#6366f1',
+    '社交互動':   '#f43f5e',
+    '心靈':       '#22c55e',
+    '認知與智慧': '#d97706',
+    '職涯與平衡': '#64748b',
+};
 
 // AspirationPicker — Slice K, Step 1 of the new-add flow.
 // Spec: docs/superpowers/specs/2026-05-23-slice-K-aspiration-system-design.md §3.2
@@ -72,6 +88,15 @@ export default function AspirationPicker({
     const [step, setStep] = useState('pick');
     const [pendingAspiration, setPendingAspiration] = useState(null); // { text, domain, source }
     const [identityChoice, setIdentityChoice] = useState('');
+    const [activeTab, setActiveTab] = useState(null);
+
+    // Personalised presets — guarded by typeKey/sleepTypeKey heuristic. Empty
+    // list collapses the whole section (don't render an empty heading).
+    // Declared before the reset-useEffect so it can be used as a dep there.
+    const personalised = useMemo(
+        () => getPersonalisedPresets(PRESET_ASPIRATIONS, { typeKey: userTypeKey, sleepTypeKey: userSleepTypeKey }),
+        [userTypeKey, userSleepTypeKey],
+    );
 
     // Reset transient state every time the modal opens.
     useEffect(() => {
@@ -84,6 +109,8 @@ export default function AspirationPicker({
         setStep('pick');
         setPendingAspiration(null);
         setIdentityChoice('');
+        const firstPersonalisedDomain = personalised[0]?.domain || GENESIS_DOMAINS[0];
+        setActiveTab(firstPersonalisedDomain);
         if (!userId) return;
         setLoadingExisting(true);
         fetch(`/api/aspirations?userId=${encodeURIComponent(userId)}&status=active`, { cache: 'no-store' })
@@ -94,14 +121,7 @@ export default function AspirationPicker({
                 setExisting([]);
             })
             .finally(() => setLoadingExisting(false));
-    }, [isOpen, userId]);
-
-    // Personalised presets — guarded by typeKey/sleepTypeKey heuristic. Empty
-    // list collapses the whole section (don't render an empty heading).
-    const personalised = useMemo(
-        () => getPersonalisedPresets(PRESET_ASPIRATIONS, { typeKey: userTypeKey, sleepTypeKey: userSleepTypeKey }),
-        [userTypeKey, userSleepTypeKey],
-    );
+    }, [isOpen, userId, personalised]);
 
     // Group presets by GENESIS+IO domain in the canonical order.
     const presetsByDomain = useMemo(() => {
@@ -266,141 +286,85 @@ export default function AspirationPicker({
                 ) : (
                 <>
                 {/* Body */}
-                <div className="flex-1 overflow-y-auto px-5 py-4 space-y-6">
+                <div className="flex-1 overflow-y-auto px-5 py-4">
                     {error && (
-                        <div className="px-3 py-2 rounded-lg bg-red-50 border border-red-100 text-sm text-red-700">
+                        <div className="px-3 py-2 rounded-lg bg-red-50 border border-red-100 text-sm text-red-700 mb-3">
                             {error}
                         </div>
                     )}
 
-                    {/* 1. Personalised */}
-                    {personalised.length > 0 && (
-                        <section>
-                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                                為你推薦
-                            </h4>
-                            <div className="space-y-2">
-                                {personalised.map((p, i) => (
-                                    <AspirationButton
-                                        key={`personalised-${i}`}
-                                        text={p.text}
-                                        footnote={p.domain}
-                                        loading={submittingText === p.text.trim()}
-                                        disabled={submittingText && submittingText !== p.text.trim()}
-                                        onClick={() => beginPick({ ...p, source: 'preset' })}
-                                    />
+                    {/* 領域 icon tab（橫向可滑） */}
+                    <div role="tablist" className="flex gap-2 overflow-x-auto px-1 pb-2 -mx-1 no-scrollbar border-b border-gray-100">
+                        {GENESIS_DOMAINS.map(domain => {
+                            const cfg = CATEGORY_CONFIG[domainToIconKey(domain)];
+                            const on = activeTab === domain;
+                            return (
+                                <button
+                                    key={domain}
+                                    role="tab"
+                                    aria-selected={on}
+                                    aria-label={domain}
+                                    onClick={() => { setActiveTab(domain); setCustomMode(false); }}
+                                    className={`flex-shrink-0 flex flex-col items-center gap-1 px-2.5 py-1.5 rounded-xl transition-colors ${on ? '' : 'opacity-60'}`}
+                                >
+                                    <span className={`w-9 h-9 rounded-full flex items-center justify-center ${on ? (cfg?.bg || 'bg-emerald-100') : 'bg-gray-100'}`}>
+                                        <IconRenderer category={domain} size={18} />
+                                    </span>
+                                    <span className={`text-[10px] font-bold whitespace-nowrap ${on ? 'text-gray-700' : 'text-gray-400'}`}>{domain}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {activeTab && (() => {
+                        const tint = DOMAIN_HEX[activeTab] || '#10b981';
+                        const recSet = new Set(personalised.filter(p => p.domain === activeTab).map(p => p.text));
+                        const domainPresets = presetsByDomain.get(activeTab) || [];
+                        const ordered = [...domainPresets].sort((a, b) => (recSet.has(b.text) ? 1 : 0) - (recSet.has(a.text) ? 1 : 0));
+                        const existingInDomain = existing.filter(a => a.domain === activeTab);
+                        return (
+                            <div className="space-y-2.5 mt-3">
+                                {existingInDomain.map(a => (
+                                    <button key={a.id} type="button" onClick={() => pickExisting(a)}
+                                        className="w-full text-left rounded-2xl p-3.5 border border-emerald-200 bg-emerald-50/60 hover:shadow-sm transition-all">
+                                        <span className="text-[10px] font-bold text-emerald-600">已建立 · 繼續用</span>
+                                        <p className="text-sm font-bold text-gray-800 mt-0.5">{a.text}</p>
+                                    </button>
                                 ))}
-                            </div>
-                        </section>
-                    )}
-
-                    {/* 2. Existing aspirations */}
-                    {!loadingExisting && existing.length > 0 && (
-                        <section>
-                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                                你已有的嚮往（{existing.length}）
-                            </h4>
-                            <div className="space-y-2">
-                                {existing.map(a => {
-                                    const habitCount = a?._count?.habits ?? 0;
-                                    return (
-                                        <AspirationButton
-                                            key={a.id}
-                                            text={a.text}
-                                            footnote={`${a.domain || '未分類'} · 掛 ${habitCount} 個任務`}
-                                            disabled={Boolean(submittingText)}
-                                            onClick={() => pickExisting(a)}
-                                        />
-                                    );
-                                })}
-                            </div>
-                        </section>
-                    )}
-
-                    {/* 3. Preset catalogue grouped by domain */}
-                    <section>
-                        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                            從 {PRESET_ASPIRATIONS.length} 個生活面向開始
-                        </h4>
-                        <div className="space-y-4">
-                            {Array.from(presetsByDomain.entries()).map(([domain, items]) => {
-                                if (items.length === 0) return null;
-                                return (
-                                    <div key={domain}>
-                                        <p className="text-[11px] font-semibold text-gray-500 mb-1.5">
-                                            {domain}
-                                        </p>
-                                        <div className="space-y-2">
-                                            {items.map((p, i) => (
-                                                <AspirationButton
-                                                    key={`${domain}-${i}`}
-                                                    text={p.text}
-                                                    loading={submittingText === p.text.trim()}
-                                                    disabled={submittingText && submittingText !== p.text.trim()}
-                                                    onClick={() => beginPick({ ...p, source: 'preset' })}
-                                                />
-                                            ))}
+                                {ordered.map(p => (
+                                    <button key={p.text} type="button" onClick={() => beginPick({ text: p.text, domain: activeTab, source: 'preset' })}
+                                        disabled={submittingText === p.text}
+                                        className="relative w-full text-left overflow-hidden rounded-2xl p-3.5 hover:-translate-y-0.5 hover:shadow-md transition-all"
+                                        style={{ background: `linear-gradient(135deg, ${tint}14, ${tint}26)`, border: `1px solid ${tint}33` }}>
+                                        <span className="absolute -right-2 -bottom-3 opacity-10" aria-hidden><IconRenderer category={activeTab} size={62} /></span>
+                                        {recSet.has(p.text) && (
+                                            <span className="absolute top-2.5 right-3 bg-amber-100 text-amber-700 text-[9px] font-bold rounded-full px-2 py-0.5 z-10">為你推薦</span>
+                                        )}
+                                        <p className="relative text-sm font-bold text-gray-800 leading-snug pr-12">{p.text}</p>
+                                    </button>
+                                ))}
+                                {!customMode ? (
+                                    <button type="button" onClick={() => { setCustomMode(true); setCustomDomain(activeTab); }}
+                                        className="w-full rounded-2xl border border-dashed border-emerald-300 bg-emerald-50/50 p-3 text-sm font-bold text-emerald-700 hover:bg-emerald-50 transition-colors">
+                                        ＋ 自己寫一句嚮往
+                                    </button>
+                                ) : (
+                                    <div className="rounded-2xl border border-emerald-200 p-3 space-y-2">
+                                        <input type="text" autoFocus value={customText} maxLength={CUSTOM_TEXT_MAX}
+                                            onChange={e => setCustomText(e.target.value)} placeholder="我想…"
+                                            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" />
+                                        <div className="flex gap-2">
+                                            <button type="button" onClick={() => { setCustomMode(false); setCustomText(''); }}
+                                                className="flex-1 py-2 rounded-lg bg-gray-100 text-gray-600 text-sm font-bold">取消</button>
+                                            <button type="button" onClick={submitCustom} disabled={!customText.trim()}
+                                                className="flex-1 py-2 rounded-lg bg-emerald-500 text-white text-sm font-bold disabled:opacity-50">下一步</button>
                                         </div>
                                     </div>
-                                );
-                            })}
-                        </div>
-                    </section>
-
-                    {/* 4. Custom */}
-                    <section>
-                        {!customMode ? (
-                            <button
-                                type="button"
-                                onClick={() => { setCustomMode(true); setError(null); }}
-                                disabled={Boolean(submittingText)}
-                                className="w-full px-3 py-2.5 rounded-xl text-sm font-medium text-center bg-gray-50 border border-dashed border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50 flex items-center justify-center gap-1"
-                            >
-                                <Edit3 size={14} /> 都不是？自訂嚮往
-                            </button>
-                        ) : (
-                            <div className="space-y-2 p-3 rounded-xl bg-gray-50 border border-gray-200">
-                                <input
-                                    type="text"
-                                    autoFocus
-                                    maxLength={CUSTOM_TEXT_MAX}
-                                    value={customText}
-                                    onChange={(e) => setCustomText(e.target.value.slice(0, CUSTOM_TEXT_MAX))}
-                                    placeholder={`你想要什麼？（最多 ${CUSTOM_TEXT_MAX} 字）`}
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
-                                />
-                                <select
-                                    value={customDomain}
-                                    onChange={(e) => setCustomDomain(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white"
-                                >
-                                    <option value="">選一個生活面向…</option>
-                                    {GENESIS_DOMAINS.map(d => (
-                                        <option key={d} value={d}>{d}</option>
-                                    ))}
-                                </select>
-                                <div className="flex gap-2">
-                                    <button
-                                        type="button"
-                                        onClick={submitCustom}
-                                        disabled={!customText.trim() || !customDomain || Boolean(submittingText)}
-                                        className="flex-1 px-3 py-2 rounded-lg bg-emerald-500 text-white text-sm font-bold hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1"
-                                    >
-                                        {submittingText === customText.trim() ? <Loader size={14} className="animate-spin" /> : <ChevronRight size={14} />}
-                                        繼續
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => { setCustomMode(false); setCustomText(''); setCustomDomain(''); setError(null); }}
-                                        disabled={Boolean(submittingText)}
-                                        className="px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-600 text-sm hover:bg-gray-100 disabled:opacity-50"
-                                    >
-                                        取消
-                                    </button>
-                                </div>
+                                )}
+                                {error && <p className="text-xs text-red-500">{error}</p>}
                             </div>
-                        )}
-                    </section>
+                        );
+                    })()}
                 </div>
                 </>
                 )}

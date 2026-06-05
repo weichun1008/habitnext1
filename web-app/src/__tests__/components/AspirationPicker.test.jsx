@@ -81,6 +81,9 @@ describe('AspirationPicker — existing aspirations', () => {
                 onSelectAspiration={onSelectAspiration}
             />
         );
+        // Switch to the tab that matches the existing aspiration's domain.
+        const tab = await screen.findByRole('tab', { name: '壓力與睡眠' });
+        fireEvent.click(tab);
         const btn = await screen.findByText('想要好好睡覺');
         fireEvent.click(btn.closest('button'));
         expect(onSelectAspiration).toHaveBeenCalledWith(existing[0]);
@@ -105,6 +108,9 @@ describe('AspirationPicker — preset POST', () => {
                 onSelectAspiration={onSelectAspiration}
             />
         );
+        // Switch to the 飲食 tab to see '想要 Y'.
+        const tab = await screen.findByRole('tab', { name: '飲食' });
+        fireEvent.click(tab);
         const btn = await screen.findByText('想要 Y');
         fireEvent.click(btn.closest('button'));
         // 2026-06-03 — selecting a NEW aspiration advances to the identity
@@ -134,10 +140,11 @@ describe('AspirationPicker — preset POST', () => {
                 onSelectAspiration={onSelectAspiration}
             />
         );
-        // Wait for the existing-section to render — otherwise the preset
-        // click happens BEFORE the GET resolves, the dup-check sees an empty
-        // list, and falls through to POST.
-        await screen.findByText(/已有的嚮往/);
+        // Switch to the 飲食 tab. Wait for the tab to render first.
+        const tab = await screen.findByRole('tab', { name: '飲食' });
+        fireEvent.click(tab);
+        // Wait for the existing entry to appear (GET must have resolved).
+        await screen.findByText('已建立 · 繼續用');
         const presetButtons = screen.getAllByText('想要 Y');
         expect(presetButtons.length).toBeGreaterThan(1); // existing + preset
         // Click the preset catalogue version (the last one in DOM order).
@@ -160,6 +167,7 @@ describe('AspirationPicker — preset POST', () => {
                 onSelectAspiration={() => {}}
             />
         );
+        // '想要 X' is in '基因與腸道' which is the default tab — no tab switch needed.
         const btn = await screen.findByText('想要 X');
         fireEvent.click(btn.closest('button'));
         // Advance through the identity sub-step to trigger the (failing) POST.
@@ -169,7 +177,8 @@ describe('AspirationPicker — preset POST', () => {
 });
 
 describe('AspirationPicker — custom mode', () => {
-    test('custom flow: reveals input → requires text + domain → POSTs with source=user', async () => {
+    test('custom flow: reveals input → requires text → POSTs with source=user using activeTab domain', async () => {
+        // '心靈' is a GENESIS_DOMAIN; we'll switch to that tab then enter custom text.
         const created = { id: 'cust1', text: '自訂目標', domain: '心靈', source: 'user' };
         mockFetchSequence([
             async () => ({ ok: true, json: async () => [] }),
@@ -184,13 +193,15 @@ describe('AspirationPicker — custom mode', () => {
                 onSelectAspiration={onSelectAspiration}
             />
         );
-        fireEvent.click(screen.getByText(/自訂嚮往/));
-        const input = await screen.findByPlaceholderText(/你想要什麼/);
+        // Switch to the 心靈 tab so customDomain is set to '心靈'.
+        const tab = await screen.findByRole('tab', { name: '心靈' });
+        fireEvent.click(tab);
+        // Click the custom entry button.
+        fireEvent.click(await screen.findByText('＋ 自己寫一句嚮往'));
+        const input = await screen.findByPlaceholderText('我想…');
         fireEvent.change(input, { target: { value: '自訂目標' } });
-        // Without a domain pick, the 繼續 button stays disabled.
-        const goBtn = screen.getByRole('button', { name: /繼續/ });
-        expect(goBtn).toBeDisabled();
-        fireEvent.change(screen.getByRole('combobox'), { target: { value: '心靈' } });
+        // Without text the submit button is disabled; with text it becomes enabled.
+        const goBtn = screen.getByRole('button', { name: '下一步' });
         expect(goBtn).not.toBeDisabled();
         fireEvent.click(goBtn);
         // Custom create also passes through the identity sub-step before POST.
@@ -211,12 +222,13 @@ describe('AspirationPicker — custom mode', () => {
                 onSelectAspiration={() => {}}
             />
         );
-        fireEvent.click(screen.getByText(/自訂嚮往/));
-        await screen.findByPlaceholderText(/你想要什麼/);
-        fireEvent.click(screen.getByText('取消'));
-        expect(screen.queryByPlaceholderText(/你想要什麼/)).not.toBeInTheDocument();
+        // Default tab is '基因與腸道' — click ＋ 自己寫一句嚮往 directly.
+        fireEvent.click(await screen.findByText('＋ 自己寫一句嚮往'));
+        await screen.findByPlaceholderText('我想…');
+        fireEvent.click(screen.getByRole('button', { name: '取消' }));
+        expect(screen.queryByPlaceholderText('我想…')).not.toBeInTheDocument();
         // The dashed entry button is back.
-        expect(screen.getByText(/自訂嚮往/)).toBeInTheDocument();
+        expect(screen.getByText('＋ 自己寫一句嚮往')).toBeInTheDocument();
     });
 });
 
@@ -230,4 +242,23 @@ describe('AspirationPicker — close', () => {
         fireEvent.click(screen.getByLabelText('關閉'));
         expect(onClose).toHaveBeenCalled();
     });
+});
+
+describe('AspirationPicker — 領域 tab', () => {
+  beforeEach(() => {
+    global.fetch = jest.fn((url) => {
+      if (typeof url === 'string' && url.includes('/api/aspirations?')) {
+        return Promise.resolve({ ok: true, json: async () => [] });
+      }
+      return Promise.resolve({ ok: true, json: async () => ({}) });
+    });
+  });
+
+  it('渲染領域 tab，切到「飲食」後該 tab 選中且出現自訂入口', async () => {
+    render(<AspirationPicker isOpen onClose={()=>{}} userId="u1" onSelectAspiration={()=>{}} />);
+    const dietTab = await screen.findByRole('tab', { name: '飲食' });
+    fireEvent.click(dietTab);
+    expect(dietTab).toHaveAttribute('aria-selected', 'true');
+    expect(await screen.findByText('＋ 自己寫一句嚮往')).toBeInTheDocument();
+  });
 });
