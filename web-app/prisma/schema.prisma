@@ -139,6 +139,7 @@ model Task {
   ratedAt         DateTime? // last time the user rated this task
   officialHabitId String? // FK fallback so slider can seed from OfficialHabit.impact/ability
   officialHabit   OfficialHabit? @relation(fields: [officialHabitId], references: [id], onDelete: SetNull)
+  targetDays      Int? // 養成期間天數；null = 不設限（沒有終止日，持續追蹤）
   // ★ end Slice L
 
   expertName String? // 指派專家名稱 (方便顯示)
