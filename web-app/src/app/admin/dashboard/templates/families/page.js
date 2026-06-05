@@ -1,26 +1,43 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, Save, Loader } from 'lucide-react';
+import { ChevronLeft, Save, Loader, FileText } from 'lucide-react';
+import { sectionIdFor } from '@/lib/templateRecommendation';
 
 const COLOR_OPTIONS = ['#ec4899', '#6366f1', '#10b981', '#f59e0b', '#3b82f6', '#8b5cf6', '#ef4444', '#06b6d4'];
 
 export default function PlanFamiliesPage() {
   const [families, setFamilies] = useState([]);
+  const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [savingSlug, setSavingSlug] = useState(null);
 
-  useEffect(() => { fetchFamilies(); }, []);
+  useEffect(() => { fetchAll(); }, []);
 
-  const fetchFamilies = async () => {
+  const fetchAll = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/plan-families');
-      if (res.ok) setFamilies(await res.json());
-    } catch (e) { console.error('fetch families failed', e); }
+      // 家族顯示設定 + 全部計畫（用來把旗下計畫包進各家族）
+      const [famRes, tplRes] = await Promise.all([
+        fetch('/api/admin/plan-families'),
+        fetch('/api/admin/templates'),
+      ]);
+      if (famRes.ok) setFamilies(await famRes.json());
+      if (tplRes.ok) setTemplates(await tplRes.json());
+    } catch (e) { console.error('fetch families/templates failed', e); }
     finally { setLoading(false); }
   };
+
+  // 依 sectionIdFor 把計畫分到家族（成員由計畫分類決定，與探索計畫一致）
+  const byFamily = useMemo(() => {
+    const map = { flower: [], sleep: [], other: [] };
+    for (const t of templates) {
+      const fid = sectionIdFor(t);
+      (map[fid] || (map[fid] = [])).push(t);
+    }
+    return map;
+  }, [templates]);
 
   const updateField = (slug, field, value) => {
     setFamilies(fs => fs.map(f => f.slug === slug ? { ...f, [field]: value } : f));
@@ -91,6 +108,37 @@ export default function PlanFamiliesPage() {
                   {savingSlug === fam.slug ? <Loader size={16} className="animate-spin" /> : <Save size={16} />} 儲存
                 </button>
               </div>
+
+              {/* 旗下計畫（唯讀 — 歸屬由計畫的「分類」自動判定） */}
+              {(() => {
+                const plans = byFamily[fam.slug] || [];
+                return (
+                  <div className="mt-4 pt-4 border-t border-gray-700">
+                    <div className="flex items-center gap-2 mb-2">
+                      <FileText size={14} className="text-gray-400" />
+                      <span className="text-xs font-bold text-gray-300">旗下計畫</span>
+                      <span className="text-xs text-gray-500">{plans.length}</span>
+                    </div>
+                    {plans.length === 0 ? (
+                      <p className="text-xs text-gray-500 italic">尚無計畫（建立計畫時選對應分類即會歸入此家族）</p>
+                    ) : (
+                      <div className="space-y-1.5">
+                        {plans.map(t => (
+                          <div key={t.id} className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-gray-900/40 border border-gray-700/60">
+                            <span className="text-sm text-gray-200 truncate">{t.name}</span>
+                            <span className="flex items-center gap-2 flex-shrink-0">
+                              <span className="text-[10px] font-mono text-gray-400">{t.category}</span>
+                              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${t.isPublic ? 'bg-emerald-500/15 text-emerald-300' : 'bg-gray-600/40 text-gray-400'}`}>
+                                {t.isPublic ? '公開' : '未公開'}
+                              </span>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           ))}
         </div>
