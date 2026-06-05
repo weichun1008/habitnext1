@@ -26,10 +26,12 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
     const isFuture = isFutureDate(dateStr, todayStr);
     const isPast = isPastDate(dateStr, todayStr);
 
-    // Inline subtask expand/collapse state. Session-only (resets on refresh /
-    // remount) — keeping the card list visually tidy by default. Tapping the
-    // chevron flips it; tapping the card body still opens the detail modal.
-    const [subtasksExpanded, setSubtasksExpanded] = useState(false);
+    // Inline subtask expand/collapse state. Checklist tasks default to EXPANDED
+    // so subtasks are tappable without an extra "expand" tap (user feedback:
+    // having to expand first was a chore). Non-checklist cards have no subtask
+    // list, so the value is moot for them. Tapping the chevron flips it; tapping
+    // the card body still opens the detail modal.
+    const [subtasksExpanded, setSubtasksExpanded] = useState(task.type === 'checklist');
 
     // Check-pulse trigger — when isCompleted transitions false → true we
     // bump pulseKey, which re-mounts the Check icon and runs the
