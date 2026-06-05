@@ -26,7 +26,6 @@ import TemplateExplorer from './TemplateExplorer';
 import ProfileModal from './ProfileModal';
 import Avatar from './Avatar';
 import AspirationPicker from './AspirationPicker';
-import AddFlowChooser from './AddFlowChooser';
 import AspirationRecommendationPanel from './AspirationRecommendationPanel';
 import { groupTasksByAspiration } from '@/lib/aspirations';
 import FocusMapModal from './FocusMapModal';
@@ -78,7 +77,6 @@ const MainApp = () => {
     //     Lifecycle mirrors activeAspiration: set on RecommendationPanel pick,
     //     cleared when library closes.
     const [isAspirationPickerOpen, setIsAspirationPickerOpen] = useState(false);
-    const [isAddChooserOpen, setIsAddChooserOpen] = useState(false);
 
     // Slice L — focus map / candidate pool.
     //   - isFocusMapModalOpen: controls FocusMapModal visibility
@@ -1117,7 +1115,7 @@ const MainApp = () => {
                 <AppHeader
                     onViewChange={setCurrentView}
                     currentView={currentView}
-                    onOpenAddFlow={() => setIsAddChooserOpen(true)}
+                    onOpenAddFlow={() => { setEditingTask(null); setIsLibraryModalOpen(true); }}
                     onOpenBadges={() => setCurrentView('badges')}
                     onOpenExplore={() => setIsTemplateExplorerOpen(true)}
                     onOpenJourney={() => { setCurrentView('journey'); fetchJourney(user?.id); }}
@@ -1676,17 +1674,6 @@ const MainApp = () => {
                         fetchCandidateCount(user.id);
                     }
                 }}
-            />
-
-            {/* AddFlowChooser — three-path entry (mobile bottom-sheet / desktop centred).
-                Opens from AppHeader [+] on mobile. Desktop uses the sidebar
-                「從嚮往開始」 button which goes directly to AspirationPicker. */}
-            <AddFlowChooser
-                isOpen={isAddChooserOpen}
-                onClose={() => setIsAddChooserOpen(false)}
-                onAspiration={() => setIsAspirationPickerOpen(true)}
-                onExplore={() => setIsTemplateExplorerOpen(true)}
-                onLibrary={() => { setEditingTask(null); setIsLibraryModalOpen(true); }}
             />
 
             {/* Slice K — Aspiration flow (Step 1 picker + Step 2 panel).
