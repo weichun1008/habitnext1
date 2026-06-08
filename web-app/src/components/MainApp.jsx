@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp, Map, Globe, Sparkles } from 'lucide-react';
+import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp, Map, Globe, Sparkles, Star } from 'lucide-react';
 import AppHeader from './AppHeader';
 import WeekStrip from './WeekStrip';
 import TaskCard from './TaskCard';
@@ -1136,10 +1136,14 @@ const MainApp = () => {
     const completedDailyTasks = dailyTasks.filter(t =>
         isCompletedOnDate(t, selectedDate) && !completingTaskIds.has(t.id) && t.direction !== 'decrease'
     );
-    // 2026-06-03 — group the incomplete list by aspiration so each group can
-    // show the aspiration's identity ("我是個…") as its header. Only the
-    // incomplete tasks are grouped; the completed collapsible stays flat.
-    const incompleteGroups = groupTasksByAspiration(incompleteDailyTasks);
+    // 我的最愛釘選：加星的未完成任務跳脫嚮往分組，整批置頂到清單最上面（一個扁平
+    // 的「已加星號」區）。其餘才依嚮往分組顯示。
+    const pinnedIncompleteTasks = incompleteDailyTasks.filter(t => t.starred);
+    const unpinnedIncompleteTasks = incompleteDailyTasks.filter(t => !t.starred);
+    // 2026-06-03 — group the (un-pinned) incomplete list by aspiration so each
+    // group can show the aspiration's identity ("我是個…") as its header. Only
+    // the incomplete tasks are grouped; the completed collapsible stays flat.
+    const incompleteGroups = groupTasksByAspiration(unpinnedIncompleteTasks);
     const flexibleTasks = tasks.filter(t => t.recurrence?.mode === 'period_count');
     const todayStr = getTodayStr();
     const isSelectedToday = selectedDate === todayStr;
@@ -1469,6 +1473,33 @@ const MainApp = () => {
                                             <span className="w-1 h-5 bg-emerald-500 rounded-full"></span> {dailySectionLabel}
                                         </h3>
                                         <div className="space-y-3">
+                                            {/* 我的最愛置頂區 — 加星的未完成任務跳脫嚮往分組，整批
+                                                顯示在最上面。完成/取消星號後會自動移出此區。 */}
+                                            {pinnedIncompleteTasks.length > 0 && (
+                                                <div>
+                                                    <div className="mb-2 px-0.5 flex items-center gap-1">
+                                                        <Star size={13} className="fill-amber-400 text-amber-400" />
+                                                        <p className="text-xs font-bold text-amber-600 tracking-wide">已加星號</p>
+                                                    </div>
+                                                    <div className="space-y-3">
+                                                        {pinnedIncompleteTasks.map(task => {
+                                                            const isExiting = exitingTaskIds.has(task.id);
+                                                            return (
+                                                                <div
+                                                                    key={task.id}
+                                                                    className={`overflow-hidden transition-all duration-300 ease-out ${
+                                                                        isExiting
+                                                                            ? 'max-h-0 opacity-0 pointer-events-none'
+                                                                            : 'max-h-[640px] opacity-100'
+                                                                    }`}
+                                                                >
+                                                                    <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} onToggleStar={handleToggleStar} />
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            )}
                                             {/* Incomplete tasks — grouped by aspiration (2026-06-03).
                                                 Each group shows the aspiration's identity ("我是個…")
                                                 as a header above its habits. The unlinked group

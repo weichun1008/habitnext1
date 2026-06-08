@@ -1,13 +1,18 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { MoreVertical } from 'lucide-react';
 
 // TaskHoverDots — desktop-only (hidden via `md:block` on parent).
 // Shows a ⋮ button on the card's right edge, vertically centered (trailing
 // kebab, like Gmail/Drive list rows) while the parent card is hovered —
-// kept clear of the completion checkmark in the top-right corner. Clicking
-// opens a popover with the shared action menu.
+// kept clear of the completion checkmark in the top-right corner.
+//
+// The popover is rendered through a portal to document.body with fixed
+// coordinates measured from the button, so the card's `overflow-hidden`
+// (needed for the progress bar / accent rail rounding) can't clip it — the
+// previous absolute-inside-card popover was getting cut off at the edge.
 //
 // Popover closes on: click outside, Esc key, or after a successful action.
 //
@@ -17,8 +22,11 @@ import { MoreVertical } from 'lucide-react';
 const TaskHoverDots = ({ children, hoverDelayMs = 100 }) => {
     const [hovered, setHovered] = useState(false);
     const [open, setOpen] = useState(false);
+    const [coords, setCoords] = useState(null); // { top, right } in viewport px
     const timerRef = useRef(null);
     const wrapperRef = useRef(null);
+    const btnRef = useRef(null);
+    const menuRef = useRef(null);
 
     // Hover delay
     const onEnter = () => {
@@ -30,14 +38,20 @@ const TaskHoverDots = ({ children, hoverDelayMs = 100 }) => {
         if (!open) setHovered(false);
     };
 
-    // Click-outside + Esc to close popover
+    const openMenu = () => {
+        const r = btnRef.current?.getBoundingClientRect();
+        if (r) setCoords({ top: r.bottom + 4, right: window.innerWidth - r.right });
+        setOpen(true);
+    };
+
+    // Click-outside + Esc to close popover. The portal menu lives outside
+    // wrapperRef, so check menuRef too before treating a click as "outside".
     useEffect(() => {
         if (!open) return;
         const onDocClick = (e) => {
-            if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
-                setOpen(false);
-                setHovered(false);
-            }
+            const inWrapper = wrapperRef.current && wrapperRef.current.contains(e.target);
+            const inMenu = menuRef.current && menuRef.current.contains(e.target);
+            if (!inWrapper && !inMenu) { setOpen(false); setHovered(false); }
         };
         const onKey = (e) => { if (e.key === 'Escape') { setOpen(false); setHovered(false); } };
         document.addEventListener('mousedown', onDocClick);
@@ -58,8 +72,9 @@ const TaskHoverDots = ({ children, hoverDelayMs = 100 }) => {
             onMouseLeave={onLeave}
         >
             <button
+                ref={btnRef}
                 type="button"
-                onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
+                onClick={(e) => { e.stopPropagation(); open ? setOpen(false) : openMenu(); }}
                 className={`w-6 h-6 rounded-full bg-gray-50/95 backdrop-blur-sm flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-opacity ${
                     hovered || open ? 'opacity-100' : 'opacity-0 pointer-events-none'
                 }`}
@@ -67,10 +82,16 @@ const TaskHoverDots = ({ children, hoverDelayMs = 100 }) => {
             >
                 <MoreVertical size={14} />
             </button>
-            {open && (
-                <div className="absolute top-7 right-0">
+            {open && coords && createPortal(
+                <div
+                    ref={menuRef}
+                    className="fixed z-[60]"
+                    style={{ top: coords.top, right: coords.right }}
+                    onClick={(e) => e.stopPropagation()}
+                >
                     {children}
-                </div>
+                </div>,
+                document.body,
             )}
         </div>
     );
