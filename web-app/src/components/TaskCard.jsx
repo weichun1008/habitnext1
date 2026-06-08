@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw, ShieldCheck, PartyPopper } from 'lucide-react';
+import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw, ShieldCheck, PartyPopper, Play } from 'lucide-react';
 import { remainingQuota, dayStatus, settleYesterday } from '@/lib/reduceHabit';
 import SwipeReveal from './taskCard/SwipeReveal';
 import TaskHoverDots from './taskCard/TaskHoverDots';
@@ -21,7 +21,7 @@ import { visibleSubtasks } from '@/lib/subtasks';
 // `viewingDate` (yyyy-mm-dd) lets the card render any day's state — used by
 // the daily view's interactive week strip. Defaults to today so existing
 // callers that don't pass it (other views) behave unchanged.
-const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction, onPickLocation, onAttachPhoto, attachingKey }) => {
+const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction, onPickLocation, onAttachPhoto, attachingKey, onStartTool }) => {
     const todayStr = getTodayStr();
     const dateStr = viewingDate || todayStr;
     const isFuture = isFutureDate(dateStr, todayStr);
@@ -238,6 +238,19 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                 </div>
 
                 <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                    {/* Slice T — tool widget launcher. When the habit carries a
+                        tool (toolType), surface a small secondary 開始 button that
+                        opens the ToolModal. stopPropagation so it doesn't also
+                        open the detail modal. Zero-punishment: skipping is free. */}
+                    {task.toolType && (
+                        <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); onStartTool?.(task); }}
+                            className="flex items-center gap-1 text-xs font-bold text-gray-600 bg-gray-50 hover:bg-gray-100 px-2.5 py-1 rounded-full border border-gray-200 transition-colors hover:-translate-y-0.5"
+                        >
+                            <Play size={12} /> 開始
+                        </button>
+                    )}
                     {isDecrease ? (
                         // Decrease control lives in its own block below the title —
                         // the top-right slot just shows a calm status pill.

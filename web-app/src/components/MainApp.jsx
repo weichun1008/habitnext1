@@ -32,6 +32,7 @@ import FocusMapModal from './FocusMapModal';
 import JourneyView from './journey/JourneyView';
 import WorldPicker from './WorldPicker';
 import FigureWorldView from './worlds/FigureWorldView';
+import ToolModal from '@/components/tools/ToolModal';
 
 // StatsView is dynamically imported to keep recharts (~96kb gzip) off the
 // `/` route's First Load JS — it only loads when the user opens the stats tab.
@@ -134,6 +135,11 @@ const MainApp = () => {
     // Slice Q — photo capture. attachingKey = `${taskId}:${dateStr}` while a
     // single row's compress/upload is in flight (drives MemoryCapture busy).
     const [attachingKey, setAttachingKey] = useState(null);
+
+    // Slice T — habit tool widget. activeToolTask is the task whose ToolModal
+    // is open (null = closed). On widget finish we auto-complete the habit via
+    // the existing completion path, then close.
+    const [activeToolTask, setActiveToolTask] = useState(null);
 
     // 1. Check Auth on Load
     useEffect(() => {
@@ -724,6 +730,37 @@ const MainApp = () => {
         });
     };
 
+    // Slice T — open the tool widget for a habit. Wired into TaskCard's
+    // onStartTool; the ToolModal returns null when activeToolTask is null.
+    const handleStartTool = (task) => setActiveToolTask(task);
+
+    // Slice T — the widget finished. Auto-complete the habit via the SAME
+    // completion path the card uses (handleTaskUpdate → handleUpdateProgress)
+    // so streaks / linger / undo all behave identically:
+    //   - binary       → 'toggle' for today (only if not already complete)
+    //   - quantitative → 'add' +1 step toward today's target
+    //   - checklist    → no auto-complete (per-subtask), just close
+    //   - music        → respect autoComplete (default true)
+    // Zero-punishment: closing without finishing the widget does nothing.
+    const handleToolComplete = (task) => {
+        if (!task) return;
+        const date = selectedDate;
+        const toolType = task.toolType;
+
+        const shouldComplete = toolType === 'music'
+            ? (task.toolConfig?.autoComplete !== false)
+            : true;
+
+        if (shouldComplete && task.type !== 'checklist') {
+            if (task.type === 'quantitative') {
+                handleTaskUpdate(task, 'add', task.stepValue || 1, null, date);
+            } else if (!isCompletedOnDate(task, date)) {
+                handleTaskUpdate(task, 'toggle', null, null, date);
+            }
+        }
+        setActiveToolTask(null);
+    };
+
     // Clean up timers + toast on unmount.
     useEffect(() => () => {
         Object.keys(exitTimersRef.current).forEach(clearExitTimersFor);
@@ -737,6 +774,8 @@ const MainApp = () => {
             dailyTarget: taskData.direction === 'decrease' ? (taskData.dailyTarget ?? 0) : (taskData.dailyTarget || 1), // direction-aware: 戒除/減量 keep literal limit (incl. 0); increase/normal default to 1
             stepValue: taskData.stepValue || 1,
             unit: taskData.unit || '次',
+            toolType: taskData.toolType ?? null,     // Slice T — habit tool widget
+            toolConfig: taskData.toolConfig ?? null,
             recurrence: {
                 ...taskData.recurrence,
                 periodTarget: taskData.recurrence?.periodTarget || 1
@@ -856,6 +895,8 @@ const MainApp = () => {
             unit: diffConfig.unit || '次',
             stepValue: diffConfig.stepValue || 1,
             subtasks: diffConfig.subtasks || [],
+            toolType: habit.fiveT?.toolVirtual?.type ?? null,     // Slice T
+            toolConfig: habit.fiveT?.toolVirtual?.params ?? null,
             officialHabitId: habit.id,
             status: 'candidate',
         };
@@ -1439,7 +1480,7 @@ const MainApp = () => {
                                                                                 : 'max-h-[640px] opacity-100'
                                                                         }`}
                                                                     >
-                                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} />
+                                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} />
                                                                     </div>
                                                                 );
                                                             })}
@@ -1476,7 +1517,7 @@ const MainApp = () => {
                                                         // needed (Task naturally jumps back into the list
                                                         // above on re-fetch). Use handleUpdateProgress
                                                         // directly to skip the toast / scheduled exit.
-                                                        <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} />
+                                                        <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} />
                                                     ))}
                                                 </>
                                             )}
@@ -1497,7 +1538,7 @@ const MainApp = () => {
                                             </h3>
                                             <div className="space-y-3">
                                                 {flexibleTasks.map(task => (
-                                                    <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} />
+                                                    <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} />
                                                 ))}
                                             </div>
                                         </div>
@@ -1557,6 +1598,7 @@ const MainApp = () => {
                                             onPickLocation={handlePickLocation}
                                             onAttachPhoto={handleAttachPhoto}
                                             attachingKey={attachingKey}
+                                            onStartTool={handleStartTool}
                                         />
                                     ))}
                                 </div>
@@ -1643,6 +1685,7 @@ const MainApp = () => {
                 onUpdate={handleUpdateProgress}
                 onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} // ★ Slice M
                 onPickLocation={handlePickLocation} // ★ Slice O
+                onStartTool={handleStartTool} // ★ Slice T
             />
 
             <TaskLibraryModal
@@ -1757,6 +1800,15 @@ const MainApp = () => {
                 message={undoToast?.message || ''}
                 onUndo={handleUndoCompletion}
                 onDismiss={() => setUndoToast(null)}
+            />
+
+            {/* Slice T — habit tool widget. Renders null when activeToolTask is
+                null, so always-mounting is safe. onComplete auto-completes the
+                habit (type-aware) then closes. */}
+            <ToolModal
+                task={activeToolTask}
+                onClose={() => setActiveToolTask(null)}
+                onComplete={handleToolComplete}
             />
         </>
     );

@@ -314,4 +314,29 @@ describe('TaskCard', () => {
             expect(screen.queryByText(/昨天/)).not.toBeInTheDocument();
         });
     });
+
+    describe('tool start button (Slice T)', () => {
+        it('renders a 開始 button when toolType is set; clicking calls onStartTool with the task and NOT onClick', async () => {
+            const mockOnStartTool = jest.fn();
+            const t = { ...mockBinaryTask, id: 'tool-1', toolType: 'breathing', toolConfig: { cycles: 4 } };
+            render(
+                <TaskCard task={t} onClick={mockOnClick} onUpdate={mockOnUpdate} onStartTool={mockOnStartTool} />
+            );
+
+            const btn = screen.getByRole('button', { name: /開始/ });
+            expect(btn).toBeInTheDocument();
+
+            await userEvent.click(btn);
+            expect(mockOnStartTool).toHaveBeenCalledWith(t);
+            // stopPropagation — clicking 開始 must not bubble to the card body onClick
+            expect(mockOnClick).not.toHaveBeenCalled();
+        });
+
+        it('does NOT render a 開始 button when toolType is falsy', () => {
+            render(
+                <TaskCard task={mockBinaryTask} onClick={mockOnClick} onUpdate={mockOnUpdate} onStartTool={jest.fn()} />
+            );
+            expect(screen.queryByRole('button', { name: /開始/ })).not.toBeInTheDocument();
+        });
+    });
 });
