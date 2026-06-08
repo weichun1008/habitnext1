@@ -15,7 +15,7 @@ const DurationSheet = ({ value, onPick, onConfirm, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[60] bg-black/40 flex items-end justify-center" onClick={onClose}>
-      <div className="bg-white w-full max-w-xl rounded-t-3xl p-5 pb-7" onClick={e => e.stopPropagation()}>
+      <div className="bg-white w-full max-w-xl rounded-t-3xl p-5 pb-7 max-h-[80dvh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <h3 className="text-base font-extrabold text-gray-800 mb-3">想養成多久？</h3>
         <div className="grid grid-cols-2 gap-2.5">
           {DURATION_OPTIONS.map(o => {

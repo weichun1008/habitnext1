@@ -51,4 +51,9 @@ describe('RatingStep', () => {
     render(<RatingStep phase="ability" {...base} index={2} total={3} />);
     expect(screen.getByRole('button', { name: /看焦點地圖/ })).toBeInTheDocument();
   });
+
+  test('執行度第一題（index=0）顯示「上一個」（可回到影響力）', () => {
+    render(<RatingStep phase="ability" {...base} index={0} total={3} />);
+    expect(screen.getByRole('button', { name: /上一個/ })).toBeInTheDocument();
+  });
 });

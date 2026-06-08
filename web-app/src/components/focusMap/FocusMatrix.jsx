@@ -40,23 +40,23 @@ const FocusMatrix = ({ points = [] }) => {
               <span className={`text-[9px] font-extrabold ${c.txt}`}>{c.label}</span>
             </div>
           ))}
-          {laid.map(p => (
-            <div
-              key={p.id}
-              data-dot-id={p.id}
-              role="button"
-              tabIndex={0}
-              aria-label={p.title}
-              onMouseEnter={() => setActive(p.id)}
-              onMouseLeave={() => setActive(cur => (cur === p.id ? null : cur))}
-              onClick={() => setActive(cur => (cur === p.id ? null : p.id))}
-              className="absolute w-6 h-6 rounded-full border-2 border-white text-white text-[11px] font-extrabold flex items-center justify-center cursor-pointer shadow-md"
-              style={{ left: `${p.x}%`, bottom: `${p.y}%`, transform: 'translate(-50%,50%)', background: p.color }}
-            >
-              {p.n}
-            </div>
-          ))}
         </div>
+        {laid.map(p => (
+          <div
+            key={p.id}
+            data-dot-id={p.id}
+            role="button"
+            tabIndex={0}
+            aria-label={p.title}
+            onMouseEnter={() => setActive(p.id)}
+            onMouseLeave={() => setActive(cur => (cur === p.id ? null : cur))}
+            onClick={() => setActive(cur => (cur === p.id ? null : p.id))}
+            className="absolute w-7 h-7 rounded-full border-2 border-white text-white text-[11px] font-extrabold flex items-center justify-center cursor-pointer shadow-md"
+            style={{ left: `${p.x}%`, bottom: `${p.y}%`, transform: 'translate(-50%,50%)', background: p.color }}
+          >
+            {p.n}
+          </div>
+        ))}
         {/* 浮層（畫在矩陣外層，避免被 overflow-hidden 裁掉） */}
         {tip && (
           <div

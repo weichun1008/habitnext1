@@ -111,7 +111,9 @@ const FocusMapModal = ({ isOpen, userId, onClose, onActivated }) => {
       });
       if (res.ok) {
         const json = await res.json();
+        setShowDur(false);
         onActivated?.(json.counts?.activate || 0);
+        onClose?.();
       } else {
         alert('批次評分失敗，請稍後再試');
       }
