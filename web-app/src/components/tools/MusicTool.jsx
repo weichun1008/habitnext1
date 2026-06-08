@@ -34,6 +34,12 @@ export default function MusicTool({ config = {}, onComplete }) {
 
     const timerMin = config.timerMin != null ? config.timerMin : DEFAULT_TIMER_MIN;
     const totalSeconds = Math.max(0, Math.round(timerMin * 60));
+    // sessionMin = the INTENDED play length (what ± sets, clamped 5–120). The big
+    // clock shows the live `remaining` countdown; ± changes the target and
+    // restarts the countdown from it.
+    const [sessionMin, setSessionMin] = useState(() =>
+        Math.min(120, Math.max(5, Math.round(timerMin)))
+    );
     const [remaining, setRemaining] = useState(totalSeconds);
 
     const [playMode, setPlayMode] = useState(config.playMode || 'loop');
@@ -144,17 +150,16 @@ export default function MusicTool({ config = {}, onComplete }) {
         [currentId]
     );
 
-    const adjustTimer = useCallback(
-        (deltaMin) => {
-            setRemaining((prev) => {
-                const next = prev + deltaMin * 60;
-                return Math.max(60, next);
-            });
-        },
-        []
-    );
-
-    const remainingMinutesLabel = Math.max(1, Math.round(remaining / 60));
+    // ± sets the intended session length (5–120 min) and restarts the countdown
+    // from that target, so it reads as "how long to play" rather than nudging
+    // the live clock.
+    const adjustTimer = useCallback((deltaMin) => {
+        setSessionMin((prev) => {
+            const next = Math.min(120, Math.max(5, prev + deltaMin));
+            setRemaining(next * 60);
+            return next;
+        });
+    }, []);
 
     // Empty state — nothing playable in this selection.
     if (!current) {
@@ -258,7 +263,7 @@ export default function MusicTool({ config = {}, onComplete }) {
                         <Minus className="h-4 w-4" aria-hidden="true" />
                     </button>
                     <span className="min-w-[3.5rem] text-center text-xs tabular-nums text-slate-300">
-                        {remainingMinutesLabel} 分鐘
+                        {sessionMin} 分鐘
                     </span>
                     <button
                         type="button"

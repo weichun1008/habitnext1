@@ -178,7 +178,6 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center',
         gap: 24,
-        padding: 24,
     },
     cycle: {
         fontSize: 14,
