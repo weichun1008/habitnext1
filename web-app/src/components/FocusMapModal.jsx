@@ -25,13 +25,14 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onC
   const [showDur, setShowDur] = useState(false);
   const [duration, setDuration] = useState(66);
   const [doneCount, setDoneCount] = useState(null);
+  const [archivedCount, setArchivedCount] = useState(0);
   const [showSavePlan, setShowSavePlan] = useState(false);
 
   useEffect(() => {
     if (!isOpen || !userId) return;
     let cancelled = false;
     setLoading(true);
-    setPhase('impact'); setIdx(0); setShowDur(false); setDuration(66); setDoneCount(null); setShowSavePlan(false);
+    setPhase('impact'); setIdx(0); setShowDur(false); setDuration(66); setDoneCount(null); setArchivedCount(0); setShowSavePlan(false);
     (async () => {
       try {
         const res = await fetch(`/api/tasks/candidates?userId=${userId}`);
@@ -119,6 +120,7 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onC
         const count = json.counts?.activate || 0;
         onActivated?.(count);
         setDoneCount(count);
+        setArchivedCount(json.counts?.archive || 0);
       } else {
         alert('批次評分失敗，請稍後再試');
       }
@@ -161,6 +163,9 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onC
           ) : doneCount != null ? (
             <div className="text-center py-10 px-4">
               <p className="text-lg font-extrabold text-gray-800">已加入 {doneCount} 個習慣</p>
+              {archivedCount > 0 && (
+                <p className="text-xs text-gray-400 mt-1">其餘 {archivedCount} 個未選的已收進封存，候選清單已清空。</p>
+              )}
               <p className="text-xs text-gray-500 mt-1">要把這套習慣存成一個計畫嗎？之後可重複使用，或申請公開分享給大家。</p>
               <div className="flex flex-col gap-2 mt-5 max-w-xs mx-auto">
                 {aspirationId && (

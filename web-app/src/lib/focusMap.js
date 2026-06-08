@@ -65,7 +65,9 @@ function sliderSeedFor(candidate) {
 }
 
 // 依使用者在焦點地圖的選擇，組出 batch-rate 的 payload。
-// 已加入(addedSet) → activate（帶 targetDays）；其餘 → keep_candidate（保留候選、不刪除）。
+// 焦點地圖是一次性的「結帳」儀式：使用者已對載入的每個候選評過分，等於都做了決定。
+// 已加入(addedSet) → activate（帶 targetDays）；其餘 → archive（離開候選池，但資料保留可日後撈回）。
+// 如此候選池在每次評分後即清空，不會跨 session 累積，避免「只加 1 個卻要評 7 個」的困惑。
 // ratings: Map<taskId, { impact, ability }>。targetDays: number | null。
 function buildBatchPayload(candidates, ratings, addedSet, targetDays) {
   if (!Array.isArray(candidates)) return [];
@@ -76,7 +78,7 @@ function buildBatchPayload(candidates, ratings, addedSet, targetDays) {
     if (addedSet && addedSet.has(c.id)) {
       return { taskId: c.id, userImpact: impact, userAbility: ability, action: 'activate', targetDays: targetDays ?? null };
     }
-    return { taskId: c.id, userImpact: impact, userAbility: ability, action: 'keep_candidate' };
+    return { taskId: c.id, userImpact: impact, userAbility: ability, action: 'archive' };
   });
 }
 
