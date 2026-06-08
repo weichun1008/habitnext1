@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp, Map, Globe, Sparkles, Star } from 'lucide-react';
+import { Sun, Calendar, Target, BookOpen, Grid, List, Award, User, Compass, BarChart3, ChevronDown, ChevronUp, Map, Globe, Sparkles, Star, Layers } from 'lucide-react';
 import AppHeader from './AppHeader';
 import WeekStrip from './WeekStrip';
 import TaskCard from './TaskCard';
@@ -29,6 +29,8 @@ import AspirationPicker from './AspirationPicker';
 import AspirationRecommendationPanel from './AspirationRecommendationPanel';
 import { groupTasksByAspiration } from '@/lib/aspirations';
 import FocusMapModal from './FocusMapModal';
+import SaveAsPlanModal from '@/components/focusMap/SaveAsPlanModal';
+import { buildPlanFromAspiration } from '@/lib/planBuilder';
 import JourneyView from './journey/JourneyView';
 import WorldPicker from './WorldPicker';
 import FigureWorldView from './worlds/FigureWorldView';
@@ -85,6 +87,9 @@ const MainApp = () => {
     //     appears when >= 5. Refreshed after add/rate/login.
     //   - bannerDismissed: per-session hide flag (resets on page reload).
     const [isFocusMapModalOpen, setIsFocusMapModalOpen] = useState(false);
+    // 把某個嚮往的習慣集存成計畫（重用 SaveAsPlanModal）。null = 關閉。
+    const [savePlanAspiration, setSavePlanAspiration] = useState(null);
+    const handleSaveAspirationAsPlan = (aspiration) => setSavePlanAspiration(aspiration);
     const [candidateCount, setCandidateCount] = useState(0);
     const [bannerDismissed, setBannerDismissed] = useState(false);
     // Daily view — completed-section collapse state. Defaults to collapsed
@@ -1549,20 +1554,35 @@ const MainApp = () => {
                                                 return (
                                                     <div key={group.key} className={gi > 0 ? 'pt-2' : ''}>
                                                         {showHeader && (
-                                                            <div className="mb-2 px-0.5">
-                                                                {group.aspiration?.identity ? (
-                                                                    <>
-                                                                        <p className="text-sm font-bold text-emerald-700 leading-tight">
-                                                                            {group.aspiration.identity}
+                                                            <div className="mb-2 px-0.5 flex items-start justify-between gap-2">
+                                                                <div className="min-w-0">
+                                                                    {group.aspiration?.identity ? (
+                                                                        <>
+                                                                            <p className="text-sm font-bold text-emerald-700 leading-tight">
+                                                                                {group.aspiration.identity}
+                                                                            </p>
+                                                                            <p className="text-[11px] text-gray-400 leading-tight mt-0.5">
+                                                                                為了「{group.aspiration.text}」
+                                                                            </p>
+                                                                        </>
+                                                                    ) : (
+                                                                        <p className="text-xs font-bold text-gray-400 tracking-wide">
+                                                                            {group.aspiration ? group.aspiration.text : '其他習慣'}
                                                                         </p>
-                                                                        <p className="text-[11px] text-gray-400 leading-tight mt-0.5">
-                                                                            為了「{group.aspiration.text}」
-                                                                        </p>
-                                                                    </>
-                                                                ) : (
-                                                                    <p className="text-xs font-bold text-gray-400 tracking-wide">
-                                                                        {group.aspiration ? group.aspiration.text : '其他習慣'}
-                                                                    </p>
+                                                                    )}
+                                                                </div>
+                                                                {/* 只有「真實嚮往」(有 id) 且該嚮往底下有可建計畫的 active 官方習慣時，
+                                                                    才顯示「存成計畫」入口；其他習慣 (aspiration null) 不顯示。 */}
+                                                                {group.aspiration?.id && tasks.some(t =>
+                                                                    t.aspirationHabits?.[0]?.aspiration?.id === group.aspiration.id
+                                                                    && t.status === 'active' && t.officialHabit) && (
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => handleSaveAspirationAsPlan(group.aspiration)}
+                                                                        className="flex-shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 px-2 py-1 rounded-lg transition-all hover:bg-emerald-50 hover:-translate-y-0.5 active:translate-y-0"
+                                                                    >
+                                                                        <Layers size={13} /> 存成計畫
+                                                                    </button>
                                                                 )}
                                                             </div>
                                                         )}
@@ -1912,6 +1932,22 @@ const MainApp = () => {
                 onClose={() => setActiveToolTask(null)}
                 onComplete={handleToolComplete}
             />
+
+            {/* 日視圖嚮往群組標頭的「存成計畫」入口。previewPlan 只是視覺預覽；
+                server 會用該嚮往的完整 active 習慣重建真正的計畫。 */}
+            {savePlanAspiration && (
+                <SaveAsPlanModal
+                    isOpen
+                    userId={user?.id}
+                    aspirationId={savePlanAspiration.id}
+                    defaultName={savePlanAspiration.identity || savePlanAspiration.text || ''}
+                    previewPlan={buildPlanFromAspiration({ habits: tasks
+                        .filter(t => t.aspirationHabits?.[0]?.aspiration?.id === savePlanAspiration.id && t.status === 'active' && t.officialHabit)
+                        .map(t => ({ taskId: t.id, title: t.title, category: t.officialHabit ? (t.category || 'community') : 'community', officialHabit: t.officialHabit, userImpact: t.userImpact, userAbility: t.userAbility, targetDays: t.targetDays })) })}
+                    onClose={() => setSavePlanAspiration(null)}
+                    onSaved={() => setSavePlanAspiration(null)}
+                />
+            )}
         </>
     );
 };
