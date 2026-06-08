@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ChevronLeft, ChevronRight, Clock, ChevronUp, ChevronDown, Trash2, Plus, Calendar, Check, Bell } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Clock, ChevronUp, ChevronDown, Trash2, Plus, Calendar, Check, Bell, TrendingUp, TrendingDown, Ban } from 'lucide-react';
 import IconRenderer from './IconRenderer';
 import LockedTaskAlert from './LockedTaskAlert';
 import AnchorPicker from './explore/AnchorPicker';
@@ -18,6 +18,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
 
     const [formData, setFormData] = useState({
         title: '', details: '', cue: '', type: 'binary', category: 'star', frequency: 'daily',
+        direction: 'increase',
         date: defaultDate || getTodayStr(), time: '09:00',
         dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
         recurrence: { type: 'daily', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3, dailyLimit: true },
@@ -45,6 +46,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                 }
                 setFormData({
                     ...initialData,
+                    direction: initialData.direction || 'increase',
                     cue: initialData.cue || '',
                     time: initialData.time || '09:00',
                     recurrence: {
@@ -58,6 +60,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
             } else {
                 setFormData({
                     title: '', details: '', cue: '', type: 'binary', category: 'star', frequency: 'daily',
+                    direction: 'increase',
                     date: defaultDate || getTodayStr(), time: '09:00',
                     dailyTarget: 10, unit: '次', stepValue: 1, subtasks: [],
                     recurrence: { type: 'daily', mode: 'specific_days', interval: 1, endType: 'never', endDate: '', endCount: 10, weekDays: [], monthType: 'date', periodTarget: 3, dailyLimit: true },
@@ -102,6 +105,37 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
         }
     }
 
+    // Slice U — direction drives type. 減量/戒除 are always quantitative
+    // (we count occurrences); 戒除 pins the limit at 0. Switching back to
+    // 正向 restores the binary default so the type picker is meaningful again.
+    const handleDirectionChange = (mode) => {
+        if (mode === 'increase') {
+            setFormData(f => ({ ...f, direction: 'increase', type: f.type === 'quantitative' && f.dailyTarget === 0 ? 'binary' : f.type }));
+        } else if (mode === 'reduce') {
+            setFormData(f => ({
+                ...f,
+                direction: 'decrease',
+                type: 'quantitative',
+                dailyTarget: (f.dailyTarget && f.dailyTarget > 0) ? f.dailyTarget : 1,
+                unit: f.unit || '次',
+            }));
+        } else if (mode === 'avoid') {
+            setFormData(f => ({
+                ...f,
+                direction: 'decrease',
+                type: 'quantitative',
+                dailyTarget: 0,
+                unit: f.unit || '次',
+            }));
+        }
+    };
+
+    // Which direction card is active. decrease + dailyTarget 0 = 戒除; otherwise 減量.
+    const directionMode = formData.direction === 'decrease'
+        ? (formData.dailyTarget === 0 ? 'avoid' : 'reduce')
+        : 'increase';
+    const isDecrease = formData.direction === 'decrease';
+
     const toggleWeekDay = (dayIndex) => {
         const currentDays = formData.recurrence.weekDays || [];
         if (currentDays.includes(dayIndex)) {
@@ -143,6 +177,13 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                     <button
                         onClick={() => onSave({
                             ...formData,
+                            // Slice U — direction drives type for reverse habits.
+                            // decrease is always quantitative; dailyTarget is the
+                            // daily 上限 (0 = 戒除, 完全避免). 正向 leaves the
+                            // user-picked type untouched.
+                            ...(isDecrease
+                                ? { direction: 'decrease', type: 'quantitative', dailyTarget: formData.dailyTarget ?? 0, unit: formData.unit || '次' }
+                                : { direction: 'increase' }),
                             // Slice L — manual create defaults to candidate; opt-out
                             // checkbox lets power users jump straight to active. Edit
                             // path passes no status, preserving existing value.
@@ -203,7 +244,72 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                         </div>
                     </div>
 
-                    {/* Type & Goal */}
+                    {/* Slice U — Habit direction. Drives type for reverse habits. */}
+                    <div className="pt-2">
+                        <label className="text-xs text-gray-400 block mb-2 font-bold uppercase">習慣方向</label>
+                        <div className="grid grid-cols-3 gap-2">
+                            {[
+                                { id: 'increase', label: '正向', sub: '越多越好', Icon: TrendingUp },
+                                { id: 'reduce', label: '減量', sub: '越少越好', Icon: TrendingDown },
+                                { id: 'avoid', label: '戒除', sub: '完全避免', Icon: Ban },
+                            ].map(({ id, label, sub, Icon }) => {
+                                const active = directionMode === id;
+                                return (
+                                    <button
+                                        key={id}
+                                        type="button"
+                                        onClick={() => handleDirectionChange(id)}
+                                        className={`flex flex-col items-center gap-1 py-3 px-2 rounded-xl border-2 transition-all hover:-translate-y-0.5 hover:shadow-sm ${active ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-gray-50 border-transparent text-gray-500 hover:bg-gray-100'}`}
+                                    >
+                                        <Icon size={20} />
+                                        <span className="text-sm font-bold">{label}</span>
+                                        <span className="text-[10px] text-gray-400">{sub}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Decrease (減量/戒除) — direction drives type, so the
+                        normal type picker is hidden. Show a 上限 input for 減量;
+                        戒除 pins the limit at 0 and just states the goal. */}
+                    {isDecrease && (
+                        <div className="flex flex-col gap-3 bg-orange-50 p-4 rounded-xl border border-orange-100">
+                            {directionMode === 'reduce' ? (
+                                <>
+                                    <div className="flex gap-3">
+                                        <div className="flex-1">
+                                            <label className="text-xs text-orange-600 block mb-1 font-bold">每日上限</label>
+                                            <input
+                                                type="number"
+                                                aria-label="每日上限"
+                                                min={1}
+                                                className="w-full bg-white border border-orange-200 rounded-lg px-3 py-2 text-sm"
+                                                value={formData.dailyTarget}
+                                                onChange={e => setFormData({ ...formData, dailyTarget: Math.max(1, parseInt(e.target.value) || 1) })}
+                                            />
+                                        </div>
+                                        <div className="w-24">
+                                            <label className="text-xs text-orange-600 block mb-1 font-bold">單位</label>
+                                            <input
+                                                type="text"
+                                                placeholder="次"
+                                                className="w-full bg-white border border-orange-200 rounded-lg px-3 py-2 text-sm"
+                                                value={formData.unit}
+                                                onChange={e => setFormData({ ...formData, unit: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+                                    <p className="text-[11px] text-orange-700/80">記錄發生次數，守在上限內就達標 — 沒有懲罰，只是看見自己。</p>
+                                </>
+                            ) : (
+                                <p className="text-[11px] text-orange-700/80">目標是完全避免。今天沒發生就達標，發生了也只是記錄下來，明天再來。</p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Type & Goal — only for 正向 habits (direction drives type otherwise) */}
+                    {!isDecrease && (
                     <div className="pt-2">
                         <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
                             {[
@@ -236,6 +342,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                             </div>
                         )}
                     </div>
+                    )}
 
                     {/* Subtask editor — supports rename, add, soft/hard delete */}
                     {(formData.type === 'checklist' || formData.subtasks.length > 0) && (

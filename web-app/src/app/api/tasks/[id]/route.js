@@ -24,6 +24,10 @@ export async function PUT(request, { params }) {
                 dailyTarget: taskData.dailyTarget,
                 unit: taskData.unit,
                 stepValue: taskData.stepValue,
+                // Slice U — persist reverse-habit direction. Only write when the
+                // payload carries it so progress-only PUTs (historyUpdate) don't
+                // clobber an existing direction with undefined→null.
+                ...(taskData.direction !== undefined ? { direction: taskData.direction } : {}),
                 date: taskData.date,
                 time: taskData.time,
                 // Slice M — accept status transitions to paused/archived from

@@ -68,6 +68,9 @@ export async function POST(request) {
                 dailyTarget: taskData.dailyTarget,
                 unit: taskData.unit,
                 stepValue: taskData.stepValue,
+                // Slice U — reverse-habit direction. null/'increase' = 正向；
+                // 'decrease' = 減量/戒除（dailyTarget 當每日上限，0 = 戒除）。
+                direction: taskData.direction ?? null,
                 date: taskData.date,
                 time: taskData.time,
                 status,
