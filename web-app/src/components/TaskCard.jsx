@@ -4,8 +4,6 @@ import { remainingQuota, dayStatus, settleYesterday, keptStreak } from '@/lib/re
 import SwipeReveal from './taskCard/SwipeReveal';
 import TaskHoverDots from './taskCard/TaskHoverDots';
 import TaskActionMenu from './taskCard/TaskActionMenu';
-import LocationChip from './taskCard/LocationChip';
-import MemoryCapture from './journey/MemoryCapture';
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import {
@@ -247,22 +245,9 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                         <p className="text-xs text-gray-400 line-clamp-1">
                             {isPeriod ? (task.frequency === 'weekly' ? '本週目標' : '本月目標') : (task.details || '無詳細說明')}
                         </p>
-                        {/* Slice O — completion location chip (where the user did it) */}
-                        {visuallyDone && (
-                            <div className="mt-0.5 flex items-center gap-3 flex-wrap" onClick={(e) => e.stopPropagation()}>
-                                <LocationChip
-                                    city={task.locationByDate?.[dateStr] || null}
-                                    recentCities={Object.values(task.locationByDate || {}).slice(-3)}
-                                    onPick={(cityName) => onPickLocation?.(task, dateStr, cityName)}
-                                />
-                                {/* Slice Q — meal-photo capture (Blob upload guarded) */}
-                                <MemoryCapture
-                                    hasPhoto={!!task.photoByDate?.[dateStr]}
-                                    busy={attachingKey === `${task.id}:${dateStr}`}
-                                    onAttach={(file) => onAttachPhoto?.(task, dateStr, file)}
-                                />
-                            </div>
-                        )}
+                        {/* Slice O/Q — 完成地點(LocationChip)與美食回憶(MemoryCapture)在前端隱藏：
+                            這兩個功能尚未實作完成(照片上傳停用、定位為 opt-in)，不應在打勾完成時冒出。
+                            待功能成熟再恢復顯示。元件保留於 ./taskCard/LocationChip、./journey/MemoryCapture。 */}
                     </div>
                 </div>
 
