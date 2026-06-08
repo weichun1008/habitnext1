@@ -1511,7 +1511,7 @@ const MainApp = () => {
                                                                                 : 'max-h-[640px] opacity-100'
                                                                         }`}
                                                                     >
-                                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} />
+                                                                        <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} onToggleStar={handleToggleStar} />
                                                                     </div>
                                                                 );
                                                             })}
@@ -1548,7 +1548,7 @@ const MainApp = () => {
                                                         // needed (Task naturally jumps back into the list
                                                         // above on re-fetch). Use handleUpdateProgress
                                                         // directly to skip the toast / scheduled exit.
-                                                        <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} />
+                                                        <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} onToggleStar={handleToggleStar} />
                                                     ))}
                                                 </>
                                             )}
@@ -1569,7 +1569,7 @@ const MainApp = () => {
                                             </h3>
                                             <div className="space-y-3">
                                                 {flexibleTasks.map(task => (
-                                                    <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} />
+                                                    <TaskCard key={task.id} task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleUpdateProgress} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} onToggleStar={handleToggleStar} />
                                                 ))}
                                             </div>
                                         </div>
@@ -1630,6 +1630,7 @@ const MainApp = () => {
                                             onAttachPhoto={handleAttachPhoto}
                                             attachingKey={attachingKey}
                                             onStartTool={handleStartTool}
+                                            onToggleStar={handleToggleStar}
                                         />
                                     ))}
                                 </div>
@@ -1717,6 +1718,7 @@ const MainApp = () => {
                 onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} // ★ Slice M
                 onPickLocation={handlePickLocation} // ★ Slice O
                 onStartTool={handleStartTool} // ★ Slice T
+                onToggleStar={handleToggleStar}
             />
 
             <TaskLibraryModal

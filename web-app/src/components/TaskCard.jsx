@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw, ShieldCheck, PartyPopper, Play } from 'lucide-react';
+import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw, ShieldCheck, PartyPopper, Play, Star } from 'lucide-react';
 import { remainingQuota, dayStatus, settleYesterday } from '@/lib/reduceHabit';
 import SwipeReveal from './taskCard/SwipeReveal';
 import TaskHoverDots from './taskCard/TaskHoverDots';
@@ -21,7 +21,7 @@ import { visibleSubtasks } from '@/lib/subtasks';
 // `viewingDate` (yyyy-mm-dd) lets the card render any day's state — used by
 // the daily view's interactive week strip. Defaults to today so existing
 // callers that don't pass it (other views) behave unchanged.
-const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction, onPickLocation, onAttachPhoto, attachingKey, onStartTool }) => {
+const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction, onPickLocation, onAttachPhoto, attachingKey, onStartTool, onToggleStar }) => {
     const todayStr = getTodayStr();
     const dateStr = viewingDate || todayStr;
     const isFuture = isFutureDate(dateStr, todayStr);
@@ -183,6 +183,8 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                         taskId={task.id}
                         taskTitle={task.title}
                         variant="popover"
+                        starred={!!task.starred}
+                        onToggleStar={onToggleStar ? () => onToggleStar(task) : undefined}
                         onAction={(action, success) => { if (success) onAfterAction?.(action); }}
                     />
                 </TaskHoverDots>
@@ -212,8 +214,11 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                                 <span className="text-gray-300">→</span>
                             </p>
                         )}
-                        <h3 className="font-bold text-sm text-gray-800">
-                            {task.title}
+                        <h3 className="font-bold text-sm text-gray-800 flex items-center gap-1">
+                            {task.starred && (
+                                <Star size={13} className="fill-amber-400 text-amber-400 flex-shrink-0" aria-label="已加星號" />
+                            )}
+                            <span className="min-w-0">{task.title}</span>
                         </h3>
                         <p className="text-xs text-gray-400 line-clamp-1">
                             {isPeriod ? (task.frequency === 'weekly' ? '本週目標' : '本月目標') : (task.details || '無詳細說明')}
