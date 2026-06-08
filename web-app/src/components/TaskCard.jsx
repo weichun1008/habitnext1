@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw, ShieldCheck } from 'lucide-react';
+import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw, ShieldCheck, PartyPopper } from 'lucide-react';
 import { remainingQuota, dayStatus } from '@/lib/reduceHabit';
 import SwipeReveal from './taskCard/SwipeReveal';
 import TaskHoverDots from './taskCard/TaskHoverDots';
@@ -125,6 +125,12 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
     // little sense on historical snapshots or done-for-the-day instances.
     const showActionMenu = !isPast && !isCompleted && !isFuture;
 
+    // Slice U — a decrease habit is "completed" in the data sense (in-quota →
+    // isCompletedOnDate true) but should NOT wear the calm done treatment; it
+    // stays a normal active card all day. visuallyDone gates only the visual
+    // done-state (faded border, accent rail, completed-only chip row).
+    const visuallyDone = isCompleted && !isDecrease;
+
     const handleUpdate = (action, ...args) => {
         if (isLocked) return;
         onUpdate(task, action, ...args);
@@ -133,7 +139,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
     // Slice M — completed cards use a calm "done" treatment: 55% opacity, gray
     // border (not emerald), and a 3px emerald accent rail on the left rendered
     // as an absolute element. Title keeps its normal color (no strikethrough).
-    const borderCls = isCompleted
+    const borderCls = visuallyDone
         ? 'border-gray-200 opacity-55'
         : isFuture
             ? 'border-indigo-200 bg-indigo-50/20 border-dashed'
@@ -154,7 +160,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
 
             {/* Slice M — left emerald accent rail when completed (non-strikethrough
                 indicator that the task is done; complements the checkmark) */}
-            {isCompleted && (
+            {visuallyDone && (
                 <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-emerald-400" aria-hidden />
             )}
 
@@ -203,7 +209,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             {isPeriod ? (task.frequency === 'weekly' ? '本週目標' : '本月目標') : (task.details || '無詳細說明')}
                         </p>
                         {/* Slice O — completion location chip (where the user did it) */}
-                        {isCompleted && (
+                        {visuallyDone && (
                             <div className="mt-0.5 flex items-center gap-3 flex-wrap" onClick={(e) => e.stopPropagation()}>
                                 <LocationChip
                                     city={task.locationByDate?.[dateStr] || null}
@@ -243,7 +249,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                     ) : (isQuant || isPeriod) ? (
                         <span className={`text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap transition-colors ${isCompleted ? 'bg-yellow-100 text-yellow-700' : 'bg-emerald-50 text-emerald-600'}`}>
                             {isCompleted ? (
-                                <span className="flex items-center gap-1">🎉 {displayStatus}</span>
+                                <span className="flex items-center gap-1"><PartyPopper size={13} /> {displayStatus}</span>
                             ) : displayStatus}
                         </span>
                     ) : isChecklist ? (
