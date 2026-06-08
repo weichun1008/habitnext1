@@ -745,17 +745,20 @@ const MainApp = () => {
     const handleToolComplete = (task) => {
         if (!task) return;
         const date = selectedDate;
-        const toolType = task.toolType;
+        // Re-read the live task from current state — the card may have toggled it
+        // while the modal was open, so the snapshot passed in can be stale.
+        const live = tasks.find((t) => t.id === task.id) || task;
+        const toolType = live.toolType;
 
         const shouldComplete = toolType === 'music'
-            ? (task.toolConfig?.autoComplete !== false)
+            ? (live.toolConfig?.autoComplete !== false)
             : true;
 
-        if (shouldComplete && task.type !== 'checklist') {
-            if (task.type === 'quantitative') {
-                handleTaskUpdate(task, 'add', task.stepValue || 1, null, date);
-            } else if (!isCompletedOnDate(task, date)) {
-                handleTaskUpdate(task, 'toggle', null, null, date);
+        if (shouldComplete && live.type !== 'checklist') {
+            if (live.type === 'quantitative') {
+                handleTaskUpdate(live, 'add', live.stepValue || 1, null, date);
+            } else if (!isCompletedOnDate(live, date)) {
+                handleTaskUpdate(live, 'toggle', null, null, date);
             }
         }
         setActiveToolTask(null);

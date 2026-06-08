@@ -56,6 +56,28 @@ describe('MusicTool — countdown completion', () => {
     });
 });
 
+describe('MusicTool — continuous playback', () => {
+    test('loop mode sets audio.loop true; countdown to 0 still fires onComplete once', () => {
+        jest.useFakeTimers();
+        const onComplete = jest.fn();
+        const { container } = render(
+            <MusicTool
+                config={{ problemId: 'stress', playMode: 'loop', timerMin: 1 / 60 }}
+                onComplete={onComplete}
+            />
+        );
+        const audio = container.querySelector('audio');
+        expect(audio.loop).toBe(true);
+
+        fireEvent.click(screen.getByRole('button', { name: /播放|play/i }));
+        act(() => {
+            jest.advanceTimersByTime(5000);
+        });
+        expect(onComplete).toHaveBeenCalledTimes(1);
+        jest.useRealTimers();
+    });
+});
+
 describe('MusicTool — non-playable tracks', () => {
     test('a track without audioUrl shows 即將推出 and clicking it does NOT call play', () => {
         render(<MusicTool config={{ problemId: 'stress' }} onComplete={() => {}} />);

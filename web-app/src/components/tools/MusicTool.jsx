@@ -47,6 +47,32 @@ export default function MusicTool({ config = {}, onComplete }) {
         [tracks, currentId]
     );
 
+    // In 'similar' mode with more than one playable track we cycle through them
+    // on track end; otherwise a single track repeats via native loop.
+    const advanceOnEnded = playMode === 'similar' && playable.length > 1;
+    const nativeLoop = !advanceOnEnded;
+
+    // Keep the audio element's loop flag in sync with the chosen strategy.
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (audio) audio.loop = nativeLoop;
+    }, [nativeLoop, currentId]);
+
+    const handleEnded = useCallback(() => {
+        if (!advanceOnEnded) return;
+        const list = playableTracks(resolveTracks(config));
+        if (list.length < 2) return;
+        const idx = list.findIndex((t) => t.id === currentId);
+        const next = list[(idx + 1) % list.length];
+        if (!next) return;
+        setCurrentId(next.id);
+        // Play the next track immediately if we're still in a playing state.
+        const audio = audioRef.current;
+        if (audio && isPlaying) {
+            audio.play();
+        }
+    }, [advanceOnEnded, config, currentId, isPlaying]);
+
     const reduceMotion = prefersReducedMotion();
 
     const finish = useCallback(() => {
@@ -142,7 +168,7 @@ export default function MusicTool({ config = {}, onComplete }) {
 
     return (
         <div className="rounded-2xl bg-slate-900 p-5 text-slate-100">
-            <audio ref={audioRef} src={current.audioUrl || undefined} loop={playMode === 'loop'} />
+            <audio ref={audioRef} src={current.audioUrl || undefined} onEnded={handleEnded} />
 
             {/* Top — current track */}
             <div className="flex items-center gap-4">

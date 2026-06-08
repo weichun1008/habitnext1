@@ -67,25 +67,15 @@ export default function TimerTool({ config, onComplete }) {
     onComplete?.();
   }, [onComplete]);
 
+  // The tick updater stays pure: it only decrements toward 0. All phase/round
+  // transitions are driven by the `remaining === 0` effect below — a single
+  // source of truth — so the break phase is never skipped.
   const tick = useCallback(() => {
     setRemaining((prev) => {
       if (prev > 1) return prev - 1;
-
-      // reached zero on this segment
       if (mode === 'count') {
         fireComplete();
-        return 0;
       }
-
-      // pomodoro
-      setPhase((curPhase) => {
-        if (curPhase === 'work') {
-          // move to break of the same round
-          return 'break';
-        }
-        // finished a break → advance round or complete
-        return 'work';
-      });
       return 0;
     });
   }, [mode, fireComplete]);
@@ -101,10 +91,12 @@ export default function TimerTool({ config, onComplete }) {
         fireComplete();
       } else {
         setRound((r) => r + 1);
+        setPhase('work');
         setRemaining(seconds);
       }
     } else {
       // work just ended → start break
+      setPhase('break');
       setRemaining(breakSeconds);
     }
   }, [remaining, phase, round, rounds, running, mode, seconds, breakSeconds, fireComplete]);

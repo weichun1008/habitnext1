@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { describeTool } from '@/lib/tools';
+import { describeMusic } from '@/lib/musicTool';
 import BreathingTool from './BreathingTool';
 import TimerTool from './TimerTool';
 import MusicTool from './MusicTool';
@@ -29,7 +30,8 @@ export default function ToolModal({ task, onClose, onComplete }) {
     if (!task || !ToolComponent) return null;
 
     const config = task.toolConfig;
-    const title = describeTool(toolType, config);
+    const title =
+        toolType === 'music' ? describeMusic(config) : describeTool(toolType, config);
 
     const handleComplete = () => {
         onComplete?.(task);
