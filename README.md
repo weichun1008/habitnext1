@@ -5,6 +5,8 @@ A habit-tracking web app grounded in behavior science — BJ Fogg's Tiny Habits 
 **Live:** [habitnext1.vercel.app](https://habitnext1.vercel.app)
 **Repo:** [github.com/weichun1008/habitnext1](https://github.com/weichun1008/habitnext1)
 
+> **交接 / 接手請從 [`docs/INDEX.md`](docs/INDEX.md) 開始** — 一頁看懂四份文件給誰看、上線 blocker、後台授權與環境變數。
+
 ---
 
 ## What you can do today
