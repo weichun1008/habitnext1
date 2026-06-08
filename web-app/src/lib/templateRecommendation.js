@@ -64,10 +64,18 @@ const TEMPLATE_SECTIONS = [
         description: null,
         quizPendingCopy: null,
     },
+    {
+        id: 'community',
+        label: '社群計畫',
+        description: '由其他使用者分享、經審核的計畫。',
+        quizPendingCopy: null,
+    },
 ];
 
 function sectionIdFor(template) {
-    if (!template || !template.category) return 'other';
+    if (!template) return 'other';
+    if (template.authorType === 'user') return 'community';
+    if (!template.category) return 'other';
     if (FLOWER_TYPES.has(template.category)) return 'flower';
     if (SLEEP_CATEGORIES.has(template.category)) return 'sleep';
     return 'other';
@@ -79,7 +87,7 @@ function sectionIdFor(template) {
  * with each list sorted so recommended templates float to the top.
  */
 function groupTemplatesBySection(templates, userTypeKey, userSleepTypeKey) {
-    const grouped = { flower: [], sleep: [], other: [] };
+    const grouped = { flower: [], sleep: [], other: [], community: [] };
     for (const t of templates) {
         grouped[sectionIdFor(t)].push(t);
     }

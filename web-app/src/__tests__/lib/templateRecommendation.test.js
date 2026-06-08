@@ -82,17 +82,19 @@ describe('sortByRecommendation', () => {
 });
 
 describe('TEMPLATE_SECTIONS', () => {
-    test('has flower, sleep, other in that order', () => {
-        expect(TEMPLATE_SECTIONS.map(s => s.id)).toEqual(['flower', 'sleep', 'other']);
+    test('has flower, sleep, other, community in that order', () => {
+        expect(TEMPLATE_SECTIONS.map(s => s.id)).toEqual(['flower', 'sleep', 'other', 'community']);
     });
 
-    test('flower + sleep sections have quizPendingCopy; other does not', () => {
+    test('flower + sleep sections have quizPendingCopy; other + community do not', () => {
         const flower = TEMPLATE_SECTIONS.find(s => s.id === 'flower');
         const sleep = TEMPLATE_SECTIONS.find(s => s.id === 'sleep');
         const otherSection = TEMPLATE_SECTIONS.find(s => s.id === 'other');
+        const communitySection = TEMPLATE_SECTIONS.find(s => s.id === 'community');
         expect(flower.quizPendingCopy).toBeTruthy();
         expect(sleep.quizPendingCopy).toBeTruthy();
         expect(otherSection.quizPendingCopy).toBeNull();
+        expect(communitySection.quizPendingCopy).toBeNull();
     });
 });
 
@@ -142,16 +144,29 @@ describe('groupTemplatesBySection', () => {
         expect(grouped.other.map(t => t.id)).toEqual(['g']);
     });
 
-    test('empty input returns three empty buckets', () => {
+    test('empty input returns four empty buckets', () => {
         const grouped = groupTemplatesBySection([], null, null);
-        expect(grouped).toEqual({ flower: [], sleep: [], other: [] });
+        expect(grouped).toEqual({ flower: [], sleep: [], other: [], community: [] });
     });
 
-    test('all-flower input leaves sleep + other empty', () => {
+    test('all-flower input leaves sleep + other + community empty', () => {
         const templates = [flower('daisy'), flower('rose')];
         const grouped = groupTemplatesBySection(templates, null, null);
         expect(grouped.flower).toHaveLength(2);
         expect(grouped.sleep).toEqual([]);
         expect(grouped.other).toEqual([]);
+        expect(grouped.community).toEqual([]);
     });
+});
+
+describe('sectionIdFor — community', () => {
+  it('routes user-authored templates to community regardless of category', () => {
+    expect(sectionIdFor({ authorType: 'user', category: 'daisy' })).toBe('community');
+    expect(sectionIdFor({ authorType: 'user', category: 'sleep_stress' })).toBe('community');
+  });
+  it('keeps official templates on their category section', () => {
+    expect(sectionIdFor({ authorType: 'official', category: 'daisy' })).toBe('flower');
+    expect(sectionIdFor({ category: 'sleep_stress' })).toBe('sleep');
+    expect(sectionIdFor({ category: 'whatever' })).toBe('other');
+  });
 });
