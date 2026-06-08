@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Plus, Search, Edit2, Trash2, Archive, RotateCcw, X, Save, Settings, FolderOpen, Link, BookOpen, Wrench, Wind, Timer, Music } from 'lucide-react';
 import IconRenderer from '@/components/IconRenderer';
 import { CATEGORY_CONFIG, domainToIconKey } from '@/lib/constants';
@@ -65,7 +66,10 @@ const defaultFormData = {
     fiveT: null
 };
 
-export default function HabitsPage() {
+function HabitsPageInner() {
+    const searchParams = useSearchParams();
+    const deepLinkHandledRef = useRef(null);
+    const toolSectionRef = useRef(null);
     const [habits, setHabits] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -148,6 +152,23 @@ export default function HabitsPage() {
         setActiveDiffTab(firstEnabled);
         setIsModalOpen(true);
     };
+
+    // Deep-link drill-down: arrive via ?edit=<id> → auto-open that habit's edit modal
+    // once (guarded by id so closing it won't reopen), then scroll to the tool section.
+    useEffect(() => {
+        const editId = searchParams.get('edit');
+        if (!editId || habits.length === 0) return;
+        if (deepLinkHandledRef.current === editId) return;
+
+        const habit = habits.find(h => String(h.id) === String(editId));
+        if (!habit) return;
+
+        deepLinkHandledRef.current = editId;
+        openEditModal(habit);
+        setTimeout(() => {
+            toolSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+    }, [habits, searchParams]);
 
     const handleSave = async () => {
         const hasEnabled = DIFFICULTY_TABS.some(t => formData.difficulties[t.key]?.enabled);
@@ -784,7 +805,7 @@ export default function HabitsPage() {
                             </div>
 
                             {/* Slice T — Habit Tools (fiveT) */}
-                            <div>
+                            <div id="habit-tool-section" ref={toolSectionRef}>
                                 <label className="admin-label mb-3 flex items-center gap-2">
                                     <Wrench size={16} /> 習慣工具 (Tool)
                                 </label>
@@ -1015,5 +1036,14 @@ export default function HabitsPage() {
                 habit={insightsHabit}
             />
         </div>
+    );
+}
+
+// useSearchParams requires a Suspense boundary at build time in the App Router.
+export default function HabitsPage() {
+    return (
+        <Suspense fallback={<div className="p-6 text-gray-400">載入中...</div>}>
+            <HabitsPageInner />
+        </Suspense>
     );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Wrench, Wind, Timer, Music, Package } from 'lucide-react';
+import { ArrowLeft, Wrench, Wind, Timer, Music, Package, ChevronRight } from 'lucide-react';
 import { describeTool } from '@/lib/tools';
 import { describeMusic } from '@/lib/musicTool';
 
@@ -138,9 +138,19 @@ export default function HabitToolsPage() {
                                             </thead>
                                             <tbody>
                                                 {rows.map(h => (
-                                                    <tr key={h.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                                    <tr key={h.id} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
                                                         <td className="py-3 pr-4 text-white">
-                                                            <div className="font-medium">{h.name}</div>
+                                                            <a
+                                                                href={`/admin/dashboard/habits?edit=${h.id}`}
+                                                                className="inline-flex items-center gap-1.5 font-medium text-white hover:text-emerald-400 hover:underline underline-offset-4 transition-colors"
+                                                                title="編輯此習慣"
+                                                            >
+                                                                {h.name}
+                                                                <ChevronRight
+                                                                    size={14}
+                                                                    className="text-gray-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all"
+                                                                />
+                                                            </a>
                                                             <div className="text-xs text-gray-500">{h.category}</div>
                                                         </td>
                                                         <td className="py-3 pr-4 text-gray-300">
@@ -172,10 +182,20 @@ export default function HabitToolsPage() {
                                 {physicalHabits.map(h => (
                                     <div
                                         key={h.id}
-                                        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 bg-white/5 rounded-xl border border-white/10 hover:border-emerald-500/30 transition-colors"
+                                        className="group flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 bg-white/5 rounded-xl border border-white/10 hover:border-emerald-500/30 transition-colors"
                                     >
                                         <div>
-                                            <div className="font-medium text-white">{h.name}</div>
+                                            <a
+                                                href={`/admin/dashboard/habits?edit=${h.id}`}
+                                                className="inline-flex items-center gap-1.5 font-medium text-white hover:text-emerald-400 hover:underline underline-offset-4 transition-colors"
+                                                title="編輯此習慣"
+                                            >
+                                                {h.name}
+                                                <ChevronRight
+                                                    size={14}
+                                                    className="text-gray-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all"
+                                                />
+                                            </a>
                                             <div className="text-xs text-gray-500">{h.category}</div>
                                         </div>
                                         <div className="flex flex-wrap gap-2">
