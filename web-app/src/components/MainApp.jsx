@@ -1803,6 +1803,7 @@ const MainApp = () => {
                 message={undoToast?.message || ''}
                 onUndo={handleUndoCompletion}
                 onDismiss={() => setUndoToast(null)}
+                durationMs={3000}
             />
 
             {/* Slice T — habit tool widget. Renders null when activeToolTask is
