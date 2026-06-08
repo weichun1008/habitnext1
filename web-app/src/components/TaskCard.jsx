@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw, ShieldCheck, PartyPopper, Play, Star } from 'lucide-react';
-import { remainingQuota, dayStatus, settleYesterday } from '@/lib/reduceHabit';
+import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw, ShieldCheck, PartyPopper, Play, Star, TrendingDown, Ban } from 'lucide-react';
+import { remainingQuota, dayStatus, settleYesterday, keptStreak } from '@/lib/reduceHabit';
 import SwipeReveal from './taskCard/SwipeReveal';
 import TaskHoverDots from './taskCard/TaskHoverDots';
 import TaskActionMenu from './taskCard/TaskActionMenu';
@@ -96,6 +96,18 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
     const decRemaining = remainingQuota({ value: decValue, limit: decLimit });
     const decStatus = dayStatus({ direction: 'decrease', value: decValue, limit: decLimit });
 
+    // Slice U 視覺區隔 — 減低(琥珀) vs 戒除(玫紅)。色帶 + 標籤 + 淡底；戒除多「已守住 N 天」。
+    const isReduce = isDecrease && decLimit > 0;
+    const isQuit = isDecrease && decLimit === 0;
+    const polColor = isQuit ? '#e11d48' : '#d97706';
+    const polSoft = isQuit ? '#fff1f2' : '#fffbeb';
+    const polBorder = isQuit ? '#fecdd3' : '#fde68a';
+    const polLabel = isQuit ? '戒除' : '減低';
+    const PolIcon = isQuit ? Ban : TrendingDown;
+    const quitStreak = isQuit
+        ? keptStreak({ limit: 0, dailyProgress: task.dailyProgress, history: task.history, todayStr, startStr: (task.createdAt ? String(task.createdAt).slice(0, 10) : (task.date || null)) })
+        : 0;
+
     // Slice U model (c) — next-day settlement. On TODAY's view only, surface a
     // calm settle line for how yesterday landed (零懲罰: kept → teal, exceeded →
     // neutral gray). Pure display from data; shown only if yesterday was tracked.
@@ -165,13 +177,19 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
     const cardBody = (
         <div
             onClick={onClick}
-            className={`group bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${borderCls} ${isPast && !isCompleted ? 'opacity-75' : ''}`}
+            className={`group p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${isDecrease ? '' : 'bg-white'} ${borderCls} ${isPast && !isCompleted ? 'opacity-75' : ''}`}
+            style={isDecrease ? { backgroundColor: `${polSoft}99`, borderColor: polBorder } : undefined}
         >
 
             {/* Slice M — left emerald accent rail when completed (non-strikethrough
                 indicator that the task is done; complements the checkmark) */}
             {visuallyDone && (
                 <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-emerald-400" aria-hidden />
+            )}
+
+            {/* Slice U 視覺區隔 — 減低/戒除 左側極性色帶（琥珀/玫紅） */}
+            {isDecrease && (
+                <div className="absolute left-0 top-0 bottom-0 w-[5px]" style={{ backgroundColor: polColor }} aria-hidden />
             )}
 
             {/* Slice M — desktop hover dots top-right. Only show on today's
@@ -219,18 +237,26 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                                     onClick={(e) => { e.stopPropagation(); onToggleStar(task); }}
                                     aria-label={task.starred ? '取消星號' : '加入星號'}
                                     aria-pressed={!!task.starred}
-                                    className={`flex-shrink-0 -ml-0.5 transition-all hover:scale-110 ${
+                                    className={`flex-shrink-0 -ml-1.5 -my-1 p-1 rounded-full hover:bg-amber-50 transition-all hover:scale-110 active:scale-95 ${
                                         task.starred
                                             ? 'text-amber-400'
-                                            : 'text-gray-300 hover:text-amber-400 opacity-0 group-hover:opacity-100 max-md:opacity-100'
+                                            : 'text-gray-300 hover:text-amber-400 opacity-40 md:opacity-0 md:group-hover:opacity-100'
                                     }`}
                                 >
-                                    <Star size={14} className={task.starred ? 'fill-amber-400' : ''} />
+                                    <Star size={19} className={task.starred ? 'fill-amber-400' : ''} />
                                 </button>
                             ) : task.starred && (
-                                <Star size={13} className="fill-amber-400 text-amber-400 flex-shrink-0" aria-label="已加星號" />
+                                <Star size={16} className="fill-amber-400 text-amber-400 flex-shrink-0" aria-label="已加星號" />
                             )}
                             <span className="min-w-0">{task.title}</span>
+                            {isDecrease && (
+                                <span
+                                    className="flex-shrink-0 inline-flex items-center gap-0.5 text-[10px] font-black rounded-full px-1.5 py-0.5 border"
+                                    style={{ color: polColor, backgroundColor: polSoft, borderColor: polBorder }}
+                                >
+                                    <PolIcon size={11} /> {polLabel}
+                                </span>
+                            )}
                         </h3>
                         <p className="text-xs text-gray-400 line-clamp-1">
                             {isPeriod ? (task.frequency === 'weekly' ? '本週目標' : '本月目標') : (task.details || '無詳細說明')}
@@ -277,8 +303,8 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             </span>
                         ) : (
                             decValue === 0 ? (
-                                <span className="text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap bg-teal-50 text-teal-700 flex items-center gap-1">
-                                    <ShieldCheck size={13} /> 今天守著
+                                <span className="text-xs font-black px-2 py-1 rounded-lg whitespace-nowrap flex items-center gap-1 text-white" style={{ backgroundColor: polColor }}>
+                                    <ShieldCheck size={13} /> {quitStreak > 0 ? `已守住 ${quitStreak} 天` : '今天守著'}
                                 </span>
                             ) : (
                                 <span className="text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap bg-gray-100 text-gray-500">
