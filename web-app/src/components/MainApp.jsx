@@ -1009,8 +1009,11 @@ const MainApp = () => {
             // showing for ~1.5s instead of instantly jumping to the bottom (which
             // read as "no dwell / jumped away"). It sorts down only once the
             // linger ends and it leaves completingTaskIds.
-            const ac = (isCompletedOnDate(a, selectedDate) && !completingTaskIds.has(a.id)) ? 1 : 0;
-            const bc = (isCompletedOnDate(b, selectedDate) && !completingTaskIds.has(b.id)) ? 1 : 0;
+            // Slice U — decrease habits are never treated as "completed" for
+            // ordering. They stay in the main flow all day (零懲罰), so they
+            // must not sink to the bottom just because value <= limit.
+            const ac = (isCompletedOnDate(a, selectedDate) && !completingTaskIds.has(a.id) && a.direction !== 'decrease') ? 1 : 0;
+            const bc = (isCompletedOnDate(b, selectedDate) && !completingTaskIds.has(b.id) && b.direction !== 'decrease') ? 1 : 0;
             if (ac !== bc) return ac - bc;
             const ao = cueOrderFor(a.cue);
             const bo = cueOrderFor(b.cue);
@@ -1030,11 +1033,14 @@ const MainApp = () => {
     // vanishes — exactly the "no checkmark dwell" the user reported).
     // We keep exitingTaskIds in the incomplete bucket so the card lingers
     // with its check showing, then the t=1000ms re-fetch finally moves it.
+    // Slice U — decrease habits always stay in the main (incomplete) list and
+    // are excluded from the collapsed 已完成 section, so the user can keep
+    // recording occurrences all day without the card being hidden as "done".
     const incompleteDailyTasks = dailyTasks.filter(t =>
-        !isCompletedOnDate(t, selectedDate) || completingTaskIds.has(t.id)
+        !isCompletedOnDate(t, selectedDate) || completingTaskIds.has(t.id) || t.direction === 'decrease'
     );
     const completedDailyTasks = dailyTasks.filter(t =>
-        isCompletedOnDate(t, selectedDate) && !completingTaskIds.has(t.id)
+        isCompletedOnDate(t, selectedDate) && !completingTaskIds.has(t.id) && t.direction !== 'decrease'
     );
     // 2026-06-03 — group the incomplete list by aspiration so each group can
     // show the aspiration's identity ("我是個…") as its header. Only the

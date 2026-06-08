@@ -188,4 +188,111 @@ describe('TaskCard', () => {
             expect(screen.getByText('2/3')).toBeInTheDocument();
         });
     });
+
+    describe('decrease habit — reverse control (Slice U)', () => {
+        it('decrease 減量：顯示剩餘額度 + 我做了+1，點擊觸發 add(+1)', async () => {
+            const t = {
+                id: 'r1',
+                title: '少喝酒',
+                type: 'quantitative',
+                direction: 'decrease',
+                dailyTarget: 3,
+                recurrence: { type: 'daily', interval: 1 },
+                history: {},
+                dailyProgress: {},
+            };
+            const { container } = render(
+                <TaskCard task={t} onClick={mockOnClick} onUpdate={mockOnUpdate} viewingDate={TODAY} />
+            );
+            expect(container.querySelector('[data-direction="decrease"]')).toBeTruthy();
+            // limit 3, value 0 → 剩 3 次
+            expect(screen.getByText(/剩\s*3\s*次/)).toBeInTheDocument();
+            await userEvent.click(screen.getByText(/我做了/));
+            expect(mockOnUpdate).toHaveBeenCalledWith(t, 'add', 1);
+        });
+
+        it('decrease 減量：-1 修正鈕觸發 add(-1)', async () => {
+            const t = {
+                id: 'r2',
+                title: '少喝酒',
+                type: 'quantitative',
+                direction: 'decrease',
+                dailyTarget: 3,
+                recurrence: { type: 'daily', interval: 1 },
+                history: {},
+                dailyProgress: { [TODAY]: { value: 2 } },
+            };
+            render(<TaskCard task={t} onClick={mockOnClick} onUpdate={mockOnUpdate} viewingDate={TODAY} />);
+            expect(screen.getByText(/剩\s*1\s*次/)).toBeInTheDocument();
+            await userEvent.click(screen.getByLabelText('修正：減一次'));
+            expect(mockOnUpdate).toHaveBeenCalledWith(t, 'add', -1);
+        });
+
+        it('decrease 減量：超過額度顯示中性語氣', () => {
+            const t = {
+                id: 'r3',
+                title: '少喝酒',
+                type: 'quantitative',
+                direction: 'decrease',
+                dailyTarget: 3,
+                recurrence: { type: 'daily', interval: 1 },
+                history: {},
+                dailyProgress: { [TODAY]: { value: 5 } },
+            };
+            render(<TaskCard task={t} onClick={mockOnClick} onUpdate={mockOnUpdate} viewingDate={TODAY} />);
+            expect(screen.getByText(/超過額度/)).toBeInTheDocument();
+        });
+
+        it('decrease 戒除（limit=0）：value=0 顯示今天守著', () => {
+            const t = {
+                id: 'r4',
+                title: '戒菸',
+                type: 'quantitative',
+                direction: 'decrease',
+                dailyTarget: 0,
+                recurrence: { type: 'daily', interval: 1 },
+                history: {},
+                dailyProgress: {},
+            };
+            const { container } = render(
+                <TaskCard task={t} onClick={mockOnClick} onUpdate={mockOnUpdate} viewingDate={TODAY} />
+            );
+            expect(container.querySelector('[data-direction="decrease"]')).toBeTruthy();
+            expect(screen.getByText(/今天守著/)).toBeInTheDocument();
+        });
+
+        it('decrease 戒除（limit=0）：value>0 顯示零懲罰記錄文案 + 誠實記錄鈕觸發 add(+1)', async () => {
+            const t = {
+                id: 'r5',
+                title: '戒菸',
+                type: 'quantitative',
+                direction: 'decrease',
+                dailyTarget: 0,
+                recurrence: { type: 'daily', interval: 1 },
+                history: {},
+                dailyProgress: { [TODAY]: { value: 2 } },
+            };
+            render(<TaskCard task={t} onClick={mockOnClick} onUpdate={mockOnUpdate} viewingDate={TODAY} />);
+            expect(screen.getByText(/明天重新開始/)).toBeInTheDocument();
+            await userEvent.click(screen.getByText(/我做了/));
+            expect(mockOnUpdate).toHaveBeenCalledWith(t, 'add', 1);
+        });
+
+        it('decrease 不顯示量化進度的 +N step 鈕', () => {
+            const t = {
+                id: 'r6',
+                title: '少喝酒',
+                type: 'quantitative',
+                direction: 'decrease',
+                dailyTarget: 3,
+                stepValue: 1,
+                recurrence: { type: 'daily', interval: 1 },
+                history: {},
+                dailyProgress: {},
+            };
+            render(<TaskCard task={t} onClick={mockOnClick} onUpdate={mockOnUpdate} viewingDate={TODAY} />);
+            // 量化 step 鈕文字是 "+1"（stepValue）；decrease 控制用「+1 我做了」，不用裸 +1 step
+            expect(screen.queryByText('+1')).not.toBeInTheDocument();
+        });
+    });
 });

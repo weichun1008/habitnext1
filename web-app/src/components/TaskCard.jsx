@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw } from 'lucide-react';
+import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw, ShieldCheck } from 'lucide-react';
+import { remainingQuota, dayStatus } from '@/lib/reduceHabit';
 import SwipeReveal from './taskCard/SwipeReveal';
 import TaskHoverDots from './taskCard/TaskHoverDots';
 import TaskActionMenu from './taskCard/TaskActionMenu';
@@ -81,9 +82,19 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
     // CATEGORY_CONFIG and leave bg/color gray. resolveIconKey translates the
     // domain name to the right config key ('apple') first.
     const config = CATEGORY_CONFIG[resolveIconKey(task.category)];
-    const isQuant = task.type === 'quantitative';
+    // Slice U — reverse habit ("越少越好"). Stored as quantitative + direction.
+    // It REPLACES the binary/quantitative completion control with a 零懲罰
+    // record-occurrence UI and stays visible in the daily list all day.
+    const isDecrease = task.direction === 'decrease';
+    const isQuant = task.type === 'quantitative' && !isDecrease;
     const isPeriod = task.recurrence?.mode === 'period_count';
     const isChecklist = task.type === 'checklist';
+
+    // Decrease day state — value = occurrences today, limit = dailyTarget cap.
+    const decValue = task.dailyProgress?.[dateStr]?.value || 0;
+    const decLimit = task.dailyTarget || 0;
+    const decRemaining = remainingQuota({ value: decValue, limit: decLimit });
+    const decStatus = dayStatus({ direction: 'decrease', value: decValue, limit: decLimit });
 
     // Subtask progress — hoisted so we can render both the X/Y badge AND the
     // inline subtask list (when expanded) from the same source.
@@ -211,7 +222,25 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                 </div>
 
                 <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                    {(isQuant || isPeriod) ? (
+                    {isDecrease ? (
+                        // Decrease control lives in its own block below the title —
+                        // the top-right slot just shows a calm status pill.
+                        decLimit > 0 ? (
+                            <span className={`text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap ${decStatus === 'over' ? 'bg-amber-50 text-amber-700' : 'bg-teal-50 text-teal-700'}`}>
+                                {decStatus === 'over' ? '超過額度' : `剩 ${decRemaining} 次`}
+                            </span>
+                        ) : (
+                            decValue === 0 ? (
+                                <span className="text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap bg-teal-50 text-teal-700 flex items-center gap-1">
+                                    <ShieldCheck size={13} /> 今天守著
+                                </span>
+                            ) : (
+                                <span className="text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap bg-gray-100 text-gray-500">
+                                    {`今天 ${decValue} 次`}
+                                </span>
+                            )
+                        )
+                    ) : (isQuant || isPeriod) ? (
                         <span className={`text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap transition-colors ${isCompleted ? 'bg-yellow-100 text-yellow-700' : 'bg-emerald-50 text-emerald-600'}`}>
                             {isCompleted ? (
                                 <span className="flex items-center gap-1">🎉 {displayStatus}</span>
@@ -326,6 +355,46 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                     <button onClick={(e) => { e.stopPropagation(); handleUpdate('add', -(task.stepValue || 1)); }} className="w-8 h-6 flex items-center justify-center text-xs font-bold text-gray-500 hover:bg-gray-100 rounded-full border border-gray-200 transition-colors"><Minus size={12} /></button>
                     <button onClick={(e) => { e.stopPropagation(); handleUpdate('add', (task.stepValue || 1)); }} className="w-12 h-6 flex items-center justify-center text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-full border border-emerald-100 transition-colors">+{task.stepValue || 1}</button>
                     <span className="text-xs text-gray-400 pt-1.5">{task.unit}</span>
+                </div>
+            )}
+
+            {/* Slice U — decrease control. Replaces binary check / quant stepper.
+                Stays visible all day; user records occurrences (+1 我做了) with a
+                small -1 correction. 零懲罰 copy — no shaming, "重新開始" framing. */}
+            {isDecrease && !isLocked && (
+                <div
+                    data-direction="decrease"
+                    className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between gap-2"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <p className="text-xs text-gray-500 leading-tight flex-1 min-w-0">
+                        {decLimit > 0
+                            ? (decStatus === 'over'
+                                ? '沒關係，明天重新開始'
+                                : `今天還可以 ${decRemaining} 次`)
+                            : (decValue === 0
+                                ? '繼續保持，你做得很好'
+                                : `今天記錄了 ${decValue} 次 · 沒關係，明天重新開始`)}
+                    </p>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                        <button
+                            type="button"
+                            aria-label="修正：減一次"
+                            disabled={decValue <= 0}
+                            onClick={(e) => { e.stopPropagation(); handleUpdate('add', -1); }}
+                            className="w-8 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full border border-gray-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                            <Minus size={12} />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); handleUpdate('add', 1); }}
+                            className="flex items-center gap-1 text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-full border border-teal-100 transition-colors"
+                        >
+                            <Plus size={12} />
+                            {decLimit > 0 ? '我做了' : '誠實記錄：我做了'}
+                        </button>
+                    </div>
                 </div>
             )}
 
