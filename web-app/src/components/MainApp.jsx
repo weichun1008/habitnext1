@@ -1671,6 +1671,7 @@ const MainApp = () => {
                 isOpen={isFocusMapModalOpen}
                 userId={user?.id}
                 aspirationId={activeAspiration?.id || null}
+                aspirationTitle={activeAspiration?.identity || activeAspiration?.title || ''}
                 onClose={() => setIsFocusMapModalOpen(false)}
                 onActivated={() => {
                     setIsFocusMapModalOpen(false);

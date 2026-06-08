@@ -14,7 +14,7 @@ import { buildPlanFromAspiration } from '@/lib/planBuilder';
 // Props: isOpen, userId, onClose(), onActivated(count)
 const ORDER = ['golden', 'big_fish', 'background', 'skip'];
 
-const FocusMapModal = ({ isOpen, userId, aspirationId, onClose, onActivated }) => {
+const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onClose, onActivated }) => {
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -210,7 +210,7 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, onClose, onActivated }) =
           isOpen
           userId={userId}
           aspirationId={aspirationId}
-          defaultName={''}
+          defaultName={aspirationTitle || ''}
           previewPlan={buildPlanFromAspiration({ habits: candidates
             .filter(c => added.has(c.id))
             .map(c => ({ taskId: c.id, title: c.title, category: c.officialHabit ? (c.category || 'community') : 'community',

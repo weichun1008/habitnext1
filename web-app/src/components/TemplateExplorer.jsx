@@ -300,10 +300,12 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                         <div className="mb-2">
                                                             <AuthorBadge template={template} />
                                                         </div>
+                                                        {template.authorType !== 'user' && (
                                                         <div className="flex items-center gap-2 text-xs text-gray-500 mb-2 flex-wrap">
                                                             <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">{template.expert?.title || '專家'}</span>
                                                             <span className="truncate">by {template.expert?.name}</span>
                                                         </div>
+                                                        )}
                                                         <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-3 flex-1">
                                                             {template.description || '這個計畫可以幫助你建立良好的生活習慣。'}
                                                         </p>
