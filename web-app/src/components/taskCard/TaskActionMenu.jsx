@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import { Pause, EyeOff, Trash2 } from 'lucide-react';
+import { Pause, EyeOff, Trash2, Edit2 } from 'lucide-react';
 
-// TaskActionMenu — shared component rendered in 3 contexts:
+// TaskActionMenu — shared component rendered in 2 contexts:
 //   1. Mobile swipe-reveal (right side of card, shows [pause, delete] only)
-//   2. Desktop hover popover (drop-down from ⋮, shows all 3)
-//   3. TaskDetailModal footer (row of 3 buttons)
+//   2. Dropdown popover — desktop card hover ⋮, and TaskDetailModal's top-right
+//      ⋮ menu (the latter passes onEdit to also surface 編輯 on top)
 //
 // Variants are controlled by the `variant` prop, but the underlying actions
 // are identical: PATCH /api/tasks/:id with the new status (paused / archived)
@@ -14,16 +14,18 @@ import { Pause, EyeOff, Trash2 } from 'lucide-react';
 //
 // Props:
 //   taskId, taskTitle (for confirm copy)
-//   variant: 'swipe' | 'popover' | 'detail-footer'
+//   variant: 'swipe' | 'popover'
 //   onAction(action, success): notified after the API call resolves;
 //     action ∈ 'paused' | 'archived' | 'deleted'; success: boolean
+//   onEdit(): optional. When provided, the popover variant renders a 編輯 entry
+//     at the top (navigation, no confirm). Used by TaskDetailModal's ⋮ menu.
 const CONFIRM_TEXT = {
     paused:   '暫停這個習慣？暫停期間不會出現在今日行程。',
     archived: '隱藏這個習慣？之後不會再看到。',
     deleted:  '確定要永久刪除這個習慣嗎？所有歷史紀錄也會一起消失。',
 };
 
-const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction }) => {
+const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction, onEdit }) => {
     const handle = async (action) => {
         if (!window.confirm(CONFIRM_TEXT[action])) return;
         try {
@@ -75,38 +77,19 @@ const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction }) =>
         );
     }
 
-    // Detail-footer variant: 3 horizontal buttons spanning the modal width
-    if (variant === 'detail-footer') {
-        return (
-            <div className="flex gap-2 p-4 border-t border-gray-100 bg-gray-50">
-                <button
-                    type="button"
-                    onClick={() => handle('paused')}
-                    className="flex-1 py-2 rounded-lg bg-amber-50 text-amber-700 text-sm font-bold hover:bg-amber-100 transition-colors flex items-center justify-center gap-1"
-                >
-                    <Pause size={14} /> 暫停
-                </button>
-                <button
-                    type="button"
-                    onClick={() => handle('archived')}
-                    className="flex-1 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-bold hover:bg-gray-200 transition-colors flex items-center justify-center gap-1"
-                >
-                    <EyeOff size={14} /> 隱藏
-                </button>
-                <button
-                    type="button"
-                    onClick={() => handle('deleted')}
-                    className="flex-1 py-2 rounded-lg bg-red-50 text-red-700 text-sm font-bold hover:bg-red-100 transition-colors flex items-center justify-center gap-1"
-                >
-                    <Trash2 size={14} /> 刪除
-                </button>
-            </div>
-        );
-    }
-
-    // Popover variant (desktop hover): vertical list, divider before delete
+    // Popover variant (desktop hover + detail modal ⋮ menu): vertical list.
+    // 編輯 (if onEdit given) sits on top; divider before the destructive 刪除.
     return (
         <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden min-w-[140px]">
+            {onEdit && (
+                <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                    className="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2 transition-colors"
+                >
+                    <Edit2 size={14} /> 編輯
+                </button>
+            )}
             <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); handle('paused'); }}
