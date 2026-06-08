@@ -129,6 +129,10 @@ model Task {
   date        String? // Start date
   time        String?
 
+  // ★ Slice U — 反向習慣方向。null/'increase' = 正向（越多越好，既有行為）；
+  //   'decrease' = 反向（越少越好：減量用 dailyTarget 當上限、戒除上限=0）。
+  direction          String?
+
   // Expert assignment fields
   assignmentId String? // 如果是專家指派的任務
   isLocked     Boolean @default(false) // 是否鎖定不可編輯
@@ -248,6 +252,9 @@ model OfficialHabit {
   // Default 3 ("middle") so unscored habits land at the chart center.
   impact  Int @default(3)
   ability Int @default(3)
+
+  // ★ Slice U — 反向習慣方向。null/'increase' = 正向；'decrease' = 反向（越少越好）。
+  direction          String?
 
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
