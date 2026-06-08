@@ -165,7 +165,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
     const cardBody = (
         <div
             onClick={onClick}
-            className={`bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${borderCls} ${isPast && !isCompleted ? 'opacity-75' : ''}`}
+            className={`group bg-white p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${borderCls} ${isPast && !isCompleted ? 'opacity-75' : ''}`}
         >
 
             {/* Slice M — left emerald accent rail when completed (non-strikethrough
@@ -183,8 +183,6 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                         taskId={task.id}
                         taskTitle={task.title}
                         variant="popover"
-                        starred={!!task.starred}
-                        onToggleStar={onToggleStar ? () => onToggleStar(task) : undefined}
                         onAction={(action, success) => { if (success) onAfterAction?.(action); }}
                     />
                 </TaskHoverDots>
@@ -215,7 +213,21 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             </p>
                         )}
                         <h3 className="font-bold text-sm text-gray-800 flex items-center gap-1">
-                            {task.starred && (
+                            {onToggleStar ? (
+                                <button
+                                    type="button"
+                                    onClick={(e) => { e.stopPropagation(); onToggleStar(task); }}
+                                    aria-label={task.starred ? '取消星號' : '加入星號'}
+                                    aria-pressed={!!task.starred}
+                                    className={`flex-shrink-0 -ml-0.5 transition-all hover:scale-110 ${
+                                        task.starred
+                                            ? 'text-amber-400'
+                                            : 'text-gray-300 hover:text-amber-400 opacity-0 group-hover:opacity-100 max-md:opacity-100'
+                                    }`}
+                                >
+                                    <Star size={14} className={task.starred ? 'fill-amber-400' : ''} />
+                                </button>
+                            ) : task.starred && (
                                 <Star size={13} className="fill-amber-400 text-amber-400 flex-shrink-0" aria-label="已加星號" />
                             )}
                             <span className="min-w-0">{task.title}</span>
