@@ -45,7 +45,7 @@ export default function ToolModal({ task, onClose, onComplete }) {
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white w-full md:max-w-md md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up max-h-[90dvh]"
+                className="bg-white w-full md:max-w-md md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up min-h-[58dvh] max-h-[90dvh] md:min-h-[460px]"
             >
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white rounded-t-2xl">
@@ -60,9 +60,12 @@ export default function ToolModal({ task, onClose, onComplete }) {
                     </button>
                 </div>
 
-                {/* Body */}
-                <div className="flex-1 overflow-y-auto">
-                    <ToolComponent config={config} onComplete={handleComplete} />
+                {/* Body — short tools (timer/breathing) center vertically with
+                    breathing room; tall ones (music list) scroll. */}
+                <div className="flex-1 overflow-y-auto flex flex-col">
+                    <div className="m-auto w-full px-5 py-7">
+                        <ToolComponent config={config} onComplete={handleComplete} />
+                    </div>
                 </div>
             </div>
 

@@ -78,6 +78,18 @@ describe('MusicTool — continuous playback', () => {
     });
 });
 
+describe('MusicTool — session length stepper', () => {
+    test('± sets the intended session length (5–120), not the live clock', () => {
+        render(<MusicTool config={{ problemId: 'stress' }} onComplete={() => {}} />);
+        // Default timerMin 30 → stepper shows 30 分鐘.
+        expect(screen.getByText('30 分鐘')).toBeInTheDocument();
+        fireEvent.click(screen.getByLabelText('增加時間'));
+        expect(screen.getByText('35 分鐘')).toBeInTheDocument();
+        fireEvent.click(screen.getByLabelText('減少時間'));
+        expect(screen.getByText('30 分鐘')).toBeInTheDocument();
+    });
+});
+
 describe('MusicTool — non-playable tracks', () => {
     test('a track without audioUrl shows 即將推出 and clicking it does NOT call play', () => {
         render(<MusicTool config={{ problemId: 'stress' }} onComplete={() => {}} />);
