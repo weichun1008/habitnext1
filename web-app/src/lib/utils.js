@@ -83,6 +83,16 @@ export const isCompletedToday = (task) => {
 };
 
 export const isCompletedOnDate = (task, dateStr) => {
+    // ★ Slice U — 反向習慣（越少越好）。當日發生次數 <= 上限即「達標/守住」。
+    // 上限用 dailyTarget；戒除型 dailyTarget = 0（不可被 ||1 預設覆蓋）。
+    // value 來源與量化一致（dailyProgress/.history 數字）。
+    if (task.direction === 'decrease') {
+        const value = task.dailyProgress?.[dateStr]?.value
+            ?? (typeof task.history?.[dateStr] === 'number' ? task.history[dateStr] : 0);
+        const limit = task.dailyTarget || 0;
+        return (value || 0) <= limit;
+    }
+
     if (task.type === 'quantitative') {
         return (task.dailyProgress?.[dateStr]?.value || 0) >= (task.dailyTarget || 1);
     }

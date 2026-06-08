@@ -158,3 +158,28 @@ describe('isCompletedOnDate — binary tasks', () => {
         expect(isCompletedOnDate(taskNone, '2026-05-22')).toBe(false);
     });
 });
+
+describe('isCompletedOnDate — decrease direction', () => {
+    it('減量：當日次數 <= 上限 達標、超過未達標', () => {
+        const t = { direction: 'decrease', dailyTarget: 3, dailyProgress: { '2026-06-05': { value: 2 } } };
+        expect(isCompletedOnDate(t, '2026-06-05')).toBe(true);
+        const over = { direction: 'decrease', dailyTarget: 3, dailyProgress: { '2026-06-05': { value: 4 } } };
+        expect(isCompletedOnDate(over, '2026-06-05')).toBe(false);
+    });
+    it('戒除 (dailyTarget 0)：0 次達標、>0 未達標（不被 ||1 覆蓋）', () => {
+        const zero = { direction: 'decrease', dailyTarget: 0, dailyProgress: {} };
+        expect(isCompletedOnDate(zero, '2026-06-05')).toBe(true);
+        const one = { direction: 'decrease', dailyTarget: 0, dailyProgress: { '2026-06-05': { value: 1 } } };
+        expect(isCompletedOnDate(one, '2026-06-05')).toBe(false);
+    });
+    it('value 來自 history 數字也可', () => {
+        const t = { direction: 'decrease', dailyTarget: 2, history: { '2026-06-05': 1 } };
+        expect(isCompletedOnDate(t, '2026-06-05')).toBe(true);
+    });
+    it('increase / 無 direction 行為不變（binary）', () => {
+        const bin = { type: 'binary', history: { '2026-06-05': true } };
+        expect(isCompletedOnDate(bin, '2026-06-05')).toBe(true);
+        const binNo = { type: 'binary', history: {} };
+        expect(isCompletedOnDate(binNo, '2026-06-05')).toBe(false);
+    });
+});
