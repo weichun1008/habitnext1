@@ -732,7 +732,7 @@ const MainApp = () => {
         // Sanitize data before sending
         const sanitizedData = {
             ...taskData,
-            dailyTarget: taskData.dailyTarget || 1, // Ensure no NaN/null for required logic
+            dailyTarget: taskData.direction === 'decrease' ? (taskData.dailyTarget ?? 0) : (taskData.dailyTarget || 1), // direction-aware: 戒除/減量 keep literal limit (incl. 0); increase/normal default to 1
             stepValue: taskData.stepValue || 1,
             unit: taskData.unit || '次',
             recurrence: {
