@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Edit2, Check, Calendar, Target, Flame, Trophy, ChevronRight, ChevronLeft, Play } from 'lucide-react';
+import { X, MoreVertical, Check, Calendar, Target, Flame, Trophy, ChevronRight, ChevronLeft, Play } from 'lucide-react';
 import IconRenderer from './IconRenderer';
 import PhysicalToolsList from '@/components/tools/PhysicalToolsList';
 import HabitInsightSection from './insights/HabitInsightSection';
@@ -11,6 +11,8 @@ import LocationChip from './taskCard/LocationChip';
 
 const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate, onAfterAction, onPickLocation, onStartTool }) => {
     const [currentDate, setCurrentDate] = useState(initialDate || getTodayStr());
+    // ⋮ overflow menu (編輯 / 暫停 / 隱藏 / 刪除) anchored top-right.
+    const [menuOpen, setMenuOpen] = useState(false);
 
     // Sync internal date when the modal re-opens for a different task or the
     // parent's browsing date changes — otherwise the modal would keep showing
@@ -18,6 +20,7 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
     useEffect(() => {
         if (isOpen) {
             setCurrentDate(initialDate || getTodayStr());
+            setMenuOpen(false);
         }
     }, [isOpen, task?.id, initialDate]);
 
@@ -61,10 +64,37 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                     <button onClick={onClose} className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors">
                         <X size={24} className="text-gray-500" />
                     </button>
-                    <div className="flex gap-2">
-                        <button onClick={() => onEdit(task)} className="flex items-center gap-1 text-sm font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors">
-                            <Edit2 size={14} /> 編輯
+                    <div className="relative">
+                        <button
+                            onClick={() => setMenuOpen(o => !o)}
+                            aria-label="更多操作"
+                            aria-haspopup="menu"
+                            aria-expanded={menuOpen}
+                            className={`p-2 -mr-2 rounded-full transition-colors ${menuOpen ? 'bg-gray-100 text-gray-700' : 'text-gray-500 hover:bg-gray-100'}`}
+                        >
+                            <MoreVertical size={22} />
                         </button>
+                        {menuOpen && task?.id && (
+                            <>
+                                {/* click-outside backdrop */}
+                                <div className="fixed inset-0 z-20" onClick={() => setMenuOpen(false)} />
+                                <div className="absolute right-0 top-full mt-1 z-30 animate-fade-in-up">
+                                    <TaskActionMenu
+                                        taskId={task.id}
+                                        taskTitle={task.title}
+                                        variant="popover"
+                                        onEdit={() => { setMenuOpen(false); onEdit(task); }}
+                                        onAction={(action, success) => {
+                                            setMenuOpen(false);
+                                            if (success) {
+                                                onClose?.();
+                                                onAfterAction?.(action);
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -260,21 +290,6 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                     )}
 
                 </div>
-
-                {/* Slice M — footer with lifecycle actions (pause / hide / delete) */}
-                {task?.id && (
-                    <TaskActionMenu
-                        taskId={task.id}
-                        taskTitle={task.title}
-                        variant="detail-footer"
-                        onAction={(action, success) => {
-                            if (success) {
-                                onClose?.();
-                                onAfterAction?.(action);
-                            }
-                        }}
-                    />
-                )}
             </div>
         </div>
     );
