@@ -3,7 +3,20 @@
 > 給 PM / 設計師 / 內容團隊 / 需求單位讀的產品地圖。
 > 工程細節看 [`ARCHITECTURE.md`](ARCHITECTURE.md)，每個 slice 的設計理由看 [`superpowers/specs/`](superpowers/specs/)。
 
-最後更新：2026-05-22 · Live: [habitnext1.vercel.app](https://habitnext1.vercel.app)
+最後更新：2026-06-06 · Live: [habitnext1.vercel.app](https://habitnext1.vercel.app)
+
+> 註：§3 功能地圖、§4 歷史、§5 路線圖主體寫於 05-22。05-26~06-06 的新功能見下方「近期更新」；工程交接細節見 [`HANDOFF.md`](HANDOFF.md)。
+
+---
+
+## 0. 近期更新（2026-05-26 ~ 06-06）
+
+- **嚮往（為了什麼）→ 推薦習慣**：從「想成為什麼樣的人」出發給推薦，而非直接挑習慣。
+- **焦點地圖（已上線並於 06-06 重設計）**：把候選習慣依「影響力 × 執行度」分四象限，挑出「值得優先做」。新流程＝**逐一評影響力 → 逐一評執行度 → 看焦點地圖加入**（大拖鈕、可反悔、白話象限、已移除 BJ Fogg 術語），加入時可選**養成期間**（21/66天推薦/90/不設限，附背後科學）。難度會依使用者評的「執行度」自動給合理預設，不必每次選。
+- **社群計畫（06-06，新）**：使用者可把「自己一個嚮往底下的習慣集」一鍵生成為**有階段的計畫**，存成私人複用、或**申請公開分享**給其他人加入。公開需**管理員審核**核准，並清楚標示「用戶自創 · by 作者」對比官方；後台有審核佇列。
+- **科學佐證（HabitInsight）**：每個習慣附「背後科學」與證據力指標。
+- **遊戲化世界層**（持續精進中，非上線硬化重點）：完成地點、旅程城市地圖、世界切換、美食回憶照片 — 細節見 `HANDOFF.md` §3。
+- **後台安全**：所有 `/api/admin/*` 已加伺服器端授權（外部無法直接呼叫）。
 
 ---
 
@@ -72,6 +85,14 @@ HabitNext 是基於**行為科學**的習慣養成 web app。和一般打卡 app
 | **H** | 14 天睡眠處方 — 4 個睡眠 template（壓力/節律/代謝失衡/荷爾蒙），dual-typing CTA | 2026-05-20 |
 | **I** | Stats + Streak 頁 — 5 widget + dynamic-import 省 100kB | 2026-05-21 |
 | **J** | Template Detail Panel — 點 carousel 卡 → 滑入詳細頁看 4 phase 任務 | 2026-05-21 |
+| **K** | 嚮往系統 — 從「為了什麼」出發推薦習慣（含身分宣告整併） | 2026-05~06 |
+| **L** | 焦點地圖候選池 — Impact×Ability 評分挑黃金行為 | 2026-05~06 |
+| **M** | 任務卡精修 — 暫停/隱藏/刪除/排序/swipe | 2026-05~06 |
+| **N** | 科學佐證 HabitInsight + 證據力指標（102 習慣已建） | 2026-06 |
+| **O/P/Q** | 遊戲化世界層（完成地點/旅程城市/世界切換/美食回憶，持續精進中） | 2026-06 |
+| **焦點地圖重設計** | 三階段引導流程、去 Fogg、養成期間、難度自動 | 2026-06-06 |
+| **社群計畫** | 嚮往→可分享計畫、送審、社群分區、作者標示 | 2026-06-06 |
+| **後台授權** | `/api/admin/*` 伺服器端 cookie 授權 | 2026-06-06 |
 
 ### 2026-05-22 整理日（無 slice 編號）
 
@@ -97,11 +118,16 @@ HabitNext 是基於**行為科學**的習慣養成 web app。和一般打卡 app
   - 睡眠處方：[`docs/notes/2026-05-20-sleep-course-content-feedback.md`](notes/2026-05-20-sleep-course-content-feedback.md)
 - **計畫詳細頁也顯示 cue / identity per task**（目前只顯示 task title）
 
+### ✅ 已完成（原列為「未做」，現已上線）
+- ~~**D — 焦點地圖（Impact × Ability）**~~ → **已上線**（Slice L）並於 2026-06-06 重設計，見 §0。
+- ~~嚮往系統~~、~~科學佐證~~ → 已上線（見 §0）。
+
 ### 中期 — 需 spec 才能動工
-- **C — AI 雙軌 Brainstorm**：使用者輸入目標 → Gemini 生 10 個 anchor × 10 個 behavior 候選 → 配對 UI
-- **D — 焦點地圖（Impact × Ability）**：對多 behavior 做 2D 評估，找黃金行為
+- **使用者認證整合 cofit 會員系統**：目前使用者資料 API 仍信任前端 userId（資安缺口），預計整合 cofit 既有會員系統當身分來源（工程細節與待確認項見 `HANDOFF.md` §4-1）。**上線前必處理。**
+- **C — AI 雙軌 Brainstorm**：使用者輸入目標 → Gemini 生 10 個 anchor × 10 個 behavior 候選 → 配對 UI（焦點地圖的分階段/文案未來可由 AI 強化）
+- **社群計畫進階**：作者頁、追蹤、熱門排行、檢舉機制（目前 v1 僅：生成→送審→公開分區）
 - **通知系統**：依錨點 / 時段觸發 push 提醒
-- **付費 / 訂閱模型**
+- **付費 / 訂閱模型**（商業模式 strawman 見 `STRATEGY.md`）
 
 ### 長期 / 想法
 - 教練端 dashboard（admin 角色看自己客戶的進度）
@@ -129,6 +155,7 @@ HabitNext 是基於**行為科學**的習慣養成 web app。和一般打卡 app
 - **管理 UI**：`/admin/dashboard/templates` — 任何 expert 都看得到全部，可編輯 task 內容、phase 結構
 - **新增**：admin 用 `+ 新增模板`；複雜情況也可寫 seed JSON + script（如 `seed-sleep-templates.js`）
 - **結構**：v2.0 用 `{ version, phases: [{ id, name, days, tasks: [{ title, details, cue, identity, ... }] }] }`
+- **社群計畫（2026-06-06 起）**：使用者也能自建計畫並申請公開。這些是 `authorType='user'`、需在 `/admin/dashboard/templates/review` **審核核准**後才出現在探索計畫的「社群計畫」分區；標示「用戶自創 · by 作者」。官方計畫不受影響。
 
 ### 計畫分類（PlanCategory）
 - **DB**：`PlanCategory` table，13 筆（5 user-defined + 8 system）
