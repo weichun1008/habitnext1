@@ -142,6 +142,9 @@ model Task {
   assignmentId String? // 如果是專家指派的任務
   isLocked     Boolean @default(false) // 是否鎖定不可編輯
 
+  // 我的最愛 / 釘選：加星的習慣排序到每日清單最上面，並顯示金色星標。
+  starred      Boolean @default(false)
+
   // ★ Slice L — candidate pool + focus map
   // Tasks enter the system as candidates and only become active after the
   // user rates them on the focus map. Template-joined tasks bypass this

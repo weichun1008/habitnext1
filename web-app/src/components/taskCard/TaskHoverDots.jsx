@@ -4,8 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MoreVertical } from 'lucide-react';
 
 // TaskHoverDots — desktop-only (hidden via `md:block` on parent).
-// Shows a ⋮ button in the card's top-right corner while the parent card
-// is hovered. Clicking opens a popover with the shared action menu.
+// Shows a ⋮ button on the card's right edge, vertically centered (trailing
+// kebab, like Gmail/Drive list rows) while the parent card is hovered —
+// kept clear of the completion checkmark in the top-right corner. Clicking
+// opens a popover with the shared action menu.
 //
 // Popover closes on: click outside, Esc key, or after a successful action.
 //
@@ -51,7 +53,7 @@ const TaskHoverDots = ({ children, hoverDelayMs = 100 }) => {
     return (
         <div
             ref={wrapperRef}
-            className="hidden md:block absolute top-2 right-2 z-20"
+            className="hidden md:block absolute top-1/2 -translate-y-1/2 right-2 z-20"
             onMouseEnter={onEnter}
             onMouseLeave={onLeave}
         >

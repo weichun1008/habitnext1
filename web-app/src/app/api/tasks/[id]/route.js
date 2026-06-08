@@ -14,7 +14,11 @@ export async function PUT(request, { params }) {
             data: {
                 title: taskData.title,
                 details: taskData.details,
-                cue: taskData.cue?.trim() || null,
+                // Guard cue like direction/tool below: only write when the
+                // payload carries it. Otherwise a partial PUT (e.g. starred-only
+                // or status-only) would null out an existing cue, since
+                // `undefined?.trim() || null` resolves to null.
+                ...(taskData.cue !== undefined ? { cue: taskData.cue?.trim() || null } : {}),
                 type: taskData.type,
                 category: taskData.category,
                 frequency: taskData.frequency,
@@ -40,6 +44,8 @@ export async function PUT(request, { params }) {
                 ...(taskData.status !== undefined && ['candidate', 'active', 'paused', 'archived'].includes(taskData.status)
                     ? { status: taskData.status }
                     : {}),
+                // 我的最愛切換 — guarded so progress/status-only PUTs don't clobber it.
+                ...(taskData.starred !== undefined ? { starred: !!taskData.starred } : {}),
             }
         });
 

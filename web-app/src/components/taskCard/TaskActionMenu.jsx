@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Pause, EyeOff, Trash2, Edit2 } from 'lucide-react';
+import { Pause, EyeOff, Trash2, Edit2, Star } from 'lucide-react';
 
 // TaskActionMenu — shared component rendered in 2 contexts:
 //   1. Mobile swipe-reveal (right side of card, shows [pause, delete] only)
@@ -18,14 +18,17 @@ import { Pause, EyeOff, Trash2, Edit2 } from 'lucide-react';
 //   onAction(action, success): notified after the API call resolves;
 //     action ∈ 'paused' | 'archived' | 'deleted'; success: boolean
 //   onEdit(): optional. When provided, the popover variant renders a 編輯 entry
-//     at the top (navigation, no confirm). Used by TaskDetailModal's ⋮ menu.
+//     near the top (navigation, no confirm). Used by TaskDetailModal's ⋮ menu.
+//   starred / onToggleStar(): optional. When onToggleStar is provided, the
+//     popover renders a 加入星號 / 取消星號 toggle on top (gold). The parent owns
+//     the PUT + state update so the daily list can re-sort (starred → top).
 const CONFIRM_TEXT = {
     paused:   '暫停這個習慣？暫停期間不會出現在今日行程。',
     archived: '隱藏這個習慣？之後不會再看到。',
     deleted:  '確定要永久刪除這個習慣嗎？所有歷史紀錄也會一起消失。',
 };
 
-const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction, onEdit }) => {
+const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction, onEdit, starred = false, onToggleStar }) => {
     const handle = async (action) => {
         if (!window.confirm(CONFIRM_TEXT[action])) return;
         try {
@@ -81,6 +84,16 @@ const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction, onEd
     // 編輯 (if onEdit given) sits on top; divider before the destructive 刪除.
     return (
         <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden min-w-[140px]">
+            {onToggleStar && (
+                <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); onToggleStar(); }}
+                    className="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-amber-50 hover:text-amber-700 flex items-center gap-2 transition-colors"
+                >
+                    <Star size={14} className={starred ? 'fill-amber-400 text-amber-400' : ''} />
+                    {starred ? '取消星號' : '加入星號'}
+                </button>
+            )}
             {onEdit && (
                 <button
                     type="button"

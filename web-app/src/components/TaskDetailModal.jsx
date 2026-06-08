@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, MoreVertical, Check, Calendar, Target, Flame, Trophy, ChevronRight, ChevronLeft, Play } from 'lucide-react';
+import { X, MoreVertical, Check, Calendar, Target, Flame, Trophy, ChevronRight, ChevronLeft, Play, Star } from 'lucide-react';
 import IconRenderer from './IconRenderer';
 import PhysicalToolsList from '@/components/tools/PhysicalToolsList';
 import HabitInsightSection from './insights/HabitInsightSection';
@@ -9,7 +9,7 @@ import { visibleSubtasks } from '@/lib/subtasks';
 import TaskActionMenu from './taskCard/TaskActionMenu';
 import LocationChip from './taskCard/LocationChip';
 
-const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate, onAfterAction, onPickLocation, onStartTool }) => {
+const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate, onAfterAction, onPickLocation, onStartTool, onToggleStar }) => {
     const [currentDate, setCurrentDate] = useState(initialDate || getTodayStr());
     // ⋮ overflow menu (編輯 / 暫停 / 隱藏 / 刪除) anchored top-right.
     const [menuOpen, setMenuOpen] = useState(false);
@@ -83,6 +83,8 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                                         taskId={task.id}
                                         taskTitle={task.title}
                                         variant="popover"
+                                        starred={!!task.starred}
+                                        onToggleStar={onToggleStar ? () => { setMenuOpen(false); onToggleStar(task); } : undefined}
                                         onEdit={() => { setMenuOpen(false); onEdit(task); }}
                                         onAction={(action, success) => {
                                             setMenuOpen(false);
@@ -135,7 +137,10 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                                 <span className="text-gray-300">→</span>
                             </p>
                         )}
-                        <h2 className="text-2xl font-black text-gray-800 text-center mb-2">{task.title}</h2>
+                        <h2 className="text-2xl font-black text-gray-800 text-center mb-2 flex items-center justify-center gap-1.5">
+                            {task.starred && <Star size={18} className="fill-amber-400 text-amber-400 flex-shrink-0" aria-label="已加星號" />}
+                            <span>{task.title}</span>
+                        </h2>
                         <p className="text-gray-500 text-center text-sm px-4">{task.details || '這個習慣沒有詳細說明，但持續做就對了！'}</p>
                     </div>
 
