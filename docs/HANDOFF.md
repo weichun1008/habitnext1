@@ -45,7 +45,12 @@
 - ⚠️ 仍未解：§4 第 1 項的**一般使用者資料 API IDOR**（`/api/tasks?userId=` 等信任 client userId）尚未處理，仍是上線 blocker。本次只硬化了 `/api/admin/*`。
 - Spec：`docs/superpowers/specs/2026-06-06-admin-authz-design.md`。
 
-> 測試總數：~401（06-05）→ **~486**（06-06）。Schema 仍 14 models，僅新增上述欄位。
+### D. 計畫家族可手動指定（2026-06-06）
+
+- 原本計畫的家族歸屬由 `sectionIdFor()` 依分類自動判定（唯讀）。現新增 `Template.planFamilySlug String?`（additive）作**手動覆寫**，優先序：手動 > `authorType=user→community` > 花朵/睡眠分類 > 其他。
+- 後台計畫模板管理每張卡有「家族」控制項：一般/社群計畫用下拉手動指定（可清回自動）；**花朵/睡眠系統分類綁定者**鎖定，點「家族」鈕只跳提示「請洽超級管理員/開發人員」（`lib/templateRecommendation.isCategoryFamilyLocked`）。API：`PUT /api/admin/templates/[id]` 接受 `planFamilySlug`。
+
+> 測試總數：~401（06-05）→ **~486 → 561**（06-06 多批）。Schema 仍 14 models，僅新增上述欄位（含 `Template.planFamilySlug`）。
 
 ---
 

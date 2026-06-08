@@ -7,8 +7,38 @@ const {
     sortByRecommendation,
     TEMPLATE_SECTIONS,
     sectionIdFor,
+    isCategoryFamilyLocked,
     groupTemplatesBySection,
 } = require('../../lib/templateRecommendation');
+
+describe('sectionIdFor — manual planFamilySlug override', () => {
+    it('manual planFamilySlug wins over everything', () => {
+        expect(sectionIdFor({ planFamilySlug: 'sleep', category: 'daisy', authorType: 'official' })).toBe('sleep');
+        expect(sectionIdFor({ planFamilySlug: 'flower', authorType: 'user' })).toBe('flower'); // 社群也能被搬
+        expect(sectionIdFor({ planFamilySlug: 'my-custom', category: '健康生活' })).toBe('my-custom');
+    });
+    it('falls back to auto rules when no override', () => {
+        expect(sectionIdFor({ category: 'daisy' })).toBe('flower');
+        expect(sectionIdFor({ authorType: 'user' })).toBe('community');
+        expect(sectionIdFor({ category: '健康生活' })).toBe('other');
+    });
+    it('groupTemplatesBySection creates a bucket for custom families', () => {
+        const g = groupTemplatesBySection([{ id: 'x', planFamilySlug: 'my-custom' }], null, null);
+        expect(g['my-custom']).toHaveLength(1);
+    });
+});
+
+describe('isCategoryFamilyLocked', () => {
+    it('locks flower + sleep system categories', () => {
+        expect(isCategoryFamilyLocked('daisy')).toBe(true);
+        expect(isCategoryFamilyLocked('sleep_stress')).toBe(true);
+    });
+    it('does not lock generic / community categories', () => {
+        expect(isCategoryFamilyLocked('健康生活')).toBe(false);
+        expect(isCategoryFamilyLocked('community')).toBe(false);
+        expect(isCategoryFamilyLocked(undefined)).toBe(false);
+    });
+});
 
 const flower = (cat) => ({ id: cat, name: `${cat} plan`, category: cat });
 const sleep = (cat) => ({ id: cat, name: `${cat} plan`, category: cat });
