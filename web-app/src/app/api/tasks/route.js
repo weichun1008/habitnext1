@@ -34,7 +34,7 @@ export async function GET(request) {
                 },
                 // Slice T — carry the backing official habit's fiveT so the
                 // detail modal can surface its physical tools (toolPhysical).
-                officialHabit: { select: { fiveT: true, name: true } },
+                officialHabit: { select: { fiveT: true, name: true, difficulties: true } },
             },
             orderBy: { createdAt: 'asc' }
         });
