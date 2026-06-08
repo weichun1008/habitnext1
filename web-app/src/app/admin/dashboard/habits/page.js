@@ -318,6 +318,12 @@ export default function HabitsPage() {
                     >
                         <FolderOpen size={16} /> 分類管理
                     </a>
+                    <a
+                        href="/admin/dashboard/habits/tools"
+                        className="admin-btn admin-btn-secondary flex items-center gap-2"
+                    >
+                        <Wrench size={16} /> 工具總覽
+                    </a>
                     <button onClick={openAddModal} className="admin-btn admin-btn-primary flex items-center gap-2">
                         <Plus size={16} /> 新增習慣
                     </button>
