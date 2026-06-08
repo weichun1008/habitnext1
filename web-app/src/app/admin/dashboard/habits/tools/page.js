@@ -142,8 +142,10 @@ export default function HabitToolsPage() {
                                                         <td className="py-3 pr-4 text-white">
                                                             <a
                                                                 href={`/admin/dashboard/habits?edit=${h.id}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
                                                                 className="inline-flex items-center gap-1.5 font-medium text-white hover:text-emerald-400 hover:underline underline-offset-4 transition-colors"
-                                                                title="編輯此習慣"
+                                                                title="在新分頁編輯此習慣"
                                                             >
                                                                 {h.name}
                                                                 <ChevronRight
@@ -187,8 +189,10 @@ export default function HabitToolsPage() {
                                         <div>
                                             <a
                                                 href={`/admin/dashboard/habits?edit=${h.id}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                                 className="inline-flex items-center gap-1.5 font-medium text-white hover:text-emerald-400 hover:underline underline-offset-4 transition-colors"
-                                                title="編輯此習慣"
+                                                title="在新分頁編輯此習慣"
                                             >
                                                 {h.name}
                                                 <ChevronRight
