@@ -4,7 +4,19 @@
 > 產品角度看 [`PRODUCT.md`](PRODUCT.md)。
 > 想看某個 slice 的具體設計理由，去 [`superpowers/specs/`](superpowers/specs/)。
 
-最後更新：2026-05-22
+最後更新：2026-06-06（核心結構為 2026-05-22 撰寫；下方「近期增補」記錄之後的重大變更。工程交接細節另見 `HANDOFF.md`，尤其 §0.5 與 §4。）
+
+---
+
+## 0. 近期增補（2026-05-26 ~ 06-06）
+
+本份 §1–§10 主體寫於 05-22，之後新增的功能/變更摘錄如下，衝突處以本節與 `HANDOFF.md` 為準：
+
+- **嚮往系統 / Focus Map / 身分 / 錨點**（Slice K/L）、**科學佐證 HabitInsight + 證據力**（Slice N）、**PlanFamily**（計畫家族分區）、**遊戲化世界層**（Slice O/P/Q：完成地點、旅程城市地圖、世界切換、美食回憶照片 — 詳見 `HANDOFF.md` §3）。
+- **焦點地圖流程重設計**（2026-06-06）：三階段引導（影響力→執行度→焦點地圖+養成期間），新增 `Task.targetDays Int?`（null=不設限）、`Task.userImpact/userAbility/ratedAt`、`Task.officialHabitId`；難度於啟用時依「執行度」自動套用（`lib/difficulty.js`）。
+- **社群計畫**（2026-06-06）：使用者把嚮往生成可分享計畫（`lib/planBuilder.js` → Template v2.0）。`Template` 新增 `authorType`(official/user)/`authorUserId`/`authorName`/`reviewStatus`(approved/pending/rejected)；`Template.expertId` 與 `Assignment.expertId` **放寬為 nullable**。`sectionIdFor` 對 `authorType==='user'` 歸 `community` 分區。後台 `/admin/dashboard/templates/review` 審核佇列。
+- **後台伺服器端授權**（2026-06-06）：`src/middleware.js` + `lib/adminAuth.js`（Web Crypto HMAC、httpOnly 簽章 cookie）保護全部 `/api/admin/*`，需環境變數 `ADMIN_SESSION_SECRET`。**這修正了原 §7/§8 所述「admin 無 auth」的狀態。**
+- Schema 由 05-22 的少數 model 擴充到 **14 models**（User/Task/TaskHistory/Aspiration/AspirationHabit/PlanCategory/PlanFamily/OfficialHabit/HabitInsight/HabitCategory/Template/Assignment/Expert/ExpertTitle）。測試 ~122 → **~486**。
 
 ---
 
@@ -14,7 +26,7 @@
 |---|---|
 | Framework | Next.js 14 App Router + React 18 |
 | Styling | Tailwind CSS 3.4 + lucide-react icons |
-| Auth | Phone + bcrypt password（無 JWT / session middleware；user info 存 localStorage）|
+| Auth | **使用者**：Phone + bcrypt（無 session；user info 存 localStorage）— 預計整合 cofit 會員系統（見 `HANDOFF.md` §4-1）。**後台**：2026-06-06 起 `/api/admin/*` 由 `src/middleware.js` + httpOnly 簽章 cookie 授權（需 `ADMIN_SESSION_SECRET`）|
 | DB | Vercel Postgres + Prisma 5 |
 | Schema 管理 | `prisma db push`（**沒有 migration history**）|
 | Testing | Jest + React Testing Library + 純函數 unit tests |
@@ -266,8 +278,9 @@ docs/
 
 ## 5. API 與 Lib 對應地圖
 
-### User-facing (no auth check beyond having userId in body)
+### User-facing（**仍信任 body/query 的 userId — IDOR，待整合 cofit 會員系統，見 `HANDOFF.md` §4-1**）
 - `POST /api/auth/login` — 手機 + 密碼登入
+- `POST /api/plans/from-aspiration` — 把嚮往生成計畫（社群計畫，pending/private）
 - `POST /api/register` — 註冊
 - `GET /api/templates/public` — 列出全部 public templates（含 expert + _count）
 - `GET /api/plan-categories` — 列出全部 PlanCategory（read-only minimal subset）
@@ -276,8 +289,10 @@ docs/
 - `GET /api/user/assignments?userId=` — 該使用者已加入的 templates
 - `GET /api/stats?userId=` — 一次取齊所有統計資料
 
-### Admin (用 `admin_expert` localStorage 識別，no token-side auth gate)
-- `POST /api/admin/auth/login`
+### Admin（**2026-06-06 起由 `src/middleware.js` 伺服器端授權**：httpOnly 簽章 cookie，非 admin → 401/403；放行 `auth/login`、`auth/logout`）
+- `POST /api/admin/auth/login` — 驗證後種 `admin_session` cookie
+- `POST /api/admin/auth/logout` — 清 cookie
+- `PATCH /api/admin/plans/[id]/review` — 社群計畫審核（核准/退回）
 - `GET/POST/PUT/DELETE /api/admin/templates` — Template CRUD
 - `GET/POST/PUT/DELETE /api/admin/plan-categories` — PlanCategory CRUD（PUT/DELETE 對 system 列回 403）
 - `GET/POST/PUT/DELETE /api/admin/habits` — OfficialHabit CRUD
@@ -357,8 +372,8 @@ Modals (z-50+)
 ### Q: 為什麼首頁 `page.js` 沒有 `flex items-center`？
 **A**: 之前用過，造成手機畫面被擠到 384px > viewport 寬度（`items-center` 讓 flex child 取 intrinsic min-width 而非 stretch）。現在 page.js 只有 `<main className="min-h-screen">`，讓 MainApp 自己決定寬度。Belt-and-suspenders 還在 `globals.css` 加 `html, body { overflow-x: hidden }`。
 
-### Q: 為什麼 admin 沒有真正的 auth middleware？
-**A**: 早期權衡簡單性。`admin_expert` 存 localStorage，API 沒檢查。任何知道路徑的人都能改資料。需要正式上線給多 expert 用之前必須補。
+### Q: admin auth middleware（已於 2026-06-06 補上）
+**A**: 早期僅 `admin_expert` 存 localStorage、API 不檢查（任何人可改資料）。**2026-06-06 已補**：`src/middleware.js` 攔截全部 `/api/admin/*`，驗證登入時種下的 httpOnly HMAC 簽章 cookie（`lib/adminAuth.js`，Web Crypto，無新依賴），非 admin → 401/403，fail-closed（需 `ADMIN_SESSION_SECRET`）。**使用者端**資料 API 的同類授權尚未做，預計整合 cofit 會員系統（見 `HANDOFF.md` §4-1）。
 
 ### Q: 為什麼花朵 / 睡眠分型沒有問卷頁？
 **A**: 暫時 admin 手動設 `User.typeKey` / `User.sleepTypeKey` 來測。問卷頁是 roadmap 上短期內要做的（spec 尚未寫）。
@@ -367,8 +382,9 @@ Modals (z-50+)
 
 ## 8. 已知技術債
 
-- **無真正的 admin auth middleware** — 開放問題
-- **Test coverage 偏 lib + critical components** — UI integration test 少（122 tests / 20 suites 中只有 ~5 個 component test）
+- ~~**無真正的 admin auth middleware**~~ — ✅ 已於 2026-06-06 解決（`src/middleware.js` + `lib/adminAuth.js`）
+- **使用者端資料 API 仍信任 client `userId`（IDOR）** — 上線 blocker，預計整合 cofit 會員系統（`HANDOFF.md` §4-1）
+- **Test coverage 偏 lib + critical components** — UI integration test 仍偏少（~486 tests / ~69 suites）
 - **沒有 e2e tests** — Playwright / Cypress 尚未引入
 - **沒有 error boundary 覆蓋全部 view**（只有 root `ErrorBoundary`）
 - **Vercel deploy 沒有 staging 環境** — push main = production
@@ -418,7 +434,7 @@ git checkout main && git merge --ff-only feat/<branch> && git push origin main
 1. `git clone` → `cd web-app` → `npm install`
 2. `vercel env pull .env.local`（要 Vercel project access）
 3. `npx prisma generate`
-4. `npm test` → 確認 122 tests pass
+4. `npm test` → 確認 ~486 tests pass
 5. `npm run dev` → localhost:3000
 6. 讀 `PRODUCT.md` 了解產品全貌
 7. 讀這份 `ARCHITECTURE.md` 了解資料模型 + 慣例
