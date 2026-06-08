@@ -18,7 +18,7 @@ const AuthorBadge = ({ template }) => {
   if (template.authorType === 'official') {
     return (
       <span className="inline-flex items-center gap-1 text-[11px] font-bold rounded-full px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200">
-        <BadgeCheck size={11} /> 官方{template.expert?.name ? ` · ${template.expert.name}` : ''}
+        <BadgeCheck size={11} /> 官方{template.expert?.name ? ` · ${template.expert?.name}` : ''}
       </span>
     );
   }

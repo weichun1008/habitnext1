@@ -102,7 +102,7 @@ export async function POST(request) {
                 data: {
                     userId,
                     templateId,
-                    expertId: template.expertId,
+                    expertId: template.expertId ?? null,
                     status: 'active',
                     startDate: startDate,
                 }
