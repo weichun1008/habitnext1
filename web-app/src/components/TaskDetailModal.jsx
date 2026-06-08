@@ -192,20 +192,25 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                                 </div>
                             </div>
                         ) : totalSubtasks > 0 ? (
-                            // Checklist with subtasks: 完成任務 is auto-derived from
-                            // subtask completion, not a manual toggle. Button is
-                            // disabled and shows progress until all subtasks are done.
+                            // Checklist with subtasks: 完成任務 一次完成所有子任務
+                            // （Google Tasks 風格）；已完成時再按一次清空。走 'toggle'，
+                            // 由 MainApp 設定全部 subtaskCompletions。
                             <button
-                                disabled
-                                className={`w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg transition-all cursor-not-allowed ${
-                                    isCompleted
-                                        ? 'bg-emerald-100 text-emerald-700'
-                                        : 'bg-gray-100 text-gray-500'
+                                disabled={isLocked}
+                                onClick={() => onUpdate(task, 'toggle', null, null, currentDate)}
+                                className={`w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg transition-all ${
+                                    isLocked
+                                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                        : isCompleted
+                                            ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                                            : 'bg-emerald-500 text-white shadow-emerald-200 hover:bg-emerald-600 hover:scale-[1.02]'
                                 }`}
                             >
-                                {isCompleted
-                                    ? <><Check size={24} /> 已完成</>
-                                    : <>需完成所有子任務（{completedSubtasks}/{totalSubtasks}）</>}
+                                {isLocked
+                                    ? '尚未到當日'
+                                    : isCompleted
+                                        ? <><Check size={24} /> 已完成（再按清空）</>
+                                        : <>全部完成（{completedSubtasks}/{totalSubtasks}）</>}
                             </button>
                         ) : (
                             <button

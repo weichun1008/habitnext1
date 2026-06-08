@@ -394,6 +394,42 @@ const MainApp = () => {
                 return updatedTask;
             }
 
+            // Checklist 主任務 toggle — 勾主任務 = 一次完成所有子任務（Google Tasks
+            // 風格）；再勾一次（全完成狀態下）= 清空所有子任務。子任務狀態仍寫進
+            // TaskHistory.subtaskCompletions，與逐項勾選共用同一份資料。
+            if (action === 'toggle' && t.type === 'checklist') {
+                const subs = visibleSubtasks(t, dateStr);
+                const prevHistoryForDate = t.history?.[dateStr];
+                const prevCompletions = (prevHistoryForDate && typeof prevHistoryForDate === 'object')
+                    ? (prevHistoryForDate.subtaskCompletions || {})
+                    : {};
+                const allDone = subs.length > 0 && subs.every(s => prevCompletions[s.id] === true);
+                const nextDone = !allDone;
+                const newCompletions = {};
+                subs.forEach(s => { newCompletions[s.id] = nextDone; });
+                const newValue = nextDone ? subs.length : 0;
+                const target = t.dailyTarget || subs.length;
+                const newCompleted = nextDone && newValue >= target;
+                const newHistory = {
+                    ...t.history,
+                    [dateStr]: {
+                        ...(prevHistoryForDate && typeof prevHistoryForDate === 'object' ? prevHistoryForDate : {}),
+                        subtaskCompletions: newCompletions,
+                        value: newValue,
+                        completed: newCompleted,
+                    },
+                };
+                updatedTask = { ...t, history: newHistory };
+                historyUpdate = {
+                    taskId: t.id,
+                    date: dateStr,
+                    subtaskCompletions: newCompletions,
+                    value: newValue,
+                    completed: newCompleted,
+                };
+                return updatedTask;
+            }
+
             // Period Goals Logic
             if (task.recurrence?.mode === 'period_count' && action === 'period_add') {
                 const currentVal = t.history[dateStr];
