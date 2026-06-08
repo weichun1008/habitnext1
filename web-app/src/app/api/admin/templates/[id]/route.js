@@ -34,7 +34,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
     try {
         const body = await request.json();
-        const { name, description, category, isPublic, tasks } = body;
+        const { name, description, category, isPublic, tasks, planFamilySlug } = body;
 
         const template = await prisma.template.update({
             where: { id: params.id },
@@ -43,7 +43,9 @@ export async function PUT(request, { params }) {
                 ...(description !== undefined && { description }),
                 ...(category && { category }),
                 ...(isPublic !== undefined && { isPublic }),
-                ...(tasks && { tasks }) // Native JSON support in PostgreSQL
+                ...(tasks && { tasks }), // Native JSON support in PostgreSQL
+                // 手動家族指定：傳 null 可清除回自動判定（故用 !== undefined）
+                ...(planFamilySlug !== undefined && { planFamilySlug: planFamilySlug || null }),
             },
             include: {
                 expert: {

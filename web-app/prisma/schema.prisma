@@ -75,6 +75,7 @@ model Template {
   authorUserId String? // 使用者自創計畫的作者（User.id）
   authorName   String? // 顯示用作者名（denormalize 自 User.nickname）
   reviewStatus String  @default("approved") // 'approved' | 'pending' | 'rejected'
+  planFamilySlug String? // 手動指定計畫家族（flower/sleep/other/community/...）；null = 沿用 sectionIdFor 自動判定
   startDateType  String       @default("user_choice") // user_choice or fixed_date
   fixedStartDate DateTime? // Only used when startDateType === 'fixed_date'
   tasks          Json // 模板包含的任務清單

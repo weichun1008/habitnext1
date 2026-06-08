@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Plus, Edit2, Trash2, Globe, Lock, ListChecks, Users, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { sectionIdFor } from '@/lib/templateRecommendation';
+import { sectionIdFor, isCategoryFamilyLocked } from '@/lib/templateRecommendation';
 
 // 第一層家族分區的 fallback 顯示（/api/admin/plan-families 無資料時）。
 const FAMILY_FALLBACK = [
@@ -112,6 +112,27 @@ export default function TemplatesPage() {
         }
     };
 
+    // 手動指定計畫家族（傳 '' 清除回自動判定）。
+    const handleSetFamily = async (id, slug) => {
+        try {
+            const res = await fetch(`/api/admin/templates/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ planFamilySlug: slug || null }),
+            });
+            if (res.ok) fetchAll();
+            else alert('更新家族失敗');
+        } catch (error) {
+            console.error('Set family error:', error);
+            alert('發生錯誤');
+        }
+    };
+
+    // 系統分類綁定（花朵/睡眠）的計畫不開放手動改家族 — 點擊只跳提示。
+    const handleLockedFamily = () => {
+        alert('此計畫的家族由系統分類自動歸屬（花朵 / 睡眠），與推薦邏輯綁定。\n為避免改錯，這裡不開放直接調整；如確實需要，請洽超級管理員或開發人員協助。');
+    };
+
     // 單張計畫卡（家族分區內共用）。
     const renderCard = (template) => {
         const cat = categoryMap[template.category] || fallbackForSlug(template.category);
@@ -147,7 +168,28 @@ export default function TemplatesPage() {
                 <div className="admin-template-owner">
                     <User size={12} /><span>{expertName}</span>
                 </div>
-                <div className="mt-4 flex gap-2" onClick={e => e.stopPropagation()}>
+                {/* 計畫家族：可手動指定（系統分類綁定者鎖定，點擊跳提示） */}
+                <div className="mt-3 flex items-center gap-2" onClick={e => e.stopPropagation()}>
+                    <span className="text-[11px] text-gray-400 flex-shrink-0">家族</span>
+                    {isCategoryFamilyLocked(template.category) ? (
+                        <button type="button" onClick={handleLockedFamily}
+                            className="admin-btn admin-btn-secondary px-2 py-1 text-xs flex items-center gap-1"
+                            title="系統分類綁定，點擊看說明">
+                            <Lock size={11} /> {orderedFamilies.find(f => f.slug === sectionIdFor(template))?.title || sectionIdFor(template)}
+                        </button>
+                    ) : (
+                        <select
+                            value={template.planFamilySlug || ''}
+                            onChange={e => handleSetFamily(template.id, e.target.value)}
+                            className="admin-input text-xs py-1 flex-1">
+                            <option value="">（自動：{orderedFamilies.find(f => f.slug === sectionIdFor({ ...template, planFamilySlug: null }))?.title || '其他'}）</option>
+                            {orderedFamilies.map(f => (
+                                <option key={f.slug} value={f.slug}>{f.title}</option>
+                            ))}
+                        </select>
+                    )}
+                </div>
+                <div className="mt-3 flex gap-2" onClick={e => e.stopPropagation()}>
                     <Link href={`/admin/dashboard/templates/${template.id}`} className="admin-btn admin-btn-secondary flex-1 justify-center no-underline">
                         <Edit2 size={14} /> 編輯
                     </Link>

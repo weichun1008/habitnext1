@@ -74,11 +74,18 @@ const TEMPLATE_SECTIONS = [
 
 function sectionIdFor(template) {
     if (!template) return 'other';
+    if (template.planFamilySlug) return template.planFamilySlug; // 手動指定最優先
     if (template.authorType === 'user') return 'community';
     if (!template.category) return 'other';
     if (FLOWER_TYPES.has(template.category)) return 'flower';
     if (SLEEP_CATEGORIES.has(template.category)) return 'sleep';
     return 'other';
+}
+
+// 該計畫的家族歸屬是否被系統分類鎖死（花朵/睡眠 — 與 lib enum/推薦邏輯綁定）。
+// 鎖死者不開放後台手動改家族，僅提示洽超級管理員/開發人員。
+function isCategoryFamilyLocked(category) {
+    return FLOWER_TYPES.has(category) || SLEEP_CATEGORIES.has(category);
 }
 
 /**
@@ -89,7 +96,8 @@ function sectionIdFor(template) {
 function groupTemplatesBySection(templates, userTypeKey, userSleepTypeKey) {
     const grouped = { flower: [], sleep: [], other: [], community: [] };
     for (const t of templates) {
-        grouped[sectionIdFor(t)].push(t);
+        const sid = sectionIdFor(t);
+        (grouped[sid] || (grouped[sid] = [])).push(t); // 手動指定可能是自訂家族 → 動態建桶
     }
     for (const id of Object.keys(grouped)) {
         grouped[id] = sortByRecommendation(grouped[id], userTypeKey, userSleepTypeKey);
@@ -104,5 +112,6 @@ module.exports = {
     sortByRecommendation,
     TEMPLATE_SECTIONS,
     sectionIdFor,
+    isCategoryFamilyLocked,
     groupTemplatesBySection,
 };
