@@ -950,13 +950,37 @@ const MainApp = () => {
         }
     };
 
+    // 我的最愛切換（釘選置頂）。樂觀更新本地 tasks（即時重排，starred → 上面），
+    // 同步更新正在檢視的 viewingTask 讓詳情頁星標即時翻轉；PUT 失敗則回滾。
+    const handleToggleStar = async (task) => {
+        if (!task?.id) return;
+        const next = !task.starred;
+        setTasks(prev => prev.map(t => t.id === task.id ? { ...t, starred: next } : t));
+        setViewingTask(prev => (prev && prev.id === task.id ? { ...prev, starred: next } : prev));
+        try {
+            const res = await fetch(`/api/tasks/${task.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ starred: next }),
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        } catch (e) {
+            console.error('[MainApp] toggle star failed:', e);
+            setTasks(prev => prev.map(t => t.id === task.id ? { ...t, starred: !next } : t));
+            setViewingTask(prev => (prev && prev.id === task.id ? { ...prev, starred: !next } : prev));
+            alert('星號更新失敗，請再試一次');
+        }
+    };
+
     // RecommendationPanel sticky-CTA "開始評分": tear down the aspiration
     // chain (panel + picker) and open the focus-map modal directly. Bypasses
     // the dashboard banner's 5+ threshold for users who want to evaluate
     // mid-session.
     const handleOpenFocusMapFromPanel = () => {
+        // 關掉推薦面板，但 **保留 activeAspiration** → 傳給 FocusMapModal 作 aspirationId，
+        // 讓評分完成畫面能出現「把這套存成計畫」入口（社群計畫）。activeAspiration 在
+        // FocusMapModal onClose 時才清除。
         setIsAspirationPickerOpen(false);
-        setActiveAspiration(null);
         setIsFocusMapModalOpen(true);
     };
 
@@ -1081,6 +1105,10 @@ const MainApp = () => {
             const ac = (isCompletedOnDate(a, selectedDate) && !completingTaskIds.has(a.id) && a.direction !== 'decrease') ? 1 : 0;
             const bc = (isCompletedOnDate(b, selectedDate) && !completingTaskIds.has(b.id) && b.direction !== 'decrease') ? 1 : 0;
             if (ac !== bc) return ac - bc;
+            // 我的最愛釘選：加星的習慣浮到（未完成 / 已完成各自區段的）最上面。
+            const as = a.starred ? 0 : 1;
+            const bs = b.starred ? 0 : 1;
+            if (as !== bs) return as - bs;
             const ao = cueOrderFor(a.cue);
             const bo = cueOrderFor(b.cue);
             if (ao !== bo) return ao - bo;
@@ -1746,9 +1774,10 @@ const MainApp = () => {
                 userId={user?.id}
                 aspirationId={activeAspiration?.id || null}
                 aspirationTitle={activeAspiration?.identity || activeAspiration?.title || ''}
-                onClose={() => setIsFocusMapModalOpen(false)}
+                onClose={() => { setIsFocusMapModalOpen(false); setActiveAspiration(null); }}
                 onActivated={() => {
-                    setIsFocusMapModalOpen(false);
+                    // 不在此關閉 Modal — 讓 FocusMapModal 顯示完成畫面（含「把這套存成計畫」入口）。
+                    // 背景刷新每日清單/候選數；關閉與清 aspiration 交給完成畫面的「完成」鈕（onClose）。
                     setBannerDismissed(false);
                     if (user?.id) {
                         fetchTasks(user.id);
