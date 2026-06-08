@@ -32,6 +32,9 @@ export async function GET(request) {
                         aspiration: { select: { id: true, text: true, identity: true, domain: true, status: true } },
                     },
                 },
+                // Slice T — carry the backing official habit's fiveT so the
+                // detail modal can surface its physical tools (toolPhysical).
+                officialHabit: { select: { fiveT: true, name: true } },
             },
             orderBy: { createdAt: 'asc' }
         });

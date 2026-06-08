@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, Edit2, Check, Calendar, Target, Flame, Trophy, ChevronRight, ChevronLeft } from 'lucide-react';
+import { X, Edit2, Check, Calendar, Target, Flame, Trophy, ChevronRight, ChevronLeft, Play } from 'lucide-react';
 import IconRenderer from './IconRenderer';
+import PhysicalToolsList from '@/components/tools/PhysicalToolsList';
 import HabitInsightSection from './insights/HabitInsightSection';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import { getTodayStr, isCompletedOnDate, calculateStats, isFutureDate } from '@/lib/utils';
@@ -8,7 +9,7 @@ import { visibleSubtasks } from '@/lib/subtasks';
 import TaskActionMenu from './taskCard/TaskActionMenu';
 import LocationChip from './taskCard/LocationChip';
 
-const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate, onAfterAction, onPickLocation }) => {
+const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate, onAfterAction, onPickLocation, onStartTool }) => {
     const [currentDate, setCurrentDate] = useState(initialDate || getTodayStr());
 
     // Sync internal date when the modal re-opens for a different task or the
@@ -106,6 +107,27 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                         )}
                         <h2 className="text-2xl font-black text-gray-800 text-center mb-2">{task.title}</h2>
                         <p className="text-gray-500 text-center text-sm px-4">{task.details || '這個習慣沒有詳細說明，但持續做就對了！'}</p>
+                    </div>
+
+                    {/* Slice T — tool entry. When the task is backed by a virtual
+                        tool (toolType set), surface a primary 開始 button that
+                        hands off to the parent's onStartTool handler. */}
+                    {task.toolType && (
+                        <div className="mb-6 flex justify-center">
+                            <button
+                                onClick={() => onStartTool?.(task)}
+                                className="w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 bg-teal-600 text-white shadow-lg shadow-teal-200 transition-all hover:bg-teal-700 hover:scale-[1.02]"
+                            >
+                                <Play size={22} fill="currentColor" /> 開始
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Slice T — suggested physical tools from the backing
+                        official habit's fiveT. PhysicalToolsList returns null on
+                        empty, so an absent/empty array renders nothing. */}
+                    <div className="mb-8">
+                        <PhysicalToolsList items={task.officialHabit?.fiveT?.toolPhysical} />
                     </div>
 
                     {/* Quick Actions (Complete for Selected Date) */}
