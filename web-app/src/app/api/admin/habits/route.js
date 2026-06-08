@@ -25,7 +25,7 @@ export async function GET(request) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { name, description, category, icon, difficulties, defaultCue } = body;
+        const { name, description, category, icon, difficulties, defaultCue, fiveT } = body;
 
         if (!name?.trim()) {
             return NextResponse.json({ error: '請輸入習慣名稱' }, { status: 400 });
@@ -51,7 +51,8 @@ export async function POST(request) {
                 category,
                 icon: icon || null,
                 difficulties: difficulties || {},
-                defaultCue: (defaultCue && String(defaultCue).trim()) || null
+                defaultCue: (defaultCue && String(defaultCue).trim()) || null,
+                fiveT: fiveT ?? null
             }
         });
         return NextResponse.json(habit);
