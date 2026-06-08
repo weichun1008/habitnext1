@@ -145,6 +145,8 @@ const TaskLibraryModal = ({
             frequency: config.recurrence?.type || 'daily',
             recurrence: config.recurrence || { type: 'daily', interval: 1, endType: 'never' },
             direction: habit.direction ?? null,
+            toolType: habit.fiveT?.toolVirtual?.type ?? null,
+            toolConfig: habit.fiveT?.toolVirtual?.params ?? null,
             dailyTarget: config.dailyTarget ?? 1,
             unit: config.unit || '次',
             stepValue: config.stepValue || 1,

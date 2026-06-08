@@ -28,6 +28,10 @@ export async function PUT(request, { params }) {
                 // payload carries it so progress-only PUTs (historyUpdate) don't
                 // clobber an existing direction with undefined→null.
                 ...(taskData.direction !== undefined ? { direction: taskData.direction } : {}),
+                // Slice T — virtual tool. Mirror direction's only-if-present guard
+                // so progress-only PUTs don't clobber an existing tool config.
+                ...(taskData.toolType !== undefined ? { toolType: taskData.toolType } : {}),
+                ...(taskData.toolConfig !== undefined ? { toolConfig: taskData.toolConfig } : {}),
                 date: taskData.date,
                 time: taskData.time,
                 // Slice M — accept status transitions to paused/archived from
