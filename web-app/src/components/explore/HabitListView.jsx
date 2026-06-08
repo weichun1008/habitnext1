@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp, Check, X, ChevronRight, Loader } from 'lucide-react';
 import IconRenderer from '../IconRenderer';
 import HabitInsightSection from '../insights/HabitInsightSection';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
@@ -71,6 +71,14 @@ export default function HabitListView({
   setSelectedDifficulty,
   onSelectHabit,
   emptyText,
+  // Optional aspiration-recommendation mode: when onAddCandidate is provided,
+  // the expanded body shows two CTAs (加入候選 toggle + 直接加入) instead of the
+  // single 加入此習慣 button. Keeps the SAME expandable / difficulty / evidence
+  // shell so the recommendation panel matches 探索習慣 exactly.
+  onAddCandidate,
+  onRemoveCandidate,
+  candidateAddedIds,
+  pickingId,
 }) {
   const [expandedId, setExpandedId] = useState(null);
 
@@ -169,12 +177,50 @@ export default function HabitListView({
                   </div>
                 </div>
 
-                <button
-                  onClick={() => onSelectHabit(habit, currentDiff)}
-                  className="w-full flex items-center justify-center gap-1 text-sm text-white bg-emerald-500 px-3 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-colors"
-                >
-                  <Plus size={16} /> 加入此習慣
-                </button>
+                {onAddCandidate ? (() => {
+                  const addedAsCandidate = candidateAddedIds?.has(habit.id);
+                  const picking = pickingId === `habit-${habit.id}`;
+                  return (
+                    <div className="grid grid-cols-2 gap-2">
+                      {addedAsCandidate ? (
+                        <button
+                          type="button"
+                          onClick={() => onRemoveCandidate?.(habit)}
+                          disabled={picking}
+                          aria-label="取消候選"
+                          className="group flex items-center justify-center gap-1 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-100 text-emerald-700 hover:bg-rose-50 hover:text-rose-600"
+                        >
+                          <span className="flex items-center gap-1 group-hover:hidden"><Check size={15} /> 已加入候選</span>
+                          <span className="hidden items-center gap-1 group-hover:flex"><X size={15} /> 取消候選</span>
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => onAddCandidate(habit, currentDiff)}
+                          disabled={picking}
+                          className="flex items-center justify-center gap-1 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:cursor-not-allowed bg-white border border-gray-200 text-gray-700 hover:border-emerald-300 hover:bg-emerald-50"
+                        >
+                          <Plus size={15} /> 加入候選
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => onSelectHabit(habit, currentDiff)}
+                        disabled={picking || addedAsCandidate}
+                        className="flex items-center justify-center gap-1 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-500 text-white hover:bg-emerald-600"
+                      >
+                        {picking ? <Loader size={15} className="animate-spin" /> : <>直接加入 <ChevronRight size={15} /></>}
+                      </button>
+                    </div>
+                  );
+                })() : (
+                  <button
+                    onClick={() => onSelectHabit(habit, currentDiff)}
+                    className="w-full flex items-center justify-center gap-1 text-sm text-white bg-emerald-500 px-3 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-colors"
+                  >
+                    <Plus size={16} /> 加入此習慣
+                  </button>
+                )}
               </div>
             )}
           </div>

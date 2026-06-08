@@ -81,10 +81,11 @@ describe('AspirationRecommendationPanel — callbacks', () => {
         await waitFor(() => expect(onPickTemplate).toHaveBeenCalledWith(template, aspiration));
     });
 
-    test('clicking 直接加入 fires onPickHabit with (habit, aspiration)', async () => {
-        // 2026-05-29: HabitCard now has two CTAs (加入候選 + 直接加入). The
-        // direct-add path is the green "直接加入" button; 加入候選 routes
-        // through onAddHabitAsCandidate instead. See sibling test below.
+    // 2026-06-07: 推薦面板的習慣改用共用的 HabitListView（可展開 + 入門/進階/挑戰 +
+    // 證據力）。動作按鈕在展開後才出現，所以測試要先點習慣標題展開。
+    const expandHabit = (name) => fireEvent.click(screen.getByText(name));
+
+    test('展開後點 直接加入 會帶 (habit, aspiration, diffKey) 呼叫 onPickHabit', async () => {
         const habit = { id: 'h1', name: '習慣一', description: '說明', difficulties: { beginner: { enabled: true } } };
         mockFetchOk({ templates: [], habits: [habit] });
         const onPickHabit = jest.fn(async () => {});
@@ -96,11 +97,12 @@ describe('AspirationRecommendationPanel — callbacks', () => {
             />
         );
         await screen.findByText('習慣一');
+        expandHabit('習慣一');
         fireEvent.click(screen.getByRole('button', { name: /直接加入/ }));
-        await waitFor(() => expect(onPickHabit).toHaveBeenCalledWith(habit, aspiration));
+        await waitFor(() => expect(onPickHabit).toHaveBeenCalledWith(habit, aspiration, 'beginner'));
     });
 
-    test('clicking 加入候選 fires onAddHabitAsCandidate, flips to a toggle, shows sticky CTA', async () => {
+    test('展開後點 加入候選 會呼叫 onAddHabitAsCandidate、翻成 toggle、出現 sticky CTA', async () => {
         const habit = { id: 'h1', name: '習慣一', description: '說明', difficulties: { beginner: { enabled: true } } };
         mockFetchOk({ templates: [], habits: [habit] });
         const onAddHabitAsCandidate = jest.fn(async () => 'task-h1');
@@ -115,20 +117,19 @@ describe('AspirationRecommendationPanel — callbacks', () => {
             />
         );
         await screen.findByText('習慣一');
+        expandHabit('習慣一');
         fireEvent.click(screen.getByRole('button', { name: /加入候選/ }));
-        await waitFor(() => expect(onAddHabitAsCandidate).toHaveBeenCalledWith(habit, aspiration));
-        // Once added, the candidate CTA becomes a toggle (still clickable, not
-        // disabled); 直接加入 stays locked to avoid a duplicate active task.
+        await waitFor(() => expect(onAddHabitAsCandidate).toHaveBeenCalledWith(habit, aspiration, 'beginner'));
+        // 加入後候選 CTA 變成可切換的 取消候選；直接加入 鎖住避免重複建立 active task。
         await waitFor(() => expect(screen.getByRole('button', { name: /取消候選/ })).toBeEnabled());
         expect(screen.getByRole('button', { name: /直接加入/ })).toBeDisabled();
-        // Sticky bottom CTA appears with running count.
         const cta = screen.getByRole('button', { name: /開始評分/ });
         expect(cta).toBeInTheDocument();
         fireEvent.click(cta);
         expect(onOpenFocusMap).toHaveBeenCalledTimes(1);
     });
 
-    test('clicking 取消候選 fires onRemoveHabitAsCandidate with the task id and reverts the CTA', async () => {
+    test('展開後點 取消候選 會帶 task id 呼叫 onRemoveHabitAsCandidate 並還原 CTA', async () => {
         const habit = { id: 'h1', name: '習慣一', description: '說明', difficulties: { beginner: { enabled: true } } };
         mockFetchOk({ templates: [], habits: [habit] });
         const onAddHabitAsCandidate = jest.fn(async () => 'task-h1');
@@ -144,14 +145,13 @@ describe('AspirationRecommendationPanel — callbacks', () => {
             />
         );
         await screen.findByText('習慣一');
+        expandHabit('習慣一');
         fireEvent.click(screen.getByRole('button', { name: /加入候選/ }));
         const toggle = await screen.findByRole('button', { name: /取消候選/ });
-        // Sticky CTA present while there is 1 candidate.
         expect(screen.getByRole('button', { name: /開始評分/ })).toBeInTheDocument();
         fireEvent.click(toggle);
         await waitFor(() => expect(onRemoveHabitAsCandidate).toHaveBeenCalledWith('task-h1', aspiration));
-        // Reverts to 加入候選 and the sticky CTA disappears (count back to 0).
-        await waitFor(() => expect(screen.getByRole('button', { name: /^加入候選$|加入候選/ })).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByRole('button', { name: /加入候選/ })).toBeInTheDocument());
         expect(screen.queryByRole('button', { name: /開始評分/ })).not.toBeInTheDocument();
     });
 
@@ -231,10 +231,16 @@ describe('AspirationRecommendationPanel — Task 4 header + evidence badge', () 
         expect(screen.getByText(/早睡的人/)).toBeInTheDocument();
     });
 
-    it('有已發布佐證的習慣顯示證據力 badge、無佐證的不顯示', async () => {
+    it('習慣以 HabitListView 呈現：預設收合，展開後出現難度選擇與動作（與探索習慣一致）', async () => {
         render(<AspirationRecommendationPanel aspiration={ASP} onBack={() => {}} />);
-        expect(await screen.findByText(/證據力/)).toBeInTheDocument();
+        expect(await screen.findByText('睡前 1 小時不看手機')).toBeInTheDocument();
         expect(screen.getByText('泡熱水澡')).toBeInTheDocument();
-        expect(screen.getAllByText(/證據力/).length).toBe(1);
+        // 收合時不顯示難度/動作。
+        expect(screen.queryByText(/選擇難度/)).not.toBeInTheDocument();
+        // 點習慣展開 → 出現難度選擇 + 加入候選/直接加入。
+        fireEvent.click(screen.getByText('睡前 1 小時不看手機'));
+        expect(await screen.findByText(/選擇難度/)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /加入候選/ })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /直接加入/ })).toBeInTheDocument();
     });
 });

@@ -910,16 +910,19 @@ const MainApp = () => {
     // beginner). The user defers difficulty / anchor / identity choices to
     // the FocusMap rating step. We keep the panel open so the user can
     // accumulate multiple candidates before evaluating.
-    const handleAddHabitAsCandidate = async (habit, aspiration) => {
+    const handleAddHabitAsCandidate = async (habit, aspiration, diffKey) => {
         if (!user?.id || !habit) {
             console.warn('[MainApp] add candidate aborted — missing user or habit');
             return;
         }
 
         const difficulties = habit.difficulties || {};
-        const firstEnabledKey = ['beginner', 'intermediate', 'challenge']
-            .find(k => difficulties[k]?.enabled);
-        const diffConfig = firstEnabledKey ? difficulties[firstEnabledKey] : {};
+        // Honor the difficulty picked in the recommendation panel; fall back to
+        // the first enabled tier if none/invalid was passed.
+        const key = (diffKey && difficulties[diffKey]?.enabled)
+            ? diffKey
+            : ['beginner', 'intermediate', 'challenge'].find(k => difficulties[k]?.enabled);
+        const diffConfig = key ? difficulties[key] : {};
 
         const taskPayload = {
             userId: user.id,
@@ -1036,16 +1039,64 @@ const MainApp = () => {
         setIsTemplateExplorerOpen(true);
     };
 
-    // Pick a habit from the recommendation panel: close the picker chain
-    // and hand the habit to TaskLibraryModal as `initialHabit`. The library
-    // jumps to that habit's list view so the user picks difficulty, then
-    // walks the existing anchor → identity → emit flow. handleSaveTask
-    // writes AspirationHabit afterward because activeAspiration is still
-    // set when the library's onSelectTask fires.
-    const handlePickHabitFromAspiration = (habit) => {
-        setIsAspirationPickerOpen(false);
-        setAspirationHabitForLibrary(habit);
-        setIsLibraryModalOpen(true);
+    // RecommendationPanel "直接加入": create an ACTIVE task straight from the
+    // picked habit + chosen difficulty (the panel now offers 入門/進階/挑戰 inline,
+    // so there's no need to re-open TaskLibraryModal for another difficulty pick).
+    // Tags the aspiration, drops the task into the daily list, then closes the
+    // aspiration flow. Anchor (cue) is left null — editable later, same as 加入候選.
+    const handlePickHabitFromAspiration = async (habit, aspiration, diffKey) => {
+        if (!user?.id || !habit) return;
+        const difficulties = habit.difficulties || {};
+        const key = (diffKey && difficulties[diffKey]?.enabled)
+            ? diffKey
+            : ['beginner', 'intermediate', 'challenge'].find(k => difficulties[k]?.enabled);
+        const diffConfig = key ? difficulties[key] : {};
+
+        const taskPayload = {
+            userId: user.id,
+            title: habit.name,
+            details: habit.description || '',
+            type: diffConfig.type || 'binary',
+            category: habit.icon || domainToIconKey(habit.category),
+            frequency: diffConfig.recurrence?.type || 'daily',
+            recurrence: diffConfig.recurrence || { type: 'daily', interval: 1, endType: 'never' },
+            reminder: { enabled: false, offset: 0 },
+            dailyTarget: diffConfig.dailyTarget || 1,
+            unit: diffConfig.unit || '次',
+            stepValue: diffConfig.stepValue || 1,
+            subtasks: diffConfig.subtasks || [],
+            toolType: habit.fiveT?.toolVirtual?.type ?? null,
+            toolConfig: habit.fiveT?.toolVirtual?.params ?? null,
+            officialHabitId: habit.id,
+            status: 'active',
+        };
+
+        try {
+            const res = await fetch('/api/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(taskPayload),
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const created = await res.json();
+            setTasks(prev => [...prev, { ...created, history: {}, dailyProgress: {} }]);
+
+            const aspId = aspiration?.id || activeAspiration?.id;
+            if (aspId) {
+                fetch(`/api/aspirations/${aspId}/habits`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ taskId: created.id }),
+                }).catch(e => console.warn('[MainApp] aspiration habit tag failed:', e));
+            }
+
+            setIsAspirationPickerOpen(false);
+            setActiveAspiration(null);
+        } catch (e) {
+            console.error('[MainApp] direct add from aspiration failed:', e);
+            alert('加入失敗，請再試一次');
+            throw e;  // let the panel's pickingId clear so the button can retry
+        }
     };
 
     // Skip-to-explore branches: aspiration is dropped on purpose — these are
