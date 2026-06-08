@@ -100,10 +100,10 @@ describe('AspirationRecommendationPanel — callbacks', () => {
         await waitFor(() => expect(onPickHabit).toHaveBeenCalledWith(habit, aspiration));
     });
 
-    test('clicking 加入候選 fires onAddHabitAsCandidate, locks both buttons, shows sticky CTA', async () => {
+    test('clicking 加入候選 fires onAddHabitAsCandidate, flips to a toggle, shows sticky CTA', async () => {
         const habit = { id: 'h1', name: '習慣一', description: '說明', difficulties: { beginner: { enabled: true } } };
         mockFetchOk({ templates: [], habits: [habit] });
-        const onAddHabitAsCandidate = jest.fn(async () => {});
+        const onAddHabitAsCandidate = jest.fn(async () => 'task-h1');
         const onOpenFocusMap = jest.fn();
         render(
             <AspirationRecommendationPanel
@@ -117,14 +117,42 @@ describe('AspirationRecommendationPanel — callbacks', () => {
         await screen.findByText('習慣一');
         fireEvent.click(screen.getByRole('button', { name: /加入候選/ }));
         await waitFor(() => expect(onAddHabitAsCandidate).toHaveBeenCalledWith(habit, aspiration));
-        // Once added, both buttons are disabled and the 加入候選 label flips.
-        await waitFor(() => expect(screen.getByRole('button', { name: /已加入候選/ })).toBeDisabled());
+        // Once added, the candidate CTA becomes a toggle (still clickable, not
+        // disabled); 直接加入 stays locked to avoid a duplicate active task.
+        await waitFor(() => expect(screen.getByRole('button', { name: /取消候選/ })).toBeEnabled());
         expect(screen.getByRole('button', { name: /直接加入/ })).toBeDisabled();
         // Sticky bottom CTA appears with running count.
         const cta = screen.getByRole('button', { name: /開始評分/ });
         expect(cta).toBeInTheDocument();
         fireEvent.click(cta);
         expect(onOpenFocusMap).toHaveBeenCalledTimes(1);
+    });
+
+    test('clicking 取消候選 fires onRemoveHabitAsCandidate with the task id and reverts the CTA', async () => {
+        const habit = { id: 'h1', name: '習慣一', description: '說明', difficulties: { beginner: { enabled: true } } };
+        mockFetchOk({ templates: [], habits: [habit] });
+        const onAddHabitAsCandidate = jest.fn(async () => 'task-h1');
+        const onRemoveHabitAsCandidate = jest.fn(async () => {});
+        render(
+            <AspirationRecommendationPanel
+                aspiration={aspiration}
+                onBack={() => {}}
+                onPickHabit={() => {}}
+                onAddHabitAsCandidate={onAddHabitAsCandidate}
+                onRemoveHabitAsCandidate={onRemoveHabitAsCandidate}
+                onOpenFocusMap={() => {}}
+            />
+        );
+        await screen.findByText('習慣一');
+        fireEvent.click(screen.getByRole('button', { name: /加入候選/ }));
+        const toggle = await screen.findByRole('button', { name: /取消候選/ });
+        // Sticky CTA present while there is 1 candidate.
+        expect(screen.getByRole('button', { name: /開始評分/ })).toBeInTheDocument();
+        fireEvent.click(toggle);
+        await waitFor(() => expect(onRemoveHabitAsCandidate).toHaveBeenCalledWith('task-h1', aspiration));
+        // Reverts to 加入候選 and the sticky CTA disappears (count back to 0).
+        await waitFor(() => expect(screen.getByRole('button', { name: /^加入候選$|加入候選/ })).toBeInTheDocument());
+        expect(screen.queryByRole('button', { name: /開始評分/ })).not.toBeInTheDocument();
     });
 
     test('sticky 開始評分 CTA does not render until at least 1 candidate added', async () => {
