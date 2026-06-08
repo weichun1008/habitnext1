@@ -293,15 +293,34 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             ) : displayStatus}
                         </span>
                     ) : isChecklist ? (
-                        // Checklist: X/Y badge + chevron to expand inline subtasks.
-                        // No outer toggle — the bug was that toggling here flipped
-                        // `completed` on the task without going through subtask
-                        // logic, leaving partial state ('1/3 + 已完成' inconsistency).
+                        // Checklist: X/Y badge + 主任務勾選圈（勾下去一次完成所有子任務，
+                        // 走 handleUpdate('toggle') → 在 MainApp 設定全部 subtaskCompletions；
+                        // 子任務狀態與逐項勾選共用同一份資料）+ chevron 展開子任務。
                         <div className="flex items-center gap-2">
                             {subtaskDisplay && (
                                 <span className={`text-xs font-bold px-2 py-1 rounded-md ${isCompleted ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-400'}`}>
                                     {subtaskDisplay}
                                 </span>
+                            )}
+                            {isFuture ? (
+                                <span
+                                    title="未來的任務 — 到那天才能完成"
+                                    className="w-6 h-6 rounded-full border-2 border-dashed border-indigo-300 bg-white flex items-center justify-center"
+                                >
+                                    <Lock size={11} className="text-indigo-400" />
+                                </span>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={(e) => { e.stopPropagation(); handleUpdate('toggle'); }}
+                                    disabled={isLocked}
+                                    aria-label={isCompleted ? '取消完成（清空子任務）' : '全部完成'}
+                                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-gray-200 hover:border-emerald-400'} ${isLocked ? 'opacity-60 cursor-not-allowed' : ''}`}
+                                >
+                                    {isCompleted && (
+                                        <Check key={pulseKey} size={14} className="text-white animate-check-pop" strokeWidth={3} />
+                                    )}
+                                </button>
                             )}
                             <button
                                 type="button"
