@@ -7,7 +7,7 @@ export async function GET() {
     try {
         console.log('[API] Fetching public templates...');
         const templatesRaw = await prisma.template.findMany({
-            where: { isPublic: true },
+            where: { isPublic: true, reviewStatus: 'approved' },
             include: {
                 expert: {
                     select: { name: true, title: true, avatar: true }
