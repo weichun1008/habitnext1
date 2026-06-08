@@ -178,7 +178,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
         <div
             onClick={onClick}
             className={`group p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md ${isDecrease ? '' : 'bg-white'} ${borderCls} ${isPast && !isCompleted ? 'opacity-75' : ''}`}
-            style={isDecrease ? { backgroundColor: `${polSoft}99`, borderColor: polBorder } : undefined}
+            style={isDecrease ? { backgroundColor: polSoft, borderColor: polBorder } : undefined}
         >
 
             {/* Slice M — left emerald accent rail when completed (non-strikethrough
