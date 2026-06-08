@@ -17,7 +17,7 @@ describe('QuadrantSection', () => {
   test('已加入顯示「已加入」、未加入顯示「加入」', () => {
     render(<QuadrantSection quadrantKey="golden" items={golden} addedSet={new Set(['a'])} onToggle={() => {}} />);
     expect(screen.getByRole('button', { name: /已加入/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /^＋ 加入/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '加入' })).toBeInTheDocument();
   });
 
   test('skip 象限未加入時文字為「仍要加入」且可點', () => {

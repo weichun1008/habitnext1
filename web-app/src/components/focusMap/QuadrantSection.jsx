@@ -37,11 +37,11 @@ const QuadrantSection = ({ quadrantKey, items, addedSet, onToggle }) => {
               <span className="truncate">{it.title}</span>
             </span>
             <button type="button" onClick={() => onToggle(it.id)}
-              className={`text-[11px] font-extrabold rounded-lg px-2.5 py-1.5 border transition-colors flex-shrink-0 ${
+              className={`inline-flex items-center gap-1 text-[11px] font-extrabold rounded-lg px-2.5 py-1.5 border transition-colors flex-shrink-0 ${
                 on ? 'bg-emerald-500 text-white border-emerald-500'
                    : isSkip ? 'bg-white text-gray-400 border-gray-200 hover:border-gray-300'
                             : 'bg-white text-emerald-600 border-emerald-200 hover:border-emerald-400'}`}>
-              {on ? '✓ 已加入' : isSkip ? '＋ 仍要加入' : '＋ 加入'}
+              {on ? <><Icons.Check size={12} /> 已加入</> : isSkip ? <><Icons.Plus size={12} /> 仍要加入</> : <><Icons.Plus size={12} /> 加入</>}
             </button>
           </div>
         );
