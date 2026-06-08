@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
+import { signSession, COOKIE_NAME, SESSION_TTL_SECONDS } from '@/lib/adminAuth';
 
 export async function POST(request) {
     try {
@@ -24,9 +25,24 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
         }
 
-        // Return expert info (without password)
+        // Return expert info (without password) + 種 httpOnly 簽章 session cookie
         const { password: _, ...safeExpert } = expert;
-        return NextResponse.json(safeExpert);
+        const exp = Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS;
+        const token = await signSession(
+            { expertId: expert.id, role: expert.role, email: expert.email, exp },
+            process.env.ADMIN_SESSION_SECRET
+        );
+        const response = NextResponse.json(safeExpert);
+        if (token) {
+            response.cookies.set(COOKIE_NAME, token, {
+                httpOnly: true,
+                sameSite: 'lax',
+                secure: process.env.NODE_ENV === 'production',
+                path: '/',
+                maxAge: SESSION_TTL_SECONDS,
+            });
+        }
+        return response;
 
     } catch (error) {
         console.error('Expert login error:', error);

@@ -32,7 +32,12 @@ export default function AdminDashboardLayout({ children }) {
         setLoading(false);
     }, [router]);
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/admin/auth/logout', { method: 'POST' });
+        } catch (e) {
+            console.warn('logout cookie clear failed', e);
+        }
         localStorage.removeItem('admin_expert');
         router.push('/admin/login');
     };
