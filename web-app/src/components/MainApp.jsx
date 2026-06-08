@@ -1317,11 +1317,11 @@ const MainApp = () => {
                                     <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 mb-4">
                                         <div className="flex items-start justify-between gap-2">
                                             <div className="flex-1">
-                                                <p className="text-xs font-bold text-amber-700">
-                                                    ✨ 你有 {candidateCount} 個候選習慣
+                                                <p className="text-xs font-bold text-amber-700 flex items-center gap-1">
+                                                    <Sparkles size={13} /> 你有 {candidateCount} 個候選習慣
                                                 </p>
                                                 <p className="text-sm font-black text-gray-800 mt-1">開始焦點地圖，挑出黃金行為</p>
-                                                <p className="text-[11px] text-gray-500 mt-1">Fogg 建議篩 3 個實際開始</p>
+                                                <p className="text-[11px] text-gray-500 mt-1">建議先挑 3 個最值得做的開始</p>
                                             </div>
                                             <button
                                                 type="button"

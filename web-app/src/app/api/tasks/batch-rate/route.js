@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 // PATCH /api/tasks/batch-rate
-// body: { ratings: [{ taskId, userImpact, userAbility, action: 'activate' | 'keep_candidate' | 'archive' }] }
+// body: { ratings: [{ taskId, userImpact, userAbility, action, targetDays? }] }
+//   action: 'activate' | 'keep_candidate' | 'archive'；targetDays 僅 activate 採用，null=不設限
 // Updates each task in one transaction. Idempotent — calling again with the
 // same payload produces the same state.
 export async function PATCH(request) {
@@ -25,15 +26,18 @@ export async function PATCH(request) {
                 else status = 'candidate';
                 counts[r.action] = (counts[r.action] || 0) + 1;
 
-                return prisma.task.update({
-                    where: { id: r.taskId },
-                    data: {
-                        status,
-                        userImpact: typeof r.userImpact === 'number' ? r.userImpact : null,
-                        userAbility: typeof r.userAbility === 'number' ? r.userAbility : null,
-                        ratedAt: now,
-                    },
-                });
+                const data = {
+                    status,
+                    userImpact: typeof r.userImpact === 'number' ? r.userImpact : null,
+                    userAbility: typeof r.userAbility === 'number' ? r.userAbility : null,
+                    ratedAt: now,
+                };
+                // 僅 activate 設定養成期間（targetDays === null 代表不設限）
+                if (r.action === 'activate' && 'targetDays' in r) {
+                    data.targetDays = typeof r.targetDays === 'number' ? r.targetDays : null;
+                }
+
+                return prisma.task.update({ where: { id: r.taskId }, data });
             })
         );
 
