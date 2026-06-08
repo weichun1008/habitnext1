@@ -5,6 +5,7 @@ import { ArrowLeft, Sparkles, Leaf, Loader, ChevronRight, Plus, Check, Target, X
 import EvidenceBadge from './insights/EvidenceBadge';
 import { scoreEvidence } from '@/lib/evidenceStrength';
 import IconRenderer from './IconRenderer';
+import HabitListView from './explore/HabitListView';
 
 // 從習慣的已發布 insights 取「最高 total」的 evidence；無則 null。
 function topEvidenceOf(habit) {
@@ -187,6 +188,8 @@ export default function AspirationRecommendationPanel({
     // mapped habitId → created taskId so each can be toggled back off (取消候選).
     // The sticky bottom CTA shows the running count + a path into FocusMapModal.
     const [candidateTaskMap, setCandidateTaskMap] = useState(() => new Map());
+    // 每個習慣選的難度（入門/進階/挑戰），與 探索習慣 的 HabitListView 共用同一套 UI。
+    const [selectedDifficulty, setSelectedDifficulty] = useState({});
 
     useEffect(() => {
         if (!aspiration?.id) return;
@@ -224,23 +227,23 @@ export default function AspirationRecommendationPanel({
         }
     };
 
-    const handlePickHabit = async (habit) => {
+    const handlePickHabit = async (habit, diffKey) => {
         if (pickingId) return;
         setPickingId(`habit-${habit.id}`);
         try {
-            await onPickHabit?.(habit, aspiration);
+            await onPickHabit?.(habit, aspiration, diffKey);
         } finally {
             setPickingId(null);
         }
     };
 
-    const handleAddCandidate = async (habit) => {
+    const handleAddCandidate = async (habit, diffKey) => {
         if (pickingId || candidateTaskMap.has(habit.id)) return;
         setPickingId(`habit-${habit.id}`);
         try {
             // onAddHabitAsCandidate returns the created task id (or undefined on
             // older callers); store a truthy fallback so the toggle still flips.
-            const taskId = await onAddHabitAsCandidate?.(habit, aspiration);
+            const taskId = await onAddHabitAsCandidate?.(habit, aspiration, diffKey);
             setCandidateTaskMap(prev => {
                 const next = new Map(prev);
                 next.set(habit.id, taskId ?? true);
@@ -284,8 +287,9 @@ export default function AspirationRecommendationPanel({
             className="fixed inset-0 z-[10000] bg-black bg-opacity-50 flex items-end md:items-center justify-center"
         >
             <div className="bg-white w-full md:max-w-md h-[85dvh] md:h-auto md:max-h-[85dvh] md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col animate-fade-in-up">
-                {/* Header: 情境漸層條 + 返回 + 身分 */}
-                <div className="relative overflow-hidden bg-gradient-to-br from-emerald-400 to-emerald-600 text-white px-5 py-4 rounded-t-2xl">
+                {/* Header: 情境漸層條 + 返回 + 身分。flex-shrink-0 — 否則內容變高時
+                    flexbox 會壓扁這個 header，配上 overflow-hidden 就把標題裁掉。 */}
+                <div className="relative flex-shrink-0 overflow-hidden bg-gradient-to-br from-emerald-400 to-emerald-600 text-white px-5 py-4 rounded-t-2xl">
                     <span className="absolute -right-3 -bottom-4 opacity-15" aria-hidden><IconRenderer category={aspiration.domain} size={64} /></span>
                     <div className="relative flex items-start gap-3">
                         <button type="button" onClick={onBack} aria-label="返回" className="p-1 -m-1 text-white/90 hover:text-white flex-shrink-0 mt-0.5">
@@ -346,19 +350,17 @@ export default function AspirationRecommendationPanel({
                             {habits.length === 0 ? (
                                 <SectionEmpty>沒有對應的習慣</SectionEmpty>
                             ) : (
-                                <div className="space-y-2">
-                                    {habits.map(h => (
-                                        <HabitCard
-                                            key={h.id}
-                                            habit={h}
-                                            picking={pickingId === `habit-${h.id}`}
-                                            addedAsCandidate={candidateTaskMap.has(h.id)}
-                                            onPick={() => handlePickHabit(h)}
-                                            onAddCandidate={() => handleAddCandidate(h)}
-                                            onRemoveCandidate={() => handleRemoveCandidate(h)}
-                                        />
-                                    ))}
-                                </div>
+                                <HabitListView
+                                    habits={habits}
+                                    selectedDifficulty={selectedDifficulty}
+                                    setSelectedDifficulty={setSelectedDifficulty}
+                                    onSelectHabit={(habit, diffKey) => handlePickHabit(habit, diffKey)}
+                                    onAddCandidate={(habit, diffKey) => handleAddCandidate(habit, diffKey)}
+                                    onRemoveCandidate={(habit) => handleRemoveCandidate(habit)}
+                                    candidateAddedIds={new Set(candidateTaskMap.keys())}
+                                    pickingId={pickingId}
+                                    emptyText="沒有對應的習慣"
+                                />
                             )}
                         </section>
                     )}
