@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Check, Minus, Plus, Lock, ChevronDown, ChevronUp, RotateCcw, ShieldCheck, PartyPopper } from 'lucide-react';
-import { remainingQuota, dayStatus } from '@/lib/reduceHabit';
+import { remainingQuota, dayStatus, settleYesterday } from '@/lib/reduceHabit';
 import SwipeReveal from './taskCard/SwipeReveal';
 import TaskHoverDots from './taskCard/TaskHoverDots';
 import TaskActionMenu from './taskCard/TaskActionMenu';
@@ -95,6 +95,16 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
     const decLimit = task.dailyTarget || 0;
     const decRemaining = remainingQuota({ value: decValue, limit: decLimit });
     const decStatus = dayStatus({ direction: 'decrease', value: decValue, limit: decLimit });
+
+    // Slice U model (c) — next-day settlement. On TODAY's view only, surface a
+    // calm settle line for how yesterday landed (零懲罰: kept → teal, exceeded →
+    // neutral gray). Pure display from data; shown only if yesterday was tracked.
+    const yKey = (() => { const d = new Date(todayStr + 'T00:00:00'); d.setDate(d.getDate() - 1); const m = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); return `${d.getFullYear()}-${m}-${day}`; })();
+    const yHasEntry = task.dailyProgress?.[yKey] !== undefined || task.history?.[yKey] !== undefined;
+    const yValue = task.dailyProgress?.[yKey]?.value ?? (typeof task.history?.[yKey] === 'number' ? task.history[yKey] : 0);
+    const ySettle = (isDecrease && dateStr === todayStr && yHasEntry)
+        ? settleYesterday({ direction: 'decrease', value: yValue, limit: decLimit })
+        : null;
 
     // Subtask progress — hoisted so we can render both the X/Y badge AND the
     // inline subtask list (when expanded) from the same source.
@@ -402,6 +412,22 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                         </button>
                     </div>
                 </div>
+            )}
+
+            {/* Slice U model (c) — yesterday settlement micro-line. Today's view
+                only, when yesterday was tracked. 零懲罰: kept = subtle teal,
+                exceeded = neutral gray with 重新開始 framing. */}
+            {ySettle && (
+                <p
+                    data-testid="yesterday-settle"
+                    className={`mt-2 flex items-center gap-1 text-xs leading-tight ${ySettle === 'kept' ? 'text-teal-600' : 'text-gray-400'}`}
+                >
+                    {ySettle === 'kept' ? (
+                        <><ShieldCheck size={12} /> 昨天守住了</>
+                    ) : (
+                        <>昨天超過了，今天重新開始</>
+                    )}
+                </p>
             )}
 
             {/* Quick Add for Period Tasks — period tasks aren't date-locked since

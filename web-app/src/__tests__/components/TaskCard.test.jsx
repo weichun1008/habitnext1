@@ -294,5 +294,24 @@ describe('TaskCard', () => {
             // 量化 step 鈕文字是 "+1"（stepValue）；decrease 控制用「+1 我做了」，不用裸 +1 step
             expect(screen.queryByText('+1')).not.toBeInTheDocument();
         });
+
+        it('decrease：昨天守住 → 顯示昨天守住了（僅今天視圖且昨天有紀錄）', () => {
+            const y = (() => { const d = new Date(getTodayStr() + 'T00:00:00'); d.setDate(d.getDate() - 1); const m = String(d.getMonth() + 1).padStart(2, '0'); const dd = String(d.getDate()).padStart(2, '0'); return `${d.getFullYear()}-${m}-${dd}`; })();
+            const t = {
+                id: 'r2', title: '少喝酒', type: 'quantitative', direction: 'decrease', dailyTarget: 3,
+                recurrence: { type: 'daily', interval: 1 }, history: {}, dailyProgress: { [y]: { value: 2 } }
+            };
+            render(<TaskCard task={t} onClick={() => { }} onUpdate={() => { }} viewingDate={getTodayStr()} />);
+            expect(screen.getByText(/昨天守住了/)).toBeInTheDocument();
+        });
+
+        it('decrease：昨天無紀錄 → 不顯示昨天結算', () => {
+            const t = {
+                id: 'r3', title: '少喝酒', type: 'quantitative', direction: 'decrease', dailyTarget: 3,
+                recurrence: { type: 'daily', interval: 1 }, history: {}, dailyProgress: {}
+            };
+            render(<TaskCard task={t} onClick={() => { }} onUpdate={() => { }} viewingDate={getTodayStr()} />);
+            expect(screen.queryByText(/昨天/)).not.toBeInTheDocument();
+        });
     });
 });
