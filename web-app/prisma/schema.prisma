@@ -133,6 +133,11 @@ model Task {
   //   'decrease' = 反向（越少越好：減量用 dailyTarget 當上限、戒除上限=0）。
   direction          String?
 
+  // ★ Slice T — 虛擬工具。toolType ∈ 'breathing'|'timer'|'music'|null；
+  //   toolConfig 依 type：breathing={inhale,hold,exhale,cycles}; timer={seconds,mode,rounds?}; music={problemId?,categoryId?,trackId?,playMode?,timerMin?,autoComplete?}
+  toolType   String?
+  toolConfig Json?
+
   // Expert assignment fields
   assignmentId String? // 如果是專家指派的任務
   isLocked     Boolean @default(false) // 是否鎖定不可編輯
@@ -255,6 +260,9 @@ model OfficialHabit {
 
   // ★ Slice U — 反向習慣方向。null/'increase' = 正向；'decrease' = 反向（越少越好）。
   direction          String?
+
+  // ★ Slice T — 5T metadata。{ skill?, toolVirtual?:{type:'breathing'|'timer'|'music', params}, toolPhysical?:[{name,url?}], tiny?, tribe?, triumph? }
+  fiveT Json?
 
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
