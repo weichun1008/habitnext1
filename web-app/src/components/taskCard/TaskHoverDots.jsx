@@ -4,9 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { MoreVertical } from 'lucide-react';
 
-// TaskHoverDots — desktop-only (hidden via `md:block` on parent).
-// A trailing kebab (⋮) on the card's right edge, vertically centered (like
-// Gmail/Drive list rows), kept clear of the completion checkmark top-right.
+// TaskHoverDots — desktop-only (hidden via `md:block`).
+// A kebab (⋮) rendered inline in the card's top-right cluster, to the LEFT of
+// the completion control (with a flex gap), so it never overlaps the check
+// circle — an earlier absolute-centered version collided with it on short cards.
 //
 // Visibility is driven by the PARENT card's hover via Tailwind `group-hover`
 // (the card carries `group`), so the button appears the moment the cursor is
@@ -53,7 +54,7 @@ const TaskHoverDots = ({ children }) => {
     return (
         <div
             ref={wrapperRef}
-            className="hidden md:block absolute top-1/2 -translate-y-1/2 right-2 z-20"
+            className="hidden md:block flex-shrink-0"
         >
             <button
                 ref={btnRef}

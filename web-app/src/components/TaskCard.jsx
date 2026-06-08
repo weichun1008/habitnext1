@@ -192,20 +192,6 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                 <div className="absolute left-0 top-0 bottom-0 w-[5px]" style={{ backgroundColor: polColor }} aria-hidden />
             )}
 
-            {/* Slice M — desktop hover dots top-right. Only show on today's
-                incomplete cards; completed (any day) and past (any state)
-                hide them because 暫停 / 隱藏 / 刪除 don't apply there. */}
-            {showActionMenu && (
-                <TaskHoverDots>
-                    <TaskActionMenu
-                        taskId={task.id}
-                        taskTitle={task.title}
-                        variant="popover"
-                        onAction={(action, success) => { if (success) onAfterAction?.(action); }}
-                    />
-                </TaskHoverDots>
-            )}
-
             {/* Background Progress for Quant or Period Tasks */}
             {(isQuant || isPeriod) && (
                 <div
@@ -280,7 +266,19 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                     </div>
                 </div>
 
-                <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                <div className="flex items-start gap-2 flex-shrink-0">
+                    {/* 桌機 ⋮ — 排在打勾欄左邊、用 gap 隔開，保證不蓋到完成圈 */}
+                    {showActionMenu && (
+                        <TaskHoverDots>
+                            <TaskActionMenu
+                                taskId={task.id}
+                                taskTitle={task.title}
+                                variant="popover"
+                                onAction={(action, success) => { if (success) onAfterAction?.(action); }}
+                            />
+                        </TaskHoverDots>
+                    )}
+                    <div className="flex flex-col items-end gap-1">
                     {/* Slice T — tool widget launcher. When the habit carries a
                         tool (toolType), surface a small secondary 開始 button that
                         opens the ToolModal. stopPropagation so it doesn't also
@@ -388,6 +386,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             )}
                         </div>
                     )}
+                    </div>
                 </div>
             </div>
 
