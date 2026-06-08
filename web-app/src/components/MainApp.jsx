@@ -423,7 +423,9 @@ const MainApp = () => {
 
                 const currentHist = t.history[dateStr] || 0;
                 const newVal = Math.max(0, currentHist + (value || 0));
-                const completedStatus = newVal >= t.dailyTarget;
+                const completedStatus = t.direction === 'decrease'
+                    ? (newVal <= (t.dailyTarget || 0))   // reverse: met when at/under limit
+                    : (newVal >= t.dailyTarget);
 
                 historyUpdate = { date: dateStr, completed: completedStatus, value: newVal };
                 updatedTask = {
@@ -463,7 +465,7 @@ const MainApp = () => {
 
         // Slice O — capture city on a completion (not un-completion) when the
         // user has opted in. Best-effort: failure / denial just skips location.
-        if (historyUpdate && historyUpdate.completed && user?.trackLocation) {
+        if (historyUpdate && historyUpdate.completed && user?.trackLocation && task.direction !== 'decrease') {
             try {
                 const pos = await getCachedPosition({ maxAgeMs: 15 * 60 * 1000 });
                 if (pos) {
@@ -732,7 +734,7 @@ const MainApp = () => {
         // Sanitize data before sending
         const sanitizedData = {
             ...taskData,
-            dailyTarget: taskData.dailyTarget || 1, // Ensure no NaN/null for required logic
+            dailyTarget: taskData.direction === 'decrease' ? (taskData.dailyTarget ?? 0) : (taskData.dailyTarget || 1), // direction-aware: 戒除/減量 keep literal limit (incl. 0); increase/normal default to 1
             stepValue: taskData.stepValue || 1,
             unit: taskData.unit || '次',
             recurrence: {
@@ -1009,8 +1011,11 @@ const MainApp = () => {
             // showing for ~1.5s instead of instantly jumping to the bottom (which
             // read as "no dwell / jumped away"). It sorts down only once the
             // linger ends and it leaves completingTaskIds.
-            const ac = (isCompletedOnDate(a, selectedDate) && !completingTaskIds.has(a.id)) ? 1 : 0;
-            const bc = (isCompletedOnDate(b, selectedDate) && !completingTaskIds.has(b.id)) ? 1 : 0;
+            // Slice U — decrease habits are never treated as "completed" for
+            // ordering. They stay in the main flow all day (零懲罰), so they
+            // must not sink to the bottom just because value <= limit.
+            const ac = (isCompletedOnDate(a, selectedDate) && !completingTaskIds.has(a.id) && a.direction !== 'decrease') ? 1 : 0;
+            const bc = (isCompletedOnDate(b, selectedDate) && !completingTaskIds.has(b.id) && b.direction !== 'decrease') ? 1 : 0;
             if (ac !== bc) return ac - bc;
             const ao = cueOrderFor(a.cue);
             const bo = cueOrderFor(b.cue);
@@ -1030,11 +1035,14 @@ const MainApp = () => {
     // vanishes — exactly the "no checkmark dwell" the user reported).
     // We keep exitingTaskIds in the incomplete bucket so the card lingers
     // with its check showing, then the t=1000ms re-fetch finally moves it.
+    // Slice U — decrease habits always stay in the main (incomplete) list and
+    // are excluded from the collapsed 已完成 section, so the user can keep
+    // recording occurrences all day without the card being hidden as "done".
     const incompleteDailyTasks = dailyTasks.filter(t =>
-        !isCompletedOnDate(t, selectedDate) || completingTaskIds.has(t.id)
+        !isCompletedOnDate(t, selectedDate) || completingTaskIds.has(t.id) || t.direction === 'decrease'
     );
     const completedDailyTasks = dailyTasks.filter(t =>
-        isCompletedOnDate(t, selectedDate) && !completingTaskIds.has(t.id)
+        isCompletedOnDate(t, selectedDate) && !completingTaskIds.has(t.id) && t.direction !== 'decrease'
     );
     // 2026-06-03 — group the incomplete list by aspiration so each group can
     // show the aspiration's identity ("我是個…") as its header. Only the

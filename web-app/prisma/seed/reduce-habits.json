@@ -1,0 +1,90 @@
+[
+  {
+    "name": "降低抽菸",
+    "description": "逐步減少每日抽菸量，把上限訂在可達成的數字，慢慢往下調。",
+    "category": "壓力與睡眠",
+    "icon": "moon",
+    "impact": 5,
+    "ability": 3,
+    "isActive": true,
+    "direction": "decrease",
+    "difficulties": {
+      "beginner": {
+        "enabled": true,
+        "label": "入門",
+        "type": "quantitative",
+        "dailyTarget": 5,
+        "unit": "根",
+        "stepValue": 1,
+        "subtasks": [],
+        "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 }
+      }
+    }
+  },
+  {
+    "name": "戒菸（完全不抽）",
+    "description": "目標是每天 0 根。把不抽當成今天守住的底線。",
+    "category": "壓力與睡眠",
+    "icon": "moon",
+    "impact": 5,
+    "ability": 2,
+    "isActive": true,
+    "direction": "decrease",
+    "difficulties": {
+      "beginner": {
+        "enabled": true,
+        "label": "入門",
+        "type": "quantitative",
+        "dailyTarget": 0,
+        "unit": "根",
+        "stepValue": 1,
+        "subtasks": [],
+        "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 }
+      }
+    }
+  },
+  {
+    "name": "降低喝酒",
+    "description": "設定每日飲酒上限，減少酒精對睡眠、肝臟與代謝的負擔。",
+    "category": "飲食",
+    "icon": "apple",
+    "impact": 4,
+    "ability": 3,
+    "isActive": true,
+    "direction": "decrease",
+    "difficulties": {
+      "beginner": {
+        "enabled": true,
+        "label": "入門",
+        "type": "quantitative",
+        "dailyTarget": 1,
+        "unit": "杯",
+        "stepValue": 1,
+        "subtasks": [],
+        "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 }
+      }
+    }
+  },
+  {
+    "name": "減少勉強自己社交",
+    "description": "替不想去的社交設一個每日上限，把精力留給真正重要的關係。",
+    "category": "社交互動",
+    "icon": "users",
+    "impact": 3,
+    "ability": 3,
+    "isActive": true,
+    "direction": "decrease",
+    "difficulties": {
+      "beginner": {
+        "enabled": true,
+        "label": "入門",
+        "type": "quantitative",
+        "dailyTarget": 1,
+        "unit": "次",
+        "stepValue": 1,
+        "subtasks": [],
+        "recurrence": { "type": "daily", "interval": 1, "endType": "never", "periodTarget": 1 }
+      }
+    }
+  }
+]
