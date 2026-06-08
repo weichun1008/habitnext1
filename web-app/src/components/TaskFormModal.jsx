@@ -29,11 +29,6 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
     const [activeTab, setActiveTab] = useState('basic');
     const iconContainerRef = useRef(null);
 
-    // Slice L — opt-out for power users: skip the candidate pool and
-    // activate the task directly. Only relevant when creating new tasks;
-    // editing existing tasks keeps whatever status they already had.
-    const [activateImmediately, setActivateImmediately] = useState(false);
-
     // Helper for monthly recurrence labels
     const dateInfo = getNthWeekday(formData.date);
 
@@ -184,10 +179,10 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                             ...(isDecrease
                                 ? { direction: 'decrease', type: 'quantitative', dailyTarget: formData.dailyTarget ?? 0, unit: formData.unit || '次' }
                                 : { direction: 'increase' }),
-                            // Slice L — manual create defaults to candidate; opt-out
-                            // checkbox lets power users jump straight to active. Edit
-                            // path passes no status, preserving existing value.
-                            ...(initialData ? {} : { status: activateImmediately ? 'active' : 'candidate' }),
+                            // 手動建立任務一律直接啟用、進每日視圖，不進候選池。
+                            // 候選池只保留給「嚮往 → 焦點地圖」流程。
+                            // 編輯既有任務不帶 status，保留原值。
+                            ...(initialData ? {} : { status: 'active' }),
                         })}
                         className="text-emerald-600 font-bold text-sm px-4 py-2 bg-emerald-50 rounded-full hover:bg-emerald-100"
                     >
@@ -674,24 +669,6 @@ const TaskFormModal = ({ isOpen, onClose, onSave, onDelete, initialData, default
                         once at the aspiration level, not per habit. */}
 
                 </div>
-
-                {/* Slice L — opt-out checkbox: skip the candidate pool. Only
-                    shown on create (not edit) since editing preserves the
-                    existing status. */}
-                {!initialData && (
-                    <div className="px-6 py-3 border-t border-gray-100 bg-gray-50 flex items-center gap-2">
-                        <input
-                            id="activate-immediately"
-                            type="checkbox"
-                            checked={activateImmediately}
-                            onChange={e => setActivateImmediately(e.target.checked)}
-                            className="w-4 h-4 text-emerald-500 rounded cursor-pointer"
-                        />
-                        <label htmlFor="activate-immediately" className="text-sm text-gray-700 cursor-pointer select-none">
-                            直接啟用，不進入候選池
-                        </label>
-                    </div>
-                )}
 
                 {/* Footer */}
                 {initialData && (

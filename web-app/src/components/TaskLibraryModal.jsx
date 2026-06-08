@@ -151,15 +151,15 @@ const TaskLibraryModal = ({
             unit: config.unit || '次',
             stepValue: config.stepValue || 1,
             subtasks: config.subtasks || [],
-            // Slice L — flow into the candidate pool by default. officialHabitId
-            // lets the focus-map sliders seed from the catalog impact/ability.
-            status: 'candidate',
+            // 手動探索加入 = 直接啟用、進每日視圖。候選池只保留給「嚮往 → 焦點地圖」
+            // 那條路（AspirationRecommendationPanel 的「加入候選」）。officialHabitId
+            // 仍帶上，供日後若進焦點地圖時 seed 影響力/執行度。
+            status: 'active',
             officialHabitId: habit.id,
         };
         onSelectTask(task);
 
-        // Slice L — reset to domain grid so the user can keep adding without
-        // re-opening the modal. Show a transient toast confirming the save.
+        // 加完留在模態、回到面向總覽，讓使用者可連續加；顯示短暫 toast 確認。
         setPendingHabit(null);
         setPendingCue(null);
         setView('domain');
@@ -170,7 +170,7 @@ const TaskLibraryModal = ({
         if (toastTimer) clearTimeout(toastTimer);
         const timer = setTimeout(() => setToast(null), 2200);
         setToastTimer(timer);
-        setToast({ text: `+1 候選：${habit.name}` });
+        setToast({ text: `已加入：${habit.name}` });
     };
 
     const visibleHabits = (() => {
@@ -340,17 +340,16 @@ const TaskLibraryModal = ({
                     )}
                 </div>
 
-                {/* Slice L — persistent footer count, only after >=1 save this session.
-                    Reminds the user that closing won't lose their candidate pool. */}
+                {/* 已加入計數：本次 session 連續加了幾個，直接進每日視圖。 */}
                 {savedThisSession > 0 && (
-                    <div className="px-6 py-3 border-t border-gray-100 bg-amber-50 flex items-center justify-between gap-3 flex-shrink-0">
-                        <p className="text-xs text-amber-700">
-                            <span className="font-bold">{savedThisSession}</span> 個已加候選 · 關閉後到 daily 一起評分
+                    <div className="px-6 py-3 border-t border-gray-100 bg-emerald-50 flex items-center justify-between gap-3 flex-shrink-0">
+                        <p className="text-xs text-emerald-700">
+                            已加入 <span className="font-bold">{savedThisSession}</span> 個習慣到每日追蹤
                         </p>
                         <button
                             type="button"
                             onClick={onClose}
-                            className="text-xs font-bold text-amber-700 underline hover:text-amber-800"
+                            className="text-xs font-bold text-emerald-700 underline hover:text-emerald-800"
                         >
                             完成 →
                         </button>
