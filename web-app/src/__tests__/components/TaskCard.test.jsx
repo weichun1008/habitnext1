@@ -243,7 +243,7 @@ describe('TaskCard', () => {
             expect(screen.getByText(/超過額度/)).toBeInTheDocument();
         });
 
-        it('decrease 戒除（limit=0）：value=0 顯示今天守著', () => {
+        it('decrease 戒除（limit=0）：value=0 顯示已守住天數（守護徽章）', () => {
             const t = {
                 id: 'r4',
                 title: '戒菸',
@@ -258,7 +258,8 @@ describe('TaskCard', () => {
                 <TaskCard task={t} onClick={mockOnClick} onUpdate={mockOnUpdate} viewingDate={TODAY} />
             );
             expect(container.querySelector('[data-direction="decrease"]')).toBeTruthy();
-            expect(screen.getByText(/今天守著/)).toBeInTheDocument();
+            expect(screen.getByText(/已守住|今天守著/)).toBeInTheDocument();
+            expect(screen.getByText(/戒除/)).toBeInTheDocument();
         });
 
         it('decrease 戒除（limit=0）：value>0 顯示零懲罰記錄文案 + 誠實記錄鈕觸發 add(+1)', async () => {

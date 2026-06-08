@@ -5,38 +5,26 @@ import { createPortal } from 'react-dom';
 import { MoreVertical } from 'lucide-react';
 
 // TaskHoverDots — desktop-only (hidden via `md:block` on parent).
-// Shows a ⋮ button on the card's right edge, vertically centered (trailing
-// kebab, like Gmail/Drive list rows) while the parent card is hovered —
-// kept clear of the completion checkmark in the top-right corner.
+// A trailing kebab (⋮) on the card's right edge, vertically centered (like
+// Gmail/Drive list rows), kept clear of the completion checkmark top-right.
+//
+// Visibility is driven by the PARENT card's hover via Tailwind `group-hover`
+// (the card carries `group`), so the button appears the moment the cursor is
+// anywhere over the card — not only when it rests on the right edge. It's a
+// solid white pill with a shadow so it reads as a real, tappable control.
 //
 // The popover is rendered through a portal to document.body with fixed
-// coordinates measured from the button, so the card's `overflow-hidden`
-// (needed for the progress bar / accent rail rounding) can't clip it — the
-// previous absolute-inside-card popover was getting cut off at the edge.
-//
-// Popover closes on: click outside, Esc key, or after a successful action.
+// coordinates measured from the button, so the card's `overflow-hidden` can't
+// clip it. Closes on click outside, Esc, or after a successful action.
 //
 // Props:
 //   children: the popover body (TaskActionMenu variant='popover')
-//   hoverDelayMs: how long the mouse must rest on the card before ⋮ fades in (default 100)
-const TaskHoverDots = ({ children, hoverDelayMs = 100 }) => {
-    const [hovered, setHovered] = useState(false);
+const TaskHoverDots = ({ children }) => {
     const [open, setOpen] = useState(false);
     const [coords, setCoords] = useState(null); // { top, right } in viewport px
-    const timerRef = useRef(null);
     const wrapperRef = useRef(null);
     const btnRef = useRef(null);
     const menuRef = useRef(null);
-
-    // Hover delay
-    const onEnter = () => {
-        clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => setHovered(true), hoverDelayMs);
-    };
-    const onLeave = () => {
-        clearTimeout(timerRef.current);
-        if (!open) setHovered(false);
-    };
 
     const openMenu = () => {
         const r = btnRef.current?.getBoundingClientRect();
@@ -51,9 +39,9 @@ const TaskHoverDots = ({ children, hoverDelayMs = 100 }) => {
         const onDocClick = (e) => {
             const inWrapper = wrapperRef.current && wrapperRef.current.contains(e.target);
             const inMenu = menuRef.current && menuRef.current.contains(e.target);
-            if (!inWrapper && !inMenu) { setOpen(false); setHovered(false); }
+            if (!inWrapper && !inMenu) setOpen(false);
         };
-        const onKey = (e) => { if (e.key === 'Escape') { setOpen(false); setHovered(false); } };
+        const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
         document.addEventListener('mousedown', onDocClick);
         document.addEventListener('keydown', onKey);
         return () => {
@@ -62,25 +50,21 @@ const TaskHoverDots = ({ children, hoverDelayMs = 100 }) => {
         };
     }, [open]);
 
-    useEffect(() => () => clearTimeout(timerRef.current), []);
-
     return (
         <div
             ref={wrapperRef}
             className="hidden md:block absolute top-1/2 -translate-y-1/2 right-2 z-20"
-            onMouseEnter={onEnter}
-            onMouseLeave={onLeave}
         >
             <button
                 ref={btnRef}
                 type="button"
                 onClick={(e) => { e.stopPropagation(); open ? setOpen(false) : openMenu(); }}
-                className={`w-6 h-6 rounded-full bg-gray-50/95 backdrop-blur-sm flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-opacity ${
-                    hovered || open ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                className={`w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:scale-105 transition-all ${
+                    open ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                 }`}
                 aria-label="任務選項"
             >
-                <MoreVertical size={14} />
+                <MoreVertical size={18} />
             </button>
             {open && coords && createPortal(
                 <div
