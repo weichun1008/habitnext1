@@ -63,6 +63,8 @@ describe('FocusMapModal — 三階段', () => {
     });
     const call = global.fetch.mock.calls.find(c => String(c[0]).includes('batch-rate'));
     const body = JSON.parse(call[1].body);
-    expect(body.ratings.every(r => r.action !== 'archive')).toBe(true);
+    // 結帳語意：每筆只會是 activate 或 archive，沒被加入的一律歸檔以清空候選池。
+    expect(body.ratings.every(r => r.action === 'activate' || r.action === 'archive')).toBe(true);
+    expect(body.ratings.some(r => r.action === 'archive')).toBe(true);
   });
 });

@@ -70,13 +70,13 @@ describe('buildBatchPayload', () => {
     ['c', { impact: 2, ability: 2 }], // skip
   ]);
 
-  it('marks added ids as activate with targetDays, others keep_candidate', () => {
+  it('marks added ids as activate with targetDays, archives the rest (clears the pool)', () => {
     const added = new Set(['a', 'b']);
     const payload = buildBatchPayload(candidates, ratings, added, 66);
     const byId = Object.fromEntries(payload.map(p => [p.taskId, p]));
     expect(byId.a).toEqual({ taskId: 'a', userImpact: 5, userAbility: 5, action: 'activate', targetDays: 66 });
     expect(byId.b).toEqual({ taskId: 'b', userImpact: 5, userAbility: 2, action: 'activate', targetDays: 66 });
-    expect(byId.c).toEqual({ taskId: 'c', userImpact: 2, userAbility: 2, action: 'keep_candidate' });
+    expect(byId.c).toEqual({ taskId: 'c', userImpact: 2, userAbility: 2, action: 'archive' });
   });
 
   it('passes targetDays: null (不設限) through for activated tasks', () => {
@@ -84,14 +84,14 @@ describe('buildBatchPayload', () => {
     expect(payload[0]).toEqual({ taskId: 'a', userImpact: 5, userAbility: 5, action: 'activate', targetDays: null });
   });
 
-  it('does NOT archive skip-quadrant tasks (non-destructive)', () => {
+  it('archives every un-added candidate so the pool is cleared after a session', () => {
     const payload = buildBatchPayload(candidates, ratings, new Set(), 66);
-    expect(payload.every(p => p.action !== 'archive')).toBe(true);
+    expect(payload.every(p => p.action === 'archive')).toBe(true);
   });
 
-  it('defaults missing ratings to 3/3', () => {
+  it('defaults missing ratings to 3/3 and archives when not added', () => {
     const payload = buildBatchPayload([{ id: 'z' }], new Map(), new Set(), 66);
-    expect(payload[0]).toMatchObject({ taskId: 'z', userImpact: 3, userAbility: 3, action: 'keep_candidate' });
+    expect(payload[0]).toMatchObject({ taskId: 'z', userImpact: 3, userAbility: 3, action: 'archive' });
   });
 });
 
