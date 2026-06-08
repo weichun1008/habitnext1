@@ -29,7 +29,7 @@ export async function PUT(request, { params }) {
     try {
         const { habitId } = await params;
         const body = await request.json();
-        const { name, description, category, icon, difficulties, isActive, defaultCue } = body;
+        const { name, description, category, icon, difficulties, isActive, defaultCue, fiveT } = body;
 
         const updateData = {};
         if (name !== undefined) updateData.name = name.trim();
@@ -39,6 +39,7 @@ export async function PUT(request, { params }) {
         if (difficulties !== undefined) updateData.difficulties = difficulties;
         if (typeof isActive === 'boolean') updateData.isActive = isActive;
         if (defaultCue !== undefined) updateData.defaultCue = (defaultCue && String(defaultCue).trim()) || null;
+        if (fiveT !== undefined) updateData.fiveT = fiveT;
 
         const habit = await prisma.officialHabit.update({
             where: { id: habitId },

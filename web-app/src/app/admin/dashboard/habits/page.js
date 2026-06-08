@@ -1,11 +1,26 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Edit2, Trash2, Archive, RotateCcw, X, Save, Settings, FolderOpen, Link, BookOpen } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Archive, RotateCcw, X, Save, Settings, FolderOpen, Link, BookOpen, Wrench, Wind, Timer, Music } from 'lucide-react';
 import IconRenderer from '@/components/IconRenderer';
 import { CATEGORY_CONFIG, domainToIconKey } from '@/lib/constants';
 import { LIFE_MOMENTS_GROUPED } from '@/lib/anchors';
+import { defaultToolConfig } from '@/lib/tools';
+import { PROBLEMS } from '@/lib/musicData';
 import HabitInsightsModal from './components/HabitInsightsModal';
+
+const TOOL_TYPES = [
+    { value: '', label: '無' },
+    { value: 'breathing', label: '呼吸' },
+    { value: 'timer', label: '番茄鐘・計時' },
+    { value: 'music', label: '睡眠音樂' },
+];
+
+const TOOL_BADGE = {
+    breathing: { label: '呼吸', Icon: Wind },
+    timer: { label: '番茄鐘', Icon: Timer },
+    music: { label: '音樂', Icon: Music },
+};
 
 const TASK_TYPES = [
     { value: 'binary', label: '一般' },
@@ -46,7 +61,8 @@ const defaultFormData = {
         beginner: { ...defaultDifficultyConfig },
         intermediate: { ...defaultDifficultyConfig },
         challenge: { ...defaultDifficultyConfig }
-    }
+    },
+    fiveT: null
 };
 
 export default function HabitsPage() {
@@ -104,7 +120,8 @@ export default function HabitsPage() {
                 beginner: { ...defaultDifficultyConfig, enabled: true, label: '入門版' },
                 intermediate: { ...defaultDifficultyConfig },
                 challenge: { ...defaultDifficultyConfig }
-            }
+            },
+            fiveT: null
         });
         setActiveDiffTab('beginner');
         setIsModalOpen(true);
@@ -123,7 +140,8 @@ export default function HabitsPage() {
                 beginner: { ...defaultDifficultyConfig, ...difficulties.beginner },
                 intermediate: { ...defaultDifficultyConfig, ...difficulties.intermediate },
                 challenge: { ...defaultDifficultyConfig, ...difficulties.challenge }
-            }
+            },
+            fiveT: habit.fiveT || null
         });
         // Set active tab to first enabled difficulty
         const firstEnabled = DIFFICULTY_TABS.find(t => difficulties[t.key]?.enabled)?.key || 'beginner';
@@ -147,10 +165,28 @@ export default function HabitsPage() {
                 ? `/api/admin/habits/${editingHabit.id}`
                 : '/api/admin/habits';
 
+            // Build fiveT from form state — drop empty physical rows, send null to clear.
+            const virtual = formData.fiveT?.toolVirtual?.type ? formData.fiveT.toolVirtual : null;
+            const physical = (formData.fiveT?.toolPhysical || [])
+                .filter(r => r.name?.trim())
+                .map(r => {
+                    let url = (r.url || '').trim();
+                    if (url && !/^https?:\/\//i.test(url)) url = `https://${url}`;
+                    return { name: r.name.trim(), ...(url ? { url } : {}) };
+                });
+            const fiveT = {
+                ...(virtual ? { toolVirtual: virtual } : {}),
+                ...(physical.length ? { toolPhysical: physical } : {})
+            };
+            const payload = {
+                ...formData,
+                fiveT: Object.keys(fiveT).length ? fiveT : null
+            };
+
             const res = await fetch(url, {
                 method: editingHabit ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             });
 
             if (res.ok) {
@@ -204,6 +240,57 @@ export default function HabitsPage() {
             }
         }));
     };
+
+    // ── Slice T tools (fiveT) form helpers ──────────────────────────────
+    const toolVirtual = formData.fiveT?.toolVirtual || null;
+    const toolType = toolVirtual?.type || '';
+    const toolParams = toolVirtual?.params || {};
+    const physicalRows = formData.fiveT?.toolPhysical || [];
+
+    const setFiveT = (next) => setFormData(prev => ({ ...prev, fiveT: next }));
+
+    const changeToolType = (type) => {
+        const fiveT = formData.fiveT || {};
+        if (!type) {
+            const { toolVirtual: _drop, ...rest } = fiveT;
+            setFiveT(Object.keys(rest).length ? rest : null);
+            return;
+        }
+        const params = type === 'music'
+            ? { ...defaultToolConfig('music'), problemId: 'stress' }
+            : defaultToolConfig(type);
+        setFiveT({ ...fiveT, toolVirtual: { type, params } });
+    };
+
+    const updateToolParam = (field, value) => {
+        const fiveT = formData.fiveT || {};
+        setFiveT({
+            ...fiveT,
+            toolVirtual: {
+                ...fiveT.toolVirtual,
+                params: { ...(fiveT.toolVirtual?.params || {}), [field]: value }
+            }
+        });
+    };
+
+    const updatePhysicalRows = (rows) => {
+        const fiveT = formData.fiveT || {};
+        if (rows.length) {
+            setFiveT({ ...fiveT, toolPhysical: rows });
+        } else {
+            const { toolPhysical: _drop, ...rest } = fiveT;
+            setFiveT(Object.keys(rest).length ? rest : null);
+        }
+    };
+
+    const addPhysicalRow = () => updatePhysicalRows([...physicalRows, {
+        id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now() + Math.random()),
+        name: '',
+        url: ''
+    }]);
+    const removePhysicalRow = (idx) => updatePhysicalRows(physicalRows.filter((_, i) => i !== idx));
+    const updatePhysicalRow = (idx, field, value) =>
+        updatePhysicalRows(physicalRows.map((row, i) => (i === idx ? { ...row, [field]: value } : row)));
 
     const filteredHabits = habits.filter(h => {
         if (search && !h.name?.toLowerCase().includes(search.toLowerCase())) return false;
@@ -292,6 +379,19 @@ export default function HabitsPage() {
                                             {getEnabledDifficulties(habit).map(d => (
                                                 <span key={d} className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded">{d}</span>
                                             ))}
+                                            {habit.fiveT?.toolVirtual?.type && TOOL_BADGE[habit.fiveT.toolVirtual.type] && (() => {
+                                                const { label, Icon } = TOOL_BADGE[habit.fiveT.toolVirtual.type];
+                                                return (
+                                                    <span className="px-2 py-0.5 bg-sky-500/20 text-sky-400 rounded inline-flex items-center gap-1">
+                                                        <Icon size={11} /> {label}
+                                                    </span>
+                                                );
+                                            })()}
+                                            {habit.fiveT?.toolPhysical?.length > 0 && (
+                                                <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded inline-flex items-center gap-1">
+                                                    <Wrench size={11} /> +{habit.fiveT.toolPhysical.length} 實體
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -674,6 +774,209 @@ export default function HabitsPage() {
                                             </div>
                                         </>
                                     )}
+                                </div>
+                            </div>
+
+                            {/* Slice T — Habit Tools (fiveT) */}
+                            <div>
+                                <label className="admin-label mb-3 flex items-center gap-2">
+                                    <Wrench size={16} /> 習慣工具 (Tool)
+                                </label>
+                                <div className="bg-gray-800/50 rounded-xl p-4 space-y-4">
+                                    {/* Virtual tool type selector */}
+                                    <div>
+                                        <label className="admin-label">虛擬工具類型</label>
+                                        <select
+                                            className="admin-input admin-select"
+                                            value={toolType}
+                                            onChange={e => changeToolType(e.target.value)}
+                                        >
+                                            {TOOL_TYPES.map(t => (
+                                                <option key={t.value || 'none'} value={t.value}>{t.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* breathing params */}
+                                    {toolType === 'breathing' && (
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="admin-label">吸氣秒數</label>
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    min={0}
+                                                    value={toolParams.inhale ?? 0}
+                                                    onChange={e => updateToolParam('inhale', parseInt(e.target.value) || 0)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="admin-label">憋氣秒數</label>
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    min={0}
+                                                    value={toolParams.hold ?? 0}
+                                                    onChange={e => updateToolParam('hold', parseInt(e.target.value) || 0)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="admin-label">吐氣秒數</label>
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    min={0}
+                                                    value={toolParams.exhale ?? 0}
+                                                    onChange={e => updateToolParam('exhale', parseInt(e.target.value) || 0)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="admin-label">輪數</label>
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    min={1}
+                                                    value={toolParams.cycles ?? 1}
+                                                    onChange={e => updateToolParam('cycles', parseInt(e.target.value) || 1)}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* timer params */}
+                                    {toolType === 'timer' && (
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="admin-label">分鐘</label>
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    min={1}
+                                                    value={Math.round((toolParams.seconds ?? 0) / 60) || ''}
+                                                    onChange={e => updateToolParam('seconds', (parseInt(e.target.value) || 0) * 60)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="admin-label">模式</label>
+                                                <select
+                                                    className="admin-input admin-select"
+                                                    value={toolParams.mode || 'count'}
+                                                    onChange={e => {
+                                                        const mode = e.target.value;
+                                                        const fiveT = formData.fiveT || {};
+                                                        const params = { ...(fiveT.toolVirtual?.params || {}), mode };
+                                                        if (mode === 'count') delete params.rounds;
+                                                        setFiveT({
+                                                            ...fiveT,
+                                                            toolVirtual: { ...fiveT.toolVirtual, params }
+                                                        });
+                                                    }}
+                                                >
+                                                    <option value="count">倒數</option>
+                                                    <option value="pomodoro">番茄鐘</option>
+                                                </select>
+                                            </div>
+                                            {toolParams.mode === 'pomodoro' && (
+                                                <div>
+                                                    <label className="admin-label">輪數</label>
+                                                    <input
+                                                        type="number"
+                                                        className="admin-input"
+                                                        min={1}
+                                                        value={toolParams.rounds ?? 1}
+                                                        onChange={e => updateToolParam('rounds', parseInt(e.target.value) || 1)}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* music params */}
+                                    {toolType === 'music' && (
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="col-span-2">
+                                                <label className="admin-label">睡眠分型</label>
+                                                <select
+                                                    className="admin-input admin-select"
+                                                    value={toolParams.problemId || ''}
+                                                    onChange={e => updateToolParam('problemId', e.target.value || undefined)}
+                                                >
+                                                    <option value="">（未指定）</option>
+                                                    {PROBLEMS.map(p => (
+                                                        <option key={p.id} value={p.id}>{p.title}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="admin-label">分鐘</label>
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    min={1}
+                                                    value={toolParams.timerMin ?? ''}
+                                                    onChange={e => updateToolParam('timerMin', parseInt(e.target.value) || 0)}
+                                                />
+                                            </div>
+                                            <div className="flex items-end">
+                                                <label className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg cursor-pointer w-full">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={Boolean(toolParams.autoComplete)}
+                                                        onChange={e => updateToolParam('autoComplete', e.target.checked)}
+                                                        className="w-5 h-5 rounded"
+                                                    />
+                                                    <span className="text-sm text-white">計時結束自動完成</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Physical tools */}
+                                    <div>
+                                        <div className="flex items-center justify-between mb-2">
+                                            <label className="admin-label mb-0">實體工具</label>
+                                            <button
+                                                type="button"
+                                                onClick={addPhysicalRow}
+                                                className="p-1.5 text-gray-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-colors"
+                                                title="新增實體工具"
+                                            >
+                                                <Plus size={16} />
+                                            </button>
+                                        </div>
+                                        {physicalRows.length === 0 ? (
+                                            <p className="text-[11px] text-gray-500">尚未設定實體工具。</p>
+                                        ) : (
+                                            <div className="space-y-2">
+                                                {physicalRows.map((row, idx) => (
+                                                    <div key={row.id ?? idx} className="flex items-center gap-2">
+                                                        <input
+                                                            type="text"
+                                                            className="admin-input flex-1"
+                                                            placeholder="名稱（例如：眼罩）"
+                                                            value={row.name || ''}
+                                                            onChange={e => updatePhysicalRow(idx, 'name', e.target.value)}
+                                                        />
+                                                        <input
+                                                            type="text"
+                                                            className="admin-input flex-1"
+                                                            placeholder="選填連結（url）"
+                                                            value={row.url || ''}
+                                                            onChange={e => updatePhysicalRow(idx, 'url', e.target.value)}
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removePhysicalRow(idx)}
+                                                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                                                            title="移除"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
