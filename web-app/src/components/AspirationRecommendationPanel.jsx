@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Sparkles, Leaf, Loader, ChevronRight, Plus, Check, Target } from 'lucide-react';
+import { ArrowLeft, Sparkles, Leaf, Loader, ChevronRight, Plus, Check, Target, X } from 'lucide-react';
 import EvidenceBadge from './insights/EvidenceBadge';
 import { scoreEvidence } from '@/lib/evidenceStrength';
 import IconRenderer from './IconRenderer';
@@ -80,7 +80,7 @@ function TemplateCard({ template, onPick, picking }) {
     );
 }
 
-function HabitCard({ habit, onPick, onAddCandidate, picking, addedAsCandidate }) {
+function HabitCard({ habit, onPick, onAddCandidate, onRemoveCandidate, picking, addedAsCandidate }) {
     // Difficulties keys are pre-sorted by the enum order, but the seed habit
     // shape uses string keys so just look at which are enabled.
     const enabledLevels = ['beginner', 'intermediate', 'challenge'].filter(
@@ -92,9 +92,10 @@ function HabitCard({ habit, onPick, onAddCandidate, picking, addedAsCandidate })
         return '挑戰';
     });
 
-    // Once user added this habit to candidate pool in this panel session,
-    // both CTAs lock to "已加入" read-only. Prevents the same habit getting
-    // dropped into both 'active' and 'candidate' status from two clicks.
+    // 直接加入 stays locked while this habit sits in the candidate pool — it
+    // would otherwise create a second task in 'active' status. To direct-add,
+    // the user first cancels the candidate. The 加入候選 CTA itself is a toggle
+    // (加入 ⇄ 取消), so the only hard lock is the in-flight request.
     const locked = addedAsCandidate || picking;
 
     const topEvidence = topEvidenceOf(habit);
@@ -124,24 +125,30 @@ function HabitCard({ habit, onPick, onAddCandidate, picking, addedAsCandidate })
                 )}
             </div>
 
-            {/* Two CTAs: candidate (defer-decision) + direct-add (commit now) */}
+            {/* Two CTAs: candidate (defer-decision, toggleable) + direct-add (commit now) */}
             <div className="mt-3 grid grid-cols-2 gap-2">
-                <button
-                    type="button"
-                    onClick={onAddCandidate}
-                    disabled={locked}
-                    className={`flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors disabled:cursor-not-allowed ${
-                        addedAsCandidate
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-white border border-gray-200 text-gray-700 hover:border-emerald-300 hover:bg-emerald-50'
-                    }`}
-                >
-                    {addedAsCandidate ? (
-                        <><Check size={14} /> 已加入候選</>
-                    ) : (
-                        <><Plus size={14} /> 加入候選</>
-                    )}
-                </button>
+                {addedAsCandidate ? (
+                    // Toggle off: idle shows 「已加入候選」(綠勾)，hover 變紅顯示「取消候選」
+                    <button
+                        type="button"
+                        onClick={onRemoveCandidate}
+                        disabled={picking}
+                        aria-label="取消候選"
+                        className="group flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-100 text-emerald-700 hover:bg-rose-50 hover:text-rose-600"
+                    >
+                        <span className="flex items-center gap-1 group-hover:hidden"><Check size={14} /> 已加入候選</span>
+                        <span className="hidden items-center gap-1 group-hover:flex"><X size={14} /> 取消候選</span>
+                    </button>
+                ) : (
+                    <button
+                        type="button"
+                        onClick={onAddCandidate}
+                        disabled={picking}
+                        className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors disabled:cursor-not-allowed bg-white border border-gray-200 text-gray-700 hover:border-emerald-300 hover:bg-emerald-50"
+                    >
+                        <Plus size={14} /> 加入候選
+                    </button>
+                )}
                 <button
                     type="button"
                     onClick={onPick}
@@ -165,6 +172,7 @@ export default function AspirationRecommendationPanel({
     onPickTemplate,
     onPickHabit,
     onAddHabitAsCandidate,
+    onRemoveHabitAsCandidate,
     onOpenFocusMap,
     onSkipToTemplates,
     onSkipToHabits,
@@ -175,10 +183,10 @@ export default function AspirationRecommendationPanel({
     // pickingId is the id of the template or habit currently being committed
     // — disables sibling cards so a double-tap doesn't fire two onPick calls.
     const [pickingId, setPickingId] = useState(null);
-    // Habit ids the user has added to the candidate pool in THIS panel
-    // session. Once added the buttons lock; the sticky bottom CTA shows
-    // the running count + a path into FocusMapModal.
-    const [candidateAddedIds, setCandidateAddedIds] = useState(() => new Set());
+    // Habits the user has added to the candidate pool in THIS panel session,
+    // mapped habitId → created taskId so each can be toggled back off (取消候選).
+    // The sticky bottom CTA shows the running count + a path into FocusMapModal.
+    const [candidateTaskMap, setCandidateTaskMap] = useState(() => new Map());
 
     useEffect(() => {
         if (!aspiration?.id) return;
@@ -227,13 +235,15 @@ export default function AspirationRecommendationPanel({
     };
 
     const handleAddCandidate = async (habit) => {
-        if (pickingId || candidateAddedIds.has(habit.id)) return;
+        if (pickingId || candidateTaskMap.has(habit.id)) return;
         setPickingId(`habit-${habit.id}`);
         try {
-            await onAddHabitAsCandidate?.(habit, aspiration);
-            setCandidateAddedIds(prev => {
-                const next = new Set(prev);
-                next.add(habit.id);
+            // onAddHabitAsCandidate returns the created task id (or undefined on
+            // older callers); store a truthy fallback so the toggle still flips.
+            const taskId = await onAddHabitAsCandidate?.(habit, aspiration);
+            setCandidateTaskMap(prev => {
+                const next = new Map(prev);
+                next.set(habit.id, taskId ?? true);
                 return next;
             });
         } finally {
@@ -241,7 +251,23 @@ export default function AspirationRecommendationPanel({
         }
     };
 
-    const candidateCount = candidateAddedIds.size;
+    const handleRemoveCandidate = async (habit) => {
+        if (pickingId || !candidateTaskMap.has(habit.id)) return;
+        setPickingId(`habit-${habit.id}`);
+        try {
+            const taskId = candidateTaskMap.get(habit.id);
+            await onRemoveHabitAsCandidate?.(taskId, aspiration);
+            setCandidateTaskMap(prev => {
+                const next = new Map(prev);
+                next.delete(habit.id);
+                return next;
+            });
+        } finally {
+            setPickingId(null);
+        }
+    };
+
+    const candidateCount = candidateTaskMap.size;
 
     const templates = data?.templates || [];
     const habits = data?.habits || [];
@@ -326,9 +352,10 @@ export default function AspirationRecommendationPanel({
                                             key={h.id}
                                             habit={h}
                                             picking={pickingId === `habit-${h.id}`}
-                                            addedAsCandidate={candidateAddedIds.has(h.id)}
+                                            addedAsCandidate={candidateTaskMap.has(h.id)}
                                             onPick={() => handlePickHabit(h)}
                                             onAddCandidate={() => handleAddCandidate(h)}
+                                            onRemoveCandidate={() => handleRemoveCandidate(h)}
                                         />
                                     ))}
                                 </div>

@@ -879,9 +879,29 @@ const MainApp = () => {
                     body: JSON.stringify({ taskId: created.id }),
                 }).catch(e => console.warn('[MainApp] aspiration habit tag failed:', e));
             }
+
+            // Return the created task id so the panel can offer an undo (取消候選).
+            return created.id;
         } catch (e) {
             console.error('[MainApp] add candidate failed:', e);
             alert('加入候選失敗，請再試一次');
+            throw e;  // let the panel's pickingId clear so the button can retry
+        }
+    };
+
+    // RecommendationPanel "取消候選": delete the candidate Task created by
+    // handleAddHabitAsCandidate. The AspirationHabit join row (if any) has a
+    // SetNull FK to Task, so it survives as a harmless taskId=null orphan —
+    // never surfaced anywhere (daily-view grouping walks task→aspiration).
+    const handleRemoveHabitAsCandidate = async (taskId) => {
+        if (!taskId) return;
+        try {
+            const res = await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            setCandidateCount(c => Math.max(0, c - 1));
+        } catch (e) {
+            console.error('[MainApp] remove candidate failed:', e);
+            alert('取消候選失敗，請再試一次');
             throw e;  // let the panel's pickingId clear so the button can retry
         }
     };
@@ -1711,6 +1731,7 @@ const MainApp = () => {
                     onPickTemplate={handlePickTemplateFromAspiration}
                     onPickHabit={handlePickHabitFromAspiration}
                     onAddHabitAsCandidate={handleAddHabitAsCandidate}
+                    onRemoveHabitAsCandidate={handleRemoveHabitAsCandidate}
                     onOpenFocusMap={handleOpenFocusMapFromPanel}
                     onSkipToTemplates={handleSkipToTemplates}
                     onSkipToHabits={handleSkipToHabits}
