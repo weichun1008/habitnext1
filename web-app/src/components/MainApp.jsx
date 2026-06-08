@@ -423,7 +423,9 @@ const MainApp = () => {
 
                 const currentHist = t.history[dateStr] || 0;
                 const newVal = Math.max(0, currentHist + (value || 0));
-                const completedStatus = newVal >= t.dailyTarget;
+                const completedStatus = t.direction === 'decrease'
+                    ? (newVal <= (t.dailyTarget || 0))   // reverse: met when at/under limit
+                    : (newVal >= t.dailyTarget);
 
                 historyUpdate = { date: dateStr, completed: completedStatus, value: newVal };
                 updatedTask = {
@@ -463,7 +465,7 @@ const MainApp = () => {
 
         // Slice O — capture city on a completion (not un-completion) when the
         // user has opted in. Best-effort: failure / denial just skips location.
-        if (historyUpdate && historyUpdate.completed && user?.trackLocation) {
+        if (historyUpdate && historyUpdate.completed && user?.trackLocation && task.direction !== 'decrease') {
             try {
                 const pos = await getCachedPosition({ maxAgeMs: 15 * 60 * 1000 });
                 if (pos) {
