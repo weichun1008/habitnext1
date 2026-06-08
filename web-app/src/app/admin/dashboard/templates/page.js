@@ -170,6 +170,9 @@ export default function TemplatesPage() {
                     <Link href="/admin/dashboard/templates/families" className="admin-btn admin-btn-secondary no-underline">
                         計畫家族
                     </Link>
+                    <Link href="/admin/dashboard/templates/review" className="admin-btn admin-btn-secondary no-underline">
+                        社群計畫審核
+                    </Link>
                     <Link href="/admin/dashboard/templates/new" className="admin-btn admin-btn-primary no-underline">
                         <Plus size={18} /> 新增模板
                     </Link>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Sparkles, Users, Calendar, ListChecks } from 'lucide-react';
+import AuthorBadge from './templates/AuthorBadge';
 
 // TemplateDetailPanel — Slice J
 // Renders a slide-in detail view for a Template inside the TemplateExplorer.
@@ -109,9 +110,14 @@ const TemplateDetailPanel = ({
                 >
                     <ArrowLeft size={20} />
                 </button>
-                <h2 className="text-base font-bold text-gray-800 truncate flex-1">
-                    {template.name}
-                </h2>
+                <div className="flex-1 min-w-0">
+                    <h2 className="text-base font-bold text-gray-800 truncate">
+                        {template.name}
+                    </h2>
+                    <div className="mt-0.5">
+                        <AuthorBadge template={template} />
+                    </div>
+                </div>
                 {isRecommended && (
                     <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-xs font-bold flex-shrink-0">
                         <Sparkles size={12} />

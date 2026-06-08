@@ -67,7 +67,7 @@ function TemplateCard({ template, onPick, picking }) {
                     )}
                     <p className="text-[11px] text-gray-400 mt-1.5">
                         {totalDays > 0 ? `${totalDays} 天 · ${totalTasks} 個任務` : '自訂結構'}
-                        {template.expert?.name && <> · {template.expert.name}</>}
+                        {template.expert?.name && <> · {template.expert?.name}</>}
                     </p>
                 </div>
                 {picking ? (

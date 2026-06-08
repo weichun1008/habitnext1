@@ -17,6 +17,7 @@ const FALLBACK_FAMILIES = [
   { slug: 'other', title: '其他公開計畫', intro: '專家設計的各式主題計畫。', icon: 'LayoutGrid', color: '#10b981', quizPendingCopy: null, order: 2, isActive: true },
 ];
 import TemplateDetailPanel from './TemplateDetailPanel';
+import AuthorBadge from './templates/AuthorBadge';
 
 // Fallback colors when a template.category slug isn't in PlanCategory yet
 // (legacy data, or admin deleted a non-system row). Family-tinted so it
@@ -295,11 +296,16 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                                 </span>
                                                             )}
                                                         </div>
-                                                        <h3 className="font-bold text-gray-800 text-base leading-snug line-clamp-2 mb-2">{template.name}</h3>
+                                                        <h3 className="font-bold text-gray-800 text-base leading-snug line-clamp-2 mb-1">{template.name}</h3>
+                                                        <div className="mb-2">
+                                                            <AuthorBadge template={template} />
+                                                        </div>
+                                                        {template.authorType !== 'user' && (
                                                         <div className="flex items-center gap-2 text-xs text-gray-500 mb-2 flex-wrap">
                                                             <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">{template.expert?.title || '專家'}</span>
                                                             <span className="truncate">by {template.expert?.name}</span>
                                                         </div>
+                                                        )}
                                                         <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-3 flex-1">
                                                             {template.description || '這個計畫可以幫助你建立良好的生活習慣。'}
                                                         </p>

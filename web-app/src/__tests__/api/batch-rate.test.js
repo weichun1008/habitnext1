@@ -4,7 +4,7 @@
 
 jest.mock('@/lib/prisma', () => ({
   __esModule: true,
-  default: { $transaction: jest.fn(() => Promise.resolve([])), task: { update: jest.fn((args) => args) } },
+  default: { $transaction: jest.fn(() => Promise.resolve([])), task: { update: jest.fn((args) => args), findMany: jest.fn(() => Promise.resolve([])) } },
 }));
 
 const prisma = require('@/lib/prisma').default;
