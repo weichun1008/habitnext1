@@ -58,6 +58,7 @@ const MainApp = () => {
     const [currentView, setCurrentView] = useState('daily');
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
+    const [recentlyAddedIds, setRecentlyAddedIds] = useState([]);
     const [isTemplateExplorerOpen, setIsTemplateExplorerOpen] = useState(false);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -811,6 +812,24 @@ const MainApp = () => {
         if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
     }, []);   // eslint-disable-line react-hooks/exhaustive-deps
 
+    // After an add, once the add modal is closed, scroll the newly-added
+    // habit into view and briefly highlight it, then clear the highlight.
+    // The library modal stays open for batch adds, so this waits until the
+    // user finally closes it; the manual form closes immediately and fires
+    // right away. We keep the existing time/cue sort untouched — this is
+    // purely a visual cue so the user notices where the card landed.
+    useEffect(() => {
+        if (recentlyAddedIds.length === 0) return;
+        if (isLibraryModalOpen || isFormModalOpen) return; // wait until the add modal is closed
+        const targetId = recentlyAddedIds[0];
+        const t1 = setTimeout(() => {
+            const el = typeof document !== 'undefined' && document.getElementById(`daily-task-${targetId}`);
+            if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 120); // let the daily view paint after the modal unmounts
+        const t2 = setTimeout(() => setRecentlyAddedIds([]), 3000); // clear highlight
+        return () => { clearTimeout(t1); clearTimeout(t2); };
+    }, [recentlyAddedIds, isLibraryModalOpen, isFormModalOpen]);
+
     const handleSaveTask = async (taskData) => {
         // Sanitize data before sending
         const sanitizedData = {
@@ -866,6 +885,10 @@ const MainApp = () => {
                     } else {
                         const formatted = { ...created, history: {}, dailyProgress: {} };
                         setTasks(prev => [...prev, formatted]);
+                        // Slice — highlight + auto-scroll the just-added active habit
+                        // once the add modal closes (see effect below). Library adds
+                        // keep the modal open for batch adds, so the cue fires later.
+                        setRecentlyAddedIds(prev => [...prev, created.id]);
                     }
 
                     // Slice K — if the user entered through the aspiration
@@ -1576,13 +1599,19 @@ const MainApp = () => {
                                                     <div className="space-y-3">
                                                         {pinnedIncompleteTasks.map(task => {
                                                             const isExiting = exitingTaskIds.has(task.id);
+                                                            const isRecentlyAdded = recentlyAddedIds.includes(task.id);
                                                             return (
                                                                 <div
                                                                     key={task.id}
+                                                                    id={`daily-task-${task.id}`}
                                                                     className={`overflow-hidden transition-all duration-300 ease-out ${
                                                                         isExiting
                                                                             ? 'max-h-0 opacity-0 pointer-events-none'
                                                                             : 'max-h-[640px] opacity-100'
+                                                                    } ${
+                                                                        isRecentlyAdded
+                                                                            ? 'ring-2 ring-emerald-400 ring-offset-2 rounded-2xl animate-pulse motion-reduce:animate-none'
+                                                                            : ''
                                                                     }`}
                                                                 >
                                                                     <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} onToggleStar={handleToggleStar} />
@@ -1640,13 +1669,19 @@ const MainApp = () => {
                                                         <div className="space-y-3">
                                                             {group.tasks.map(task => {
                                                                 const isExiting = exitingTaskIds.has(task.id);
+                                                                const isRecentlyAdded = recentlyAddedIds.includes(task.id);
                                                                 return (
                                                                     <div
                                                                         key={task.id}
+                                                                        id={`daily-task-${task.id}`}
                                                                         className={`overflow-hidden transition-all duration-300 ease-out ${
                                                                             isExiting
                                                                                 ? 'max-h-0 opacity-0 pointer-events-none'
                                                                                 : 'max-h-[640px] opacity-100'
+                                                                        } ${
+                                                                            isRecentlyAdded
+                                                                                ? 'ring-2 ring-emerald-400 ring-offset-2 rounded-2xl animate-pulse motion-reduce:animate-none'
+                                                                                : ''
                                                                         }`}
                                                                     >
                                                                         <TaskCard task={task} viewingDate={selectedDate} onClick={() => { setViewingTask(task); setIsDetailModalOpen(true); }} onUpdate={handleTaskUpdate} onAfterAction={() => { if (user?.id) fetchTasks(user.id); }} onPickLocation={handlePickLocation} onAttachPhoto={handleAttachPhoto} attachingKey={attachingKey} onStartTool={handleStartTool} onToggleStar={handleToggleStar} />
