@@ -86,13 +86,11 @@ const MainApp = () => {
     //   - isFocusMapModalOpen: controls FocusMapModal visibility
     //   - candidateCount: cached number of candidate-status tasks; banner
     //     appears when >= 5. Refreshed after add/rate/login.
-    //   - bannerDismissed: per-session hide flag (resets on page reload).
     const [isFocusMapModalOpen, setIsFocusMapModalOpen] = useState(false);
     // 把某個嚮往的習慣集存成計畫（重用 SaveAsPlanModal）。null = 關閉。
     const [savePlanAspiration, setSavePlanAspiration] = useState(null);
     const handleSaveAspirationAsPlan = (aspiration) => setSavePlanAspiration(aspiration);
     const [candidateCount, setCandidateCount] = useState(0);
-    const [bannerDismissed, setBannerDismissed] = useState(false);
     // Daily view — completed-section collapse state. Defaults to collapsed
     // so the daily list visually focuses on incomplete tasks; users tap the
     // divider row to peek at what they've already done. Session-only (resets
@@ -172,6 +170,25 @@ const MainApp = () => {
             }
         } catch (e) {
             console.error('Fetch candidate count error', e);
+        }
+    };
+
+    // banner 上 X = 把所有候選一次封存。destructive 動作，二次確認。
+    const handleClearCandidates = async () => {
+        if (!user) return;
+        const ok = window.confirm(`確定要捨棄全部 ${candidateCount} 個候選習慣？這些習慣會被封存，可從歷史中恢復。`);
+        if (!ok) return;
+        try {
+            const res = await fetch('/api/tasks/candidates/clear', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id }),
+            });
+            if (res.ok) {
+                setCandidateCount(0);
+            }
+        } catch (e) {
+            console.error('Clear candidates error', e);
         }
     };
 
@@ -1529,10 +1546,9 @@ const MainApp = () => {
                                         </button>
                                     </div>
                                 )}
-                                {/* Slice L — focus-map banner. Shown when the user has built up
-                                    >= 5 candidates and hasn't dismissed this session. Per-session
-                                    dismiss only (resets on full page reload). */}
-                                {isSelectedToday && candidateCount >= 5 && !bannerDismissed && (
+                                {/* Slice L — focus-map banner. 候選 >= 5 時顯示。
+                                    X = 全部捨棄候選（封存所有 status='candidate'，destructive 帶確認）。 */}
+                                {isSelectedToday && candidateCount >= 5 && (
                                     <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 mb-4">
                                         <div className="flex items-start justify-between gap-2">
                                             <div className="flex-1">
@@ -1544,9 +1560,9 @@ const MainApp = () => {
                                             </div>
                                             <button
                                                 type="button"
-                                                onClick={() => setBannerDismissed(true)}
+                                                onClick={handleClearCandidates}
                                                 className="p-1 -mr-1 text-gray-400 hover:text-gray-600 text-lg leading-none"
-                                                aria-label="暫時隱藏"
+                                                aria-label="全部捨棄候選"
                                             >
                                                 ×
                                             </button>
