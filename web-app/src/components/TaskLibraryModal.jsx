@@ -304,25 +304,6 @@ const TaskLibraryModal = ({
                                 onChange={setPendingCue}
                                 yourTasks={yourTasks}
                             />
-                            <div className="flex gap-2 pt-2 border-t border-gray-100">
-                                <button
-                                    onClick={() => emitPendingTask(null)}
-                                    className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition-colors"
-                                >
-                                    略過錨點，直接加入
-                                </button>
-                                <button
-                                    onClick={() => emitPendingTask(pendingCue)}
-                                    disabled={!pendingCue}
-                                    className={`flex-1 py-3 rounded-xl font-bold text-sm transition-colors ${
-                                        pendingCue
-                                            ? 'bg-emerald-500 text-white hover:bg-emerald-600'
-                                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                    }`}
-                                >
-                                    {pendingCue ? `加入（錨點：${pendingCue}）` : '請先選一個錨點'}
-                                </button>
-                            </div>
                         </>
                     ) : (
                         <>
@@ -340,8 +321,29 @@ const TaskLibraryModal = ({
                     )}
                 </div>
 
-                {/* 已加入計數：本次 session 連續加了幾個，直接進每日視圖。 */}
-                {savedThisSession > 0 && (
+                {view === 'anchor' && (
+                    <div className="px-4 py-3 border-t border-gray-100 bg-white flex gap-2 flex-shrink-0">
+                        <button
+                            onClick={() => emitPendingTask(null)}
+                            className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition-colors"
+                        >
+                            略過錨點，直接加入
+                        </button>
+                        <button
+                            onClick={() => emitPendingTask(pendingCue)}
+                            disabled={!pendingCue}
+                            className={`flex-1 py-3 rounded-xl font-bold text-sm transition-colors ${
+                                pendingCue
+                                    ? 'bg-emerald-500 text-white hover:bg-emerald-600'
+                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            }`}
+                        >
+                            {pendingCue ? `加入（錨點：${pendingCue}）` : '請先選一個錨點'}
+                        </button>
+                    </div>
+                )}
+
+                {savedThisSession > 0 && view !== 'anchor' && (
                     <div className="px-6 py-3 border-t border-gray-100 bg-emerald-50 flex items-center justify-between gap-3 flex-shrink-0">
                         <p className="text-xs text-emerald-700">
                             已加入 <span className="font-bold">{savedThisSession}</span> 個習慣到每日追蹤
