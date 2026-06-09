@@ -10,6 +10,15 @@ export default function RootLayout({ children }) {
         <html lang="zh-TW">
             <head>
                 {/*
+                  字體大小偏好 — 在 hydrate 前同步套用，避免閃爍。
+                  與 src/lib/fontSize.js 的 STORAGE_KEY / 對應表保持一致。
+                */}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: "(function(){try{var v=localStorage.getItem('habitnext.fontSize');var m={standard:16,large:18,xlarge:20};var px=m[v];if(px)document.documentElement.style.fontSize=px+'px';}catch(e){}})();",
+                    }}
+                />
+                {/*
                   Material Symbols Rounded — Google's variable icon font.
                   Loaded once at the document level so every page can use
                   <MaterialIcon name="restaurant" /> with no per-icon cost.

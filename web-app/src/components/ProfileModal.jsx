@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from 'react';
-import { X, User, Phone, Lock, Save, Loader, Eye, EyeOff, LogOut, Sparkles, MapPin } from 'lucide-react';
+import { X, User, Phone, Lock, Save, Loader, Eye, EyeOff, LogOut, Sparkles, MapPin, Type } from 'lucide-react';
 import { AVATAR_DEFS, DEFAULT_AVATAR_ID, getAvatarDef } from '@/lib/avatars';
+import { FONT_SIZE_OPTIONS, DEFAULT_FONT_SIZE, loadFontSize, saveFontSize, applyFontSize } from '@/lib/fontSize';
 import MyAspirationsTab from './profile/MyAspirationsTab';
 
 const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
@@ -26,6 +27,14 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
     const [changePassword, setChangePassword] = useState(false);
     // Slice O — opt-in 記錄完成地點 (default off). Persists immediately on toggle.
     const [trackLocation, setTrackLocation] = useState(!!user?.trackLocation);
+    // 字體大小（localStorage，純前端偏好）。lazy init 在首次 render 就讀現值，避免閃爍。
+    const [fontSize, setFontSize] = useState(() => loadFontSize());
+
+    const handleSelectFontSize = (id) => {
+        setFontSize(id);
+        applyFontSize(id);
+        saveFontSize(id);
+    };
 
     const handleToggleTrackLocation = async () => {
         const next = !trackLocation;
@@ -339,6 +348,31 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
                             </div>
                         </div>
                     )}
+
+                    {/* 字體大小 */}
+                    <div className="py-3 border-t border-gray-100">
+                        <p className="text-sm font-bold text-gray-800 flex items-center gap-1.5 mb-2"><Type size={14} className="text-indigo-500" />字體大小</p>
+                        <div className="grid grid-cols-3 gap-2">
+                            {FONT_SIZE_OPTIONS.map(opt => {
+                                const isSelected = fontSize === opt.id;
+                                return (
+                                    <button
+                                        key={opt.id}
+                                        type="button"
+                                        onClick={() => handleSelectFontSize(opt.id)}
+                                        aria-pressed={isSelected}
+                                        className={`py-2 rounded-xl border transition-colors ${
+                                            isSelected
+                                                ? 'border-indigo-500 bg-indigo-50 text-indigo-700 font-bold'
+                                                : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                                        }`}
+                                    >
+                                        <span style={{ fontSize: `${opt.px}px` }}>{opt.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
 
                     {/* Slice O — opt-in 記錄完成地點 */}
                     <div className="flex items-start justify-between gap-3 py-3 border-t border-gray-100">
