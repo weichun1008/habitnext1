@@ -1,0 +1,410 @@
+{
+    "每日攝取益生菌/發酵食物": {
+        "name": "Take probiotics / fermented foods daily",
+        "description": "Probiotics keep the gut microbiome balanced; fermented foods provide live cultures and short-chain fatty acids that support immunity and digestion."
+    },
+    "觀察並記錄每日排便狀況": {
+        "name": "Track your daily bowel movements",
+        "description": "Stool form (the Bristol Stool Scale) is a real-time indicator of gut health; keeping a daily log helps you spot abnormalities early."
+    },
+    "避免攝取過敏原食物": {
+        "name": "Avoid your food allergens",
+        "description": "Personal allergens (such as gluten or dairy) can trigger chronic inflammation; identifying and avoiding them improves both gut health and mental well-being."
+    },
+    "定期進行健康檢查": {
+        "name": "Get regular health checkups",
+        "description": "Prevention beats treatment: annual checkups can catch chronic-disease risk markers before symptoms ever appear."
+    },
+    "記錄家族病史風險": {
+        "name": "Record your family health history",
+        "description": "Family medical history reveals genetic predispositions, guiding your prevention strategy and how often you should get screened."
+    },
+    "每天攝取足夠膳食纖維": {
+        "name": "Eat enough dietary fiber every day",
+        "description": "Dietary fiber feeds beneficial gut bacteria, supporting regular bowel movements, stable blood sugar, and lower cholesterol."
+    },
+    "餐前喝一杯溫水": {
+        "name": "Drink a glass of warm water before meals",
+        "description": "Hydrating before meals stimulates gastric secretion and slows down eating, helping you control portions and improve digestion."
+    },
+    "避免不必要的抗生素使用": {
+        "name": "Avoid unnecessary antibiotics",
+        "description": "Overusing antibiotics disrupts the gut microbiome; take them only on a doctor's advice to protect your microbial diversity."
+    },
+    "練習腹式呼吸按摩腸道": {
+        "name": "Practice belly breathing to massage the gut",
+        "description": "Diaphragmatic breathing mobilizes the diaphragm and internal organs and stimulates the parasympathetic nervous system, aiding gut motility and relieving stress."
+    },
+    "攝取富含益生元的食物 (洋蔥/蒜)": {
+        "name": "Eat prebiotic-rich foods (onion/garlic)",
+        "description": "Prebiotics are the food source for probiotics; onions, garlic, and other oligosaccharide-rich foods nourish beneficial gut bacteria."
+    },
+    "每天早晨開窗通風": {
+        "name": "Open the windows for fresh air each morning",
+        "description": "Carbon dioxide and volatile compounds build up overnight and dull alertness; airing out the room each morning improves air quality and mental clarity."
+    },
+    "整理工作桌面保持清爽": {
+        "name": "Keep your work desk tidy",
+        "description": "A tidy environment reduces visual distraction and cognitive load, supporting focus and better decision-making."
+    },
+    "接觸大自然/戶外散步": {
+        "name": "Get into nature / take an outdoor walk",
+        "description": "Time in green spaces lowers cortisol and lifts mood — a low-cost health intervention known as the “green prescription.”"
+    },
+    "減少暴露於噪音環境": {
+        "name": "Reduce exposure to noisy environments",
+        "description": "Chronic noise exposure raises blood pressure and damages hearing; actively reducing noise protects the cardiovascular and auditory systems."
+    },
+    "每週進行數位環境大掃除": {
+        "name": "Do a weekly digital declutter",
+        "description": "Cleaning up files, unsubscribing from emails, and organizing your desktop icons reduces digital fatigue and information anxiety."
+    },
+    "臥室保持完全黑暗 (助眠)": {
+        "name": "Keep the bedroom completely dark (for sleep)",
+        "description": "Light suppresses melatonin secretion; a fully dark room helps you fall asleep faster and sleep more deeply."
+    },
+    "種植室內植物淨化空氣": {
+        "name": "Grow indoor plants to purify the air",
+        "description": "Houseplants absorb some volatile organic compounds and raise humidity, while also providing a calming psychological effect."
+    },
+    "調整符合人體工學的桌椅": {
+        "name": "Set up an ergonomic desk and chair",
+        "description": "Properly adjusted desk and chair height reduces cumulative strain on the neck, shoulders, and lower back — a basic investment for anyone working long hours."
+    },
+    "定期清理冰箱與儲藏室": {
+        "name": "Clean out the fridge and pantry regularly",
+        "description": "Removing expired food lowers foodborne-illness risk, and a well-organized pantry makes healthy eating choices clearer."
+    },
+    "減少使用一次性塑膠": {
+        "name": "Cut down on single-use plastics",
+        "description": "Using less plastic reduces microplastic exposure and environmental burden; bringing your own containers is the easiest way to start."
+    },
+    "執行 168 間歇性斷食": {
+        "name": "Do 16:8 intermittent fasting",
+        "description": "A 16-hour fasting window lowers insulin and activates cellular autophagy — a common and easy-to-follow metabolic intervention."
+    },
+    "每餐攝取一個拳頭的蔬菜": {
+        "name": "Eat a fist-sized serving of vegetables each meal",
+        "description": "Vegetables provide fiber, vitamins, and phytochemicals; eating enough of them is the cornerstone of a balanced diet."
+    },
+    "減少精緻糖與澱粉攝取": {
+        "name": "Cut back on refined sugar and starch",
+        "description": "Refined sugar and starch cause sharp blood-sugar swings; long-term excess raises the risk of metabolic syndrome."
+    },
+    "吃飯細嚼慢嚥 (每口20下)": {
+        "name": "Chew slowly (20 chews per bite)",
+        "description": "Thorough chewing gives satiety signals time to register, helping you control portions and improving digestion and nutrient absorption."
+    },
+    "維持血糖穩定 (先吃菜肉再吃飯)": {
+        "name": "Keep blood sugar steady (veggies and protein before rice)",
+        "description": "Eating order affects the post-meal glucose response; having vegetables and protein first blunts the blood-sugar spike from starches."
+    },
+    "每天喝足 2500cc 水": {
+        "name": "Drink 2500 cc of water every day",
+        "description": "Hydration affects metabolism, skin, and cognition; sipping small amounts throughout the day works better than drinking a lot at once."
+    },
+    "每週實行一日無肉日": {
+        "name": "Have one meat-free day each week",
+        "description": "Skipping animal protein for one day lowers saturated-fat intake and environmental impact, while adding more plant diversity to your diet."
+    },
+    "避免晚餐後進食 (消夜)": {
+        "name": "No eating after dinner (late-night snacks)",
+        "description": "Eating close to bedtime disrupts digestion and sleep quality; an evening fast lets your metabolism rest and promotes fat burning."
+    },
+    "攝取優質 Omega-3 油脂": {
+        "name": "Get quality omega-3 fats",
+        "description": "Omega-3s help counter inflammation in the cardiovascular system and brain; common sources include oily fish, flaxseed, and walnuts."
+    },
+    "閱讀食品營養標示": {
+        "name": "Read nutrition labels",
+        "description": "Understanding calories, sugar, sodium, and ingredient order is the first step to escaping the processed-food trap."
+    },
+    "每餐都要有一份蛋白質": {
+        "name": "Include a serving of protein in every meal",
+        "description": "Protein steadies blood sugar, boosts satiety, and preserves muscle. Eggs, tofu, chicken, or soy milk all count. 💡 Fasting or skipping a meal? Choose a lower difficulty, or edit the meal slots after adding."
+    },
+    "每餐前先喝一杯水": {
+        "name": "Drink a glass of water before each meal",
+        "description": "200–300 cc of water before meals curbs hunger, slows your eating pace, and helps you stay hydrated. 💡 On fasting days just pick the low difficulty — keep drinking water."
+    },
+    "飯後散步 15 分鐘 (穩定血糖)": {
+        "name": "Walk 15 minutes after meals (blood sugar)",
+        "description": "Light activity after eating significantly lowers the post-meal glucose peak, with a big payoff for metabolic health."
+    },
+    "每天深蹲 30 下 (肌力)": {
+        "name": "Do 30 squats a day (strength)",
+        "description": "Squats work the large lower-body muscles, maintaining basal metabolism and mobility — a highly efficient at-home strength exercise."
+    },
+    "避免久坐超過 60 分鐘": {
+        "name": "Avoid sitting for more than 60 minutes at a stretch",
+        "description": "Prolonged sitting slows metabolism and raises cardiovascular risk; simply standing up and moving once an hour brings significant relief."
+    },
+    "每週進行 3 次有氧運動": {
+        "name": "Do aerobic exercise 3 times a week",
+        "description": "Regular cardio improves cardiorespiratory fitness and insulin sensitivity — the minimum activity level recommended by the WHO."
+    },
+    "晨間脊椎伸展操": {
+        "name": "Do morning spine stretches",
+        "description": "A short stretch after waking activates the nervous system and improves spinal mobility, reducing stiffness throughout the day."
+    },
+    "走樓梯代替搭電梯": {
+        "name": "Take the stairs instead of the elevator",
+        "description": "Stair climbing is highly efficient non-exercise activity thermogenesis (NEAT), painlessly adding to your daily activity total."
+    },
+    "進行 1 分鐘棒式 (Plank)": {
+        "name": "Hold a 1-minute plank (Plank)",
+        "description": "The plank builds core stability, helping improve posture, protect the lower back, and boost overall athletic performance."
+    },
+    "睡前拉筋放鬆肌肉": {
+        "name": "Stretch before bed to relax your muscles",
+        "description": "Stretching engages the parasympathetic nervous system and relaxes muscles, improving sleep quality and next-day flexibility."
+    },
+    "每天步行 8000 步": {
+        "name": "Walk 8000 steps a day",
+        "description": "Step count is a composite indicator of daily activity; research shows 7000–8000 steps a day significantly lowers mortality risk."
+    },
+    "練習單腳站立 (平衡感)": {
+        "name": "Practice single-leg standing (balance)",
+        "description": "Standing on one leg trains proprioception and core stability — one of the simplest exercises for preventing falls and slowing aging."
+    },
+    "睡前 1 小時不看手機 (藍光)": {
+        "name": "No phone for 1 hour before bed (blue light)",
+        "description": "Blue light from screens suppresses melatonin; putting the phone away before bed speeds sleep onset and deepens sleep."
+    },
+    "練習 4-7-8 呼吸法紓壓": {
+        "name": "Practice 4-7-8 breathing to de-stress",
+        "description": "The 4-7-8 technique stimulates the vagus nerve and activates the parasympathetic system, easing anxiety within minutes."
+    },
+    "確保每天 7 小時優質睡眠": {
+        "name": "Get 7 hours of quality sleep every night",
+        "description": "Sleep duration and quality directly affect immunity, cognition, and mood; 7–9 hours is the recommended range for adults."
+    },
+    "建立固定的睡前儀式": {
+        "name": "Build a consistent bedtime routine",
+        "description": "A regular pre-sleep ritual sends a “time to rest” signal to the nervous system, speeding sleep onset and deepening sleep."
+    },
+    "午後不再攝取咖啡因": {
+        "name": "No caffeine after noon",
+        "description": "Caffeine has a half-life of about 5–6 hours; afternoon intake interferes with falling asleep and reduces the share of deep sleep."
+    },
+    "泡熱水澡放鬆神經": {
+        "name": "Take a hot bath to relax your nerves",
+        "description": "A warm bath 1–2 hours before bed helps core body temperature drop, triggering the sleep-onset response and relaxing your muscles."
+    },
+    "使用眼罩或耳塞助眠": {
+        "name": "Use an eye mask or earplugs for sleep",
+        "description": "Blocking light and noise keeps your sleep cycles intact — especially helpful for city dwellers and light sleepers."
+    },
+    "寫下煩惱清單 (清空大腦)": {
+        "name": "Write a worry list (brain dump)",
+        "description": "Externalizing worries before bed reduces rumination, helping the brain switch from to-do mode into rest mode."
+    },
+    "早上起床曬 10 分鐘太陽": {
+        "name": "Get 10 minutes of morning sunlight",
+        "description": "Morning light calibrates the circadian rhythm and boosts serotonin — a key anchor for stable mood and sleep."
+    },
+    "午間小睡 20 分鐘 (Power Nap)": {
+        "name": "Take a 20-minute midday nap (Power Nap)",
+        "description": "A nap of 20 minutes or less restores alertness without disturbing nighttime sleep; beyond 30 minutes you risk slipping into deep sleep and waking groggy."
+    },
+    "每天擁抱家人/伴侶": {
+        "name": "Hug your family/partner every day",
+        "description": "Physical touch boosts oxytocin and lowers stress hormones — a low-cost way to build emotional connection."
+    },
+    "每週與一位好友通話": {
+        "name": "Call a close friend each week",
+        "description": "Strong social ties are among the most robust predictors of longevity; nurture them actively rather than waiting passively."
+    },
+    "練習傾聽不打斷": {
+        "name": "Practice listening without interrupting",
+        "description": "Listening fully builds trust and a sense of being understood — a core skill for close relationships and workplace communication."
+    },
+    "主動表達感謝與愛": {
+        "name": "Express gratitude and love openly",
+        "description": "Clearly voicing positive feelings benefits both sides of a relationship, and multiple psychology studies confirm it raises well-being."
+    },
+    "參與社群活動減少孤獨感": {
+        "name": "Join community activities to reduce loneliness",
+        "description": "Loneliness can harm health as much as smoking; regular social interaction is an effective prevention strategy."
+    },
+    "安排與伴侶的約會時光": {
+        "name": "Schedule date time with your partner",
+        "description": "Deliberately creating high-quality time together sustains intimacy; quality matters more than frequency."
+    },
+    "每天讚美一個人": {
+        "name": "Compliment someone every day",
+        "description": "Specific praise fuels positive social cycles and trains you to notice the strengths in others."
+    },
+    "寫張卡片給重要的人": {
+        "name": "Write a card to someone important",
+        "description": "Handwritten messages carry far more emotional depth than instant messages — a high-return investment in your relationships."
+    },
+    "練習換位思考": {
+        "name": "Practice perspective-taking",
+        "description": "Actively trying to understand events from another person's viewpoint reduces conflict and builds empathy."
+    },
+    "與家人共進晚餐且不滑手機": {
+        "name": "Eat dinner with family, phones away",
+        "description": "Sharing meals with focused interaction strengthens family bonds; research links it to better mental health in children and teens."
+    },
+    "每日正念冥想 10 分鐘": {
+        "name": "Meditate mindfully for 10 minutes daily",
+        "description": "Regular meditation can reshape brain structure and dampen amygdala reactivity, improving emotional regulation."
+    },
+    "寫下感恩日記 (三件事)": {
+        "name": "Keep a gratitude journal (three things)",
+        "description": "Writing down three things you're grateful for each day trains the brain to notice positive signals, significantly boosting subjective well-being."
+    },
+    "定義個人核心價值觀": {
+        "name": "Define your core personal values",
+        "description": "Clarifying your values gives you a compass for decision-making, reducing aimlessness and choice anxiety."
+    },
+    "練習自我慈悲與對話": {
+        "name": "Practice self-compassion and self-talk",
+        "description": "Treating yourself as gently as you would a good friend is a core skill for reducing self-criticism and the risk of depression."
+    },
+    "尋找生活中的意義感 (Ikigai)": {
+        "name": "Find your sense of meaning (Ikigai)",
+        "description": "A sense of meaning connects daily actions to long-term goals — a psychological trait shared across the long-lived Blue Zones."
+    },
+    "閱讀心靈成長書籍": {
+        "name": "Read personal-growth books",
+        "description": "Books on psychology and philosophy provide thinking frameworks that help you process emotions and life's bigger questions."
+    },
+    "進行十分鐘的靜默練習": {
+        "name": "Take 10 minutes of silence",
+        "description": "Deliberately scheduling stimulus-free quiet time lets the nervous system recover from overstimulation."
+    },
+    "練習寬恕與放下": {
+        "name": "Practice forgiveness and letting go",
+        "description": "Long-held resentment harms both body and mind; forgiveness isn't condoning the other person — it's releasing yourself."
+    },
+    "每天對著鏡子自我肯定": {
+        "name": "Do daily mirror affirmations",
+        "description": "Research shows self-affirmation helps in some contexts but may backfire for people with low self-esteem. Treat it as a self-awareness exercise — results vary by person."
+    },
+    "參與藝術創作或欣賞": {
+        "name": "Create or appreciate art",
+        "description": "Engaging with art sparks creativity and emotional expression, and can also lower the stress hormone cortisol."
+    },
+    "每天閱讀非虛構書籍 15 分鐘": {
+        "name": "Read nonfiction for 15 minutes a day",
+        "description": "Consistent nonfiction reading is a high-leverage habit for building cross-domain knowledge — far more structured than scattered snippets of information."
+    },
+    "學習一項新技能或語言": {
+        "name": "Learn a new skill or language",
+        "description": "Continuous learning builds cognitive reserve, lowers dementia risk, and widens your career options."
+    },
+    "玩益智遊戲活化大腦": {
+        "name": "Play brain games to stay sharp",
+        "description": "Chess, sudoku, and other puzzle activities exercise executive function and working memory — a low-barrier way to maintain brainpower."
+    },
+    "進行深度工作 (Deep Work)": {
+        "name": "Do focused deep work (Deep Work)",
+        "description": "Distraction-free, high-focus blocks are the key to high-value output — increasingly scarce, and increasingly a competitive edge."
+    },
+    "寫作或輸出今日所學": {
+        "name": "Write about or share what you learned today",
+        "description": "Producing output forces knowledge to be structured and tested — the core step of the Feynman learning technique."
+    },
+    "收聽知識型 Podcast": {
+        "name": "Listen to educational podcasts",
+        "description": "Commutes and chores can become a steady learning window when filled with knowledge-rich audio."
+    },
+    "每天學習一個新單字": {
+        "name": "Learn one new word a day",
+        "description": "Vocabulary underpins precision of thought; one word a day adds up to hundreds of new words in a year."
+    },
+    "觀看一場 TED Talk": {
+        "name": "Watch a TED Talk",
+        "description": "TED delivers idea-dense talks and fresh knowledge — an efficient channel for exposure to cross-disciplinary thinking."
+    },
+    "練習批判性思考": {
+        "name": "Practice critical thinking",
+        "description": "Questioning sources and spotting logical fallacies is essential self-defense in the age of information overload."
+    },
+    "參加線上課程或講座": {
+        "name": "Take an online course or lecture",
+        "description": "Structured courses provide a guided learning path, making it easier to build a complete body of knowledge than scattered self-study."
+    },
+    "設定每日最重要的三件事": {
+        "name": "Set your three most important tasks daily",
+        "description": "Focusing on three MITs (Most Important Tasks) keeps busywork from draining you and channels attention into high-leverage goals."
+    },
+    "劃分清晰的工作/生活界線": {
+        "name": "Draw clear work/life boundaries",
+        "description": "Explicit boundaries of time or space keep work from eroding your personal life — the foundation of burnout prevention."
+    },
+    "定期檢視職涯成就感": {
+        "name": "Review your career fulfillment regularly",
+        "description": "Periodically reviewing your career direction keeps you off autopilot; adjusting early is far more efficient than correcting with regret."
+    },
+    "優化工作流程提升效率": {
+        "name": "Optimize your workflows for efficiency",
+        "description": "Identifying repetitive, time-consuming steps and automating or simplifying them is the key to getting more output from the same hours."
+    },
+    "尋找工作中的心流體驗": {
+        "name": "Find flow in your work",
+        "description": "Flow comes easiest when challenge matches ability — a source of meaning at work and long-term motivation."
+    },
+    "整理收件匣 (Inbox Zero)": {
+        "name": "Clear your inbox (Inbox Zero)",
+        "description": "Keeping your inbox empty reduces information anxiety; treat emails as to-do triggers rather than storage."
+    },
+    "番茄鐘工作法": {
+        "name": "Use the Pomodoro Technique",
+        "description": "Cycles of 25 minutes of focus plus a 5-minute break sustain high-quality output and prevent the drain of long unbroken stretches."
+    },
+    "拒絕不必要的會議": {
+        "name": "Decline unnecessary meetings",
+        "description": "Meetings are time sinks; actively assessing whether you really need to attend frees up large blocks for deep work."
+    },
+    "每週回顧工作進度": {
+        "name": "Review your work progress weekly",
+        "description": "A weekly review surfaces both progress and deviations — a key practice for staying aligned with goals and adjusting your pace."
+    },
+    "建立個人品牌": {
+        "name": "Build your personal brand",
+        "description": "Consistently publishing professional content builds personal trust capital that becomes leverage when changing careers or starting a business."
+    },
+    "睡前做 2 分鐘深呼吸（4-7-8）": {
+        "name": "Do 2 minutes of deep breathing before bed (4-7-8)",
+        "description": "The 4-7-8 method lowers sympathetic nervous activity, relaxes muscles, and helps you fall asleep; about 2–3 cycles is enough to feel the calming effect."
+    },
+    "第一餐吃完後吃保健品": {
+        "name": "Take supplements after your first meal",
+        "description": "Supplements absorb better with food, and food in the stomach buffers discomfort. A fixed anchor point makes them harder to forget."
+    },
+    "起床後喝兩大口水": {
+        "name": "Drink two big gulps of water after waking",
+        "description": "After a night of metabolism the body is mildly dehydrated; morning hydration kick-starts your metabolism and reduces morning headaches."
+    },
+    "上完廁所後伸展 10 分鐘": {
+        "name": "Stretch for 10 minutes after bathroom breaks",
+        "description": "A bathroom trip is a natural “stand up” anchor; use this cue to accumulate stretching time and avoid prolonged sitting."
+    },
+    "空腹吃益生菌": {
+        "name": "Take probiotics on an empty stomach",
+        "description": "Stomach acid is temporarily lower on an empty stomach, so more probiotics survive the passage through to the gut."
+    },
+    "睡前補充鎂": {
+        "name": "Take magnesium before bed",
+        "description": "Magnesium supports muscle relaxation and a calm nervous system; taking it before bed improves sleep onset. Best kept apart from calcium and dairy."
+    },
+    "飯後補充薑黃和葉酸鐵": {
+        "name": "Take turmeric, folate, and iron after meals",
+        "description": "Turmeric absorbs better with dietary fat; folate and iron are best not taken on an empty stomach to reduce gastric discomfort."
+    },
+    "想吃甜食先吃堅果等 10 分鐘": {
+        "name": "Craving sweets? Eat nuts and wait 10 minutes",
+        "description": "Sugar cravings often stem from rapid blood-sugar swings; eating nuts first slows absorption, and the craving usually fades naturally within 10 minutes."
+    },
+    "把含糖飲料換成白開水或無糖飲品": {
+        "name": "Swap sugary drinks for water or sugar-free options",
+        "description": "Sugary drinks spike blood sugar fast without adding satiety; switching to sugar-free options is the simplest first step to cutting sugar."
+    },
+    "找一個 5 分鐘什麼都不做的時間": {
+        "name": "Take 5 minutes to do absolutely nothing",
+        "description": "A brief pause lets the nervous system shift from constant activation into parasympathetic mode — an everyday emotional buffer."
+    }
+}
