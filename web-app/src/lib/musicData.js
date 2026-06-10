@@ -2,6 +2,7 @@ const PROBLEMS = [
   {
     id: 'stress',
     title: '壓力型：腦袋停不下來',
+    titleKey: 'music.problems.stress.title',
     description: '大腦停不下來，越晚越清醒。躺下後還在想事情',
     recommendedCategoryId: 'calm',
     imageUrl: 'https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?auto=format&fit=crop&q=80&w=800'
@@ -9,6 +10,7 @@ const PROBLEMS = [
   {
     id: 'circadian',
     title: '節律型：明明很累卻睡不著',
+    titleKey: 'music.problems.circadian.title',
     description: '到了睡覺時間，身體卻還沒準備好。',
     recommendedCategoryId: 'routine',
     imageUrl: 'https://images.unsplash.com/photo-1513628253939-010e64ac66cd?auto=format&fit=crop&q=80&w=800'
@@ -16,6 +18,7 @@ const PROBLEMS = [
   {
     id: 'metabolic',
     title: '代謝失衡型：半夜易醒',
+    titleKey: 'music.problems.metabolic.title',
     description: '容易半夜醒來，醒了就很難再睡。',
     recommendedCategoryId: 'guard',
     imageUrl: 'https://images.unsplash.com/photo-1505322022379-7c3353ee6291?auto=format&fit=crop&q=80&w=800'
@@ -23,6 +26,7 @@ const PROBLEMS = [
   {
     id: 'hormonal',
     title: '荷爾蒙波動型：身體起伏大',
+    titleKey: 'music.problems.hormonal.title',
     description: '身體狀態起伏大，睡眠也跟著受影響。',
     recommendedCategoryId: 'relax',
     imageUrl: 'https://images.unsplash.com/photo-1512438248247-f0f2a5a8b7f0?auto=format&fit=crop&q=80&w=800'
@@ -30,10 +34,10 @@ const PROBLEMS = [
 ];
 
 const CATEGORIES = [
-  { id: 'calm', title: '安撫腦袋', description: '幫助腦袋慢下來，適合睡前反芻多的人', imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800' },
-  { id: 'routine', title: '固定作息', description: '幫助建立睡前訊號，適合作息容易延後的人', imageUrl: 'https://images.unsplash.com/photo-1445905595283-21f8ae8a33d2?auto=format&fit=crop&q=80&w=800' },
-  { id: 'guard', title: '整夜守護', description: '降低夜醒干擾，適合半夜容易醒來的人', imageUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=800' },
-  { id: 'relax', title: '身體放鬆', description: '減少身體不適感，適合容易受身體狀態影響的人', imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800' },
+  { id: 'calm', title: '安撫腦袋', titleKey: 'music.categories.calm.title', description: '幫助腦袋慢下來，適合睡前反芻多的人', imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800' },
+  { id: 'routine', title: '固定作息', titleKey: 'music.categories.routine.title', description: '幫助建立睡前訊號，適合作息容易延後的人', imageUrl: 'https://images.unsplash.com/photo-1445905595283-21f8ae8a33d2?auto=format&fit=crop&q=80&w=800' },
+  { id: 'guard', title: '整夜守護', titleKey: 'music.categories.guard.title', description: '降低夜醒干擾，適合半夜容易醒來的人', imageUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=800' },
+  { id: 'relax', title: '身體放鬆', titleKey: 'music.categories.relax.title', description: '減少身體不適感，適合容易受身體狀態影響的人', imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800' },
 ];
 
 const TRACKS = [

@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useT } from '@/lib/i18n';
 
 // 公仔世界的夥伴 — a small companion creature that grows with you.
 // Pure SVG, no deps. Tonality: coral #f97362 (figure world accent) + a green
@@ -10,6 +13,7 @@ import React from 'react';
 // - Stage-aware (1..6): the same creature, growing — body scales up, sprout
 //   sprouts and grows, accessories (leaf crown / belly star / sparkle) accrue.
 const FigureCreature = ({ size = 64, stage = 1, className = '' }) => {
+  const { t } = useT();
   const s = Math.max(1, Math.min(6, Math.round(stage) || 1));
 
   // Progressive growth: body scale + sprout presence/size keyed to stage.
@@ -27,7 +31,7 @@ const FigureCreature = ({ size = 64, stage = 1, className = '' }) => {
       height={size}
       className={className}
       role="img"
-      aria-label="公仔夥伴"
+      aria-label={t('figure.creatureAria')}
       fill="none"
     >
       <style>{`

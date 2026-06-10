@@ -38,7 +38,10 @@ export const isPastDate = (dateStr, todayStr = getTodayStr()) =>
 export const isToday = (dateStr, todayStr = getTodayStr()) =>
     Boolean(dateStr && dateStr === todayStr);
 
-export const getNthWeekday = (dateStr) => {
+// `t` 為選用的 i18n 翻譯函式（由呼叫端的 useT() 傳入）— lib 不碰 React context。
+// 不傳 t 時維持 zh-TW 字串（向下相容）。`weekday` 維持 canonical 中文字，
+// 供 isTaskDueToday 的 === 比對使用；顯示用字串是 desc / lastDesc。
+export const getNthWeekday = (dateStr, t) => {
     if (!dateStr) return { weekNum: 1, weekday: '', isLast: false, desc: '', lastDesc: '' };
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return { weekNum: 1, weekday: '', isLast: false, desc: '', lastDesc: '' };
@@ -52,12 +55,20 @@ export const getNthWeekday = (dateStr) => {
     nextWeek.setDate(d + 7);
     const isLast = nextWeek.getMonth() !== date.getMonth();
 
+    // header.weekDays 是 Mon..Sun 陣列；getDay() 以週日為 0 → (day+6)%7。
+    const tWeekDays = t ? t('header.weekDays') : null;
+    const dayLabel = Array.isArray(tWeekDays) ? tWeekDays[(day + 6) % 7] : days[day];
+
     return {
         weekNum: weekNum,
         weekday: days[day],
         isLast: isLast,
-        desc: `每月第 ${weekNum} 個星期${days[day]}`,
-        lastDesc: `每月最後一個星期${days[day]}`
+        desc: t
+            ? t('dates.nthWeekdayOfMonth', { n: weekNum, day: dayLabel })
+            : `每月第 ${weekNum} 個星期${days[day]}`,
+        lastDesc: t
+            ? t('dates.lastWeekdayOfMonth', { day: dayLabel })
+            : `每月最後一個星期${days[day]}`
     };
 };
 

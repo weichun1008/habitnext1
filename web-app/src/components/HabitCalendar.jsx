@@ -5,8 +5,10 @@ import { ChevronLeft, ChevronRight, Calendar, CalendarDays } from 'lucide-react'
 import WeekView from './calendar/WeekView';
 import MonthView from './calendar/MonthView';
 import { getTodayStr } from '@/lib/utils';
+import { useT } from '@/lib/i18n';
 
 const HabitCalendar = ({ tasks, onUpdate, onTaskClick }) => {
+    const { t } = useT();
     const [viewMode, setViewMode] = useState('week'); // 'week' | 'month'
     const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -41,7 +43,7 @@ const HabitCalendar = ({ tasks, onUpdate, onTaskClick }) => {
         const month = currentDate.getMonth() + 1;
 
         if (viewMode === 'month') {
-            return `${year} 年 ${month} 月`;
+            return t('calendar.yearMonth', { year, month });
         }
 
         // Week view: show week range
@@ -58,7 +60,7 @@ const HabitCalendar = ({ tasks, onUpdate, onTaskClick }) => {
         const endDay = endOfWeek.getDate();
 
         if (startMonth === endMonth) {
-            return `${year} 年 ${startMonth} 月 ${startDay} - ${endDay} 日`;
+            return t('calendar.weekRange', { year, month: startMonth, start: startDay, end: endDay });
         }
         return `${startMonth}/${startDay} - ${endMonth}/${endDay}`;
     };
@@ -102,7 +104,7 @@ const HabitCalendar = ({ tasks, onUpdate, onTaskClick }) => {
                         onClick={goToToday}
                         className="px-4 py-2 text-sm font-bold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition-colors"
                     >
-                        今天
+                        {t('calendar.today')}
                     </button>
 
                     <div className="flex bg-gray-100 rounded-xl p-1">
@@ -114,7 +116,7 @@ const HabitCalendar = ({ tasks, onUpdate, onTaskClick }) => {
                                 }`}
                         >
                             <CalendarDays size={16} />
-                            週
+                            {t('calendar.week')}
                         </button>
                         <button
                             onClick={() => setViewMode('month')}
@@ -124,7 +126,7 @@ const HabitCalendar = ({ tasks, onUpdate, onTaskClick }) => {
                                 }`}
                         >
                             <Calendar size={16} />
-                            月
+                            {t('calendar.month')}
                         </button>
                     </div>
                 </div>

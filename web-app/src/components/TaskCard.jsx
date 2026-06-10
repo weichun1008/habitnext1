@@ -15,11 +15,14 @@ import {
     isPastDate,
 } from '@/lib/utils';
 import { visibleSubtasks } from '@/lib/subtasks';
+import { useT } from '@/lib/i18n';
+import { translateCue } from '@/lib/i18n/dataLabels';
 
 // `viewingDate` (yyyy-mm-dd) lets the card render any day's state — used by
 // the daily view's interactive week strip. Defaults to today so existing
 // callers that don't pass it (other views) behave unchanged.
 const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction, onPickLocation, onAttachPhoto, attachingKey, onStartTool, onToggleStar }) => {
+    const { t } = useT();
     const todayStr = getTodayStr();
     const dateStr = viewingDate || todayStr;
     const isFuture = isFutureDate(dateStr, todayStr);
@@ -59,7 +62,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
         currentVal = count;
         targetVal = target;
         progressPercent = target > 0 ? Math.min(100, (count / target) * 100) : 0;
-        displayStatus = `${count}/${target} 次`;
+        displayStatus = t('taskCard.periodStatus', { count, target });
     }
     // Logic for Daily/Specific Day Tasks — date-driven.
     else {
@@ -100,7 +103,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
     const polColor = isQuit ? '#e11d48' : '#d97706';
     const polSoft = isQuit ? '#fff1f2' : '#fffbeb';
     const polBorder = isQuit ? '#fecdd3' : '#fde68a';
-    const polLabel = isQuit ? '戒除' : '減低';
+    const polLabel = isQuit ? t('taskCard.quit') : t('taskCard.reduce');
     const PolIcon = isQuit ? Ban : TrendingDown;
     const quitStreak = isQuit
         ? keptStreak({ limit: 0, dailyProgress: task.dailyProgress, history: task.history, todayStr, startStr: (task.createdAt ? String(task.createdAt).slice(0, 10) : (task.date || null)) })
@@ -210,7 +213,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             aspiration level, not per card */}
                         {task.cue && (
                             <p className="text-[11px] font-medium text-emerald-600 mb-0.5 flex items-center gap-1 leading-tight">
-                                <span>{task.cue}</span>
+                                <span>{translateCue(task.cue, t)}</span>
                                 <span className="text-gray-300">→</span>
                             </p>
                         )}
@@ -219,7 +222,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                                 <button
                                     type="button"
                                     onClick={(e) => { e.stopPropagation(); onToggleStar(task); }}
-                                    aria-label={task.starred ? '取消星號' : '加入星號'}
+                                    aria-label={task.starred ? t('taskCard.unstar') : t('taskCard.star')}
                                     aria-pressed={!!task.starred}
                                     className={`flex-shrink-0 -ml-1.5 -my-1 p-1 rounded-full hover:bg-amber-50 transition-all hover:scale-110 active:scale-95 ${
                                         task.starred
@@ -230,7 +233,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                                     <Star size={19} className={task.starred ? 'fill-amber-400' : ''} />
                                 </button>
                             ) : task.starred && (
-                                <Star size={16} className="fill-amber-400 text-amber-400 flex-shrink-0" aria-label="已加星號" />
+                                <Star size={16} className="fill-amber-400 text-amber-400 flex-shrink-0" aria-label={t('taskCard.starred')} />
                             )}
                             <span className="min-w-0">{task.title}</span>
                             {isDecrease && (
@@ -243,7 +246,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             )}
                         </h3>
                         <p className="text-xs text-gray-400 line-clamp-1">
-                            {isPeriod ? (task.frequency === 'weekly' ? '本週目標' : '本月目標') : (task.details || '無詳細說明')}
+                            {isPeriod ? (task.frequency === 'weekly' ? t('taskCard.weeklyGoal') : t('taskCard.monthlyGoal')) : (task.details || t('taskCard.noDetails'))}
                         </p>
                         {/* Slice O/Q — 完成地點(LocationChip)與美食回憶(MemoryCapture)在前端隱藏：
                             這兩個功能尚未實作完成(照片上傳停用、定位為 opt-in)，不應在打勾完成時冒出。
@@ -274,7 +277,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             onClick={(e) => { e.stopPropagation(); onStartTool?.(task); }}
                             className="flex items-center gap-1 text-xs font-bold text-gray-600 bg-gray-50 hover:bg-gray-100 px-2.5 py-1 rounded-full border border-gray-200 transition-colors hover:-translate-y-0.5"
                         >
-                            <Play size={12} /> 開始
+                            <Play size={12} /> {t('taskCard.start')}
                         </button>
                     )}
                     {isDecrease ? (
@@ -282,16 +285,16 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                         // the top-right slot just shows a calm status pill.
                         decLimit > 0 ? (
                             <span className={`text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap ${decStatus === 'over' ? 'bg-amber-50 text-amber-700' : 'bg-teal-50 text-teal-700'}`}>
-                                {decStatus === 'over' ? '超過額度' : `剩 ${decRemaining} 次`}
+                                {decStatus === 'over' ? t('taskCard.overQuota') : t('taskCard.remaining', { n: decRemaining })}
                             </span>
                         ) : (
                             decValue === 0 ? (
                                 <span className="text-xs font-black px-2 py-1 rounded-lg whitespace-nowrap flex items-center gap-1 text-white" style={{ backgroundColor: polColor }}>
-                                    <ShieldCheck size={13} /> {quitStreak > 0 ? `已守住 ${quitStreak} 天` : '今天守著'}
+                                    <ShieldCheck size={13} /> {quitStreak > 0 ? t('taskCard.keptDays', { n: quitStreak }) : t('taskCard.holdingToday')}
                                 </span>
                             ) : (
                                 <span className="text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap bg-gray-100 text-gray-500">
-                                    {`今天 ${decValue} 次`}
+                                    {t('taskCard.todayCount', { n: decValue })}
                                 </span>
                             )
                         )
@@ -313,7 +316,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             )}
                             {isFuture ? (
                                 <span
-                                    title="未來的任務 — 到那天才能完成"
+                                    title={t('taskCard.futureLockTitle')}
                                     className="w-6 h-6 rounded-full border-2 border-dashed border-indigo-300 bg-white flex items-center justify-center"
                                 >
                                     <Lock size={11} className="text-indigo-400" />
@@ -323,7 +326,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                                     type="button"
                                     onClick={(e) => { e.stopPropagation(); handleUpdate('toggle'); }}
                                     disabled={isLocked}
-                                    aria-label={isCompleted ? '取消完成（清空子任務）' : '全部完成'}
+                                    aria-label={isCompleted ? t('taskCard.uncompleteAll') : t('taskCard.completeAll')}
                                     className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-gray-200 hover:border-emerald-400'} ${isLocked ? 'opacity-60 cursor-not-allowed' : ''}`}
                                 >
                                     {isCompleted && (
@@ -334,7 +337,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             <button
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); setSubtasksExpanded(v => !v); }}
-                                aria-label={subtasksExpanded ? '收合子任務' : '展開子任務'}
+                                aria-label={subtasksExpanded ? t('taskCard.collapseSubtasks') : t('taskCard.expandSubtasks')}
                                 aria-expanded={subtasksExpanded}
                                 className="w-6 h-6 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors text-gray-400"
                             >
@@ -346,7 +349,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                         <div className="flex items-center gap-2">
                             {isFuture ? (
                                 <span
-                                    title="未來的任務 — 到那天才能完成"
+                                    title={t('taskCard.futureLockTitle')}
                                     className="w-6 h-6 rounded-full border-2 border-dashed border-indigo-300 bg-white flex items-center justify-center"
                                 >
                                     <Lock size={11} className="text-indigo-400" />
@@ -445,16 +448,16 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                     <p className="text-xs text-gray-500 leading-tight flex-1 min-w-0">
                         {decLimit > 0
                             ? (decStatus === 'over'
-                                ? '沒關係，明天重新開始'
-                                : `今天還可以 ${decRemaining} 次`)
+                                ? t('taskCard.restartTomorrow')
+                                : t('taskCard.canStillToday', { n: decRemaining }))
                             : (decValue === 0
-                                ? '繼續保持，你做得很好'
-                                : `今天記錄了 ${decValue} 次 · 沒關係，明天重新開始`)}
+                                ? t('taskCard.keepItUp')
+                                : t('taskCard.recordedToday', { n: decValue }))}
                     </p>
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <button
                             type="button"
-                            aria-label="修正：減一次"
+                            aria-label={t('taskCard.correctMinusOne')}
                             disabled={decValue <= 0}
                             onClick={(e) => { e.stopPropagation(); handleUpdate('add', -1); }}
                             className="w-8 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full border border-gray-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
@@ -467,7 +470,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             className="flex items-center gap-1 text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-full border border-teal-100 transition-colors"
                         >
                             <Plus size={12} />
-                            {decLimit > 0 ? '我做了' : '誠實記錄：我做了'}
+                            {decLimit > 0 ? t('taskCard.iDidIt') : t('taskCard.honestRecord')}
                         </button>
                     </div>
                 </div>
@@ -482,9 +485,9 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                     className={`mt-2 flex items-center gap-1 text-xs leading-tight ${ySettle === 'kept' ? 'text-teal-600' : 'text-gray-400'}`}
                 >
                     {ySettle === 'kept' ? (
-                        <><ShieldCheck size={12} /> 昨天守住了</>
+                        <><ShieldCheck size={12} /> {t('taskCard.yesterdayKept')}</>
                     ) : (
-                        <>昨天超過了，今天重新開始</>
+                        <>{t('taskCard.yesterdayExceeded')}</>
                     )}
                 </p>
             )}
@@ -497,7 +500,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                         onClick={(e) => { e.stopPropagation(); handleUpdate('period_add'); }}
                         className="text-xs flex items-center gap-1 bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold hover:bg-emerald-100 transition-colors"
                     >
-                        <Plus size={12} /> 紀錄一次
+                        <Plus size={12} /> {t('taskCard.recordOnce')}
                     </button>
                 </div>
             )}
@@ -505,7 +508,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
             {/* Subtle future-day badge */}
             {isFuture && (
                 <div className="mt-2 inline-flex items-center gap-1 text-[10px] text-indigo-500 font-medium">
-                    <Lock size={10} /> 未來預覽
+                    <Lock size={10} /> {t('taskCard.futurePreview')}
                 </div>
             )}
         </div>

@@ -35,6 +35,7 @@ import JourneyView from './journey/JourneyView';
 import WorldPicker from './WorldPicker';
 import FigureWorldView from './worlds/FigureWorldView';
 import ToolModal from '@/components/tools/ToolModal';
+import { useT } from '@/lib/i18n';
 
 // StatsView is dynamically imported to keep recharts (~96kb gzip) off the
 // `/` route's First Load JS — it only loads when the user opens the stats tab.
@@ -42,14 +43,18 @@ import ToolModal from '@/components/tools/ToolModal';
 // a width / padding jump when the chunk finishes loading.
 const StatsView = dynamic(() => import('./StatsView'), {
     ssr: false,
-    loading: () => (
-        <div className="p-4 space-y-4 w-full">
-            <div className="text-center text-gray-400 py-12">載入中…</div>
-        </div>
-    ),
+    loading: function StatsLoading() {
+        const { t } = useT();
+        return (
+            <div className="p-4 space-y-4 w-full">
+                <div className="text-center text-gray-400 py-12">{t('daily.loading')}</div>
+            </div>
+        );
+    },
 });
 
 const MainApp = () => {
+    const { t } = useT();
     const [user, setUser] = useState(null);
     const [tasks, setTasks] = useState([]);
     const [assignments, setAssignments] = useState([]);
@@ -176,7 +181,7 @@ const MainApp = () => {
     // banner 上 X = 把所有候選一次封存。destructive 動作，二次確認。
     const handleClearCandidates = async () => {
         if (!user) return;
-        const ok = window.confirm(`確定要捨棄全部 ${candidateCount} 個候選習慣？這些習慣會被封存，可從歷史中恢復。`);
+        const ok = window.confirm(t('daily.confirmClearCandidates', { n: candidateCount }));
         if (!ok) return;
         try {
             const res = await fetch('/api/tasks/candidates/clear', {
@@ -784,7 +789,7 @@ const MainApp = () => {
             // re-toggle cleanly reverts. Quantitative/checklist "undo" isn't a
             // simple flip, so they get the linger without the toast.
             if (action === 'toggle') {
-                setUndoToast({ taskId: task.id, date, message: `完成「${task.title}」` });
+                setUndoToast({ taskId: task.id, date, message: t('daily.completedToast', { title: task.title }) });
             }
         });
     };
@@ -884,7 +889,7 @@ const MainApp = () => {
                     setTasks(prev => prev.map(t => t.id === editingTask.id ? formatted : t));
                 } else {
                     const err = await res.json();
-                    alert(`儲存失敗: ${err.error || '未知錯誤'}`);
+                    alert(t('errors.saveFailed', { error: err.error || t('errors.unknown') }));
                 }
             } else {
                 // Create
@@ -926,12 +931,12 @@ const MainApp = () => {
                     }
                 } else {
                     const err = await res.json();
-                    alert(`建立失敗: ${err.error || '未知錯誤'}`);
+                    alert(t('errors.createFailed', { error: err.error || t('errors.unknown') }));
                 }
             }
         } catch (err) {
             console.error('Save failed', err);
-            alert('儲存失敗，請檢查網路連線');
+            alert(t('errors.saveNetworkError'));
         }
 
         setIsFormModalOpen(false);
@@ -1012,7 +1017,7 @@ const MainApp = () => {
             return created.id;
         } catch (e) {
             console.error('[MainApp] add candidate failed:', e);
-            alert('加入候選失敗，請再試一次');
+            alert(t('errors.addCandidateFailed'));
             throw e;  // let the panel's pickingId clear so the button can retry
         }
     };
@@ -1029,7 +1034,7 @@ const MainApp = () => {
             setCandidateCount(c => Math.max(0, c - 1));
         } catch (e) {
             console.error('[MainApp] remove candidate failed:', e);
-            alert('取消候選失敗，請再試一次');
+            alert(t('errors.removeCandidateFailed'));
             throw e;  // let the panel's pickingId clear so the button can retry
         }
     };
@@ -1052,7 +1057,7 @@ const MainApp = () => {
             console.error('[MainApp] toggle star failed:', e);
             setTasks(prev => prev.map(t => t.id === task.id ? { ...t, starred: !next } : t));
             setViewingTask(prev => (prev && prev.id === task.id ? { ...prev, starred: !next } : prev));
-            alert('星號更新失敗，請再試一次');
+            alert(t('errors.starUpdateFailed'));
         }
     };
 
@@ -1139,7 +1144,7 @@ const MainApp = () => {
             setActiveAspiration(null);
         } catch (e) {
             console.error('[MainApp] direct add from aspiration failed:', e);
-            alert('加入失敗，請再試一次');
+            alert(t('errors.addFailed'));
             throw e;  // let the panel's pickingId clear so the button can retry
         }
     };
@@ -1196,7 +1201,7 @@ const MainApp = () => {
     };
 
     const handleDeleteTask = async (taskId) => {
-        if (window.confirm('確定要刪除此任務嗎？')) {
+        if (window.confirm(t('manage.confirmDeleteTask'))) {
             const prevTasks = [...tasks];
             setTasks(prev => prev.filter(t => t.id !== taskId));
             setIsFormModalOpen(false);
@@ -1207,7 +1212,7 @@ const MainApp = () => {
             } catch (err) {
                 console.error('Delete failed', err);
                 setTasks(prevTasks);
-                alert('刪除失敗');
+                alert(t('errors.deleteFailed'));
             }
         }
     };
@@ -1280,9 +1285,9 @@ const MainApp = () => {
     const todayStr = getTodayStr();
     const isSelectedToday = selectedDate === todayStr;
     const dailySectionLabel = (() => {
-        if (isSelectedToday) return '今日行程';
+        if (isSelectedToday) return t('daily.todaySchedule');
         const d = new Date(selectedDate);
-        if (isNaN(d.getTime())) return '行程';
+        if (isNaN(d.getTime())) return t('daily.schedule');
         const m = d.getMonth() + 1;
         const day = d.getDate();
         // Quick relative label for tomorrow / yesterday
@@ -1291,9 +1296,9 @@ const MainApp = () => {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const ds = selectedDate;
-        if (ds === toLocalDateStr(tomorrow)) return '明日行程';
-        if (ds === toLocalDateStr(yesterday)) return '昨日行程';
-        return `${m}/${day} 行程`;
+        if (ds === toLocalDateStr(tomorrow)) return t('daily.tomorrowSchedule');
+        if (ds === toLocalDateStr(yesterday)) return t('daily.yesterdaySchedule');
+        return t('daily.dateSchedule', { m, d: day });
     })();
 
     const hasJoinedFlowerTemplate = (() => {
@@ -1346,7 +1351,7 @@ const MainApp = () => {
     const soloTasks = tasks.filter(t => !t.assignmentId);
 
     if (loading && !user) {
-        return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-emerald-600 font-bold">載入中...</div>;
+        return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-emerald-600 font-bold">{t('daily.loading')}</div>;
     }
 
     return (
@@ -1381,7 +1386,7 @@ const MainApp = () => {
                             onClick={() => setIsAspirationPickerOpen(true)}
                             className="w-full bg-gradient-to-r from-emerald-400 to-emerald-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-emerald-200 hover:shadow-emerald-300 transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2 mb-4"
                         >
-                            <Sparkles size={20} /> 從嚮往開始
+                            <Sparkles size={20} /> {t('daily.startFromAspiration')}
                         </button>
 
                         <button
@@ -1389,7 +1394,7 @@ const MainApp = () => {
                             className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-4 rounded-2xl font-bold shadow-lg shadow-emerald-200 hover:shadow-emerald-300 transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2 mb-4"
                         >
                             <BookOpen size={20} />
-                            探索計畫
+                            {t('daily.explorePlans')}
                         </button>
 
                         <button
@@ -1400,7 +1405,7 @@ const MainApp = () => {
                             className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-4 rounded-2xl font-bold shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2 mb-4"
                         >
                             <Compass size={20} />
-                            探索習慣
+                            {t('daily.exploreHabits')}
                         </button>
 
                         <button
@@ -1411,7 +1416,7 @@ const MainApp = () => {
                             className="w-full bg-white text-gray-700 border border-gray-200 p-4 rounded-2xl font-bold hover:bg-gray-50 transition-all flex items-center justify-center gap-2 shadow-sm"
                         >
                             <span className="text-xl leading-none">+</span>
-                            建立習慣
+                            {t('daily.createHabit')}
                         </button>
                     </div>
 
@@ -1421,49 +1426,49 @@ const MainApp = () => {
                             className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'daily' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
                         >
                             <Sun size={20} />
-                            今日
+                            {t('daily.navToday')}
                         </button>
                         <button
                             onClick={() => setCurrentView('manage')}
                             className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'manage' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
                         >
                             <Grid size={20} />
-                            計畫總覽
+                            {t('manage.title')}
                         </button>
                         <button
                             onClick={() => setCurrentView('dashboard_detail')}
                             className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'dashboard_detail' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
                         >
                             <Calendar size={20} />
-                            日曆
+                            {t('calendar.title')}
                         </button>
                         <button
                             onClick={() => setCurrentView('stats')}
                             className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'stats' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
                         >
                             <BarChart3 size={20} />
-                            統計
+                            {t('header.view.stats')}
                         </button>
                         <button
                             onClick={() => setCurrentView('world')}
                             className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'world' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
                         >
                             <Globe size={20} />
-                            世界
+                            {t('header.view.world')}
                         </button>
                         <button
                             onClick={() => { setCurrentView('journey'); fetchJourney(user?.id); }}
                             className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'journey' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
                         >
                             <Map size={20} />
-                            旅程
+                            {t('header.view.journey')}
                         </button>
                         <button
                             onClick={() => setCurrentView('badges')}
                             className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-colors ${currentView === 'badges' ? 'bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
                         >
                             <Award size={20} />
-                            成就
+                            {t('daily.navBadges')}
                         </button>
                     </nav>
 
@@ -1474,7 +1479,7 @@ const MainApp = () => {
                         >
                             <Avatar user={user} size="w-8 h-8" />
                             <div className="flex-1 min-w-0">
-                                <p className="font-medium text-gray-800 truncate">{user?.nickname || user?.name || '使用者'}</p>
+                                <p className="font-medium text-gray-800 truncate">{user?.nickname || user?.name || t('daily.defaultUser')}</p>
                                 <p className="text-xs text-gray-500 truncate">{user?.phone || user?.email || ''}</p>
                             </div>
                         </button>
@@ -1503,8 +1508,8 @@ const MainApp = () => {
                                 <div className="flex items-center justify-between gap-2 mb-3 px-1">
                                     <span className="text-sm text-gray-600">
                                         {isMenstrualMode
-                                            ? (menstrualExpired ? '生理期模式（超過 5 天）' : '生理期模式進行中')
-                                            : '生理期模式'}
+                                            ? (menstrualExpired ? t('daily.menstrualExpired') : t('daily.menstrualActive'))
+                                            : t('daily.menstrualMode')}
                                     </span>
                                     <button
                                         type="button"
@@ -1515,34 +1520,34 @@ const MainApp = () => {
                                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                         }`}
                                     >
-                                        {isMenstrualMode ? '結束生理期' : '我正在生理期'}
+                                        {isMenstrualMode ? t('daily.menstrualEnd') : t('daily.menstrualStart')}
                                     </button>
                                 </div>
                                 {user?.typeKey && USER_TYPE_PROFILES[user.typeKey] && !hasJoinedFlowerTemplate && (
                                     <div className="bg-gradient-to-br from-rose-50 to-amber-50 border border-rose-100 rounded-2xl p-4 mb-4">
-                                        <p className="text-xs text-rose-600 font-bold uppercase tracking-wider">為你準備的小課程</p>
-                                        <h3 className="text-lg font-black text-gray-800 mt-1">{USER_TYPE_PROFILES[user.typeKey].label}小課程</h3>
-                                        <p className="text-xs text-gray-500 mt-1">根據你的問卷結果量身打造</p>
+                                        <p className="text-xs text-rose-600 font-bold uppercase tracking-wider">{t('daily.miniCourseEyebrow')}</p>
+                                        <h3 className="text-lg font-black text-gray-800 mt-1">{t('daily.miniCourseTitle', { label: USER_TYPE_PROFILES[user.typeKey].label })}</h3>
+                                        <p className="text-xs text-gray-500 mt-1">{t('daily.miniCourseDesc')}</p>
                                         <button
                                             type="button"
                                             onClick={() => setIsTemplateExplorerOpen(true)}
                                             className="mt-3 px-4 py-2 rounded-xl bg-rose-500 text-white text-sm font-bold hover:bg-rose-600 transition-colors"
                                         >
-                                            查看小課程 →
+                                            {t('daily.viewMiniCourse')}
                                         </button>
                                     </div>
                                 )}
                                 {user?.sleepTypeKey && SLEEP_TYPE_PROFILES[user.sleepTypeKey] && !hasJoinedSleepTemplate && (
                                     <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl p-4 mb-4">
-                                        <p className="text-xs text-indigo-600 font-bold uppercase tracking-wider">為你準備的睡眠處方</p>
-                                        <h3 className="text-lg font-black text-gray-800 mt-1">{SLEEP_TYPE_PROFILES[user.sleepTypeKey].label}睡眠處方</h3>
-                                        <p className="text-xs text-gray-500 mt-1">14 天循序漸進,從 baby step 開始建立睡眠節奏</p>
+                                        <p className="text-xs text-indigo-600 font-bold uppercase tracking-wider">{t('daily.sleepRxEyebrow')}</p>
+                                        <h3 className="text-lg font-black text-gray-800 mt-1">{t('daily.sleepRxTitle', { label: SLEEP_TYPE_PROFILES[user.sleepTypeKey].label })}</h3>
+                                        <p className="text-xs text-gray-500 mt-1">{t('daily.sleepRxDesc')}</p>
                                         <button
                                             type="button"
                                             onClick={() => setIsTemplateExplorerOpen(true)}
                                             className="mt-3 px-4 py-2 rounded-xl bg-indigo-500 text-white text-sm font-bold hover:bg-indigo-600 transition-colors"
                                         >
-                                            查看睡眠處方 →
+                                            {t('daily.viewSleepRx')}
                                         </button>
                                     </div>
                                 )}
@@ -1553,16 +1558,16 @@ const MainApp = () => {
                                         <div className="flex items-start justify-between gap-2">
                                             <div className="flex-1">
                                                 <p className="text-xs font-bold text-amber-700 flex items-center gap-1">
-                                                    <Sparkles size={13} /> 你有 {candidateCount} 個候選習慣
+                                                    <Sparkles size={13} /> {t('daily.candidateBannerCount', { n: candidateCount })}
                                                 </p>
-                                                <p className="text-sm font-black text-gray-800 mt-1">開始焦點地圖，挑出黃金行為</p>
-                                                <p className="text-[11px] text-gray-500 mt-1">建議先挑 3 個最值得做的開始</p>
+                                                <p className="text-sm font-black text-gray-800 mt-1">{t('daily.focusMapTitle')}</p>
+                                                <p className="text-[11px] text-gray-500 mt-1">{t('daily.focusMapHint')}</p>
                                             </div>
                                             <button
                                                 type="button"
                                                 onClick={handleClearCandidates}
                                                 className="p-1 -mr-1 text-gray-400 hover:text-gray-600 text-lg leading-none"
-                                                aria-label="全部捨棄候選"
+                                                aria-label={t('daily.clearCandidatesAria')}
                                             >
                                                 ×
                                             </button>
@@ -1572,7 +1577,7 @@ const MainApp = () => {
                                             onClick={() => setIsFocusMapModalOpen(true)}
                                             className="mt-3 w-full px-4 py-2 rounded-xl bg-amber-500 text-white text-sm font-bold hover:bg-amber-600 transition-colors"
                                         >
-                                            開始評分 →
+                                            {t('daily.startRating')}
                                         </button>
                                     </div>
                                 )}
@@ -1585,14 +1590,14 @@ const MainApp = () => {
                                 {!isSelectedToday && (
                                     <div className="mb-4 flex items-center justify-between gap-2 bg-indigo-50 border border-indigo-100 rounded-2xl px-4 py-3">
                                         <p className="text-xs text-indigo-700">
-                                            正在預覽 <span className="font-bold">{dailySectionLabel}</span>
+                                            {t('daily.previewing')} <span className="font-bold">{dailySectionLabel}</span>
                                         </p>
                                         <button
                                             type="button"
                                             onClick={() => setSelectedDate(todayStr)}
                                             className="text-xs font-bold px-3 py-1 rounded-full bg-white text-indigo-600 border border-indigo-200 hover:bg-indigo-100 transition-colors"
                                         >
-                                            回到今天
+                                            {t('daily.backToToday')}
                                         </button>
                                     </div>
                                 )}
@@ -1610,7 +1615,7 @@ const MainApp = () => {
                                                 <div>
                                                     <div className="mb-2 px-0.5 flex items-center gap-1">
                                                         <Star size={13} className="fill-amber-400 text-amber-400" />
-                                                        <p className="text-xs font-bold text-amber-600 tracking-wide">已加星號</p>
+                                                        <p className="text-xs font-bold text-amber-600 tracking-wide">{t('daily.starredSection')}</p>
                                                     </div>
                                                     <div className="space-y-3">
                                                         {pinnedIncompleteTasks.map(task => {
@@ -1658,12 +1663,12 @@ const MainApp = () => {
                                                                                 {group.aspiration.identity}
                                                                             </p>
                                                                             <p className="text-[11px] text-gray-400 leading-tight mt-0.5">
-                                                                                為了「{group.aspiration.text}」
+                                                                                {t('daily.forAspiration', { text: group.aspiration.text })}
                                                                             </p>
                                                                         </>
                                                                     ) : (
                                                                         <p className="text-xs font-bold text-gray-400 tracking-wide">
-                                                                            {group.aspiration ? group.aspiration.text : '其他習慣'}
+                                                                            {group.aspiration ? group.aspiration.text : t('daily.otherHabits')}
                                                                         </p>
                                                                     )}
                                                                 </div>
@@ -1677,7 +1682,7 @@ const MainApp = () => {
                                                                         onClick={() => handleSaveAspirationAsPlan(group.aspiration)}
                                                                         className="flex-shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 px-2 py-1 rounded-lg transition-all hover:bg-emerald-50 hover:-translate-y-0.5 active:translate-y-0"
                                                                     >
-                                                                        <Layers size={13} /> 存成計畫
+                                                                        <Layers size={13} /> {t('daily.saveAsPlan')}
                                                                     </button>
                                                                 )}
                                                             </div>
@@ -1724,7 +1729,7 @@ const MainApp = () => {
                                                     >
                                                         <span className="flex-1 h-px bg-gray-200" />
                                                         <span className="flex items-center gap-1 whitespace-nowrap">
-                                                            已完成 {completedDailyTasks.length} 個
+                                                            {t('daily.completedCount', { n: completedDailyTasks.length })}
                                                             {completedExpanded
                                                                 ? <ChevronUp size={14} />
                                                                 : <ChevronDown size={14} />}
@@ -1744,7 +1749,7 @@ const MainApp = () => {
 
                                             {dailyTasks.length === 0 && (
                                                 <p className="text-gray-400 text-sm col-span-full">
-                                                    {isSelectedToday ? '今日無固定行程。' : '這天沒有安排任務。'}
+                                                    {isSelectedToday ? t('daily.emptyToday') : t('daily.emptyOtherDay')}
                                                 </p>
                                             )}
                                         </div>
@@ -1754,7 +1759,7 @@ const MainApp = () => {
                                     {isSelectedToday && flexibleTasks.length > 0 && (
                                         <div>
                                             <h3 className="text-gray-800 font-bold text-lg mb-4 flex items-center gap-2">
-                                                <span className="w-1 h-5 bg-amber-500 rounded-full"></span> 週期目標 (彈性)
+                                                <span className="w-1 h-5 bg-amber-500 rounded-full"></span> {t('daily.periodGoals')}
                                             </h3>
                                             <div className="space-y-3">
                                                 {flexibleTasks.map(task => (
@@ -1777,19 +1782,19 @@ const MainApp = () => {
 
                         {currentView === 'manage' && (
                             <div className="p-4">
-                                <h2 className="text-2xl font-black text-gray-800 mb-6">計畫總覽</h2>
+                                <h2 className="text-2xl font-black text-gray-800 mb-6">{t('manage.title')}</h2>
                                 {/* Tasks List */}
                                 <div className="space-y-4 pb-24 md:pb-0">
-                                    {loading && <div className="text-center py-10 text-gray-400">載入中...</div>}
+                                    {loading && <div className="text-center py-10 text-gray-400">{t('daily.loading')}</div>}
 
                                     {!loading && tasks.length === 0 && (
                                         <div className="text-center py-20">
                                             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">🌵</div>
-                                            <h3 className="text-xl font-bold text-gray-800 mb-2">還沒有習慣</h3>
-                                            <p className="text-gray-500 mb-6">開始建立你的第一個習慣，或是探索專家計畫</p>
+                                            <h3 className="text-xl font-bold text-gray-800 mb-2">{t('manage.emptyTitle')}</h3>
+                                            <p className="text-gray-500 mb-6">{t('manage.emptyDesc')}</p>
                                             <div className="flex justify-center gap-4">
-                                                <button onClick={() => setIsTemplateExplorerOpen(true)} className="text-emerald-500 font-bold hover:underline">探索計畫</button>
-                                                <button onClick={() => setIsFormModalOpen(true)} className="text-indigo-500 font-bold hover:underline">建立習慣</button>
+                                                <button onClick={() => setIsTemplateExplorerOpen(true)} className="text-emerald-500 font-bold hover:underline">{t('daily.explorePlans')}</button>
+                                                <button onClick={() => setIsFormModalOpen(true)} className="text-indigo-500 font-bold hover:underline">{t('daily.createHabit')}</button>
                                             </div>
                                         </div>
                                     )}
@@ -1859,8 +1864,8 @@ const MainApp = () => {
                         {currentView === 'badges' && (
                             <div className="p-4 text-center py-20">
                                 <Award size={64} className="mx-auto text-yellow-400 mb-4" />
-                                <h2 className="text-2xl font-bold text-gray-800">成就中心</h2>
-                                <p className="text-gray-500">持續完成任務，解鎖更多徽章！</p>
+                                <h2 className="text-2xl font-bold text-gray-800">{t('header.view.achievements')}</h2>
+                                <p className="text-gray-500">{t('daily.badgesDesc')}</p>
                             </div>
                         )}
 

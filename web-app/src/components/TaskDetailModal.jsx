@@ -8,8 +8,11 @@ import { getTodayStr, isCompletedOnDate, calculateStats, isFutureDate } from '@/
 import { visibleSubtasks } from '@/lib/subtasks';
 import TaskActionMenu from './taskCard/TaskActionMenu';
 import LocationChip from './taskCard/LocationChip';
+import { useT } from '@/lib/i18n';
+import { translateCue } from '@/lib/i18n/dataLabels';
 
 const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate, onAfterAction, onPickLocation, onStartTool, onToggleStar }) => {
+    const { t } = useT();
     const [currentDate, setCurrentDate] = useState(initialDate || getTodayStr());
     // ⋮ overflow menu (編輯 / 暫停 / 隱藏 / 刪除) anchored top-right.
     const [menuOpen, setMenuOpen] = useState(false);
@@ -67,7 +70,7 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                     <div className="relative">
                         <button
                             onClick={() => setMenuOpen(o => !o)}
-                            aria-label="更多操作"
+                            aria-label={t('taskDetail.moreActions')}
                             aria-haspopup="menu"
                             aria-expanded={menuOpen}
                             className={`p-2 -mr-2 rounded-full transition-colors ${menuOpen ? 'bg-gray-100 text-gray-700' : 'text-gray-500 hover:bg-gray-100'}`}
@@ -108,8 +111,8 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                         <div className="flex items-center gap-2 font-bold text-gray-700">
                             <Calendar size={16} className="text-emerald-500" />
                             {currentDate}
-                            {isToday && <span className="text-xs bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full">今天</span>}
-                            {isFuture && <span className="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">未來</span>}
+                            {isToday && <span className="text-xs bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full">{t('taskDetail.today')}</span>}
+                            {isFuture && <span className="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">{t('taskDetail.future')}</span>}
                         </div>
                         <button onClick={() => handleDateChange(1)} className="p-1 hover:bg-gray-100 rounded-full text-gray-400"><ChevronRight size={20} /></button>
                     </div>
@@ -133,15 +136,15 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                         {/* identity removed 2026-06-03 — moved to aspiration */}
                         {task.cue && (
                             <p className="text-sm font-medium text-emerald-600 mb-1 flex items-center gap-1">
-                                <span>{task.cue}</span>
+                                <span>{translateCue(task.cue, t)}</span>
                                 <span className="text-gray-300">→</span>
                             </p>
                         )}
                         <h2 className="text-2xl font-black text-gray-800 text-center mb-2 flex items-center justify-center gap-1.5">
-                            {task.starred && <Star size={18} className="fill-amber-400 text-amber-400 flex-shrink-0" aria-label="已加星號" />}
+                            {task.starred && <Star size={18} className="fill-amber-400 text-amber-400 flex-shrink-0" aria-label={t('taskCard.starred')} />}
                             <span>{task.title}</span>
                         </h2>
-                        <p className="text-gray-500 text-center text-sm px-4">{task.details || '這個習慣沒有詳細說明，但持續做就對了！'}</p>
+                        <p className="text-gray-500 text-center text-sm px-4">{task.details || t('taskDetail.noDetailsFallback')}</p>
                     </div>
 
                     {/* Slice T — tool entry. When the task is backed by a virtual
@@ -153,7 +156,7 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                                 onClick={() => onStartTool?.(task)}
                                 className="w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 bg-teal-600 text-white shadow-lg shadow-teal-200 transition-all hover:bg-teal-700 hover:scale-[1.02]"
                             >
-                                <Play size={22} fill="currentColor" /> 開始
+                                <Play size={22} fill="currentColor" /> {t('taskCard.start')}
                             </button>
                         </div>
                     )}
@@ -170,7 +173,7 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                         {task.type === 'quantitative' ? (
                             <div className="bg-gray-50 rounded-2xl p-4 w-full border border-gray-100">
                                 <div className="flex justify-between items-end mb-2">
-                                    <span className="text-xs font-bold text-gray-400">當日進度</span>
+                                    <span className="text-xs font-bold text-gray-400">{t('taskDetail.dayProgress')}</span>
                                     <span className="text-xl font-black text-gray-800">
                                         {task.dailyProgress?.[currentDate]?.value || 0} <span className="text-sm text-gray-400 font-medium">/ {task.dailyTarget} {task.unit}</span>
                                     </span>
@@ -207,10 +210,10 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                                 }`}
                             >
                                 {isLocked
-                                    ? '尚未到當日'
+                                    ? t('taskDetail.notYet')
                                     : isCompleted
-                                        ? <><Check size={24} /> 已完成（再按清空）</>
-                                        : <>全部完成（{completedSubtasks}/{totalSubtasks}）</>}
+                                        ? <><Check size={24} /> {t('taskDetail.completedTapToClear')}</>
+                                        : <>{t('taskDetail.completeAllCount', { completed: completedSubtasks, total: totalSubtasks })}</>}
                             </button>
                         ) : (
                             <button
@@ -225,10 +228,10 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                                 }`}
                             >
                                 {isLocked
-                                    ? '尚未到當日'
+                                    ? t('taskDetail.notYet')
                                     : isCompleted
-                                        ? <><Check size={24} /> 已完成</>
-                                        : '完成任務'}
+                                        ? <><Check size={24} /> {t('taskDetail.completed')}</>
+                                        : t('taskDetail.completeTask')}
                             </button>
                         )}
                     </div>
@@ -239,7 +242,7 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                         return (
                             <div className="mb-8">
                                 <div className="flex justify-between items-center mb-3">
-                                    <h3 className="font-bold text-gray-800 flex items-center gap-2"><List size={18} className="text-blue-500" /> 子任務</h3>
+                                    <h3 className="font-bold text-gray-800 flex items-center gap-2"><List size={18} className="text-blue-500" /> {t('taskDetail.subtasks')}</h3>
                                     <span className="text-xs font-bold text-gray-400">{completedSubtasks}/{totalSubtasks}</span>
                                 </div>
                                 <div className="space-y-2">
@@ -268,23 +271,23 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                     <div className="grid grid-cols-2 gap-3">
                         <div className="bg-orange-50 p-4 rounded-2xl border border-orange-100">
                             <div className="flex items-center gap-2 mb-1 text-orange-600">
-                                <Flame size={16} /> <span className="text-xs font-bold">連續紀錄</span>
+                                <Flame size={16} /> <span className="text-xs font-bold">{t('taskDetail.streak')}</span>
                             </div>
-                            <p className="text-2xl font-black text-gray-800">{streak} <span className="text-xs font-medium text-gray-400">天</span></p>
+                            <p className="text-2xl font-black text-gray-800">{streak} <span className="text-xs font-medium text-gray-400">{t('taskDetail.daysUnit')}</span></p>
                         </div>
                         <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100">
                             <div className="flex items-center gap-2 mb-1 text-blue-600">
-                                <Trophy size={16} /> <span className="text-xs font-bold">累計完成</span>
+                                <Trophy size={16} /> <span className="text-xs font-bold">{t('taskDetail.totalCompletions')}</span>
                             </div>
-                            <p className="text-2xl font-black text-gray-800">{totalCompletions} <span className="text-xs font-medium text-gray-400">次</span></p>
+                            <p className="text-2xl font-black text-gray-800">{totalCompletions} <span className="text-xs font-medium text-gray-400">{t('taskDetail.timesUnit')}</span></p>
                         </div>
                     </div>
 
                     {/* Habit Tips (Static for now) */}
                     <div className="mt-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                        <h4 className="font-bold text-gray-800 text-sm mb-2">💡 養成小撇步</h4>
+                        <h4 className="font-bold text-gray-800 text-sm mb-2">{t('taskDetail.tipsTitle')}</h4>
                         <p className="text-xs text-gray-500 leading-relaxed">
-                            {task.science || '將這個習慣與你已經養成的習慣綁定在一起（例如：刷牙後就做...），可以大幅提升成功率喔！'}
+                            {task.science || t('taskDetail.tipsFallback')}
                         </p>
                     </div>
 

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Play, Pause, Music, Clock, Repeat, Shuffle, Minus, Plus } from 'lucide-react';
 import { resolveTracks, playableTracks } from '@/lib/musicTool';
+import { useT } from '@/lib/i18n';
 
 // Slice T sleep-music player.
 // Resolves a track list from `config`, auto-selects the first playable track
@@ -26,6 +27,7 @@ function formatRemaining(totalSeconds) {
 }
 
 export default function MusicTool({ config = {}, onComplete }) {
+    const { t } = useT();
     const tracks = useMemo(() => resolveTracks(config), [config]);
     const playable = useMemo(() => playableTracks(tracks), [tracks]);
 
@@ -166,7 +168,7 @@ export default function MusicTool({ config = {}, onComplete }) {
         return (
             <div className="rounded-2xl bg-slate-900 p-6 text-center text-slate-300">
                 <Music className="mx-auto mb-3 h-8 w-8 text-slate-500" aria-hidden="true" />
-                <p className="text-sm">這個分類的曲目即將推出</p>
+                <p className="text-sm">{t('music.categoryComingSoon')}</p>
             </div>
         );
     }
@@ -200,7 +202,7 @@ export default function MusicTool({ config = {}, onComplete }) {
                 <button
                     type="button"
                     onClick={handleToggle}
-                    aria-label={isPlaying ? '暫停' : '播放'}
+                    aria-label={isPlaying ? t('music.pause') : t('music.play')}
                     className="group flex h-14 w-14 items-center justify-center rounded-full bg-teal-500 text-white transition-all duration-200 hover:scale-105 hover:bg-teal-400 active:scale-95 motion-reduce:transition-none motion-reduce:hover:scale-100"
                 >
                     {isPlaying ? (
@@ -214,7 +216,7 @@ export default function MusicTool({ config = {}, onComplete }) {
                     <Clock className="h-4 w-4 text-slate-400" aria-hidden="true" />
                     <span
                         className="font-mono text-2xl tabular-nums"
-                        aria-label="剩餘時間"
+                        aria-label={t('music.remainingAria')}
                         data-testid="music-countdown"
                     >
                         {formatRemaining(remaining)}
@@ -236,7 +238,7 @@ export default function MusicTool({ config = {}, onComplete }) {
                         }`}
                     >
                         <Repeat className="h-3.5 w-3.5" aria-hidden="true" />
-                        循環
+                        {t('music.loop')}
                     </button>
                     <button
                         type="button"
@@ -249,7 +251,7 @@ export default function MusicTool({ config = {}, onComplete }) {
                         }`}
                     >
                         <Shuffle className="h-3.5 w-3.5" aria-hidden="true" />
-                        同類續播
+                        {t('music.similar')}
                     </button>
                 </div>
 
@@ -257,18 +259,18 @@ export default function MusicTool({ config = {}, onComplete }) {
                     <button
                         type="button"
                         onClick={() => adjustTimer(-5)}
-                        aria-label="減少時間"
+                        aria-label={t('music.decreaseTime')}
                         className="flex h-7 w-7 items-center justify-center rounded-full text-slate-300 transition-colors duration-150 hover:bg-slate-800 active:scale-95 motion-reduce:transition-none"
                     >
                         <Minus className="h-4 w-4" aria-hidden="true" />
                     </button>
                     <span className="min-w-[3.5rem] text-center text-xs tabular-nums text-slate-300">
-                        {sessionMin} 分鐘
+                        {t('music.minutes', { n: sessionMin })}
                     </span>
                     <button
                         type="button"
                         onClick={() => adjustTimer(5)}
-                        aria-label="增加時間"
+                        aria-label={t('music.increaseTime')}
                         className="flex h-7 w-7 items-center justify-center rounded-full text-slate-300 transition-colors duration-150 hover:bg-slate-800 active:scale-95 motion-reduce:transition-none"
                     >
                         <Plus className="h-4 w-4" aria-hidden="true" />
@@ -315,7 +317,7 @@ export default function MusicTool({ config = {}, onComplete }) {
                                 </span>
                                 {!isPlayable && (
                                     <span className="flex-shrink-0 rounded-full bg-slate-800 px-2 py-0.5 text-[11px] font-medium text-slate-500">
-                                        即將推出
+                                        {t('music.comingSoon')}
                                     </span>
                                 )}
                             </button>

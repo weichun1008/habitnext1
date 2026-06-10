@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { getTodayStr, toLocalDateStr } from '@/lib/utils';
+import { useT } from '@/lib/i18n';
 
 // WeekStrip — the Mon-Sun date selector shown on the daily view.
 //
@@ -20,9 +21,8 @@ import { getTodayStr, toLocalDateStr } from '@/lib/utils';
 //   className     — extra classes for the outer wrapper (e.g. border, padding)
 
 const SWIPE_THRESHOLD = 45;
-const WEEK_DAY_LABELS = ['一', '二', '三', '四', '五', '六', '日']; // Mon..Sun
 
-const computeWeek = (anchorDate) => {
+const computeWeek = (anchorDate, weekDayLabels) => {
     const jsDay = anchorDate.getDay();
     const mondayOffset = (jsDay + 6) % 7;
     const monday = new Date(anchorDate);
@@ -30,7 +30,7 @@ const computeWeek = (anchorDate) => {
     monday.setDate(anchorDate.getDate() - mondayOffset);
 
     const todayStr = getTodayStr();
-    return WEEK_DAY_LABELS.map((label, i) => {
+    return weekDayLabels.map((label, i) => {
         const d = new Date(monday);
         d.setDate(monday.getDate() + i);
         const dateStr = toLocalDateStr(d); // local, not UTC — see utils.toLocalDateStr
@@ -45,6 +45,9 @@ const computeWeek = (anchorDate) => {
 };
 
 const WeekStrip = ({ selectedDate, onSelectDate, className = '' }) => {
+    const { t } = useT();
+    const tWeekDays = t('header.weekDays'); // Mon..Sun，可能是 string[] 也可能是 fallback string
+    const weekDayLabels = Array.isArray(tWeekDays) ? tWeekDays : ['一', '二', '三', '四', '五', '六', '日'];
     const [weekAnchor, setWeekAnchor] = useState(() => {
         const seed = selectedDate ? new Date(selectedDate) : new Date();
         return isNaN(seed.getTime()) ? new Date() : seed;
@@ -56,12 +59,12 @@ const WeekStrip = ({ selectedDate, onSelectDate, className = '' }) => {
         if (!selectedDate) return;
         const d = new Date(selectedDate);
         if (isNaN(d.getTime())) return;
-        const cells = computeWeek(weekAnchor);
+        const cells = computeWeek(weekAnchor, weekDayLabels);
         const inRange = cells.some(c => c.dateStr === selectedDate);
         if (!inRange) setWeekAnchor(d);
     }, [selectedDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const weekCells = useMemo(() => computeWeek(weekAnchor), [weekAnchor]);
+    const weekCells = useMemo(() => computeWeek(weekAnchor, weekDayLabels), [weekAnchor, weekDayLabels]);
 
     const shiftWeek = (deltaDays) => {
         const d = new Date(weekAnchor);
@@ -115,7 +118,7 @@ const WeekStrip = ({ selectedDate, onSelectDate, className = '' }) => {
                 type="button"
                 onClick={() => shiftWeek(-7)}
                 className="hidden md:flex items-center justify-center w-7 h-7 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 flex-shrink-0 mr-1"
-                aria-label="上一週"
+                aria-label={t('dates.prevWeek')}
             >
                 ‹
             </button>
@@ -152,7 +155,7 @@ const WeekStrip = ({ selectedDate, onSelectDate, className = '' }) => {
                 type="button"
                 onClick={() => shiftWeek(7)}
                 className="hidden md:flex items-center justify-center w-7 h-7 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 flex-shrink-0 ml-1"
-                aria-label="下一週"
+                aria-label={t('dates.nextWeek')}
             >
                 ›
             </button>

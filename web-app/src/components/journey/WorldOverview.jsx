@@ -1,13 +1,6 @@
 'use client';
 
-const TIER_LABELS = {
-  empty: '空地',
-  village: '村莊',
-  town: '城鎮',
-  city: '都市',
-  metropolis: '大都會',
-  megacity: '巨型都會',
-};
+import { useT } from '@/lib/i18n';
 
 const CX = 180;
 const CY = 140;
@@ -30,6 +23,7 @@ function cityPosition(index, count) {
 }
 
 export default function WorldOverview({ cities, onSelectCity }) {
+  const { t } = useT();
   if (!cities || cities.length === 0) return null;
 
   return (
@@ -39,7 +33,7 @@ export default function WorldOverview({ cities, onSelectCity }) {
       height="auto"
       preserveAspectRatio="xMidYMid meet"
       role="img"
-      aria-label="旅程世界總覽"
+      aria-label={t('journey.overviewAria')}
     >
       <ellipse cx={CX} cy={CY} rx="172" ry="128" fill="#dff1ea" stroke="#bfe3d9" strokeWidth="2" />
 
@@ -80,7 +74,7 @@ export default function WorldOverview({ cities, onSelectCity }) {
               fill="#6b7280"
               fontSize="9"
             >
-              {TIER_LABELS[c.tier] || ''}
+              {c.tier ? t(`journey.tiers.${c.tier}`) : ''}
             </text>
           </g>
         );

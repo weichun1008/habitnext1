@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { describeTool } from '@/lib/tools';
 import { describeMusic } from '@/lib/musicTool';
+import { useT } from '@/lib/i18n';
 import BreathingTool from './BreathingTool';
 import TimerTool from './TimerTool';
 import MusicTool from './MusicTool';
@@ -15,6 +16,7 @@ const TOOL_COMPONENTS = {
 };
 
 export default function ToolModal({ task, onClose, onComplete }) {
+    const { t } = useT();
     const toolType = task?.toolType;
     const ToolComponent = toolType ? TOOL_COMPONENTS[toolType] : undefined;
 
@@ -31,7 +33,7 @@ export default function ToolModal({ task, onClose, onComplete }) {
 
     const config = task.toolConfig;
     const title =
-        toolType === 'music' ? describeMusic(config) : describeTool(toolType, config);
+        toolType === 'music' ? describeMusic(config, t) : describeTool(toolType, config, t);
 
     const handleComplete = () => {
         onComplete?.(task);
@@ -53,7 +55,7 @@ export default function ToolModal({ task, onClose, onComplete }) {
                     <button
                         type="button"
                         onClick={onClose}
-                        aria-label="關閉"
+                        aria-label={t('tools.close')}
                         className="tool-modal__close p-2 -mr-2 hover:bg-gray-100 rounded-full text-gray-500"
                     >
                         <X size={24} />

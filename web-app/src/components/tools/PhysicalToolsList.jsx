@@ -1,15 +1,17 @@
 'use client';
 
 import { Package, ExternalLink } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 export default function PhysicalToolsList({ items }) {
+    const { t } = useT();
     if (!items || items.length === 0) return null;
 
     return (
         <div className="physical-tools rounded-2xl border border-gray-100 bg-gray-50 p-4">
             <h3 className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
                 <Package size={16} className="text-emerald-500" />
-                建議工具
+                {t('tools.suggested')}
             </h3>
             <ul className="space-y-2">
                 {items.map((item, i) => (
