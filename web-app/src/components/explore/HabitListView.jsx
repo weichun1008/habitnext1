@@ -6,7 +6,7 @@ import IconRenderer from '../IconRenderer';
 import HabitInsightSection from '../insights/HabitInsightSection';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import { useT } from '@/lib/i18n';
-import { translateUnit } from '@/lib/i18n/dataLabels';
+import { translateUnit, localizedHabitField, translateDifficultyLabel } from '@/lib/i18n/dataLabels';
 
 // NOTE (2026-05-25, Slice K Task 11): the 「清單 ｜ 焦點地圖」view-mode
 // toggle was removed here. Spec v2 reframed the add-flow around the
@@ -82,7 +82,7 @@ export default function HabitListView({
   candidateAddedIds,
   pickingId,
 }) {
-  const { t } = useT();
+  const { t, locale } = useT();
   const [expandedId, setExpandedId] = useState(null);
 
   if (habits.length === 0) {
@@ -127,9 +127,9 @@ export default function HabitListView({
                   <IconRenderer category={iconKey} size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-gray-800">{habit.name}</h4>
+                  <h4 className="font-bold text-gray-800">{localizedHabitField(habit, 'name', locale)}</h4>
                   {habit.description && !isExpanded && (
-                    <p className="text-xs text-gray-400 line-clamp-1 mt-0.5">{habit.description}</p>
+                    <p className="text-xs text-gray-400 line-clamp-1 mt-0.5">{localizedHabitField(habit, 'description', locale)}</p>
                   )}
                 </div>
               </div>
@@ -145,7 +145,7 @@ export default function HabitListView({
             {isExpanded && (
               <div className="px-4 pb-4 border-t border-gray-100 pt-3 space-y-3">
                 {habit.description && (
-                  <p className="text-sm text-gray-600 leading-relaxed">{habit.description}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed">{localizedHabitField(habit, 'description', locale)}</p>
                 )}
 
                 <HabitInsightSection habitId={habit.id} />
@@ -170,7 +170,7 @@ export default function HabitListView({
                             color: diff.color === 'emerald' ? '#047857' : diff.color === 'amber' ? '#B45309' : '#B91C1C',
                           }}
                         >
-                          <span className="text-xs font-bold">{diffConfig?.label || t(diff.labelKey)}</span>
+                          <span className="text-xs font-bold">{diffConfig?.label ? translateDifficultyLabel(diffConfig.label, t) : t(diff.labelKey)}</span>
                           {summary && (
                             <span className="text-[10px] leading-tight opacity-90 text-center">{summary}</span>
                           )}

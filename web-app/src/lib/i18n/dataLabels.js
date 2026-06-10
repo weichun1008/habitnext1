@@ -85,3 +85,43 @@ export function translateUnit(unit, t) {
     const k = UNIT_KEY_BY_LABEL[unit];
     return k ? t(`data.units.${k}`) : unit;
 }
+
+// 官方習慣的 name/description 翻譯。
+// habit.translations = { en: { name, description }, ... }（OfficialHabit.translations）。
+// zh-TW（canonical）或缺翻譯時 fallback 回原欄位。
+export function localizedHabitField(habit, field, locale) {
+    if (!habit) return '';
+    if (locale && locale !== 'zh-TW') {
+        const tr = habit.translations?.[locale]?.[field];
+        if (tr) return tr;
+    }
+    return habit[field] || '';
+}
+
+// 任務顯示標題/描述：任務是加入時從官方習慣複製的快照（title/details）。
+// 若快照仍等於官方 canonical（使用者沒改過字），顯示翻譯版；
+// 使用者改過 → 尊重使用者的字，原樣顯示。
+export function localizedTaskField(task, field, locale) {
+    if (!task) return '';
+    const own = task[field] || '';
+    const habit = task.officialHabit;
+    if (!habit) return own;
+    const habitField = field === 'title' ? 'name' : 'description';
+    const canonical = habit[habitField] || '';
+    if (own !== canonical) return own;
+    return localizedHabitField(habit, habitField, locale) || own;
+}
+
+// difficulties.{key}.label 是 DB 內的中文標籤（入門/進階/挑戰）。
+// 標準三檔走 difficulty.* 字典；admin 自訂的非標準標籤原樣顯示。
+const DIFFICULTY_KEY_BY_LABEL = {
+    '入門': 'difficulty.beginner',
+    '進階': 'difficulty.intermediate',
+    '挑戰': 'difficulty.challenge',
+};
+
+export function translateDifficultyLabel(label, t) {
+    if (!label) return label;
+    const k = DIFFICULTY_KEY_BY_LABEL[label];
+    return k ? t(k) : label;
+}

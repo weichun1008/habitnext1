@@ -9,10 +9,10 @@ import { visibleSubtasks } from '@/lib/subtasks';
 import TaskActionMenu from './taskCard/TaskActionMenu';
 import LocationChip from './taskCard/LocationChip';
 import { useT } from '@/lib/i18n';
-import { translateCue, translateUnit } from '@/lib/i18n/dataLabels';
+import { translateCue, translateUnit, localizedTaskField } from '@/lib/i18n/dataLabels';
 
 const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate, onAfterAction, onPickLocation, onStartTool, onToggleStar }) => {
-    const { t } = useT();
+    const { t, locale } = useT();
     const [currentDate, setCurrentDate] = useState(initialDate || getTodayStr());
     // ⋮ overflow menu (編輯 / 暫停 / 隱藏 / 刪除) anchored top-right.
     const [menuOpen, setMenuOpen] = useState(false);
@@ -142,9 +142,9 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                         )}
                         <h2 className="text-2xl font-black text-gray-800 text-center mb-2 flex items-center justify-center gap-1.5">
                             {task.starred && <Star size={18} className="fill-amber-400 text-amber-400 flex-shrink-0" aria-label={t('taskCard.starred')} />}
-                            <span>{task.title}</span>
+                            <span>{localizedTaskField(task, 'title', locale)}</span>
                         </h2>
-                        <p className="text-gray-500 text-center text-sm px-4">{task.details || t('taskDetail.noDetailsFallback')}</p>
+                        <p className="text-gray-500 text-center text-sm px-4">{localizedTaskField(task, 'details', locale) || t('taskDetail.noDetailsFallback')}</p>
                     </div>
 
                     {/* Slice T — tool entry. When the task is backed by a virtual

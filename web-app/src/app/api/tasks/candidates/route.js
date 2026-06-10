@@ -16,7 +16,7 @@ export async function GET(request) {
         const candidates = await prisma.task.findMany({
             where: { userId, status: 'candidate' },
             include: {
-                officialHabit: { select: { id: true, name: true, impact: true, ability: true, icon: true } },
+                officialHabit: { select: { id: true, name: true, description: true, impact: true, ability: true, icon: true, translations: true } },
             },
             orderBy: { createdAt: 'asc' },
         });

@@ -34,7 +34,9 @@ export async function GET(request) {
                 },
                 // Slice T — carry the backing official habit's fiveT so the
                 // detail modal can surface its physical tools (toolPhysical).
-                officialHabit: { select: { fiveT: true, name: true, difficulties: true } },
+                // name/description/translations 供前端把「未改名的任務快照」顯示成
+                // 使用者語言（lib/i18n/dataLabels.js localizedTaskField）。
+                officialHabit: { select: { fiveT: true, name: true, description: true, difficulties: true, translations: true } },
             },
             orderBy: { createdAt: 'asc' }
         });

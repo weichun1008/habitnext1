@@ -16,13 +16,13 @@ import {
 } from '@/lib/utils';
 import { visibleSubtasks } from '@/lib/subtasks';
 import { useT } from '@/lib/i18n';
-import { translateCue, translateUnit } from '@/lib/i18n/dataLabels';
+import { translateCue, translateUnit, localizedTaskField } from '@/lib/i18n/dataLabels';
 
 // `viewingDate` (yyyy-mm-dd) lets the card render any day's state — used by
 // the daily view's interactive week strip. Defaults to today so existing
 // callers that don't pass it (other views) behave unchanged.
 const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAction, onPickLocation, onAttachPhoto, attachingKey, onStartTool, onToggleStar }) => {
-    const { t } = useT();
+    const { t, locale } = useT();
     const todayStr = getTodayStr();
     const dateStr = viewingDate || todayStr;
     const isFuture = isFutureDate(dateStr, todayStr);
@@ -235,7 +235,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             ) : task.starred && (
                                 <Star size={16} className="fill-amber-400 text-amber-400 flex-shrink-0" aria-label={t('taskCard.starred')} />
                             )}
-                            <span className="min-w-0">{task.title}</span>
+                            <span className="min-w-0">{localizedTaskField(task, 'title', locale)}</span>
                             {isDecrease && (
                                 <span
                                     className="flex-shrink-0 inline-flex items-center gap-0.5 text-[10px] font-black rounded-full px-1.5 py-0.5 border"
@@ -246,7 +246,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                             )}
                         </h3>
                         <p className="text-xs text-gray-400 line-clamp-1">
-                            {isPeriod ? (task.frequency === 'weekly' ? t('taskCard.weeklyGoal') : t('taskCard.monthlyGoal')) : (task.details || t('taskCard.noDetails'))}
+                            {isPeriod ? (task.frequency === 'weekly' ? t('taskCard.weeklyGoal') : t('taskCard.monthlyGoal')) : (localizedTaskField(task, 'details', locale) || t('taskCard.noDetails'))}
                         </p>
                         {/* Slice O/Q — 完成地點(LocationChip)與美食回憶(MemoryCapture)在前端隱藏：
                             這兩個功能尚未實作完成(照片上傳停用、定位為 opt-in)，不應在打勾完成時冒出。
