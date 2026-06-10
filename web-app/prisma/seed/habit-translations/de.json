@@ -1,0 +1,410 @@
+{
+    "每日攝取益生菌/發酵食物": {
+        "name": "Täglich Probiotika / fermentierte Lebensmittel",
+        "description": "Probiotika halten das Darmmikrobiom im Gleichgewicht; fermentierte Lebensmittel liefern lebende Kulturen und kurzkettige Fettsäuren für Immunsystem und Verdauung."
+    },
+    "觀察並記錄每日排便狀況": {
+        "name": "Täglichen Stuhlgang beobachten und dokumentieren",
+        "description": "Die Stuhlform (Bristol-Skala) ist ein unmittelbarer Indikator für die Darmgesundheit; kontinuierliches Protokollieren hilft, Auffälligkeiten früh zu erkennen."
+    },
+    "避免攝取過敏原食物": {
+        "name": "Allergene Lebensmittel meiden",
+        "description": "Individuelle Allergene (z. B. Gluten, Milchprodukte) können chronische Entzündungen auslösen; sie aktiv zu erkennen und zu meiden verbessert Darmgesundheit und Wohlbefinden."
+    },
+    "定期進行健康檢查": {
+        "name": "Regelmäßige Gesundheitschecks",
+        "description": "Vorbeugen ist besser als Heilen: Jährliche Untersuchungen erkennen Risikomarker für chronische Krankheiten, bevor Symptome auftreten."
+    },
+    "記錄家族病史風險": {
+        "name": "Familiäre Krankheitsrisiken dokumentieren",
+        "description": "Die Familienanamnese zeigt genetische Veranlagungen und hilft, Präventionsstrategien und Screening-Intervalle gezielt zu wählen."
+    },
+    "每天攝取足夠膳食纖維": {
+        "name": "Täglich ausreichend Ballaststoffe",
+        "description": "Ballaststoffe sind Nahrung für nützliche Darmbakterien; sie fördern regelmäßigen Stuhlgang, stabilisieren den Blutzucker und senken das Cholesterin."
+    },
+    "餐前喝一杯溫水": {
+        "name": "Ein Glas warmes Wasser vor dem Essen",
+        "description": "Wasser vor der Mahlzeit regt die Magensaftproduktion an, verlangsamt das Esstempo und hilft, die Portionsgröße zu kontrollieren und die Verdauung zu verbessern."
+    },
+    "避免不必要的抗生素使用": {
+        "name": "Unnötige Antibiotika vermeiden",
+        "description": "Übermäßiger Antibiotikaeinsatz schädigt das Darmmikrobiom; nimm Antibiotika nur auf ärztlichen Rat, um die mikrobielle Vielfalt zu schützen."
+    },
+    "練習腹式呼吸按摩腸道": {
+        "name": "Bauchatmung zur Darmmassage üben",
+        "description": "Die Zwerchfellatmung aktiviert Zwerchfell und innere Organe, stimuliert den Parasympathikus, fördert die Darmperistaltik und baut Stress ab."
+    },
+    "攝取富含益生元的食物 (洋蔥/蒜)": {
+        "name": "Präbiotikareiche Lebensmittel essen (Zwiebeln/Knoblauch)",
+        "description": "Präbiotika sind die Nahrungsquelle der Probiotika; Zwiebeln und Knoblauch sind reich an Oligosacchariden, die nützliche Darmbakterien nähren."
+    },
+    "每天早晨開窗通風": {
+        "name": "Jeden Morgen das Fenster zum Lüften öffnen",
+        "description": "Nachts angesammeltes CO2 und flüchtige Stoffe beeinträchtigen die Wachheit; morgendliches Lüften verbessert Luftqualität und geistige Frische."
+    },
+    "整理工作桌面保持清爽": {
+        "name": "Den Schreibtisch aufgeräumt halten",
+        "description": "Eine aufgeräumte Umgebung reduziert visuelle Ablenkung und kognitive Last und fördert Konzentration und Entscheidungsqualität."
+    },
+    "接觸大自然/戶外散步": {
+        "name": "Zeit in der Natur / Spaziergang im Freien",
+        "description": "Kontakt mit Grünflächen senkt das Cortisol und hebt die Stimmung – eine kostengünstige Gesundheitsintervention, auch als grünes Rezept bekannt."
+    },
+    "減少暴露於噪音環境": {
+        "name": "Lärmbelastung reduzieren",
+        "description": "Chronische Lärmbelastung erhöht den Blutdruck und schädigt das Gehör; aktiver Lärmschutz schützt Herz-Kreislauf-System und Hörvermögen."
+    },
+    "每週進行數位環境大掃除": {
+        "name": "Wöchentlicher digitaler Großputz",
+        "description": "Dateien aufräumen, Newsletter abbestellen und den Desktop ordnen reduziert digitale Ermüdung und Informationsstress."
+    },
+    "臥室保持完全黑暗 (助眠)": {
+        "name": "Schlafzimmer komplett abdunkeln (Schlafhilfe)",
+        "description": "Licht unterdrückt die Melatoninausschüttung; völlige Dunkelheit verkürzt die Einschlafzeit und vertieft den Schlaf."
+    },
+    "種植室內植物淨化空氣": {
+        "name": "Zimmerpflanzen zur Luftverbesserung",
+        "description": "Zimmerpflanzen nehmen einen Teil flüchtiger organischer Verbindungen auf, erhöhen die Luftfeuchtigkeit und wirken zugleich psychisch entspannend."
+    },
+    "調整符合人體工學的桌椅": {
+        "name": "Ergonomische Tisch- und Stuhleinstellung",
+        "description": "Die richtige Tisch- und Stuhlhöhe verringert kumulative Belastungen von Nacken, Schultern und Rücken – eine Grundinvestition für alle, die lange am Schreibtisch arbeiten."
+    },
+    "定期清理冰箱與儲藏室": {
+        "name": "Kühlschrank und Vorratskammer regelmäßig ausmisten",
+        "description": "Abgelaufene Lebensmittel zu entsorgen senkt das Risiko lebensmittelbedingter Erkrankungen; übersichtlich gelagerte Vorräte erleichtern gesunde Essensentscheidungen."
+    },
+    "減少使用一次性塑膠": {
+        "name": "Einwegplastik reduzieren",
+        "description": "Weniger Plastik verringert die Mikroplastikbelastung und schont die Umwelt; eigene Behälter mitzubringen ist der einfachste Einstieg."
+    },
+    "執行 168 間歇性斷食": {
+        "name": "16:8-Intervallfasten praktizieren",
+        "description": "16 Stunden ohne Nahrung senken den Insulinspiegel und aktivieren die zelluläre Autophagie – eine verbreitete und leicht umsetzbare Stoffwechselintervention."
+    },
+    "每餐攝取一個拳頭的蔬菜": {
+        "name": "Eine Faust Gemüse pro Mahlzeit",
+        "description": "Gemüse liefert Ballaststoffe, Vitamine und sekundäre Pflanzenstoffe; ausreichend Gemüse ist das Fundament einer ausgewogenen Ernährung."
+    },
+    "減少精緻糖與澱粉攝取": {
+        "name": "Weniger raffinierten Zucker und Stärke",
+        "description": "Raffinierter Zucker und Stärke verursachen starke Blutzuckerschwankungen; langfristiger Überkonsum erhöht das Risiko für das metabolische Syndrom."
+    },
+    "吃飯細嚼慢嚥 (每口20下)": {
+        "name": "Langsam essen und gründlich kauen (20-mal pro Bissen)",
+        "description": "Gründliches Kauen gibt den Sättigungssignalen Zeit anzukommen, hilft die Portionsgröße zu kontrollieren und verbessert Verdauung und Nährstoffaufnahme."
+    },
+    "維持血糖穩定 (先吃菜肉再吃飯)": {
+        "name": "Blutzucker stabil halten (erst Gemüse und Eiweiß, dann Reis)",
+        "description": "Die Reihenfolge des Essens beeinflusst die Blutzuckerreaktion nach der Mahlzeit; Gemüse und Eiweiß zuerst dämpfen die Blutzuckerspitze durch Stärke."
+    },
+    "每天喝足 2500cc 水": {
+        "name": "Täglich 2500 ml Wasser trinken",
+        "description": "Die Flüssigkeitszufuhr beeinflusst Stoffwechsel, Haut und Kognition; mehrere kleine Portionen über den Tag sind wirksamer als eine große Menge auf einmal."
+    },
+    "每週實行一日無肉日": {
+        "name": "Ein fleischfreier Tag pro Woche",
+        "description": "Ein Tag ohne tierisches Eiweiß reduziert gesättigte Fette und die Umweltbelastung und erhöht die pflanzliche Vielfalt."
+    },
+    "避免晚餐後進食 (消夜)": {
+        "name": "Nach dem Abendessen nichts mehr essen (kein Spätsnack)",
+        "description": "Essen kurz vor dem Schlafengehen beeinträchtigt Verdauung und Schlafqualität; abendliches Fasten fördert die Stoffwechselerholung und die Fettverbrennung."
+    },
+    "攝取優質 Omega-3 油脂": {
+        "name": "Hochwertige Omega-3-Fette aufnehmen",
+        "description": "Omega-3-Fettsäuren wirken entzündungshemmend für Herz-Kreislauf-System und Gehirn; gute Quellen sind Seefisch, Leinsamen und Walnüsse."
+    },
+    "閱讀食品營養標示": {
+        "name": "Nährwertangaben lesen",
+        "description": "Kalorien, Zucker, Natrium und die Reihenfolge der Zutaten zu verstehen ist der erste Schritt, um den Fallen verarbeiteter Lebensmittel zu entgehen."
+    },
+    "每餐都要有一份蛋白質": {
+        "name": "Eine Portion Protein zu jeder Mahlzeit",
+        "description": "Protein stabilisiert den Blutzucker, erhöht die Sättigung und erhält die Muskulatur. Ei, Tofu, Hähnchen oder Sojamilch zählen alle. 💡 Du fastest oder lässt eine Mahlzeit aus? Wähle eine niedrigere Stufe oder passe die Mahlzeiten nach dem Hinzufügen an."
+    },
+    "每餐前先喝一杯水": {
+        "name": "Vor jeder Mahlzeit ein Glas Wasser",
+        "description": "200–300 ml Wasser vor dem Essen dämpfen das Hungergefühl, verlangsamen das Esstempo und sichern die Flüssigkeitszufuhr. 💡 An Fastentagen genügt die niedrige Stufe – trinken solltest du trotzdem."
+    },
+    "飯後散步 15 分鐘 (穩定血糖)": {
+        "name": "15 Minuten Spaziergang nach dem Essen (Blutzucker stabilisieren)",
+        "description": "Leichte Bewegung nach dem Essen senkt die Blutzuckerspitze nach der Mahlzeit deutlich und hat großen Einfluss auf die Stoffwechselgesundheit."
+    },
+    "每天深蹲 30 下 (肌力)": {
+        "name": "Täglich 30 Kniebeugen (Kraft)",
+        "description": "Kniebeugen trainieren die großen Muskelgruppen der Beine und erhalten Grundumsatz und Mobilität – eine hocheffiziente Kraftübung für zu Hause."
+    },
+    "避免久坐超過 60 分鐘": {
+        "name": "Nicht länger als 60 Minuten am Stück sitzen",
+        "description": "Langes Sitzen verlangsamt den Stoffwechsel und erhöht das Herz-Kreislauf-Risiko; stündliches Aufstehen und Bewegen wirkt dem deutlich entgegen."
+    },
+    "每週進行 3 次有氧運動": {
+        "name": "Dreimal pro Woche Ausdauertraining",
+        "description": "Regelmäßiges Ausdauertraining stärkt Herz und Lunge und verbessert die Insulinsensitivität – das von der WHO empfohlene Mindestmaß an Bewegung."
+    },
+    "晨間脊椎伸展操": {
+        "name": "Morgendliche Wirbelsäulendehnung",
+        "description": "Kurzes Dehnen nach dem Aufstehen weckt das Nervensystem, verbessert die Beweglichkeit der Wirbelsäule und reduziert Steifheit über den Tag."
+    },
+    "走樓梯代替搭電梯": {
+        "name": "Treppe statt Aufzug",
+        "description": "Treppensteigen ist hocheffizienter alltagsbedingter Energieverbrauch (NEAT) und steigert die tägliche Aktivität fast nebenbei."
+    },
+    "進行 1 分鐘棒式 (Plank)": {
+        "name": "1 Minute Unterarmstütz (Plank)",
+        "description": "Der Plank trainiert die Rumpfstabilität, verbessert die Haltung, schützt den unteren Rücken und steigert die allgemeine sportliche Leistungsfähigkeit."
+    },
+    "睡前拉筋放鬆肌肉": {
+        "name": "Dehnen vor dem Schlafengehen",
+        "description": "Dehnen aktiviert den Parasympathikus und entspannt die Muskeln – das fördert die Schlafqualität und die Beweglichkeit am nächsten Tag."
+    },
+    "每天步行 8000 步": {
+        "name": "Täglich 8000 Schritte gehen",
+        "description": "Die Schrittzahl ist ein Gesamtindikator der Alltagsaktivität; Studien zeigen, dass bereits 7000–8000 Schritte pro Tag die Sterblichkeit deutlich senken."
+    },
+    "練習單腳站立 (平衡感)": {
+        "name": "Einbeinstand üben (Gleichgewicht)",
+        "description": "Der Einbeinstand trainiert Propriozeption und Rumpfstabilität – eine der einfachsten Übungen, um Stürzen und Alterungsfolgen vorzubeugen."
+    },
+    "睡前 1 小時不看手機 (藍光)": {
+        "name": "1 Stunde vor dem Schlafen kein Handy (Blaulicht)",
+        "description": "Blaues Bildschirmlicht unterdrückt die Melatoninausschüttung; das Handy abends wegzulegen beschleunigt das Einschlafen und vertieft den Schlaf."
+    },
+    "練習 4-7-8 呼吸法紓壓": {
+        "name": "4-7-8-Atemtechnik zum Stressabbau",
+        "description": "Die 4-7-8-Atmung stimuliert den Vagusnerv und aktiviert den Parasympathikus – das kann Angstgefühle innerhalb weniger Minuten senken."
+    },
+    "確保每天 7 小時優質睡眠": {
+        "name": "Täglich 7 Stunden guten Schlaf sichern",
+        "description": "Schlafdauer und -qualität beeinflussen Immunsystem, Kognition und Stimmung direkt; 7–9 Stunden sind der empfohlene Bereich für Erwachsene."
+    },
+    "建立固定的睡前儀式": {
+        "name": "Ein festes Abendritual etablieren",
+        "description": "Regelmäßige Abendroutinen senden dem Nervensystem das Signal, zur Ruhe zu kommen, und beschleunigen Einschlafen und Tiefschlaf."
+    },
+    "午後不再攝取咖啡因": {
+        "name": "Kein Koffein nach dem Mittag",
+        "description": "Koffein hat eine Halbwertszeit von etwa 5–6 Stunden; Konsum am Nachmittag stört das Einschlafen und den Tiefschlafanteil."
+    },
+    "泡熱水澡放鬆神經": {
+        "name": "Warmes Bad zur Entspannung",
+        "description": "Ein warmes Bad 1–2 Stunden vor dem Schlafengehen unterstützt das Absinken der Körperkerntemperatur, löst die Einschlafreaktion aus und entspannt die Muskeln."
+    },
+    "使用眼罩或耳塞助眠": {
+        "name": "Schlafmaske oder Ohrstöpsel verwenden",
+        "description": "Weniger Licht- und Geräuschstörungen halten den Schlafzyklus intakt – besonders hilfreich für Stadtbewohner und Menschen mit leichtem Schlaf."
+    },
+    "寫下煩惱清單 (清空大腦)": {
+        "name": "Sorgenliste aufschreiben (Kopf leeren)",
+        "description": "Sorgen vor dem Schlafen schriftlich zu externalisieren reduziert Grübeln und hilft dem Gehirn, vom Aufgabenmodus in den Ruhemodus zu wechseln."
+    },
+    "早上起床曬 10 分鐘太陽": {
+        "name": "Morgens 10 Minuten Sonnenlicht tanken",
+        "description": "Morgenlicht kalibriert die innere Uhr und fördert die Serotoninausschüttung – ein zentraler Anker für stabile Stimmung und guten Schlaf."
+    },
+    "午間小睡 20 分鐘 (Power Nap)": {
+        "name": "20 Minuten Mittagsschlaf (Power Nap)",
+        "description": "Ein Nickerchen unter 20 Minuten stellt die Wachheit wieder her, ohne den Nachtschlaf zu stören; über 30 Minuten droht Tiefschlaf und anschließende Müdigkeit."
+    },
+    "每天擁抱家人/伴侶": {
+        "name": "Familie oder Partner täglich umarmen",
+        "description": "Körperkontakt fördert die Oxytocinausschüttung und senkt Stresshormone – eine kostengünstige Form emotionaler Verbundenheit."
+    },
+    "每週與一位好友通話": {
+        "name": "Wöchentlich mit einem guten Freund telefonieren",
+        "description": "Enge Beziehungen gehören zu den verlässlichsten Gesundheitsprädiktoren der Langlebigkeitsforschung; pflege sie aktiv, statt passiv zu warten."
+    },
+    "練習傾聽不打斷": {
+        "name": "Zuhören, ohne zu unterbrechen",
+        "description": "Vollständiges Zuhören schafft Vertrauen und das Gefühl, verstanden zu werden – eine Kernkompetenz für enge Beziehungen und die Kommunikation im Beruf."
+    },
+    "主動表達感謝與愛": {
+        "name": "Dankbarkeit und Liebe aktiv ausdrücken",
+        "description": "Positive Gefühle klar auszusprechen nützt beiden Seiten einer Beziehung – mehrere psychologische Studien belegen die Steigerung des Wohlbefindens."
+    },
+    "參與社群活動減少孤獨感": {
+        "name": "An Gemeinschaftsaktivitäten teilnehmen gegen Einsamkeit",
+        "description": "Einsamkeit schadet der Gesundheit ähnlich stark wie Rauchen; regelmäßiger sozialer Austausch ist eine wirksame Präventionsstrategie."
+    },
+    "安排與伴侶的約會時光": {
+        "name": "Date-Zeit mit dem Partner einplanen",
+        "description": "Bewusst geschaffene, hochwertige gemeinsame Zeit erhält die Nähe – wichtiger als die Häufigkeit ist die Qualität."
+    },
+    "每天讚美一個人": {
+        "name": "Täglich einer Person ein Kompliment machen",
+        "description": "Konkretes Lob fördert positive zwischenmenschliche Kreisläufe und trainiert den eigenen Blick für die Stärken anderer."
+    },
+    "寫張卡片給重要的人": {
+        "name": "Eine Karte an einen wichtigen Menschen schreiben",
+        "description": "Handgeschriebene Botschaften transportieren weit mehr emotionale Tiefe als Sofortnachrichten – eine hochwirksame Investition in Beziehungen."
+    },
+    "練習換位思考": {
+        "name": "Perspektivwechsel üben",
+        "description": "Ereignisse aktiv aus der Sicht anderer zu betrachten reduziert Konflikte und stärkt die Empathie."
+    },
+    "與家人共進晚餐且不滑手機": {
+        "name": "Abendessen mit der Familie ohne Handy",
+        "description": "Gemeinsames Essen mit ungeteilter Aufmerksamkeit stärkt den Familienzusammenhalt; Studien zeigen einen positiven Zusammenhang mit der psychischen Gesundheit von Kindern und Jugendlichen."
+    },
+    "每日正念冥想 10 分鐘": {
+        "name": "Täglich 10 Minuten Achtsamkeitsmeditation",
+        "description": "Regelmäßige Meditation kann die Gehirnstruktur verändern, die Reaktivität der Amygdala senken und die Emotionsregulation verbessern."
+    },
+    "寫下感恩日記 (三件事)": {
+        "name": "Dankbarkeitstagebuch führen (drei Dinge)",
+        "description": "Täglich drei Dinge zu notieren, für die du dankbar bist, trainiert das Gehirn auf positive Signale und steigert das subjektive Wohlbefinden deutlich."
+    },
+    "定義個人核心價值觀": {
+        "name": "Persönliche Kernwerte definieren",
+        "description": "Klar definierte eigene Werte dienen als Entscheidungskompass und verringern Orientierungslosigkeit und Entscheidungsangst."
+    },
+    "練習自我慈悲與對話": {
+        "name": "Selbstmitgefühl und inneren Dialog üben",
+        "description": "Mit dir selbst so freundlich umzugehen wie mit einem guten Freund ist eine Kernkompetenz, um Selbstkritik und Depressionsrisiko zu senken."
+    },
+    "尋找生活中的意義感 (Ikigai)": {
+        "name": "Sinn im Leben finden (Ikigai)",
+        "description": "Sinnempfinden verbindet tägliches Handeln mit langfristigen Zielen – ein gemeinsames psychologisches Merkmal der langlebigen Blue Zones."
+    },
+    "閱讀心靈成長書籍": {
+        "name": "Bücher zur persönlichen Entwicklung lesen",
+        "description": "Psychologische und philosophische Lektüre liefert Denkrahmen und hilft, Gefühle und Lebensthemen zu ordnen."
+    },
+    "進行十分鐘的靜默練習": {
+        "name": "Zehn Minuten Stille üben",
+        "description": "Bewusst eingeplante reizfreie Ruhezeit lässt das Nervensystem sich von Überstimulation erholen."
+    },
+    "練習寬恕與放下": {
+        "name": "Vergeben und Loslassen üben",
+        "description": "Anhaltender Groll schadet Körper und Psyche; Vergebung heißt nicht, dem anderen recht zu geben, sondern dich selbst zu befreien."
+    },
+    "每天對著鏡子自我肯定": {
+        "name": "Tägliche Selbstbestärkung vor dem Spiegel",
+        "description": "Studien zeigen, dass Selbstaffirmationen in bestimmten Situationen helfen; bei geringem Selbstwertgefühl können sie jedoch das Gegenteil bewirken. Als Übung zur Selbstwahrnehmung geeignet – die Wirkung ist individuell verschieden."
+    },
+    "參與藝術創作或欣賞": {
+        "name": "Kunst schaffen oder genießen",
+        "description": "Kontakt mit Kunst fördert Kreativität und emotionalen Ausdruck und kann zudem das Stresshormon Cortisol senken."
+    },
+    "每天閱讀非虛構書籍 15 分鐘": {
+        "name": "Täglich 15 Minuten Sachbücher lesen",
+        "description": "Kontinuierliches Sachbuchlesen ist eine Gewohnheit mit großer Hebelwirkung, um fachübergreifendes Wissen aufzubauen – strukturierter als Informationshäppchen."
+    },
+    "學習一項新技能或語言": {
+        "name": "Eine neue Fähigkeit oder Sprache lernen",
+        "description": "Kontinuierliches Lernen baut kognitive Reserven auf, senkt das Demenzrisiko und erweitert die beruflichen Optionen."
+    },
+    "玩益智遊戲活化大腦": {
+        "name": "Denkspiele zur Gehirnaktivierung",
+        "description": "Schach, Sudoku und andere Denkspiele trainieren exekutive Funktionen und das Arbeitsgedächtnis – ein niedrigschwelliger Weg, geistig fit zu bleiben."
+    },
+    "進行深度工作 (Deep Work)": {
+        "name": "Konzentriertes Arbeiten (Deep Work)",
+        "description": "Störungsfreie Phasen hoher Konzentration sind der Schlüssel zu wertvollen Ergebnissen – sie werden immer seltener und damit immer wettbewerbsentscheidender."
+    },
+    "寫作或輸出今日所學": {
+        "name": "Heutiges Gelerntes aufschreiben oder weitergeben",
+        "description": "Wissen auszudrücken zwingt dazu, es zu strukturieren und zu überprüfen – der Kernschritt der Feynman-Lernmethode."
+    },
+    "收聽知識型 Podcast": {
+        "name": "Wissens-Podcasts hören",
+        "description": "Pendel- und Hausarbeitszeit lässt sich mit Wissens-Audios in ein kontinuierliches Lernfenster verwandeln."
+    },
+    "每天學習一個新單字": {
+        "name": "Täglich ein neues Wort lernen",
+        "description": "Der Wortschatz ist die Grundlage präzisen Denkens; ein Wort pro Tag summiert sich in einem Jahr auf mehrere Hundert neue Begriffe."
+    },
+    "觀看一場 TED Talk": {
+        "name": "Einen TED Talk ansehen",
+        "description": "TED liefert verdichtete Perspektiven und neues Wissen – ein hocheffizienter Zugang zu fachübergreifendem Denken."
+    },
+    "練習批判性思考": {
+        "name": "Kritisches Denken üben",
+        "description": "Quellen aktiv zu hinterfragen und logische Fehlschlüsse zu erkennen ist die unverzichtbare Selbstverteidigung im Zeitalter der Informationsflut."
+    },
+    "參加線上課程或講座": {
+        "name": "An Online-Kursen oder Vorträgen teilnehmen",
+        "description": "Strukturierte Kurse bieten einen geführten Lernpfad und bauen leichter ein vollständiges Wissenssystem auf als verstreutes Selbststudium."
+    },
+    "設定每日最重要的三件事": {
+        "name": "Die drei wichtigsten Aufgaben des Tages festlegen",
+        "description": "Der Fokus auf drei MITs (Most Important Tasks) verhindert, dass Kleinkram dich aufreibt, und lenkt die Aufmerksamkeit auf Ziele mit großer Hebelwirkung."
+    },
+    "劃分清晰的工作/生活界線": {
+        "name": "Klare Grenzen zwischen Arbeit und Privatleben ziehen",
+        "description": "Klare zeitliche oder räumliche Grenzen verhindern, dass die Arbeit ins Privatleben vordringt – die Grundlage der Burnout-Prävention."
+    },
+    "定期檢視職涯成就感": {
+        "name": "Berufliche Erfüllung regelmäßig überprüfen",
+        "description": "Die eigene Karriererichtung periodisch zu reflektieren verhindert das Verharren in Gewohnheitsbahnen; frühes Nachjustieren ist effizienter als späte Korrektur."
+    },
+    "優化工作流程提升效率": {
+        "name": "Arbeitsabläufe optimieren und Effizienz steigern",
+        "description": "Wiederkehrende, zeitraubende Schritte zu erkennen und zu automatisieren oder zu vereinfachen ist der Schlüssel zu mehr Output in derselben Zeit."
+    },
+    "尋找工作中的心流體驗": {
+        "name": "Flow-Erlebnisse in der Arbeit suchen",
+        "description": "Flow entsteht am leichtesten, wenn Herausforderung und Fähigkeiten zueinander passen – eine Quelle von Sinn und langfristiger Motivation im Beruf."
+    },
+    "整理收件匣 (Inbox Zero)": {
+        "name": "Posteingang aufräumen (Inbox Zero)",
+        "description": "Ein leerer Posteingang senkt Informationsstress; behandle E-Mails als Auslöser für Aufgaben, nicht als Ablageort."
+    },
+    "番茄鐘工作法": {
+        "name": "Pomodoro-Technik",
+        "description": "Der Zyklus aus 25 Minuten Konzentration und 5 Minuten Pause hält die Qualität der Arbeit hoch und verhindert Erschöpfung durch zu lange Sitzungen."
+    },
+    "拒絕不必要的會議": {
+        "name": "Unnötige Meetings ablehnen",
+        "description": "Meetings sind Zeitfresser; die Notwendigkeit der eigenen Teilnahme aktiv zu prüfen setzt viel Zeit für konzentriertes Arbeiten frei."
+    },
+    "每週回顧工作進度": {
+        "name": "Wöchentlicher Rückblick auf den Arbeitsfortschritt",
+        "description": "Der Wochenrückblick macht Abweichungen und Fortschritte sichtbar – eine Schlüsselpraxis, um auf Kurs zu bleiben und das Tempo anzupassen."
+    },
+    "建立個人品牌": {
+        "name": "Eine persönliche Marke aufbauen",
+        "description": "Kontinuierlich Fachinhalte zu veröffentlichen baut persönliches Vertrauenskapital auf und wird beim Jobwechsel oder bei der Gründung zum Hebel."
+    },
+    "睡前做 2 分鐘深呼吸（4-7-8）": {
+        "name": "2 Minuten tiefes Atmen vor dem Schlafen (4-7-8)",
+        "description": "Die 4-7-8-Atmung senkt die Aktivität des Sympathikus, entspannt die Muskeln und erleichtert das Einschlafen. Schon 2–3 Zyklen wirken entspannend."
+    },
+    "第一餐吃完後吃保健品": {
+        "name": "Nahrungsergänzungsmittel nach der ersten Mahlzeit",
+        "description": "Mit einer Mahlzeit eingenommen werden Supplemente besser aufgenommen, und der Mageninhalt puffert Beschwerden ab. Ein fester Anker hilft gegen das Vergessen."
+    },
+    "起床後喝兩大口水": {
+        "name": "Nach dem Aufstehen zwei große Schlucke Wasser trinken",
+        "description": "Nach dem nächtlichen Stoffwechsel ist der Körper leicht dehydriert; morgendliches Trinken aktiviert den Stoffwechsel und reduziert morgendliche Kopfschmerzen."
+    },
+    "上完廁所後伸展 10 分鐘": {
+        "name": "Nach dem Toilettengang 10 Minuten dehnen",
+        "description": "Der Toilettengang ist ein natürlicher Aufsteh-Anker. Nutze diesen Auslöser, um Dehnzeit zu sammeln und langem Sitzen vorzubeugen."
+    },
+    "空腹吃益生菌": {
+        "name": "Probiotika auf nüchternen Magen",
+        "description": "Auf nüchternen Magen ist die Magensäure vorübergehend niedriger, sodass mehr Probiotika den Weg durch den Magen in den Darm lebend überstehen."
+    },
+    "睡前補充鎂": {
+        "name": "Magnesium vor dem Schlafengehen",
+        "description": "Magnesium unterstützt die Muskelentspannung und stabilisiert die Nerven; abends eingenommen verbessert es das Einschlafen. Am besten zeitlich getrennt von Kalzium und Milchprodukten."
+    },
+    "飯後補充薑黃和葉酸鐵": {
+        "name": "Kurkuma sowie Folsäure und Eisen nach dem Essen",
+        "description": "Kurkuma wird mit Fett besser aufgenommen; Folsäure und Eisen solltest du nicht auf nüchternen Magen einnehmen, um Magenbeschwerden zu vermeiden."
+    },
+    "想吃甜食先吃堅果等 10 分鐘": {
+        "name": "Bei Süßhunger erst Nüsse essen und 10 Minuten warten",
+        "description": "Das Verlangen nach Süßem entsteht meist durch schnelle Blutzuckerschwankungen. Nüsse verlangsamen die Aufnahme – nach 10 Minuten lässt der Heißhunger oft von selbst nach."
+    },
+    "把含糖飲料換成白開水或無糖飲品": {
+        "name": "Zuckerhaltige Getränke durch Wasser oder ungesüßte Getränke ersetzen",
+        "description": "Zuckerhaltige Getränke lassen den Blutzucker schnell ansteigen, ohne zu sättigen. Der Wechsel zu ungesüßten Alternativen ist der einfachste Schritt zu weniger Zucker."
+    },
+    "找一個 5 分鐘什麼都不做的時間": {
+        "name": "5 Minuten am Tag bewusst nichts tun",
+        "description": "Eine kurze Pause lässt das Nervensystem vom Daueraktivierungsmodus in den parasympathischen Modus wechseln – ein täglicher emotionaler Puffer."
+    }
+}
