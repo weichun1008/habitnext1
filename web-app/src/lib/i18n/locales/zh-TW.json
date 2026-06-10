@@ -82,5 +82,58 @@
             "updateFailed": "更新失敗",
             "networkError": "網路錯誤，請稍後再試"
         }
+    },
+    "data": {
+        "timeOfDay": {
+            "morning": "早晨",
+            "noon": "中午",
+            "evening": "晚上",
+            "work": "工作",
+            "commute": "通勤",
+            "any": "任意時刻"
+        },
+        "anchors": {
+            "wake_up": "起床後",
+            "first_water": "喝完第一杯水後",
+            "after_brushing": "刷完牙後",
+            "after_washing": "洗完臉後",
+            "after_breakfast": "吃完早餐後",
+            "leaving_home": "出門前",
+            "arrive_work": "到辦公室／工作場所後",
+            "before_lunch": "午餐前",
+            "after_lunch": "午餐後",
+            "midday_break": "午間休息時",
+            "leaving_work": "下班離開工作場所後",
+            "arrive_home": "回家進門後",
+            "before_dinner": "晚餐前",
+            "after_dinner": "晚餐後",
+            "after_shower": "洗完澡後",
+            "before_bed": "上床睡覺前",
+            "bedtime": "睡前躺上床後",
+            "lights_off": "關燈前",
+            "before_work": "開電腦／開始工作前",
+            "first_unlock": "手機第一次解鎖時",
+            "coffee_tea": "泡咖啡／泡茶時",
+            "after_meeting": "結束一個會議後",
+            "task_done": "完成一項任務後",
+            "stand_break": "站起來伸展時",
+            "commute": "通勤路上",
+            "waiting_transport": "等公車／捷運時",
+            "red_light": "等紅綠燈時",
+            "waiting": "排隊／等候時",
+            "before_social": "打開社群媒體前",
+            "feel_stressed": "感到壓力時"
+        },
+        "domains": {
+            "genesGut": "基因與腸道",
+            "environment": "環境",
+            "diet": "飲食",
+            "exercise": "運動",
+            "stressSleep": "壓力與睡眠",
+            "social": "社交互動",
+            "mind": "心靈",
+            "cognition": "認知與智慧",
+            "career": "職涯與平衡"
+        }
     }
 }
