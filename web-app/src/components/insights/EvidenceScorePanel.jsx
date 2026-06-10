@@ -25,7 +25,7 @@ export default function EvidenceScorePanel({ evidence }) {
       <div className="space-y-1.5">
         {DIMENSIONS.map((dim) => {
           const d = dimDisplay(dim.key, evidence[dim.key]);
-          const t = TONE_CLASSES[d.tone];
+          const tc = TONE_CLASSES[d.tone];
           return (
             <div key={dim.key} className="flex items-center justify-between gap-2">
               <span className="text-[11.5px] text-gray-600">{t(dim.labelKey)}</span>
@@ -36,7 +36,7 @@ export default function EvidenceScorePanel({ evidence }) {
                     <span
                       key={i}
                       style={{ width: 3, height: h, borderRadius: 1, display: 'block' }}
-                      className={i < d.filled ? t.bar : t.track}
+                      className={i < d.filled ? tc.bar : tc.track}
                     />
                   ))}
                 </span>
