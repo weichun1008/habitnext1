@@ -43,23 +43,25 @@ function playableTracks(list = []) {
   return list.filter((t) => t && t.audioUrl);
 }
 
-function describeMusic(config = {}) {
+// t（選用）為呼叫端 useT() 的翻譯函式 — 不傳則維持 zh-TW canonical 字串。
+// 曲名（track.title）為專有名詞，不翻譯。
+function describeMusic(config = {}, t) {
   const { problemId, categoryId, trackId, timerMin } = config;
   const parts = [];
 
   if (problemId) {
     const problem = PROBLEMS.find((p) => p.id === problemId);
-    if (problem) parts.push(problem.title);
+    if (problem) parts.push(t && problem.titleKey ? t(problem.titleKey) : problem.title);
   } else if (categoryId) {
     const category = CATEGORIES.find((c) => c.id === categoryId);
-    if (category) parts.push(category.title);
+    if (category) parts.push(t && category.titleKey ? t(category.titleKey) : category.title);
   } else if (trackId) {
-    const track = TRACKS.find((t) => t.id === trackId);
+    const track = TRACKS.find((tr) => tr.id === trackId);
     if (track) parts.push(track.title);
   }
 
   if (timerMin != null) {
-    parts.push(`${timerMin} 分鐘`);
+    parts.push(t ? t('music.minutes', { n: timerMin }) : `${timerMin} 分鐘`);
   }
 
   return parts.join('・');

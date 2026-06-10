@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Trash2, Info, ChevronDown, ChevronUp, Lock } from 'lucide-react';
 import TaskCard from './TaskCard';
+import { useT } from '@/lib/i18n';
 
 const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTaskDelete, onUpdate }) => {
+    const { t } = useT();
     const [isExpanded, setIsExpanded] = useState(true);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -27,15 +29,15 @@ const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTas
                         onClick={() => setIsExpanded(!isExpanded)}
                     >
                         <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xs">
-                            計畫
+                            {t('planGroup.plan')}
                         </div>
                         <div>
                             <h3 className="font-bold text-gray-800 text-sm flex items-center gap-2">
-                                {assignment.template?.name || '專屬計畫'}
+                                {assignment.template?.name || t('planGroup.defaultPlanName')}
                                 {isExpertAssigned && <Lock size={12} className="text-emerald-500" />}
                             </h3>
                             <p className="text-xs text-gray-500">
-                                由 {assignment.expertName || assignment.expert?.name || '專家'} 建立
+                                {t('planGroup.createdBy', { name: assignment.expertName || assignment.expert?.name || t('planGroup.expertFallback') })}
                             </p>
                         </div>
                     </div>
@@ -44,7 +46,7 @@ const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTas
                         {assignment.template?.description && (
                             <button
                                 className="p-2 text-gray-400 hover:text-emerald-500 transition-colors"
-                                title="計畫說明"
+                                title={t('planGroup.planDescription')}
                                 onClick={() => alert(assignment.template.description)}
                             >
                                 <Info size={18} />
@@ -74,7 +76,7 @@ const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTas
                             // Group tasks by phase
                             const phases = {};
                             tasks.forEach(task => {
-                                const phaseName = task.metadata?.phaseName || '一般任務';
+                                const phaseName = task.metadata?.phaseName || t('planGroup.generalTasks');
                                 if (!phases[phaseName]) {
                                     phases[phaseName] = {
                                         name: phaseName,
@@ -106,10 +108,10 @@ const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTas
                                                 </div>
                                                 <span className="text-xs font-bold text-gray-700">{phase.name}</span>
                                                 {phase.days && (
-                                                    <span className="text-[10px] text-gray-400">({phase.days}天)</span>
+                                                    <span className="text-[10px] text-gray-400">{t('planGroup.phaseDays', { n: phase.days })}</span>
                                                 )}
                                                 {isFuture && (
-                                                    <span className="text-[10px] text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded">尚未開始</span>
+                                                    <span className="text-[10px] text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded">{t('planGroup.notStarted')}</span>
                                                 )}
                                             </div>
                                         )}
@@ -135,17 +137,17 @@ const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTas
                 <div className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
                         <h3 className="text-lg font-bold text-gray-800 mb-2">
-                            {isExpertAssigned ? '確認刪除專家計畫？' : '確認刪除計畫？'}
+                            {isExpertAssigned ? t('planGroup.confirmDeleteExpertTitle') : t('planGroup.confirmDeleteTitle')}
                         </h3>
 
                         {isExpertAssigned ? (
                             <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm mb-6 leading-relaxed">
-                                <p className="font-bold mb-2">⚠️ 警告</p>
-                                這是由專家幫你建立的清單，刪除前請先和你的專家充分討論。如果還沒進行討論直接刪除，資料將無法復原。
+                                <p className="font-bold mb-2">{t('planGroup.warning')}</p>
+                                {t('planGroup.expertDeleteWarning')}
                             </div>
                         ) : (
                             <p className="text-gray-500 mb-6 text-sm">
-                                刪除計畫後，其中包含的所有任務也將一併被刪除且無法復原。
+                                {t('planGroup.deleteWarning')}
                             </p>
                         )}
 
@@ -154,13 +156,13 @@ const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTas
                                 onClick={() => setShowDeleteConfirm(false)}
                                 className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
                             >
-                                取消
+                                {t('common.cancel')}
                             </button>
                             <button
                                 onClick={confirmDelete}
                                 className="flex-1 py-3 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 transition-colors"
                             >
-                                {isExpertAssigned ? '仍要刪除' : '確認刪除'}
+                                {isExpertAssigned ? t('planGroup.deleteAnyway') : t('planGroup.confirmDeleteButton')}
                             </button>
                         </div>
                     </div>

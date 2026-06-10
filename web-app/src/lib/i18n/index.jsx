@@ -73,10 +73,19 @@ function interpolate(value, vars) {
     return value.replace(/\{(\w+)\}/g, (m, k) => (vars[k] !== undefined ? String(vars[k]) : m));
 }
 
+// Provider 外的 fallback t — 直接解析 zh-TW 字典（含插值）。
+// 讓單元測試（沒包 LocaleProvider）與任何 provider 外的元件
+// 顯示預設語言文字，而不是 raw key。
+function defaultT(key, vars) {
+    const v = getByPath(DICT[DEFAULT_LOCALE], key);
+    if (v !== undefined) return typeof v === 'string' ? interpolate(v, vars) : v;
+    return key;
+}
+
 const LocaleContext = createContext({
     locale: DEFAULT_LOCALE,
     setLocale: () => {},
-    t: (key) => key,
+    t: defaultT,
 });
 
 export function LocaleProvider({ children }) {

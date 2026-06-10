@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { BookOpen, ChevronDown, ChevronUp, ExternalLink, Loader } from 'lucide-react';
 import EvidenceBadge from './EvidenceBadge';
 import EvidenceScorePanel from './EvidenceScorePanel';
+import { useT } from '@/lib/i18n';
 
 // HabitInsightSection — Slice N user-facing surface for "為什麼這個習慣重要".
 //
@@ -22,14 +23,17 @@ import EvidenceScorePanel from './EvidenceScorePanel';
 
 const ReactMarkdown = dynamic(() => import('react-markdown'), {
     ssr: false,
-    loading: () => <span className="text-xs text-gray-400">載入中…</span>,
+    loading: function MarkdownLoading() {
+        const { t } = useT();
+        return <span className="text-xs text-gray-400">{t('insights.loading')}</span>;
+    },
 });
 
-function sourceTypeLabel(type) {
+function sourceTypeLabel(type, t) {
     if (type === 'pubmed') return 'PubMed';
-    if (type === 'journal') return '期刊';
-    if (type === 'book') return '書籍';
-    return '來源';
+    if (type === 'journal') return t('insights.sourceType.journal');
+    if (type === 'book') return t('insights.sourceType.book');
+    return t('insights.sourceType.source');
 }
 
 // Single insight card. Layered disclosure:
@@ -41,6 +45,7 @@ function sourceTypeLabel(type) {
 // — once the user has chosen to "expand" they want to see where this
 // claim comes from. Putting sources behind layer 3 would feel buried.
 function InsightCard({ insight }) {
+    const { t } = useT();
     const [expanded, setExpanded] = useState(false);
     const [detailOpen, setDetailOpen] = useState(false);
     const [scoreOpen, setScoreOpen] = useState(false);
@@ -79,14 +84,14 @@ function InsightCard({ insight }) {
                                     hasTakeaway ? 'text-emerald-900 font-medium' : 'text-gray-800 font-bold'
                                 }`}
                             >
-                                {hasTakeaway ? `「${headline}」` : headline}
+                                {hasTakeaway ? t('insights.takeawayQuote', { text: headline }) : headline}
                             </p>
                         </button>
                     </div>
                     <button
                         type="button"
                         onClick={() => setExpanded(v => !v)}
-                        aria-label={expanded ? '收合' : '展開'}
+                        aria-label={expanded ? t('insights.collapse') : t('insights.expand')}
                         className="text-gray-400 flex-shrink-0 mt-0.5"
                     >
                         {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -124,7 +129,7 @@ function InsightCard({ insight }) {
                         className="text-xs font-medium text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
                     >
                         {detailOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                        {detailOpen ? '收起研究細節' : '看研究細節'}
+                        {detailOpen ? t('insights.hideDetail') : t('insights.showDetail')}
                     </button>
                     {detailOpen && (
                         <div className="prose prose-sm max-w-none text-gray-700 prose-headings:text-gray-800 prose-strong:text-gray-900 prose-strong:font-bold prose-li:my-0.5 prose-p:my-2 prose-ul:my-2 leading-relaxed text-xs">
@@ -147,11 +152,11 @@ function InsightCard({ insight }) {
                                                 rel="noopener noreferrer"
                                                 className="text-emerald-700 hover:underline inline-flex items-center gap-0.5 break-all"
                                             >
-                                                {s.label || sourceTypeLabel(s.type)}
+                                                {s.label || sourceTypeLabel(s.type, t)}
                                                 <ExternalLink size={10} className="flex-shrink-0" />
                                             </a>
                                         ) : (
-                                            <span>{s.label || sourceTypeLabel(s.type)}</span>
+                                            <span>{s.label || sourceTypeLabel(s.type, t)}</span>
                                         )}
                                     </span>
                                 </div>
@@ -179,6 +184,7 @@ function InsightCard({ insight }) {
 }
 
 export default function HabitInsightSection({ habitId, className = '' }) {
+    const { t } = useT();
     const [insights, setInsights] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -219,7 +225,7 @@ export default function HabitInsightSection({ habitId, className = '' }) {
         return (
             <div className={`py-3 flex items-center gap-2 text-xs text-gray-400 ${className}`}>
                 <Loader size={12} className="animate-spin" />
-                載入科學佐證…
+                {t('insights.loadingEvidence')}
             </div>
         );
     }
@@ -228,12 +234,12 @@ export default function HabitInsightSection({ habitId, className = '' }) {
     return (
         <section
             className={`space-y-2 ${className}`}
-            aria-label="科學佐證"
+            aria-label={t('insights.sectionAria')}
             data-testid="habit-insight-section"
         >
             <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
                 <BookOpen size={12} className="text-emerald-500" />
-                為什麼這個習慣重要
+                {t('insights.whyImportant')}
                 {insights.length > 1 && (
                     <span className="text-gray-400 normal-case font-medium">· {insights.length}</span>
                 )}

@@ -3,6 +3,7 @@
 import React from 'react';
 import CalendarTaskChip from './CalendarTaskChip';
 import { isTaskDueToday } from '@/lib/utils';
+import { useT } from '@/lib/i18n';
 
 // Generate time slots from 6:00 to 23:00
 const TIME_SLOTS = Array.from({ length: 18 }, (_, i) => {
@@ -13,9 +14,14 @@ const TIME_SLOTS = Array.from({ length: 18 }, (_, i) => {
     };
 });
 
-const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
-
 const WeekView = ({ currentDate, tasks, todayStr, onUpdate, onTaskClick }) => {
+    const { t } = useT();
+    // header.weekDays 是 Mon..Sun；本檔以週日為第 0 天，所以用 (i+6)%7 轉索引。
+    const tWeekDays = t('header.weekDays');
+    const WEEKDAYS = Array.isArray(tWeekDays)
+        ? Array.from({ length: 7 }, (_, i) => tWeekDays[(i + 6) % 7])
+        : ['日', '一', '二', '三', '四', '五', '六'];
+
     // Calculate week days (Sunday to Saturday)
     const getWeekDays = () => {
         const startOfWeek = new Date(currentDate);
@@ -98,7 +104,7 @@ const WeekView = ({ currentDate, tasks, todayStr, onUpdate, onTaskClick }) => {
             {/* All-day Section */}
             <div className="grid grid-cols-[44px_repeat(7,minmax(0,1fr))] border-b border-gray-200">
                 <div className="p-2 text-xs font-medium text-gray-400 bg-gray-50 flex items-center justify-center">
-                    全日
+                    {t('calendar.allDay')}
                 </div>
                 {weekDays.map(({ dateStr }) => {
                     const { allDay } = separateTasksByTime(getTasksForDate(dateStr));
@@ -121,7 +127,7 @@ const WeekView = ({ currentDate, tasks, todayStr, onUpdate, onTaskClick }) => {
                                 ))}
                                 {allDay.length > 3 && (
                                     <div className="text-xs text-gray-400 text-center">
-                                        +{allDay.length - 3} 更多
+                                        {t('calendar.moreCount', { n: allDay.length - 3 })}
                                     </div>
                                 )}
                             </div>

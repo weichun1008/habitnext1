@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { MoreVertical } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 // TaskHoverDots — desktop-only (hidden via `md:block`).
 // A kebab (⋮) rendered inline in the card's top-right cluster, to the LEFT of
@@ -21,6 +22,7 @@ import { MoreVertical } from 'lucide-react';
 // Props:
 //   children: the popover body (TaskActionMenu variant='popover')
 const TaskHoverDots = ({ children }) => {
+    const { t } = useT();
     const [open, setOpen] = useState(false);
     const [coords, setCoords] = useState(null); // { top, right } in viewport px
     const wrapperRef = useRef(null);
@@ -63,7 +65,7 @@ const TaskHoverDots = ({ children }) => {
                 className={`w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:scale-105 transition-all ${
                     open ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                 }`}
-                aria-label="任務選項"
+                aria-label={t('taskCard.taskOptions')}
             >
                 <MoreVertical size={18} />
             </button>

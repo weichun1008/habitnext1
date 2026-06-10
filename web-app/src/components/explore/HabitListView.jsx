@@ -5,6 +5,8 @@ import { Plus, ChevronDown, ChevronUp, Check, X, ChevronRight, Loader } from 'lu
 import IconRenderer from '../IconRenderer';
 import HabitInsightSection from '../insights/HabitInsightSection';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
+import { useT } from '@/lib/i18n';
+import { translateUnit } from '@/lib/i18n/dataLabels';
 
 // NOTE (2026-05-25, Slice K Task 11): the 「清單 ｜ 焦點地圖」view-mode
 // toggle was removed here. Spec v2 reframed the add-flow around the
@@ -14,9 +16,9 @@ import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 // HabitListView toggle was wrong-placed for v2's UX.
 
 const DIFFICULTY_OPTIONS = [
-  { key: 'beginner',     label: '入門', color: 'emerald' },
-  { key: 'intermediate', label: '進階', color: 'amber' },
-  { key: 'challenge',    label: '挑戰', color: 'red' },
+  { key: 'beginner',     labelKey: 'difficulty.beginner',     color: 'emerald' },
+  { key: 'intermediate', labelKey: 'difficulty.intermediate', color: 'amber' },
+  { key: 'challenge',    labelKey: 'difficulty.challenge',    color: 'red' },
 ];
 
 function getDefaultDifficulty(habit) {
@@ -32,35 +34,35 @@ function getEnabledDifficulties(habit) {
   return DIFFICULTY_OPTIONS.filter(d => diffs[d.key]?.enabled);
 }
 
-function summarizeCadence(r) {
+function summarizeCadence(r, t) {
   if (!r) return '';
   if (r.type === 'daily') {
-    return r.periodTarget > 1 ? `每日 ${r.periodTarget} 次` : '每日';
+    return r.periodTarget > 1 ? t('explore.cadence.dailyTimes', { n: r.periodTarget }) : t('explore.cadence.daily');
   }
   if (r.type === 'weekly') {
     const days = r.weekDays || [];
-    if (days.length === 3 && [1, 3, 5].every(d => days.includes(d))) return '週 3 (一三五)';
-    if (days.length === 5 && [1, 2, 3, 4, 5].every(d => days.includes(d))) return '週 5 (週間)';
-    if (days.length === 7) return '每日';
+    if (days.length === 3 && [1, 3, 5].every(d => days.includes(d))) return t('explore.cadence.weekly135');
+    if (days.length === 5 && [1, 2, 3, 4, 5].every(d => days.includes(d))) return t('explore.cadence.weekly5Weekdays');
+    if (days.length === 7) return t('explore.cadence.daily');
     const n = r.periodTarget || days.length || 1;
-    return `每週 ${n} 次`;
+    return t('explore.cadence.weeklyTimes', { n });
   }
   if (r.type === 'monthly') {
     const i = r.interval || 1;
-    if (i === 12) return '每年';
-    if (i === 6) return '每半年';
-    if (i === 3) return '每季';
-    if (i === 1) return '每月';
-    return `每 ${i} 個月`;
+    if (i === 12) return t('explore.cadence.yearly');
+    if (i === 6) return t('explore.cadence.halfYearly');
+    if (i === 3) return t('explore.cadence.quarterly');
+    if (i === 1) return t('explore.cadence.monthly');
+    return t('explore.cadence.everyNMonths', { n: i });
   }
   return '';
 }
 
-function summarizeDifficulty(config) {
+function summarizeDifficulty(config, t) {
   if (!config) return '';
-  const cadence = summarizeCadence(config.recurrence);
+  const cadence = summarizeCadence(config.recurrence, t);
   if (config.type === 'quantitative') {
-    return `${config.dailyTarget}${config.unit || ''} · ${cadence}`;
+    return `${config.dailyTarget}${translateUnit(config.unit, t) || ''} · ${cadence}`;
   }
   return cadence;
 }
@@ -80,12 +82,13 @@ export default function HabitListView({
   candidateAddedIds,
   pickingId,
 }) {
+  const { t } = useT();
   const [expandedId, setExpandedId] = useState(null);
 
   if (habits.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500">
-        {emptyText || '這個面向目前還沒有推薦習慣'}
+        {emptyText || t('explore.noRecommendedHabits')}
       </div>
     );
   }
@@ -148,12 +151,12 @@ export default function HabitListView({
                 <HabitInsightSection habitId={habit.id} />
 
                 <div>
-                  <p className="text-xs text-gray-500 mb-2">選擇難度：</p>
+                  <p className="text-xs text-gray-500 mb-2">{t('explore.chooseDifficulty')}</p>
                   <div className="grid grid-cols-3 gap-2">
                     {enabledDiffs.map(diff => {
                       const isSelected = currentDiff === diff.key;
                       const diffConfig = habit.difficulties[diff.key];
-                      const summary = summarizeDifficulty(diffConfig);
+                      const summary = summarizeDifficulty(diffConfig, t);
                       return (
                         <button
                           key={diff.key}
@@ -167,7 +170,7 @@ export default function HabitListView({
                             color: diff.color === 'emerald' ? '#047857' : diff.color === 'amber' ? '#B45309' : '#B91C1C',
                           }}
                         >
-                          <span className="text-xs font-bold">{diffConfig?.label || diff.label}</span>
+                          <span className="text-xs font-bold">{diffConfig?.label || t(diff.labelKey)}</span>
                           {summary && (
                             <span className="text-[10px] leading-tight opacity-90 text-center">{summary}</span>
                           )}
@@ -187,11 +190,11 @@ export default function HabitListView({
                           type="button"
                           onClick={() => onRemoveCandidate?.(habit)}
                           disabled={picking}
-                          aria-label="取消候選"
+                          aria-label={t('explore.cancelCandidate')}
                           className="group flex items-center justify-center gap-1 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-100 text-emerald-700 hover:bg-rose-50 hover:text-rose-600"
                         >
-                          <span className="flex items-center gap-1 group-hover:hidden"><Check size={15} /> 已加入候選</span>
-                          <span className="hidden items-center gap-1 group-hover:flex"><X size={15} /> 取消候選</span>
+                          <span className="flex items-center gap-1 group-hover:hidden"><Check size={15} /> {t('explore.addedCandidate')}</span>
+                          <span className="hidden items-center gap-1 group-hover:flex"><X size={15} /> {t('explore.cancelCandidate')}</span>
                         </button>
                       ) : (
                         <button
@@ -200,7 +203,7 @@ export default function HabitListView({
                           disabled={picking}
                           className="flex items-center justify-center gap-1 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:cursor-not-allowed bg-white border border-gray-200 text-gray-700 hover:border-emerald-300 hover:bg-emerald-50"
                         >
-                          <Plus size={15} /> 加入候選
+                          <Plus size={15} /> {t('explore.addCandidate')}
                         </button>
                       )}
                       <button
@@ -209,7 +212,7 @@ export default function HabitListView({
                         disabled={picking || addedAsCandidate}
                         className="flex items-center justify-center gap-1 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-500 text-white hover:bg-emerald-600"
                       >
-                        {picking ? <Loader size={15} className="animate-spin" /> : <>直接加入 <ChevronRight size={15} /></>}
+                        {picking ? <Loader size={15} className="animate-spin" /> : <>{t('explore.addDirectly')} <ChevronRight size={15} /></>}
                       </button>
                     </div>
                   );
@@ -218,7 +221,7 @@ export default function HabitListView({
                     onClick={() => onSelectHabit(habit, currentDiff)}
                     className="w-full flex items-center justify-center gap-1 text-sm text-white bg-emerald-500 px-3 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-colors"
                   >
-                    <Plus size={16} /> 加入此習慣
+                    <Plus size={16} /> {t('explore.addThisHabit')}
                   </button>
                 )}
               </div>

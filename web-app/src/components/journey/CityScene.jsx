@@ -1,4 +1,7 @@
+'use client';
+
 import { layoutCity, VIEW_W, VIEW_H, CX, CY } from '@/lib/journeyWorld';
+import { useT } from '@/lib/i18n';
 import DomainLandmark, { LANDMARKS } from '@/components/journey/landmarks/DomainLandmark';
 import GenericBuilding from '@/components/journey/landmarks/GenericBuilding';
 import MemoryPin from '@/components/journey/landmarks/MemoryPin';
@@ -9,6 +12,7 @@ import PolaroidPin from '@/components/journey/landmarks/PolaroidPin';
 const RIVER_TIERS = new Set(['city', 'metropolis', 'megacity']);
 
 export default function CityScene({ cityData, userId }) {
+  const { t } = useT();
   const nodes = layoutCity(cityData);
   const sorted = [...nodes].sort((a, b) => a.y - b.y);
 
@@ -30,7 +34,7 @@ export default function CityScene({ cityData, userId }) {
       height="auto"
       preserveAspectRatio="xMidYMid meet"
       role="img"
-      aria-label={`${cityData.city} 的城市`}
+      aria-label={t('journey.cityAria', { city: cityData.city })}
     >
       <defs>
         <radialGradient id="cityscene-sky" cx="50%" cy="30%" r="80%">

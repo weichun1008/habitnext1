@@ -1,8 +1,10 @@
 'use client';
 
 import { MapPin, Sparkles } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 function EmptyPlotSvg() {
+  const { t } = useT();
   return (
     <svg
       viewBox="0 0 320 200"
@@ -10,7 +12,7 @@ function EmptyPlotSvg() {
       height="auto"
       preserveAspectRatio="xMidYMid meet"
       role="img"
-      aria-label="一塊正在等待長出建築的空地"
+      aria-label={t('journey.empty.plotAria')}
     >
       <ellipse cx="160" cy="120" rx="148" ry="68" fill="#cfe8bf" stroke="#a9d49a" strokeWidth="2" />
 
@@ -37,12 +39,11 @@ function EmptyPlotSvg() {
 }
 
 export default function JourneyEmptyState({ trackLocationOn, onOpenSettings }) {
+  const { t } = useT();
   const isOff = trackLocationOn === false;
 
-  const heading = isOff ? '開始建造屬於你的城市' : '你的城市正在等待';
-  const body = isOff
-    ? '打開「記錄完成地點」，每完成一個習慣，這座城市就會長出一點。'
-    : '完成第一個有記錄地點的習慣，這裡就會長出你的第一棟建築。';
+  const heading = isOff ? t('journey.empty.startBuilding') : t('journey.empty.waiting');
+  const body = isOff ? t('journey.empty.bodyOff') : t('journey.empty.bodyOn');
 
   return (
     <div className="flex flex-col items-center text-center px-6 py-10">
@@ -66,14 +67,14 @@ export default function JourneyEmptyState({ trackLocationOn, onOpenSettings }) {
           className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#0d9488] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-teal-700"
         >
           <MapPin size={16} aria-hidden="true" />
-          前往設定開啟
+          {t('journey.empty.goSettings')}
         </button>
       )}
 
       {!isOff && (
         <p className="mt-4 inline-flex items-center gap-1.5 text-xs text-[#6b7280]">
           <MapPin size={14} aria-hidden="true" />
-          已開啟記錄完成地點
+          {t('journey.empty.trackingOn')}
         </p>
       )}
     </div>

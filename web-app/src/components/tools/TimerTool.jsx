@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause, RotateCcw } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 const BREAK_SECONDS = 300;
 const RING_SIZE = 220;
@@ -30,6 +31,7 @@ function usePrefersReducedMotion() {
 }
 
 export default function TimerTool({ config, onComplete }) {
+  const { t } = useT();
   const { seconds = 0, mode = 'count', rounds = 1 } = config || {};
   const breakSeconds = config?.breakSeconds ?? BREAK_SECONDS;
   const reducedMotion = usePrefersReducedMotion();
@@ -117,7 +119,7 @@ export default function TimerTool({ config, onComplete }) {
       ? CIRCUMFERENCE * (1 - remaining / phaseTotal)
       : CIRCUMFERENCE;
 
-  const phaseLabel = phase === 'break' ? '休息' : '專注';
+  const phaseLabel = phase === 'break' ? t('tools.timer.break') : t('tools.timer.focus');
 
   return (
     <div
@@ -150,7 +152,7 @@ export default function TimerTool({ config, onComplete }) {
             {phaseLabel}
           </span>
           <span style={{ color: '#6B7280' }}>
-            第 {round} / {rounds} 輪
+            {t('tools.cycle', { current: round, total: rounds })}
           </span>
         </div>
       )}
@@ -160,7 +162,7 @@ export default function TimerTool({ config, onComplete }) {
           width={RING_SIZE}
           height={RING_SIZE}
           viewBox={`0 0 ${RING_SIZE} ${RING_SIZE}`}
-          aria-label="計時環"
+          aria-label={t('tools.timer.ringAria')}
           style={{ transform: 'rotate(-90deg)' }}
         >
           <circle
@@ -211,7 +213,7 @@ export default function TimerTool({ config, onComplete }) {
           type="button"
           onClick={toggle}
           disabled={finished}
-          aria-label={running ? '暫停' : '開始'}
+          aria-label={running ? t('tools.pause') : t('tools.start')}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -240,13 +242,13 @@ export default function TimerTool({ config, onComplete }) {
           }}
         >
           {running ? <Pause size={18} /> : <Play size={18} />}
-          {running ? '暫停' : '開始'}
+          {running ? t('tools.pause') : t('tools.start')}
         </button>
 
         <button
           type="button"
           onClick={reset}
-          aria-label="重設"
+          aria-label={t('tools.reset')}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -273,7 +275,7 @@ export default function TimerTool({ config, onComplete }) {
           }}
         >
           <RotateCcw size={18} />
-          重設
+          {t('tools.reset')}
         </button>
       </div>
     </div>

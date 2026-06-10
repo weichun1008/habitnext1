@@ -245,8 +245,8 @@ const ProfileModal = ({ isOpen, onClose, user, onUpdate, onLogout }) => {
                                                         ? 'ring-2 ring-indigo-500 ring-offset-2 scale-105'
                                                         : 'ring-1 ring-gray-200 hover:ring-indigo-300 hover:scale-105'
                                                 }`}
-                                                title={def.label}
-                                                aria-label={def.label}
+                                                title={t(`avatars.${def.id}`)}
+                                                aria-label={t(`avatars.${def.id}`)}
                                                 aria-pressed={isSelected}
                                             >
                                                 <def.Component />

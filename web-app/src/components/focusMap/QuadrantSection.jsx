@@ -3,6 +3,7 @@
 import React from 'react';
 import * as Icons from 'lucide-react';
 import { QUADRANTS } from '@/lib/focusMap';
+import { useT } from '@/lib/i18n';
 
 // QuadrantSection — 一個象限卡：圖示 + 白話名稱 + 說明 + 習慣加入切換清單。
 // Props:
@@ -11,6 +12,7 @@ import { QUADRANTS } from '@/lib/focusMap';
 //   addedSet: Set<id>（已加入）
 //   onToggle(id): 切換加入
 const QuadrantSection = ({ quadrantKey, items, addedSet, onToggle }) => {
+  const { t } = useT();
   if (!items || items.length === 0) return null;
   const meta = QUADRANTS[quadrantKey];
   const Icon = Icons[meta.iconKey] || Icons.Circle;
@@ -23,8 +25,8 @@ const QuadrantSection = ({ quadrantKey, items, addedSet, onToggle }) => {
           <Icon size={15} style={{ color: meta.color }} />
         </span>
         <div className="min-w-0">
-          <b className="text-[13.5px]" style={{ color: meta.color }}>{meta.label}</b>
-          <p className="text-[10px] text-gray-500 leading-snug">{meta.advice}</p>
+          <b className="text-[13.5px]" style={{ color: meta.color }}>{t(meta.labelKey)}</b>
+          <p className="text-[10px] text-gray-500 leading-snug">{t(meta.adviceKey)}</p>
         </div>
         <span className="ml-auto text-[11px] font-bold text-gray-400">{items.length}</span>
       </div>
@@ -41,7 +43,7 @@ const QuadrantSection = ({ quadrantKey, items, addedSet, onToggle }) => {
                 on ? 'bg-emerald-500 text-white border-emerald-500'
                    : isSkip ? 'bg-white text-gray-400 border-gray-200 hover:border-gray-300'
                             : 'bg-white text-emerald-600 border-emerald-200 hover:border-emerald-400'}`}>
-              {on ? <><Icons.Check size={12} /> 已加入</> : isSkip ? <><Icons.Plus size={12} /> 仍要加入</> : <><Icons.Plus size={12} /> 加入</>}
+              {on ? <><Icons.Check size={12} /> {t('focusMap.added')}</> : isSkip ? <><Icons.Plus size={12} /> {t('focusMap.addAnyway')}</> : <><Icons.Plus size={12} /> {t('focusMap.add')}</>}
             </button>
           </div>
         );

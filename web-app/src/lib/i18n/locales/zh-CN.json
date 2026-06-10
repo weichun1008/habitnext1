@@ -7,7 +7,15 @@
         "logout": "退出登录"
     },
     "header": {
-        "weekDays": ["一", "二", "三", "四", "五", "六", "日"],
+        "weekDays": [
+            "一",
+            "二",
+            "三",
+            "四",
+            "五",
+            "六",
+            "日"
+        ],
         "openProfile": "打开个人资料",
         "guest": "访客",
         "worldAria": "世界",
@@ -81,6 +89,928 @@
             "passwordMismatch": "新密码与确认密码不一致",
             "updateFailed": "更新失败",
             "networkError": "网络错误，请稍后再试"
+        }
+    },
+    "data": {
+        "timeOfDay": {
+            "morning": "早晨",
+            "noon": "中午",
+            "evening": "晚上",
+            "work": "工作",
+            "commute": "通勤",
+            "any": "任意时刻"
+        },
+        "anchors": {
+            "wake_up": "起床后",
+            "first_water": "喝完第一杯水后",
+            "after_brushing": "刷完牙后",
+            "after_washing": "洗完脸后",
+            "after_breakfast": "吃完早餐后",
+            "leaving_home": "出门前",
+            "arrive_work": "到办公室／工作场所后",
+            "before_lunch": "午餐前",
+            "after_lunch": "午餐后",
+            "midday_break": "午间休息时",
+            "leaving_work": "下班离开工作场所后",
+            "arrive_home": "回家进门后",
+            "before_dinner": "晚餐前",
+            "after_dinner": "晚餐后",
+            "after_shower": "洗完澡后",
+            "before_bed": "上床睡觉前",
+            "bedtime": "睡前躺上床后",
+            "lights_off": "关灯前",
+            "before_work": "开电脑／开始工作前",
+            "first_unlock": "手机第一次解锁时",
+            "coffee_tea": "泡咖啡／泡茶时",
+            "after_meeting": "结束一个会议后",
+            "task_done": "完成一项任务后",
+            "stand_break": "站起来伸展时",
+            "commute": "通勤路上",
+            "waiting_transport": "等公交／地铁时",
+            "red_light": "等红绿灯时",
+            "waiting": "排队／等候时",
+            "before_social": "打开社交媒体前",
+            "feel_stressed": "感到压力时"
+        },
+        "domains": {
+            "genesGut": "基因与肠道",
+            "environment": "环境",
+            "diet": "饮食",
+            "exercise": "运动",
+            "stressSleep": "压力与睡眠",
+            "social": "社交互动",
+            "mind": "心灵",
+            "cognition": "认知与智慧",
+            "career": "职业与平衡"
+        },
+        "units": {
+            "second": "秒",
+            "minute": "分钟",
+            "hour": "小时",
+            "time": "次",
+            "set": "组",
+            "rep": "下",
+            "step": "步",
+            "page": "页",
+            "item": "个",
+            "pill": "颗",
+            "cup": "杯",
+            "bowl": "碗",
+            "serving": "份",
+            "gram": "克",
+            "kg": "公斤",
+            "cc": "毫升",
+            "ml": "毫升",
+            "liter": "升",
+            "km": "公里",
+            "meter": "米",
+            "day": "天"
+        }
+    },
+    "daily": {
+        "loading": "加载中...",
+        "navToday": "今日",
+        "navBadges": "成就",
+        "defaultUser": "用户",
+        "startFromAspiration": "从向往开始",
+        "explorePlans": "探索计划",
+        "exploreHabits": "探索习惯",
+        "createHabit": "创建习惯",
+        "menstrualMode": "生理期模式",
+        "menstrualActive": "生理期模式进行中",
+        "menstrualExpired": "生理期模式（超过 5 天）",
+        "menstrualEnd": "结束生理期",
+        "menstrualStart": "我正在生理期",
+        "miniCourseEyebrow": "为你准备的小课程",
+        "miniCourseTitle": "{label}小课程",
+        "miniCourseDesc": "根据你的问卷结果量身定制",
+        "viewMiniCourse": "查看小课程 →",
+        "sleepRxEyebrow": "为你准备的睡眠处方",
+        "sleepRxTitle": "{label}睡眠处方",
+        "sleepRxDesc": "14 天循序渐进，从 baby step 开始建立睡眠节奏",
+        "viewSleepRx": "查看睡眠处方 →",
+        "candidateBannerCount": "你有 {n} 个候选习惯",
+        "focusMapTitle": "开始焦点地图，挑出黄金行为",
+        "focusMapHint": "建议先挑 3 个最值得做的开始",
+        "clearCandidatesAria": "全部舍弃候选",
+        "confirmClearCandidates": "确定要舍弃全部 {n} 个候选习惯？这些习惯会被归档，可从历史中恢复。",
+        "startRating": "开始评分 →",
+        "previewing": "正在预览",
+        "backToToday": "回到今天",
+        "todaySchedule": "今日日程",
+        "tomorrowSchedule": "明日日程",
+        "yesterdaySchedule": "昨日日程",
+        "dateSchedule": "{m}/{d} 日程",
+        "schedule": "日程",
+        "starredSection": "已加星标",
+        "forAspiration": "为了「{text}」",
+        "otherHabits": "其他习惯",
+        "saveAsPlan": "存为计划",
+        "completedCount": "已完成 {n} 个",
+        "emptyToday": "今日无固定日程。",
+        "emptyOtherDay": "这天没有安排任务。",
+        "periodGoals": "周期目标（弹性）",
+        "badgesDesc": "持续完成任务，解锁更多徽章！",
+        "completedToast": "完成「{title}」",
+        "undo": "撤销",
+        "avatarAria": "{label} 头像",
+        "defaultAvatarAria": "默认头像"
+    },
+    "manage": {
+        "title": "计划总览",
+        "emptyTitle": "还没有习惯",
+        "emptyDesc": "开始创建你的第一个习惯，或者探索专家计划",
+        "confirmDeleteTask": "确定要删除此任务吗？",
+        "lockedTitle": "专属健康计划",
+        "lockedByPrefix": "此任务由 ",
+        "lockedBySuffix": " 专为您设计",
+        "advisorFallback": "您的健康顾问",
+        "lockedBody": "为确保健康计划的完整性与效果，此任务的内容暂时无法修改。这是根据您的健康目标量身定制的习惯，请持续执行以达到最佳效果！",
+        "lockedContact": "如有疑问，请联系您的专属顾问",
+        "lockedConfirm": "我知道了，继续执行 💪"
+    },
+    "dashboard": {
+        "todayScore": "今日健康分数",
+        "scoreUnit": "分",
+        "weeklyGoal": "本周目标",
+        "achievedOf": "/ {n} 达成",
+        "streak": "连续记录",
+        "days": "天",
+        "keepGoing": "保持下去！",
+        "insightsTitle": "健康洞察报告",
+        "weeklyTrend": "本周完成率趋势",
+        "coachTitle": "💡 健康教练点评",
+        "coachQuote1": "「你这周在 ",
+        "coachWater": "饮水",
+        "coachQuote2": " 方面表现非常稳定，连续三天达标！不过 ",
+        "coachSleep": "睡眠",
+        "coachQuote3": " 时间似乎有些不规律。建议今晚试着设置一个 10:30 的『睡前仪式』提醒，这能帮助你提升 20% 的深度睡眠质量哦。」"
+    },
+    "calendar": {
+        "title": "日历",
+        "yearMonth": "{year} 年 {month} 月",
+        "weekRange": "{year} 年 {month} 月 {start} - {end} 日",
+        "today": "今天",
+        "week": "周",
+        "month": "月",
+        "allDay": "全天",
+        "moreCount": "+{n} 更多"
+    },
+    "worldPicker": {
+        "title": "选择你的世界",
+        "subtitle": "每天完成的习惯，会在你选定的世界里慢慢长出成果。没有对错，随时可以换。",
+        "current": "当前所在",
+        "comingSoon": "即将推出",
+        "enterWorld": "进入{name}世界",
+        "selected": "已选定",
+        "chooseAsMyWorld": "选为我的世界",
+        "soonNote": "画面即将推出，先选定后完成的习惯会记到这个世界"
+    },
+    "errors": {
+        "unknown": "未知错误",
+        "saveFailed": "保存失败: {error}",
+        "createFailed": "创建失败: {error}",
+        "saveNetworkError": "保存失败，请检查网络连接",
+        "addFailed": "添加失败，请再试一次",
+        "addCandidateFailed": "添加候选失败，请再试一次",
+        "removeCandidateFailed": "取消候选失败，请再试一次",
+        "starUpdateFailed": "星标更新失败，请再试一次",
+        "deleteFailed": "删除失败",
+        "boundaryTitle": "发生错误",
+        "boundaryMessage": "很抱歉，应用程序发生了意外错误。",
+        "reload": "刷新页面"
+    },
+    "dates": {
+        "prevWeek": "上一周",
+        "nextWeek": "下一周",
+        "nthWeekdayOfMonth": "每月第 {n} 个星期{day}",
+        "lastWeekdayOfMonth": "每月最后一个星期{day}"
+    },
+    "difficulty": {
+        "beginner": "入门",
+        "intermediate": "进阶",
+        "challenge": "挑战"
+    },
+    "avatars": {
+        "sunrise": "日出",
+        "bloom": "花苞",
+        "wave": "海浪",
+        "sprout": "新芽",
+        "crystal": "晶石",
+        "star": "繁星",
+        "citrus": "柑橘",
+        "moon": "月夜",
+        "heart": "心动",
+        "mountain": "山林",
+        "cloud": "云朵",
+        "berry": "莓果"
+    },
+    "library": {
+        "chooseHabit": "选择习惯",
+        "chooseAnchor": "选择锚点",
+        "searchResults": "搜索结果",
+        "searchInDomain": "在「{name}」内搜索…",
+        "searchHabits": "搜索习惯…",
+        "searchQuery": "搜索「{query}」",
+        "recommendedHabits": "推荐习惯",
+        "noMatchingHabits": "没有符合的习惯",
+        "pickDomain": "选择一个健康维度",
+        "fromAspiration": "从向往开始",
+        "fromAspirationHint": "不知从何下手？从你想成为的样子出发，我们帮你配习惯",
+        "createCustomTask": "手动创建新任务",
+        "selectDifficultyFirst": "请先选择难度",
+        "aboutToAdd": "准备添加：",
+        "difficultyLabel": "难度：{level}",
+        "pickAnchorHint": "挑一个锚点（你习惯在什么时候做）",
+        "skipAnchor": "跳过锚点，直接添加",
+        "addWithAnchor": "添加（锚点：{anchor}）",
+        "pickAnchorFirst": "请先选一个锚点",
+        "addedToast": "已添加：{name}",
+        "savedThisSession": "已添加 {n} 个习惯到每日追踪",
+        "done": "完成 →"
+    },
+    "explore": {
+        "noRecommendedHabits": "这个维度目前还没有推荐习惯",
+        "chooseDifficulty": "选择难度：",
+        "addThisHabit": "添加此习惯",
+        "addDirectly": "直接添加",
+        "addCandidate": "加入候选",
+        "addedCandidate": "已加入候选",
+        "cancelCandidate": "取消候选",
+        "add": "添加",
+        "cadence": {
+            "daily": "每日",
+            "dailyTimes": "每日 {n} 次",
+            "weekly135": "每周 3 次（一三五）",
+            "weekly5Weekdays": "每周 5 次（工作日）",
+            "weeklyTimes": "每周 {n} 次",
+            "yearly": "每年",
+            "halfYearly": "每半年",
+            "quarterly": "每季度",
+            "monthly": "每月",
+            "everyNMonths": "每 {n} 个月"
+        },
+        "lifeMoments": "生活时刻",
+        "currentAnchor": "当前锚点：",
+        "clearAnchor": "清除锚点",
+        "customAnchorCta": "都不是？输入自定义锚点",
+        "customAnchorPlaceholder": "输入自定义锚点（最多 {n} 字）",
+        "recommended": "推荐",
+        "currentIdentity": "当前身份：",
+        "clearIdentity": "清除身份",
+        "recommendedIdentityFor": "为你推荐的身份（{type}）",
+        "userTypes": {
+            "daisy": "雏菊型",
+            "rose": "玫瑰型",
+            "orchid": "兰花型",
+            "sunflower": "向日葵型"
+        },
+        "orChooseYourOwn": "或自选",
+        "customIdentityCta": "自定义身份",
+        "customIdentityPlaceholder": "输入自定义身份（最多 {n} 字）",
+        "goldenQuadrantAria": "黄金行为（高影响 × 高容易）",
+        "goldenQuadrantLabel": "黄金行为区（右上）",
+        "impactAxis": "影响 →",
+        "abilityAxis": "容易 →",
+        "dotLabel": "{name}（影响 {impact}・容易 {ability}）"
+    },
+    "templates": {
+        "exploreTitle": "探索习惯计划",
+        "pickFamily": "选一个计划家族开始",
+        "pickCourse": "选一个课程开始",
+        "planFallback": "计划",
+        "backToFamilies": "返回计划家族",
+        "families": {
+            "flower": {
+                "title": "花朵型小课程",
+                "intro": "依女性周期身体状态分型，14 天分阶段任务。",
+                "quizPending": "花朵分型问卷功能开发中 — 先浏览全部，完成后自动推荐。"
+            },
+            "sleep": {
+                "title": "睡眠处方",
+                "intro": "依睡眠卡点分型，14 天 4 阶段处方。",
+                "quizPending": "睡眠分型问卷功能开发中 — 先浏览全部，完成后自动推荐。"
+            },
+            "other": {
+                "title": "其他公开计划",
+                "intro": "专家设计的各类主题计划。"
+            }
+        },
+        "courseCount": "{n} 个课程",
+        "hasRecommended": "有为你推荐",
+        "recommendedForYou": "为你推荐",
+        "familyEmpty": "这个家族目前还没有公开课程",
+        "expertFallback": "专家",
+        "descriptionFallback": "这个计划可以帮助你建立良好的生活习惯。",
+        "details": "详情",
+        "joining": "加入中…",
+        "joinPlan": "加入计划",
+        "joinFailed": "加入失败，请稍后再试",
+        "errorOccurred": "发生错误",
+        "chooseStartDate": "选择开始日期",
+        "startToday": "今天开始",
+        "startTomorrow": "明天开始",
+        "startCustom": "指定日期",
+        "confirmJoin": "确认加入",
+        "detailAria": "{name} 详细介绍",
+        "daysCount": "{n} 天",
+        "noTasksYet": "（暂无任务）",
+        "untitled": "（无标题）",
+        "tasksUnit": "个任务",
+        "daysUnit": "天",
+        "joinedUnit": "人加入",
+        "phaseCount": "{n} 阶段",
+        "legacyStructure": "本计划任务结构为旧版",
+        "legacyStructureHint": "加入后可在「今日」与「计划总览」看到完整内容",
+        "communityAuthor": "用户自创",
+        "officialAuthor": "官方"
+    },
+    "aspirations": {
+        "pickTitle": "你想要什么？",
+        "pickSubtitle": "从这里开始，我们会推荐合适的计划与习惯",
+        "identityTitle": "想成为怎样的人？",
+        "identitySubtitle": "为这个向往立一个身份认同，会显示在每日日程上方（可跳过）",
+        "close": "关闭",
+        "yourAspiration": "你的向往",
+        "skip": "跳过",
+        "confirmIdentityContinue": "确认身份并继续",
+        "skipIdentityContinue": "先不设置，继续",
+        "existingBadge": "已创建 · 继续用",
+        "recommendedForYou": "为你推荐",
+        "writeYourOwn": "＋ 自己写一句向往",
+        "customPlaceholder": "我想…",
+        "becomeIdentity": "成为「{identity}」",
+        "loadingRecommendations": "正在加载推荐…",
+        "suitablePlans": "适合的计划",
+        "noMatchingPlans": "没有对应的计划",
+        "suitableHabits": "适合的习惯",
+        "noMatchingHabits": "没有对应的习惯",
+        "planSummary": "{days} 天 · {tasks} 个任务",
+        "customStructure": "自定义结构",
+        "emptyResultsHint": "这个向往目前还没有对应的计划 / 习惯，去自己找找看：",
+        "skipExploreHint": "或者，跳过向往直接探索：",
+        "explorePlans": "探索计划",
+        "exploreHabits": "探索习惯",
+        "candidateCount": "已加入 {n} 个候选",
+        "candidateHint": "继续加入或开始评分挑出黄金行为",
+        "startScoring": "开始评分 →",
+        "loading": "加载中…",
+        "empty": "还没有向往。从首页的 [+] 开始新增。",
+        "setIdentity": "＋ 设置身份认同",
+        "saveIdentity": "保存身份",
+        "identityEditPlaceholder": "例：我是个重视睡眠的人（最多 {n} 字）",
+        "uncategorized": "未分类",
+        "linkedTasks": "关联 {n} 个任务",
+        "markAchieved": "标记达成",
+        "archive": "归档",
+        "delete": "删除",
+        "deleteConfirm": "确定要删除「{text}」？关联此向往的任务不会被删除，但会与此向往解除关联。",
+        "status": {
+            "active": "进行中",
+            "achieved": "已达成",
+            "archived": "已归档"
+        },
+        "time": {
+            "today": "今天",
+            "daysAgo": "{n} 天前",
+            "monthsAgo": "{n} 个月前",
+            "yearsAgo": "{n} 年前"
+        },
+        "errors": {
+            "textRequired": "请输入向往内容",
+            "createFailed": "新增向往失败，请再试一次",
+            "domainRequired": "请选一个生活维度",
+            "fetchRecommendationsFailed": "获取推荐失败，请再试一次",
+            "fetchFailed": "获取向往失败",
+            "updateFailed": "更新向往失败",
+            "updateIdentityFailed": "更新身份失败",
+            "deleteFailed": "删除向往失败"
+        }
+    },
+    "taskCard": {
+        "periodStatus": "{count}/{target} 次",
+        "quit": "戒除",
+        "reduce": "减量",
+        "star": "加星标",
+        "unstar": "取消星标",
+        "starred": "已加星标",
+        "weeklyGoal": "本周目标",
+        "monthlyGoal": "本月目标",
+        "noDetails": "无详细说明",
+        "start": "开始",
+        "overQuota": "超过额度",
+        "remaining": "剩 {n} 次",
+        "keptDays": "已守住 {n} 天",
+        "holdingToday": "今天守着",
+        "todayCount": "今天 {n} 次",
+        "futureLockTitle": "未来的任务 — 到那天才能完成",
+        "uncompleteAll": "取消完成（清空子任务）",
+        "completeAll": "全部完成",
+        "collapseSubtasks": "收起子任务",
+        "expandSubtasks": "展开子任务",
+        "restartTomorrow": "没关系，明天重新开始",
+        "canStillToday": "今天还可以 {n} 次",
+        "keepItUp": "继续保持，你做得很好",
+        "recordedToday": "今天记录了 {n} 次 · 没关系，明天重新开始",
+        "correctMinusOne": "修正：减一次",
+        "iDidIt": "我做了",
+        "honestRecord": "诚实记录：我做了",
+        "yesterdayKept": "昨天守住了",
+        "yesterdayExceeded": "昨天超过了，今天重新开始",
+        "recordOnce": "记录一次",
+        "futurePreview": "未来预览",
+        "confirmPause": "暂停这个习惯？暂停期间不会出现在今日日程。",
+        "confirmArchive": "隐藏这个习惯？之后不会再看到。",
+        "confirmDelete": "确定要永久删除这个习惯吗？所有历史记录也会一起消失。",
+        "actionFailed": "操作失败（{action}），请稍后再试",
+        "genericError": "发生错误",
+        "pause": "暂停",
+        "pauseAria": "暂停 {title}",
+        "delete": "删除",
+        "deleteAria": "删除 {title}",
+        "edit": "编辑",
+        "hide": "隐藏",
+        "taskOptions": "任务选项"
+    },
+    "taskDetail": {
+        "moreActions": "更多操作",
+        "today": "今天",
+        "future": "未来",
+        "noDetailsFallback": "这个习惯没有详细说明，但坚持做就对了！",
+        "dayProgress": "当日进度",
+        "notYet": "尚未到当日",
+        "completedTapToClear": "已完成（再按清空）",
+        "completeAllCount": "全部完成（{completed}/{total}）",
+        "completed": "已完成",
+        "completeTask": "完成任务",
+        "subtasks": "子任务",
+        "streak": "连续记录",
+        "daysUnit": "天",
+        "totalCompletions": "累计完成",
+        "timesUnit": "次",
+        "tipsTitle": "💡 养成小窍门",
+        "tipsFallback": "把这个习惯和你已经养成的习惯绑定在一起（例如：刷牙后就做...），可以大幅提升成功率哦！"
+    },
+    "taskForm": {
+        "editTask": "编辑任务",
+        "newTask": "新建任务",
+        "titlePlaceholder": "任务名称（例如：喝水）",
+        "chooseIcon": "选择图标",
+        "habitDirection": "习惯方向",
+        "direction": {
+            "increase": "正向",
+            "increaseSub": "越多越好",
+            "reduce": "减量",
+            "reduceSub": "越少越好",
+            "avoid": "戒除",
+            "avoidSub": "完全避免"
+        },
+        "dailyCap": "每日上限",
+        "unitLabel": "单位",
+        "unitPlaceholderTimes": "次",
+        "reduceHint": "记录发生次数，守在上限内就达标 — 没有惩罚，只是看见自己。",
+        "avoidHint": "目标是完全避免。今天没发生就达标，发生了也只是记录下来，明天再来。",
+        "type": {
+            "binary": "一般（达成/未达成）",
+            "quantitative": "计量（步数/毫升）",
+            "checklist": "清单（子任务）"
+        },
+        "targetValue": "目标数值",
+        "stepValueLabel": "每次增量（例如 +200）",
+        "subtasksCount": "子任务（{n}）",
+        "deleteFailed": "删除失败",
+        "addSubtask": "+ 添加子任务",
+        "advancedSettings": "日期、重复与提醒设置",
+        "timeAndFrequency": "时间与频率",
+        "startDate": "开始日期",
+        "time": "时间",
+        "repeatFrequency": "重复频率",
+        "freq": {
+            "once": "不重复",
+            "daily": "每天",
+            "weekly": "每周",
+            "monthly": "每月"
+        },
+        "specificWeekdays": "固定星期",
+        "flexibleFrequencyWeekly": "弹性频率（周期目标）",
+        "repeatOn": "重复于：",
+        "weekDays": [
+            "日",
+            "一",
+            "二",
+            "三",
+            "四",
+            "五",
+            "六"
+        ],
+        "weeklyCompletePrefix": "每周完成",
+        "monthlyCompletePrefix": "每月完成",
+        "timesSuffix": "次",
+        "dailyLimitOnce": "每日限完成 1 次",
+        "specificDate": "固定日期",
+        "flexibleFrequency": "弹性频率",
+        "monthlyOnDate": "每月 {d} 日",
+        "monthlyNthWeekday": "每月第 {n} 个星期{day}",
+        "endCondition": "停止条件:",
+        "endNever": "永不停止",
+        "endAfterCount": "重复几次后",
+        "endUntilDate": "直到日期",
+        "repeatPrefix": "重复",
+        "timesThenStop": "次后终止",
+        "reminder": "提醒通知",
+        "onTime": "准时（{time}）",
+        "minutesBefore": "{n} 分钟前",
+        "hoursBefore": "{n} 小时前",
+        "daysBefore": "{n} 天前",
+        "reminderAutoCancel": "若任务提前完成，系统将自动取消提醒",
+        "notes": "备注说明",
+        "notesPlaceholder": "写点什么...",
+        "anchor": "锚点",
+        "anchorHint": "（选填，做习惯前的提示）",
+        "delete": "删除",
+        "subtaskNamePlaceholder": "子任务名称",
+        "deleteSubtask": "删除子任务",
+        "disabledSince": "已停用（{date}）",
+        "confirmDeleteSubtask": "删除「{label}」？",
+        "unnamed": "未命名",
+        "hideFromToday": "从今天起不再出现",
+        "keepPastRecords": "过去的完成记录保留",
+        "permanentDeleteAll": "永久删除，包含所有过去记录",
+        "permanentDeleteDetail": "清干净，过去的勾选记录一起消失",
+        "noHistoryDetail": "无历史记录，不需要这个选项",
+        "confirmDelete": "确认删除"
+    },
+    "planGroup": {
+        "plan": "计划",
+        "defaultPlanName": "专属计划",
+        "createdBy": "由 {name} 创建",
+        "expertFallback": "专家",
+        "planDescription": "计划说明",
+        "generalTasks": "一般任务",
+        "phaseDays": "（{n}天）",
+        "notStarted": "尚未开始",
+        "confirmDeleteExpertTitle": "确认删除专家计划？",
+        "confirmDeleteTitle": "确认删除计划？",
+        "warning": "⚠️ 警告",
+        "expertDeleteWarning": "这是由专家帮你创建的清单，删除前请先和你的专家充分讨论。如果还没进行讨论直接删除，数据将无法恢复。",
+        "deleteWarning": "删除计划后，其中包含的所有任务也将一并被删除且无法恢复。",
+        "deleteAnyway": "仍要删除",
+        "confirmDeleteButton": "确认删除"
+    },
+    "location": {
+        "addLocation": "加地点",
+        "searchCity": "搜索城市"
+    },
+    "focusMap": {
+        "title": "焦点地图",
+        "loading": "加载中…",
+        "noCandidates": "没有候选习惯可评分",
+        "addedCount": "已加入 {n} 个习惯",
+        "archivedNote": "其余 {n} 个未选的已收进归档，候选清单已清空。",
+        "savePlanPrompt": "要把这套习惯存成一个计划吗？之后可重复使用，或申请公开分享给大家。",
+        "saveAsPlan": "把这套存成计划",
+        "done": "完成",
+        "mapTitle": "你的焦点地图",
+        "mapSubtitle": "按「影响力 × 执行度」分四区，帮你决定先做哪些。",
+        "submitting": "处理中…",
+        "addHabitsCta": "加入 {n} 个习惯 ›",
+        "batchRateFailed": "批量评分失败，请稍后再试",
+        "genericError": "发生错误",
+        "added": "已加入",
+        "addAnyway": "仍要加入",
+        "add": "加入",
+        "quadrants": {
+            "golden": {
+                "label": "值得优先做",
+                "advice": "高影响又容易做到 — 最划算，建议先加入。"
+            },
+            "big_fish": {
+                "label": "值得挑战",
+                "advice": "影响大但目前不易做到 — 可先从更简单的版本开始，别逼太紧。"
+            },
+            "background": {
+                "label": "顺手加码",
+                "advice": "容易做但影响有限 — 有余力再加。"
+            },
+            "skip": {
+                "label": "建议先跳过",
+                "advice": "影响有限又不易做 — 建议先搁着；但你仍可自行加入。"
+            }
+        },
+        "matrix": {
+            "skipShort": "建议跳过",
+            "impactAxis": "影响力 →",
+            "abilityAxis": "执行度（越右越容易）→"
+        },
+        "rating": {
+            "prev": "‹ 上一个",
+            "next": "下一个 ›",
+            "viewMap": "看焦点地图 ›",
+            "impact": {
+                "title": "第一步 · 影响力",
+                "q": "这个习惯对你想要的改变，影响有多大？",
+                "sub": "想它跟你的目标关联多强，先别管做不做得到。",
+                "lo": "没感觉",
+                "hi": "很有感",
+                "aria": "影响力",
+                "labels": {
+                    "1": "没什么感觉",
+                    "2": "影响不大",
+                    "3": "一般",
+                    "4": "挺有感",
+                    "5": "非常关键"
+                }
+            },
+            "ability": {
+                "title": "第二步 · 执行度",
+                "q": "对你来说，这个习惯有多容易做到？",
+                "sub": "纯评估难易，影响大不大这步先不管。",
+                "lo": "很难",
+                "hi": "很容易",
+                "aria": "执行度",
+                "labels": {
+                    "1": "很难做到",
+                    "2": "有点难",
+                    "3": "一般",
+                    "4": "算容易",
+                    "5": "非常容易"
+                }
+            }
+        },
+        "duration": {
+            "title": "想养成多久？",
+            "recommended": "推荐",
+            "sciAria": "查看背后科学",
+            "whyScience": "为什么建议 66 天？查看背后科学",
+            "fullSource": "查看完整来源与说明",
+            "confirm": "确认加入",
+            "d21": {
+                "label": "21 天",
+                "sub": "起步尝试"
+            },
+            "d66": {
+                "label": "66 天",
+                "sub": "养成自动化"
+            },
+            "d90": {
+                "label": "90 天",
+                "sub": "巩固成形"
+            },
+            "none": {
+                "label": "不设限",
+                "sub": "没有终止日，持续追踪"
+            }
+        },
+        "science": {
+            "summary": "研究发现，新行为要变成「不太需要意志力的自动反应」，平均约需 66 天（会因人和习惯难度而异，落在 18–254 天）。所以我们把默认值设为 66 天。"
+        }
+    },
+    "plan": {
+        "saveAsPlanTitle": "存为计划",
+        "nameLabel": "计划名称",
+        "descriptionLabel": "描述（选填）",
+        "phasePreview": "阶段预览（共 {n} 阶段）",
+        "phaseSummary": "{days} 天 · {n} 个习惯",
+        "savePrivate": "存为私人",
+        "sharePublic": "申请公开分享",
+        "createFailed": "创建计划失败，请稍后再试",
+        "genericError": "发生错误",
+        "phases": {
+            "p1": "养成期",
+            "p2": "进阶",
+            "p3": "挑战"
+        }
+    },
+    "stats": {
+        "title": "统计",
+        "loading": "加载中…",
+        "loadError": "统计暂时无法加载：{error}",
+        "emptyTitle": "打完第一个卡再回来看 📊",
+        "emptySubtitle": "统计需要至少一天的记录才有故事",
+        "daysUnit": "天",
+        "streak": {
+            "longestPrefix": "你的最长记录",
+            "notToday": "今天还没打卡，加油 💪",
+            "startToday": "今天打第一个卡，从 1 开始 🌱"
+        },
+        "rate": {
+            "last7": "最近 7 天完成率",
+            "last30": "最近 30 天完成率"
+        },
+        "domains": {
+            "title": "9 大健康维度分布",
+            "subtitle": "最近 30 天，完成次数",
+            "times": "{n} 次",
+            "completed": "完成"
+        },
+        "heatmap": {
+            "title": "最近 12 周",
+            "subtitle": "每格代表一天，颜色越深当天完成越多",
+            "dayTitle": "{date} · {n} 个完成",
+            "less": "少",
+            "more": "多"
+        },
+        "taskStreaks": {
+            "title": "你的金牌 Habit",
+            "longest": "最长 {n}"
+        }
+    },
+    "insights": {
+        "loading": "加载中…",
+        "loadingEvidence": "正在加载科学佐证…",
+        "sectionAria": "科学佐证",
+        "whyImportant": "为什么这个习惯重要",
+        "takeawayQuote": "「{text}」",
+        "collapse": "收起",
+        "expand": "展开",
+        "hideDetail": "收起研究细节",
+        "showDetail": "看研究细节",
+        "sourceType": {
+            "journal": "期刊",
+            "book": "书籍",
+            "source": "来源"
+        }
+    },
+    "evidence": {
+        "tier": {
+            "strong": "强",
+            "moderate": "中",
+            "preliminary": "初步"
+        },
+        "badge": {
+            "aria": "证据力 {tier}，点击查看评分",
+            "label": "证据力 {tier}"
+        },
+        "panel": {
+            "title": "证据力评分",
+            "total": "总分",
+            "totalValue": "{total} / 9 → 证据力 {tier}",
+            "howScored": "了解我们怎么评分"
+        },
+        "rubric": {
+            "title": "我们怎么评证据力",
+            "close": "关闭",
+            "intro": "每条科学佐证从 4 个维度评分、加总分为三个等级。分数衡量「证据有多可信」，不代表「习惯有多好」——严谨研究即使结论是效果有限，证据力依然高。",
+            "points": "{n} 分",
+            "totalScale": "总分 0–9 分对应等级：",
+            "tiers": "强（{strongFrom}–9）· 中（{moderateFrom}–{moderateTo}）· 初步（0–{preliminaryTo}）"
+        },
+        "dimensions": {
+            "studyType": {
+                "label": "研究类型",
+                "l3": "荟萃分析／系统综述",
+                "l2": "RCT 干预试验",
+                "l1": "观察性研究",
+                "l0": "动物／机制／专家意见"
+            },
+            "scale": {
+                "label": "对象与规模",
+                "l2": "大型人体",
+                "l1": "小型人体",
+                "l0": "非人体（动物／细胞）"
+            },
+            "causality": {
+                "label": "因果强度",
+                "l2": "干预证明因果",
+                "l1": "强相关＋合理机制",
+                "l0": "仅相关／机制推论"
+            },
+            "replication": {
+                "label": "重复验证",
+                "l2": "多研究一致",
+                "l1": "部分支持",
+                "l0": "单一研究／结果混合"
+            }
+        }
+    },
+    "journey": {
+        "tiers": {
+            "empty": "空地",
+            "village": "村庄",
+            "town": "城镇",
+            "city": "都市",
+            "metropolis": "大都会",
+            "megacity": "巨型都会"
+        },
+        "panel": {
+            "totalPrefix": "累计完成",
+            "totalSuffix": "次",
+            "toNextTier": "再 {n} 次升{tier}",
+            "maxTier": "已达最高级",
+            "foodMemories": "{city} · {n} 个美食回忆",
+            "flagshipInfo": "旗舰 Lv{level} · {count} 栋",
+            "recent": "最近记录"
+        },
+        "empty": {
+            "plotAria": "一块正在等待长出建筑的空地",
+            "startBuilding": "开始建造属于你的城市",
+            "waiting": "你的城市正在等待",
+            "bodyOff": "打开「记录完成地点」，每完成一个习惯，这座城市就会长出一点。",
+            "bodyOn": "完成第一个有记录地点的习惯，这里就会长出你的第一栋建筑。",
+            "goSettings": "前往设置开启",
+            "trackingOn": "已开启记录完成地点"
+        },
+        "overviewAria": "旅程世界总览",
+        "cityAria": "{city} 的城市",
+        "memory": {
+            "saving": "正在收进旅程…",
+            "saved": "已收进旅程",
+            "capture": "记录这餐"
+        }
+    },
+    "worlds": {
+        "journey": {
+            "name": "旅程",
+            "tagline": "把习惯完成的地点，建成一座真实世界的城市地图"
+        },
+        "home": {
+            "name": "居家",
+            "tagline": "用每天的完成，把家一点一点布置得更温暖"
+        },
+        "figure": {
+            "name": "公仔",
+            "tagline": "养一只陪你的伙伴，随着你的习惯一起长大"
+        }
+    },
+    "figure": {
+        "creatureAria": "公仔伙伴",
+        "emptyPrompt": "完成习惯，你的伙伴会开始成长",
+        "completedCount": "已完成 {n} 次",
+        "evolveHint": "再 {n} 次完成，伙伴会进化到 {next}",
+        "fullyGrown": "伙伴已经完全长大，谢谢你一路的陪伴",
+        "stages": {
+            "s1": "蛋",
+            "s2": "幼体",
+            "s3": "成长期",
+            "s4": "活泼期",
+            "s5": "成熟期",
+            "s6": "伙伴"
+        }
+    },
+    "tools": {
+        "start": "开始",
+        "pause": "暂停",
+        "skip": "跳过",
+        "reset": "重置",
+        "done": "完成",
+        "close": "关闭",
+        "cycle": "第 {current} / {total} 轮",
+        "suggested": "建议工具",
+        "timer": {
+            "focus": "专注",
+            "break": "休息",
+            "ringAria": "计时环",
+            "describePomodoro": "番茄钟 {minutes} 分 × {rounds} 轮",
+            "describeCount": "计时 {minutes} 分"
+        },
+        "breathing": {
+            "inhale": "吸气",
+            "hold": "屏息",
+            "exhale": "呼气",
+            "describe": "{inhale}-{hold}-{exhale} 呼吸 × {cycles} 轮"
+        },
+        "music": {
+            "describe": "音乐 {minutes} 分"
+        }
+    },
+    "music": {
+        "play": "播放",
+        "pause": "暂停",
+        "remainingAria": "剩余时间",
+        "loop": "循环",
+        "similar": "同类续播",
+        "decreaseTime": "减少时间",
+        "increaseTime": "增加时间",
+        "minutes": "{n} 分钟",
+        "comingSoon": "即将推出",
+        "categoryComingSoon": "这个分类的曲目即将推出",
+        "problems": {
+            "stress": {
+                "title": "压力型：脑袋停不下来"
+            },
+            "circadian": {
+                "title": "节律型：明明很累却睡不着"
+            },
+            "metabolic": {
+                "title": "代谢失衡型：半夜易醒"
+            },
+            "hormonal": {
+                "title": "荷尔蒙波动型：身体起伏大"
+            }
+        },
+        "categories": {
+            "calm": {
+                "title": "安抚大脑"
+            },
+            "routine": {
+                "title": "固定作息"
+            },
+            "guard": {
+                "title": "整夜守护"
+            },
+            "relax": {
+                "title": "身体放松"
+            }
         }
     }
 }

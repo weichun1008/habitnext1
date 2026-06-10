@@ -3,10 +3,15 @@
 import React from 'react';
 import { isTaskDueToday, getDaysInMonth, getFirstDayOfMonth } from '@/lib/utils';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
-
-const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
+import { useT } from '@/lib/i18n';
 
 const MonthView = ({ currentDate, tasks, todayStr, onDateClick, onTaskClick }) => {
+    const { t } = useT();
+    // header.weekDays 是 Mon..Sun；本檔以週日為第 0 天，所以用 (i+6)%7 轉索引。
+    const tWeekDays = t('header.weekDays');
+    const WEEKDAYS = Array.isArray(tWeekDays)
+        ? Array.from({ length: 7 }, (_, i) => tWeekDays[(i + 6) % 7])
+        : ['日', '一', '二', '三', '四', '五', '六'];
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 

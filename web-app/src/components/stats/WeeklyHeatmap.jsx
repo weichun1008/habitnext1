@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useT } from '@/lib/i18n';
 
 // WeeklyHeatmap — Slice I §6.2 widget
 // 12 weeks × 7 days, GitHub contribution-style grid.
@@ -12,6 +15,7 @@ const bucketClass = (count) => {
 };
 
 const WeeklyHeatmap = ({ heatmap }) => {
+    const { t } = useT();
     if (!heatmap || heatmap.length === 0) return null;
 
     // heatmap is 84 entries oldest→newest. Render as 12 columns × 7 rows.
@@ -23,8 +27,8 @@ const WeeklyHeatmap = ({ heatmap }) => {
 
     return (
         <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
-            <p className="text-sm font-medium text-gray-700 mb-1">最近 12 週</p>
-            <p className="text-xs text-gray-400 mb-3">每格代表一天，顏色越深當天完成越多</p>
+            <p className="text-sm font-medium text-gray-700 mb-1">{t('stats.heatmap.title')}</p>
+            <p className="text-xs text-gray-400 mb-3">{t('stats.heatmap.subtitle')}</p>
             <div className="flex gap-1 overflow-x-auto pb-1">
                 {columns.map((week, ci) => (
                     <div key={ci} className="flex flex-col gap-1">
@@ -32,7 +36,7 @@ const WeeklyHeatmap = ({ heatmap }) => {
                             <div
                                 key={day.date}
                                 className={`w-3 h-3 rounded-sm ${bucketClass(day.count)}`}
-                                title={`${day.date} · ${day.count} 個完成`}
+                                title={t('stats.heatmap.dayTitle', { date: day.date, n: day.count })}
                             />
                         ))}
                     </div>
@@ -40,12 +44,12 @@ const WeeklyHeatmap = ({ heatmap }) => {
             </div>
             {/* Legend */}
             <div className="flex items-center gap-1 mt-3 text-xs text-gray-400">
-                <span>少</span>
+                <span>{t('stats.heatmap.less')}</span>
                 <span className="w-3 h-3 rounded-sm bg-gray-100" />
                 <span className="w-3 h-3 rounded-sm bg-emerald-200" />
                 <span className="w-3 h-3 rounded-sm bg-emerald-400" />
                 <span className="w-3 h-3 rounded-sm bg-emerald-600" />
-                <span>多</span>
+                <span>{t('stats.heatmap.more')}</span>
             </div>
         </div>
     );

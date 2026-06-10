@@ -6,6 +6,7 @@ import EvidenceBadge from './insights/EvidenceBadge';
 import { scoreEvidence } from '@/lib/evidenceStrength';
 import IconRenderer from './IconRenderer';
 import HabitListView from './explore/HabitListView';
+import { useT } from '@/lib/i18n';
 
 // 從習慣的已發布 insights 取「最高 total」的 evidence；無則 null。
 function topEvidenceOf(habit) {
@@ -42,6 +43,7 @@ function SectionEmpty({ children }) {
 }
 
 function TemplateCard({ template, onPick, picking }) {
+    const { t } = useT();
     const phases = template?.tasks?.phases;
     const totalDays = Array.isArray(phases)
         ? phases.reduce((acc, ph) => acc + (Number(ph.days) || 0), 0)
@@ -67,7 +69,7 @@ function TemplateCard({ template, onPick, picking }) {
                         </p>
                     )}
                     <p className="text-[11px] text-gray-400 mt-1.5">
-                        {totalDays > 0 ? `${totalDays} 天 · ${totalTasks} 個任務` : '自訂結構'}
+                        {totalDays > 0 ? t('aspirations.planSummary', { days: totalDays, tasks: totalTasks }) : t('aspirations.customStructure')}
                         {template.expert?.name && <> · {template.expert?.name}</>}
                     </p>
                 </div>
@@ -82,16 +84,13 @@ function TemplateCard({ template, onPick, picking }) {
 }
 
 function HabitCard({ habit, onPick, onAddCandidate, onRemoveCandidate, picking, addedAsCandidate }) {
+    const { t } = useT();
     // Difficulties keys are pre-sorted by the enum order, but the seed habit
     // shape uses string keys so just look at which are enabled.
     const enabledLevels = ['beginner', 'intermediate', 'challenge'].filter(
         k => habit.difficulties?.[k]?.enabled,
     );
-    const levelLabels = enabledLevels.map(k => {
-        if (k === 'beginner') return '入門';
-        if (k === 'intermediate') return '進階';
-        return '挑戰';
-    });
+    const levelLabels = enabledLevels.map(k => t(`difficulty.${k}`));
 
     // 直接加入 stays locked while this habit sits in the candidate pool — it
     // would otherwise create a second task in 'active' status. To direct-add,
@@ -134,11 +133,11 @@ function HabitCard({ habit, onPick, onAddCandidate, onRemoveCandidate, picking, 
                         type="button"
                         onClick={onRemoveCandidate}
                         disabled={picking}
-                        aria-label="取消候選"
+                        aria-label={t('explore.cancelCandidate')}
                         className="group flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-100 text-emerald-700 hover:bg-rose-50 hover:text-rose-600"
                     >
-                        <span className="flex items-center gap-1 group-hover:hidden"><Check size={14} /> 已加入候選</span>
-                        <span className="hidden items-center gap-1 group-hover:flex"><X size={14} /> 取消候選</span>
+                        <span className="flex items-center gap-1 group-hover:hidden"><Check size={14} /> {t('explore.addedCandidate')}</span>
+                        <span className="hidden items-center gap-1 group-hover:flex"><X size={14} /> {t('explore.cancelCandidate')}</span>
                     </button>
                 ) : (
                     <button
@@ -147,7 +146,7 @@ function HabitCard({ habit, onPick, onAddCandidate, onRemoveCandidate, picking, 
                         disabled={picking}
                         className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors disabled:cursor-not-allowed bg-white border border-gray-200 text-gray-700 hover:border-emerald-300 hover:bg-emerald-50"
                     >
-                        <Plus size={14} /> 加入候選
+                        <Plus size={14} /> {t('explore.addCandidate')}
                     </button>
                 )}
                 <button
@@ -159,7 +158,7 @@ function HabitCard({ habit, onPick, onAddCandidate, onRemoveCandidate, picking, 
                     {picking ? (
                         <Loader size={14} className="animate-spin" />
                     ) : (
-                        <>直接加入 <ChevronRight size={14} /></>
+                        <>{t('explore.addDirectly')} <ChevronRight size={14} /></>
                     )}
                 </button>
             </div>
@@ -178,6 +177,7 @@ export default function AspirationRecommendationPanel({
     onSkipToTemplates,
     onSkipToHabits,
 }) {
+    const { t } = useT();
     const [data, setData] = useState(null); // { templates, habits }
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -207,7 +207,7 @@ export default function AspirationRecommendationPanel({
             })
             .catch(err => {
                 console.error('[AspirationRecommendationPanel] fetch failed:', err);
-                if (!cancelled) setError('取得推薦失敗，請再試一次');
+                if (!cancelled) setError(t('aspirations.errors.fetchRecommendationsFailed'));
             })
             .finally(() => {
                 if (!cancelled) setLoading(false);
@@ -292,14 +292,14 @@ export default function AspirationRecommendationPanel({
                 <div className="relative flex-shrink-0 overflow-hidden bg-gradient-to-br from-emerald-400 to-emerald-600 text-white px-5 py-4 rounded-t-2xl">
                     <span className="absolute -right-3 -bottom-4 opacity-15" aria-hidden><IconRenderer category={aspiration.domain} size={64} /></span>
                     <div className="relative flex items-start gap-3">
-                        <button type="button" onClick={onBack} aria-label="返回" className="p-1 -m-1 text-white/90 hover:text-white flex-shrink-0 mt-0.5">
+                        <button type="button" onClick={onBack} aria-label={t('common.back')} className="p-1 -m-1 text-white/90 hover:text-white flex-shrink-0 mt-0.5">
                             <ArrowLeft size={22} />
                         </button>
                         <div className="min-w-0 flex-1">
-                            <p className="text-[10px] font-bold opacity-85 tracking-wider">你的嚮往</p>
+                            <p className="text-[10px] font-bold opacity-85 tracking-wider">{t('aspirations.yourAspiration')}</p>
                             <h3 id="aspiration-rec-title" className="font-extrabold text-base leading-snug break-words mt-0.5">{aspiration.text}</h3>
                             {aspiration.identity && (
-                                <span className="inline-block mt-2 bg-white/90 text-emerald-700 text-[10px] font-extrabold rounded-full px-2.5 py-0.5">成為「{aspiration.identity}」</span>
+                                <span className="inline-block mt-2 bg-white/90 text-emerald-700 text-[10px] font-extrabold rounded-full px-2.5 py-0.5">{t('aspirations.becomeIdentity', { identity: aspiration.identity })}</span>
                             )}
                         </div>
                     </div>
@@ -309,7 +309,7 @@ export default function AspirationRecommendationPanel({
                 <div className="flex-1 overflow-y-auto px-5 py-4 space-y-6">
                     {loading && (
                         <div className="flex items-center justify-center py-10 text-gray-400">
-                            <Loader size={20} className="animate-spin mr-2" /> 載入推薦中…
+                            <Loader size={20} className="animate-spin mr-2" /> {t('aspirations.loadingRecommendations')}
                         </div>
                     )}
                     {error && (
@@ -322,10 +322,10 @@ export default function AspirationRecommendationPanel({
                     {!loading && !error && (
                         <section>
                             <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-                                <Sparkles size={12} className="text-emerald-500" /> 適合的計畫
+                                <Sparkles size={12} className="text-emerald-500" /> {t('aspirations.suitablePlans')}
                             </h4>
                             {templates.length === 0 ? (
-                                <SectionEmpty>沒有對應的計畫</SectionEmpty>
+                                <SectionEmpty>{t('aspirations.noMatchingPlans')}</SectionEmpty>
                             ) : (
                                 <div className="space-y-2">
                                     {templates.map(t => (
@@ -345,10 +345,10 @@ export default function AspirationRecommendationPanel({
                     {!loading && !error && (
                         <section>
                             <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-                                <Leaf size={12} className="text-emerald-500" /> 適合的習慣
+                                <Leaf size={12} className="text-emerald-500" /> {t('aspirations.suitableHabits')}
                             </h4>
                             {habits.length === 0 ? (
-                                <SectionEmpty>沒有對應的習慣</SectionEmpty>
+                                <SectionEmpty>{t('aspirations.noMatchingHabits')}</SectionEmpty>
                             ) : (
                                 <HabitListView
                                     habits={habits}
@@ -359,7 +359,7 @@ export default function AspirationRecommendationPanel({
                                     onRemoveCandidate={(habit) => handleRemoveCandidate(habit)}
                                     candidateAddedIds={new Set(candidateTaskMap.keys())}
                                     pickingId={pickingId}
-                                    emptyText="沒有對應的習慣"
+                                    emptyText={t('aspirations.noMatchingHabits')}
                                 />
                             )}
                         </section>
@@ -370,8 +370,8 @@ export default function AspirationRecommendationPanel({
                         <section className="border-t border-gray-100 pt-4">
                             <p className="text-xs text-gray-500 mb-2">
                                 {isEmptyResults
-                                    ? '這個嚮往目前還沒有對應的計畫 / 習慣，去自己找看看：'
-                                    : '或者，跳過嚮往直接探索：'}
+                                    ? t('aspirations.emptyResultsHint')
+                                    : t('aspirations.skipExploreHint')}
                             </p>
                             <div className="flex gap-2">
                                 <button
@@ -379,14 +379,14 @@ export default function AspirationRecommendationPanel({
                                     onClick={onSkipToTemplates}
                                     className="flex-1 px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:border-gray-300 hover:shadow-sm"
                                 >
-                                    探索計畫
+                                    {t('aspirations.explorePlans')}
                                 </button>
                                 <button
                                     type="button"
                                     onClick={onSkipToHabits}
                                     className="flex-1 px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:border-gray-300 hover:shadow-sm"
                                 >
-                                    探索習慣
+                                    {t('aspirations.exploreHabits')}
                                 </button>
                             </div>
                         </section>
@@ -401,10 +401,10 @@ export default function AspirationRecommendationPanel({
                     <div className="border-t border-gray-100 bg-gradient-to-br from-amber-50 to-orange-50 px-5 py-3 flex items-center justify-between gap-3 flex-shrink-0 rounded-b-2xl">
                         <div className="min-w-0 flex-1">
                             <p className="text-xs font-bold text-amber-700 flex items-center gap-1">
-                                <Target size={12} /> 已加入 {candidateCount} 個候選
+                                <Target size={12} /> {t('aspirations.candidateCount', { n: candidateCount })}
                             </p>
                             <p className="text-[11px] text-gray-500 mt-0.5">
-                                繼續加入或開始評分挑出黃金行為
+                                {t('aspirations.candidateHint')}
                             </p>
                         </div>
                         <button
@@ -413,7 +413,7 @@ export default function AspirationRecommendationPanel({
                             disabled={!onOpenFocusMap}
                             className="flex-shrink-0 px-3 py-2 rounded-lg bg-amber-500 text-white text-xs font-bold hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            開始評分 →
+                            {t('aspirations.startScoring')}
                         </button>
                     </div>
                 )}

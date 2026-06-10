@@ -3,11 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Play, Pause, SkipForward } from 'lucide-react';
 import { breathingPhases } from '@/lib/tools';
+import { useT } from '@/lib/i18n';
 
-const PHASE_LABEL = {
-    inhale: '吸氣',
-    hold: '憋氣',
-    exhale: '吐氣',
+const PHASE_LABEL_KEY = {
+    inhale: 'tools.breathing.inhale',
+    hold: 'tools.breathing.hold',
+    exhale: 'tools.breathing.exhale',
 };
 
 const PHASE_SCALE = {
@@ -24,6 +25,7 @@ function prefersReducedMotion() {
 }
 
 export default function BreathingTool({ config, onComplete }) {
+    const { t } = useT();
     const phases = breathingPhases(config);
     const cycles = config?.cycles || 0;
     const phasesPerCycle = cycles > 0 ? phases.length / cycles : phases.length;
@@ -104,7 +106,7 @@ export default function BreathingTool({ config, onComplete }) {
 
     return (
         <div className="breathing-tool" style={styles.root}>
-            <div style={styles.cycle}>第 {currentCycle} / {cycles} 輪</div>
+            <div style={styles.cycle}>{t('tools.cycle', { current: currentCycle, total: cycles })}</div>
 
             <div style={styles.stage}>
                 {!reduceMotion && (
@@ -118,7 +120,7 @@ export default function BreathingTool({ config, onComplete }) {
                     />
                 )}
                 <div style={styles.readout}>
-                    <div style={styles.phaseLabel}>{done ? '完成' : PHASE_LABEL[phaseKey]}</div>
+                    <div style={styles.phaseLabel}>{done ? t('tools.done') : t(PHASE_LABEL_KEY[phaseKey])}</div>
                     {!done && <div style={styles.seconds}>{remaining}</div>}
                 </div>
             </div>
@@ -133,7 +135,7 @@ export default function BreathingTool({ config, onComplete }) {
                     disabled={done}
                 >
                     {running ? <Pause size={20} /> : <Play size={20} />}
-                    <span>{running ? '暫停' : '開始'}</span>
+                    <span>{running ? t('tools.pause') : t('tools.start')}</span>
                 </button>
                 <button
                     type="button"
@@ -144,7 +146,7 @@ export default function BreathingTool({ config, onComplete }) {
                     disabled={done}
                 >
                     <SkipForward size={20} />
-                    <span>跳過</span>
+                    <span>{t('tools.skip')}</span>
                 </button>
             </div>
 

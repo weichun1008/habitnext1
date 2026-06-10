@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Pause, EyeOff, Trash2, Edit2, Star } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 // TaskActionMenu — shared component rendered in 2 contexts:
 //   1. Mobile swipe-reveal (right side of card, shows [pause, delete] only)
@@ -22,15 +23,16 @@ import { Pause, EyeOff, Trash2, Edit2, Star } from 'lucide-react';
 //   starred / onToggleStar(): optional. When onToggleStar is provided, the
 //     popover renders a 加入星號 / 取消星號 toggle on top (gold). The parent owns
 //     the PUT + state update so the daily list can re-sort (starred → top).
-const CONFIRM_TEXT = {
-    paused:   '暫停這個習慣？暫停期間不會出現在今日行程。',
-    archived: '隱藏這個習慣？之後不會再看到。',
-    deleted:  '確定要永久刪除這個習慣嗎？所有歷史紀錄也會一起消失。',
+const CONFIRM_KEYS = {
+    paused:   'taskCard.confirmPause',
+    archived: 'taskCard.confirmArchive',
+    deleted:  'taskCard.confirmDelete',
 };
 
 const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction, onEdit, starred = false, onToggleStar }) => {
+    const { t } = useT();
     const handle = async (action) => {
-        if (!window.confirm(CONFIRM_TEXT[action])) return;
+        if (!window.confirm(t(CONFIRM_KEYS[action]))) return;
         try {
             let res;
             if (action === 'deleted') {
@@ -45,12 +47,12 @@ const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction, onEd
             }
             onAction?.(action, res.ok);
             if (!res.ok) {
-                window.alert(`操作失敗（${action}），請稍後再試`);
+                window.alert(t('taskCard.actionFailed', { action }));
             }
         } catch (e) {
             console.error('TaskActionMenu action error', e);
             onAction?.(action, false);
-            window.alert('發生錯誤');
+            window.alert(t('taskCard.genericError'));
         }
     };
 
@@ -62,19 +64,19 @@ const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction, onEd
                     type="button"
                     onClick={(e) => { e.stopPropagation(); handle('paused'); }}
                     className="flex flex-col items-center justify-center px-4 bg-amber-500 text-white text-xs font-bold gap-1"
-                    aria-label={`暫停 ${taskTitle}`}
+                    aria-label={t('taskCard.pauseAria', { title: taskTitle })}
                 >
                     <Pause size={16} />
-                    暫停
+                    {t('taskCard.pause')}
                 </button>
                 <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); handle('deleted'); }}
                     className="flex flex-col items-center justify-center px-4 bg-red-500 text-white text-xs font-bold gap-1 rounded-r-2xl"
-                    aria-label={`刪除 ${taskTitle}`}
+                    aria-label={t('taskCard.deleteAria', { title: taskTitle })}
                 >
                     <Trash2 size={16} />
-                    刪除
+                    {t('taskCard.delete')}
                 </button>
             </div>
         );
@@ -91,7 +93,7 @@ const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction, onEd
                     className="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-amber-50 hover:text-amber-700 flex items-center gap-2 transition-colors"
                 >
                     <Star size={14} className={starred ? 'fill-amber-400 text-amber-400' : ''} />
-                    {starred ? '取消星號' : '加入星號'}
+                    {starred ? t('taskCard.unstar') : t('taskCard.star')}
                 </button>
             )}
             {onEdit && (
@@ -100,7 +102,7 @@ const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction, onEd
                     onClick={(e) => { e.stopPropagation(); onEdit(); }}
                     className="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2 transition-colors"
                 >
-                    <Edit2 size={14} /> 編輯
+                    <Edit2 size={14} /> {t('taskCard.edit')}
                 </button>
             )}
             <button
@@ -108,14 +110,14 @@ const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction, onEd
                 onClick={(e) => { e.stopPropagation(); handle('paused'); }}
                 className="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-amber-50 hover:text-amber-700 flex items-center gap-2 transition-colors"
             >
-                <Pause size={14} /> 暫停
+                <Pause size={14} /> {t('taskCard.pause')}
             </button>
             <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); handle('archived'); }}
                 className="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
             >
-                <EyeOff size={14} /> 隱藏
+                <EyeOff size={14} /> {t('taskCard.hide')}
             </button>
             <div className="h-px bg-gray-100" />
             <button
@@ -123,7 +125,7 @@ const TaskActionMenu = ({ taskId, taskTitle, variant = 'popover', onAction, onEd
                 onClick={(e) => { e.stopPropagation(); handle('deleted'); }}
                 className="w-full px-3 py-2 text-sm text-left text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
             >
-                <Trash2 size={14} /> 刪除
+                <Trash2 size={14} /> {t('taskCard.delete')}
             </button>
         </div>
     );

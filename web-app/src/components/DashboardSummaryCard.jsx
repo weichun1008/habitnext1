@@ -1,8 +1,12 @@
+'use client';
+
 import React from 'react';
 import { Sparkles, Target, Flame } from 'lucide-react';
 import { getTodayStr, isCompletedToday, calculatePeriodProgress, isTaskDueToday } from '@/lib/utils';
+import { useT } from '@/lib/i18n';
 
 const DashboardSummaryCard = ({ tasks, onOpenDetail }) => {
+    const { t } = useT();
     // Filter tasks that are actually due today (including specific week days)
     // Exclude 'period_count' as they don't have a single daily binary status usually, unless we want to track them.
     // For now, let's track binary/quant tasks due today.
@@ -38,10 +42,10 @@ const DashboardSummaryCard = ({ tasks, onOpenDetail }) => {
             >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full transform translate-x-10 -translate-y-10"></div>
                 <div>
-                    <p className="text-emerald-100 font-bold text-sm mb-1 flex items-center gap-1"><Sparkles size={14} /> 今日健康分數</p>
+                    <p className="text-emerald-100 font-bold text-sm mb-1 flex items-center gap-1"><Sparkles size={14} /> {t('dashboard.todayScore')}</p>
                     <div className="flex items-baseline gap-1">
                         <h2 className="text-5xl font-black">{finalScore}</h2>
-                        <span className="text-sm font-medium opacity-70">分</span>
+                        <span className="text-sm font-medium opacity-70">{t('dashboard.scoreUnit')}</span>
                     </div>
                 </div>
 
@@ -58,11 +62,11 @@ const DashboardSummaryCard = ({ tasks, onOpenDetail }) => {
             <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center">
                 <div className="flex items-center gap-2 mb-2">
                     <Target size={16} className="text-amber-500" />
-                    <span className="text-xs font-bold text-gray-500">本週目標</span>
+                    <span className="text-xs font-bold text-gray-500">{t('dashboard.weeklyGoal')}</span>
                 </div>
                 <div className="flex items-end gap-1">
                     <span className="text-2xl font-black text-gray-800">{periodDone}</span>
-                    <span className="text-xs text-gray-400 mb-1">/ {periodTotal} 達成</span>
+                    <span className="text-xs text-gray-400 mb-1">{t('dashboard.achievedOf', { n: periodTotal })}</span>
                 </div>
                 <div className="w-full bg-gray-100 h-1.5 rounded-full mt-2">
                     <div className="bg-amber-500 h-1.5 rounded-full" style={{ width: `${periodTotal > 0 ? (periodDone / periodTotal) * 100 : 0}%` }}></div>
@@ -73,13 +77,13 @@ const DashboardSummaryCard = ({ tasks, onOpenDetail }) => {
             <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center">
                 <div className="flex items-center gap-2 mb-2">
                     <Flame size={16} className="text-red-500" />
-                    <span className="text-xs font-bold text-gray-500">連續紀錄</span>
+                    <span className="text-xs font-bold text-gray-500">{t('dashboard.streak')}</span>
                 </div>
                 <div className="flex items-end gap-1">
                     <span className="text-2xl font-black text-gray-800">5</span>
-                    <span className="text-xs text-gray-400 mb-1">天</span>
+                    <span className="text-xs text-gray-400 mb-1">{t('dashboard.days')}</span>
                 </div>
-                <p className="text-[10px] text-gray-400 mt-1">保持下去！</p>
+                <p className="text-[10px] text-gray-400 mt-1">{t('dashboard.keepGoing')}</p>
             </div>
         </div>
     );

@@ -7,7 +7,15 @@
         "logout": "Abmelden"
     },
     "header": {
-        "weekDays": ["M", "D", "M", "D", "F", "S", "S"],
+        "weekDays": [
+            "Mo",
+            "Di",
+            "Mi",
+            "Do",
+            "Fr",
+            "Sa",
+            "So"
+        ],
         "openProfile": "Profil öffnen",
         "guest": "Gast",
         "worldAria": "Welt",
@@ -51,7 +59,7 @@
     },
     "profile": {
         "title": "Profil",
-        "myAspirations": "Meine Ziele",
+        "myAspirations": "Meine Wunschbilder",
         "selectAvatar": "Wähle deinen Avatar",
         "nickname": "Spitzname",
         "phone": "Telefonnummer",
@@ -81,6 +89,928 @@
             "passwordMismatch": "Neues Passwort und Bestätigung stimmen nicht überein",
             "updateFailed": "Aktualisierung fehlgeschlagen",
             "networkError": "Netzwerkfehler. Bitte versuche es erneut."
+        }
+    },
+    "data": {
+        "timeOfDay": {
+            "morning": "Morgens",
+            "noon": "Mittags",
+            "evening": "Abends",
+            "work": "Arbeit",
+            "commute": "Pendeln",
+            "any": "Jederzeit"
+        },
+        "anchors": {
+            "wake_up": "Nach dem Aufstehen",
+            "first_water": "Nach dem ersten Glas Wasser",
+            "after_brushing": "Nach dem Zähneputzen",
+            "after_washing": "Nach dem Gesichtwaschen",
+            "after_breakfast": "Nach dem Frühstück",
+            "leaving_home": "Bevor du das Haus verlässt",
+            "arrive_work": "Bei Ankunft am Arbeitsplatz",
+            "before_lunch": "Vor dem Mittagessen",
+            "after_lunch": "Nach dem Mittagessen",
+            "midday_break": "In der Mittagspause",
+            "leaving_work": "Nach Feierabend",
+            "arrive_home": "Beim Nachhausekommen",
+            "before_dinner": "Vor dem Abendessen",
+            "after_dinner": "Nach dem Abendessen",
+            "after_shower": "Nach dem Duschen",
+            "before_bed": "Vor dem Zubettgehen",
+            "bedtime": "Wenn du im Bett liegst",
+            "lights_off": "Vor dem Lichtausmachen",
+            "before_work": "Vor dem Arbeitsbeginn am Computer",
+            "first_unlock": "Beim ersten Entsperren des Handys",
+            "coffee_tea": "Beim Kaffee- oder Teekochen",
+            "after_meeting": "Nach einem Meeting",
+            "task_done": "Nach Abschluss einer Aufgabe",
+            "stand_break": "Beim Aufstehen und Strecken",
+            "commute": "Auf dem Arbeitsweg",
+            "waiting_transport": "Beim Warten auf Bus oder Bahn",
+            "red_light": "An der roten Ampel",
+            "waiting": "Beim Anstehen oder Warten",
+            "before_social": "Vor dem Öffnen von Social Media",
+            "feel_stressed": "Wenn du Stress spürst"
+        },
+        "domains": {
+            "genesGut": "Gene & Darm",
+            "environment": "Umfeld",
+            "diet": "Ernährung",
+            "exercise": "Bewegung",
+            "stressSleep": "Stress & Schlaf",
+            "social": "Soziales",
+            "mind": "Geist & Seele",
+            "cognition": "Kognition & Weisheit",
+            "career": "Karriere & Balance"
+        },
+        "units": {
+            "second": "Sek.",
+            "minute": "Min.",
+            "hour": "Std.",
+            "time": "Wdh.",
+            "set": "Sätze",
+            "rep": "Wdh.",
+            "step": "Schritte",
+            "page": "Seiten",
+            "item": "Stk.",
+            "pill": "Stk.",
+            "cup": "Tassen",
+            "bowl": "Schüsseln",
+            "serving": "Portionen",
+            "gram": "g",
+            "kg": "kg",
+            "cc": "ml",
+            "ml": "ml",
+            "liter": "L",
+            "km": "km",
+            "meter": "m",
+            "day": "Tage"
+        }
+    },
+    "daily": {
+        "loading": "Lädt …",
+        "navToday": "Heute",
+        "navBadges": "Erfolge",
+        "defaultUser": "Nutzer",
+        "startFromAspiration": "Mit einem Wunschbild starten",
+        "explorePlans": "Pläne entdecken",
+        "exploreHabits": "Gewohnheiten entdecken",
+        "createHabit": "Gewohnheit erstellen",
+        "menstrualMode": "Periodenmodus",
+        "menstrualActive": "Periodenmodus aktiv",
+        "menstrualExpired": "Periodenmodus (über 5 Tage)",
+        "menstrualEnd": "Periode beenden",
+        "menstrualStart": "Ich habe gerade meine Periode",
+        "miniCourseEyebrow": "Dein Mini-Kurs",
+        "miniCourseTitle": "Mini-Kurs: {label}",
+        "miniCourseDesc": "Auf Basis deiner Fragebogen-Ergebnisse zusammengestellt",
+        "viewMiniCourse": "Mini-Kurs ansehen →",
+        "sleepRxEyebrow": "Dein Schlafrezept",
+        "sleepRxTitle": "Schlafrezept: {label}",
+        "sleepRxDesc": "14 Tage Schritt für Schritt – mit Baby Steps zu deinem Schlafrhythmus",
+        "viewSleepRx": "Schlafrezept ansehen →",
+        "candidateBannerCount": "Du hast {n} Kandidaten-Gewohnheiten",
+        "focusMapTitle": "Starte die Fokus-Karte und finde deine goldenen Gewohnheiten",
+        "focusMapHint": "Tipp: Wähle zuerst die 3 lohnendsten",
+        "clearCandidatesAria": "Alle Kandidaten verwerfen",
+        "confirmClearCandidates": "Alle {n} Kandidaten-Gewohnheiten verwerfen? Sie werden archiviert und können aus dem Verlauf wiederhergestellt werden.",
+        "startRating": "Bewertung starten →",
+        "previewing": "Vorschau",
+        "backToToday": "Zurück zu heute",
+        "todaySchedule": "Heutiger Zeitplan",
+        "tomorrowSchedule": "Zeitplan für morgen",
+        "yesterdaySchedule": "Zeitplan von gestern",
+        "dateSchedule": "Zeitplan {d}.{m}.",
+        "schedule": "Zeitplan",
+        "starredSection": "Mit Stern markiert",
+        "forAspiration": "Für „{text}“",
+        "otherHabits": "Weitere Gewohnheiten",
+        "saveAsPlan": "Als Plan speichern",
+        "completedCount": "{n} erledigt",
+        "emptyToday": "Heute steht nichts Festes an.",
+        "emptyOtherDay": "Für diesen Tag sind keine Aufgaben geplant.",
+        "periodGoals": "Zeitraum-Ziele (flexibel)",
+        "badgesDesc": "Schließe weiter Aufgaben ab und schalte mehr Abzeichen frei!",
+        "completedToast": "„{title}“ erledigt",
+        "undo": "Rückgängig",
+        "avatarAria": "Avatar {label}",
+        "defaultAvatarAria": "Standard-Avatar"
+    },
+    "manage": {
+        "title": "Planübersicht",
+        "emptyTitle": "Noch keine Gewohnheiten",
+        "emptyDesc": "Erstelle deine erste Gewohnheit oder entdecke Experten-Pläne",
+        "confirmDeleteTask": "Diese Aufgabe wirklich löschen?",
+        "lockedTitle": "Exklusiver Gesundheitsplan",
+        "lockedByPrefix": "Diese Aufgabe wurde von ",
+        "lockedBySuffix": " speziell für dich erstellt",
+        "advisorFallback": "deinem Gesundheitscoach",
+        "lockedBody": "Um die Wirkung deines Gesundheitsplans zu sichern, kann diese Aufgabe momentan nicht bearbeitet werden. Sie wurde auf deine Gesundheitsziele zugeschnitten – bleib dran für das beste Ergebnis!",
+        "lockedContact": "Bei Fragen wende dich an deinen persönlichen Coach",
+        "lockedConfirm": "Verstanden, ich bleibe dran 💪"
+    },
+    "dashboard": {
+        "todayScore": "Heutiger Gesundheitsscore",
+        "scoreUnit": "Pkt.",
+        "weeklyGoal": "Wochenziel",
+        "achievedOf": "/ {n} erreicht",
+        "streak": "Serie",
+        "days": "Tage",
+        "keepGoing": "Weiter so!",
+        "insightsTitle": "Gesundheits-Erkenntnisse",
+        "weeklyTrend": "Abschlussquote diese Woche",
+        "coachTitle": "💡 Feedback vom Gesundheitscoach",
+        "coachQuote1": "„Diese Woche warst du beim ",
+        "coachWater": "Wassertrinken",
+        "coachQuote2": " sehr konstant – drei Tage in Folge geschafft! Dein ",
+        "coachSleep": "Schlaf",
+        "coachQuote3": " wirkt dagegen etwas unregelmäßig. Versuch heute Abend eine Erinnerung für ein Abendritual um 22:30 Uhr – das kann deinen Tiefschlaf um 20 % verbessern.“"
+    },
+    "calendar": {
+        "title": "Kalender",
+        "yearMonth": "{month}/{year}",
+        "weekRange": "{start}.–{end}. · {month}/{year}",
+        "today": "Heute",
+        "week": "Woche",
+        "month": "Monat",
+        "allDay": "Ganztägig",
+        "moreCount": "+{n} mehr"
+    },
+    "worldPicker": {
+        "title": "Wähle deine Welt",
+        "subtitle": "Jede abgeschlossene Gewohnheit lässt in deiner gewählten Welt etwas wachsen. Es gibt kein Richtig oder Falsch – du kannst jederzeit wechseln.",
+        "current": "Aktuelle Welt",
+        "comingSoon": "Bald verfügbar",
+        "enterWorld": "Welt „{name}“ betreten",
+        "selected": "Ausgewählt",
+        "chooseAsMyWorld": "Als meine Welt wählen",
+        "soonNote": "Die Ansicht kommt bald – wähle die Welt jetzt, abgeschlossene Gewohnheiten zählen schon für sie"
+    },
+    "errors": {
+        "unknown": "Unbekannter Fehler",
+        "saveFailed": "Speichern fehlgeschlagen: {error}",
+        "createFailed": "Erstellen fehlgeschlagen: {error}",
+        "saveNetworkError": "Speichern fehlgeschlagen – bitte prüfe deine Internetverbindung",
+        "addFailed": "Hinzufügen fehlgeschlagen, bitte erneut versuchen",
+        "addCandidateFailed": "Kandidat konnte nicht hinzugefügt werden, bitte erneut versuchen",
+        "removeCandidateFailed": "Kandidat konnte nicht entfernt werden, bitte erneut versuchen",
+        "starUpdateFailed": "Stern konnte nicht aktualisiert werden, bitte erneut versuchen",
+        "deleteFailed": "Löschen fehlgeschlagen",
+        "boundaryTitle": "Fehler aufgetreten",
+        "boundaryMessage": "Entschuldigung, in der App ist ein unerwarteter Fehler aufgetreten.",
+        "reload": "Seite neu laden"
+    },
+    "dates": {
+        "prevWeek": "Vorherige Woche",
+        "nextWeek": "Nächste Woche",
+        "nthWeekdayOfMonth": "Jeden {n}. {day} im Monat",
+        "lastWeekdayOfMonth": "Jeden letzten {day} im Monat"
+    },
+    "difficulty": {
+        "beginner": "Einsteiger",
+        "intermediate": "Fortgeschritten",
+        "challenge": "Herausforderung"
+    },
+    "avatars": {
+        "sunrise": "Sonnenaufgang",
+        "bloom": "Knospe",
+        "wave": "Welle",
+        "sprout": "Spross",
+        "crystal": "Kristall",
+        "star": "Sterne",
+        "citrus": "Zitrus",
+        "moon": "Mondnacht",
+        "heart": "Herz",
+        "mountain": "Berge",
+        "cloud": "Wolke",
+        "berry": "Beere"
+    },
+    "library": {
+        "chooseHabit": "Gewohnheit wählen",
+        "chooseAnchor": "Anker wählen",
+        "searchResults": "Suchergebnisse",
+        "searchInDomain": "In „{name}“ suchen …",
+        "searchHabits": "Gewohnheiten suchen …",
+        "searchQuery": "Suche nach „{query}“",
+        "recommendedHabits": "Empfohlene Gewohnheiten",
+        "noMatchingHabits": "Keine passenden Gewohnheiten",
+        "pickDomain": "Wähle einen Gesundheitsbereich",
+        "fromAspiration": "Mit einem Wunschbild starten",
+        "fromAspirationHint": "Keine Ahnung, wo du anfangen sollst? Starte bei dem, wer du sein willst – wir schlagen passende Gewohnheiten vor",
+        "createCustomTask": "Neue Aufgabe manuell erstellen",
+        "selectDifficultyFirst": "Bitte wähle zuerst einen Schwierigkeitsgrad",
+        "aboutToAdd": "Wird hinzugefügt:",
+        "difficultyLabel": "Schwierigkeit: {level}",
+        "pickAnchorHint": "Wähle einen Anker (wann machst du es gewöhnlich?)",
+        "skipAnchor": "Anker überspringen, direkt hinzufügen",
+        "addWithAnchor": "Hinzufügen (Anker: {anchor})",
+        "pickAnchorFirst": "Bitte wähle zuerst einen Anker",
+        "addedToast": "Hinzugefügt: {name}",
+        "savedThisSession": "{n} Gewohnheiten zum täglichen Tracking hinzugefügt",
+        "done": "Fertig →"
+    },
+    "explore": {
+        "noRecommendedHabits": "Für diesen Bereich gibt es noch keine empfohlenen Gewohnheiten",
+        "chooseDifficulty": "Schwierigkeit wählen:",
+        "addThisHabit": "Diese Gewohnheit hinzufügen",
+        "addDirectly": "Direkt hinzufügen",
+        "addCandidate": "Als Kandidat hinzufügen",
+        "addedCandidate": "Als Kandidat hinzugefügt",
+        "cancelCandidate": "Kandidat entfernen",
+        "add": "Hinzufügen",
+        "cadence": {
+            "daily": "Täglich",
+            "dailyTimes": "{n}× täglich",
+            "weekly135": "3×/Woche (Mo, Mi, Fr)",
+            "weekly5Weekdays": "5×/Woche (werktags)",
+            "weeklyTimes": "{n}× pro Woche",
+            "yearly": "Jährlich",
+            "halfYearly": "Halbjährlich",
+            "quarterly": "Vierteljährlich",
+            "monthly": "Monatlich",
+            "everyNMonths": "Alle {n} Monate"
+        },
+        "lifeMoments": "Alltagsmomente",
+        "currentAnchor": "Aktueller Anker:",
+        "clearAnchor": "Anker entfernen",
+        "customAnchorCta": "Nichts dabei? Eigenen Anker eingeben",
+        "customAnchorPlaceholder": "Eigenen Anker eingeben (max. {n} Zeichen)",
+        "recommended": "Empfohlen",
+        "currentIdentity": "Aktuelle Identität:",
+        "clearIdentity": "Identität entfernen",
+        "recommendedIdentityFor": "Empfohlene Identität für dich ({type})",
+        "userTypes": {
+            "daisy": "Gänseblümchen-Typ",
+            "rose": "Rosen-Typ",
+            "orchid": "Orchideen-Typ",
+            "sunflower": "Sonnenblumen-Typ"
+        },
+        "orChooseYourOwn": "Oder selbst wählen",
+        "customIdentityCta": "Eigene Identität",
+        "customIdentityPlaceholder": "Eigene Identität eingeben (max. {n} Zeichen)",
+        "goldenQuadrantAria": "Goldene Gewohnheiten (hohe Wirkung × leicht machbar)",
+        "goldenQuadrantLabel": "Goldene Zone (oben rechts)",
+        "impactAxis": "Wirkung →",
+        "abilityAxis": "Leichtigkeit →",
+        "dotLabel": "{name} (Wirkung {impact} · Leichtigkeit {ability})"
+    },
+    "templates": {
+        "exploreTitle": "Gewohnheitspläne entdecken",
+        "pickFamily": "Wähle eine Plan-Familie",
+        "pickCourse": "Wähle einen Kurs",
+        "planFallback": "Plan",
+        "backToFamilies": "Zurück zu den Plan-Familien",
+        "families": {
+            "flower": {
+                "title": "Blumen-Mini-Kurse",
+                "intro": "Typisierung nach dem weiblichen Zyklus, 14-Tage-Aufgaben in Phasen.",
+                "quizPending": "Der Blumen-Typ-Fragebogen ist in Arbeit – stöbere erst mal, danach gibt es automatische Empfehlungen."
+            },
+            "sleep": {
+                "title": "Schlafrezepte",
+                "intro": "Typisierung nach deiner Schlafblockade, 14-Tage-Rezept in 4 Phasen.",
+                "quizPending": "Der Schlaf-Typ-Fragebogen ist in Arbeit – stöbere erst mal, danach gibt es automatische Empfehlungen."
+            },
+            "other": {
+                "title": "Weitere öffentliche Pläne",
+                "intro": "Von Experten gestaltete Pläne zu verschiedenen Themen."
+            }
+        },
+        "courseCount": "{n} Kurse",
+        "hasRecommended": "Empfehlung für dich",
+        "recommendedForYou": "Für dich empfohlen",
+        "familyEmpty": "In dieser Familie gibt es noch keine öffentlichen Kurse",
+        "expertFallback": "Experte",
+        "descriptionFallback": "Dieser Plan hilft dir, gute Gewohnheiten aufzubauen.",
+        "details": "Details",
+        "joining": "Trete bei …",
+        "joinPlan": "Plan beitreten",
+        "joinFailed": "Beitritt fehlgeschlagen, bitte später erneut versuchen",
+        "errorOccurred": "Fehler aufgetreten",
+        "chooseStartDate": "Startdatum wählen",
+        "startToday": "Heute starten",
+        "startTomorrow": "Morgen starten",
+        "startCustom": "Datum wählen",
+        "confirmJoin": "Beitritt bestätigen",
+        "detailAria": "Details zu {name}",
+        "daysCount": "{n} Tage",
+        "noTasksYet": "(Noch keine Aufgaben)",
+        "untitled": "(Ohne Titel)",
+        "tasksUnit": "Aufgaben",
+        "daysUnit": "Tage",
+        "joinedUnit": "Teilnehmer",
+        "phaseCount": "{n} Phasen",
+        "legacyStructure": "Dieser Plan nutzt eine ältere Aufgabenstruktur",
+        "legacyStructureHint": "Nach dem Beitritt siehst du alles unter „Heute“ und in der Planübersicht",
+        "communityAuthor": "Community",
+        "officialAuthor": "Offiziell"
+    },
+    "aspirations": {
+        "pickTitle": "Was wünschst du dir?",
+        "pickSubtitle": "Starte hier – wir empfehlen dir passende Pläne und Gewohnheiten",
+        "identityTitle": "Wer möchtest du sein?",
+        "identitySubtitle": "Gib diesem Wunschbild eine Identität – sie erscheint über deinem Tagesplan (überspringbar)",
+        "close": "Schließen",
+        "yourAspiration": "Dein Wunschbild",
+        "skip": "Überspringen",
+        "confirmIdentityContinue": "Identität bestätigen und weiter",
+        "skipIdentityContinue": "Später festlegen, weiter",
+        "existingBadge": "Bereits angelegt · weiter nutzen",
+        "recommendedForYou": "Für dich empfohlen",
+        "writeYourOwn": "＋ Eigenes Wunschbild schreiben",
+        "customPlaceholder": "Ich möchte …",
+        "becomeIdentity": "„{identity}“ werden",
+        "loadingRecommendations": "Empfehlungen werden geladen …",
+        "suitablePlans": "Passende Pläne",
+        "noMatchingPlans": "Keine passenden Pläne",
+        "suitableHabits": "Passende Gewohnheiten",
+        "noMatchingHabits": "Keine passenden Gewohnheiten",
+        "planSummary": "{days} Tage · {tasks} Aufgaben",
+        "customStructure": "Eigene Struktur",
+        "emptyResultsHint": "Für dieses Wunschbild gibt es noch keine passenden Pläne / Gewohnheiten – schau selbst:",
+        "skipExploreHint": "Oder überspringe das Wunschbild und entdecke direkt:",
+        "explorePlans": "Pläne entdecken",
+        "exploreHabits": "Gewohnheiten entdecken",
+        "candidateCount": "{n} Kandidaten hinzugefügt",
+        "candidateHint": "Füge weitere hinzu oder starte die Bewertung, um goldene Gewohnheiten zu finden",
+        "startScoring": "Bewertung starten →",
+        "loading": "Lädt …",
+        "empty": "Noch keine Wunschbilder. Starte über das [+] auf der Startseite.",
+        "setIdentity": "＋ Identität festlegen",
+        "saveIdentity": "Identität speichern",
+        "identityEditPlaceholder": "z. B.: Ich bin jemand, dem Schlaf wichtig ist (max. {n} Zeichen)",
+        "uncategorized": "Ohne Kategorie",
+        "linkedTasks": "{n} Aufgaben verknüpft",
+        "markAchieved": "Als erreicht markieren",
+        "archive": "Archivieren",
+        "delete": "Löschen",
+        "deleteConfirm": "„{text}“ wirklich löschen? Verknüpfte Aufgaben werden nicht gelöscht, aber von diesem Wunschbild getrennt.",
+        "status": {
+            "active": "Aktiv",
+            "achieved": "Erreicht",
+            "archived": "Archiviert"
+        },
+        "time": {
+            "today": "Heute",
+            "daysAgo": "Vor {n} Tagen",
+            "monthsAgo": "Vor {n} Monaten",
+            "yearsAgo": "Vor {n} Jahren"
+        },
+        "errors": {
+            "textRequired": "Bitte gib dein Wunschbild ein",
+            "createFailed": "Wunschbild konnte nicht erstellt werden, bitte erneut versuchen",
+            "domainRequired": "Bitte wähle einen Lebensbereich",
+            "fetchRecommendationsFailed": "Empfehlungen konnten nicht geladen werden, bitte erneut versuchen",
+            "fetchFailed": "Wunschbilder konnten nicht geladen werden",
+            "updateFailed": "Wunschbild konnte nicht aktualisiert werden",
+            "updateIdentityFailed": "Identität konnte nicht aktualisiert werden",
+            "deleteFailed": "Wunschbild konnte nicht gelöscht werden"
+        }
+    },
+    "taskCard": {
+        "periodStatus": "{count}/{target}×",
+        "quit": "Aufhören",
+        "reduce": "Reduzieren",
+        "star": "Stern setzen",
+        "unstar": "Stern entfernen",
+        "starred": "Mit Stern markiert",
+        "weeklyGoal": "Wochenziel",
+        "monthlyGoal": "Monatsziel",
+        "noDetails": "Keine Beschreibung",
+        "start": "Start",
+        "overQuota": "Limit überschritten",
+        "remaining": "Noch {n}×",
+        "keptDays": "{n} Tage durchgehalten",
+        "holdingToday": "Heute hältst du durch",
+        "todayCount": "Heute {n}×",
+        "futureLockTitle": "Zukünftige Aufgabe – erst an dem Tag abschließbar",
+        "uncompleteAll": "Abschluss aufheben (Unteraufgaben leeren)",
+        "completeAll": "Alle abschließen",
+        "collapseSubtasks": "Unteraufgaben einklappen",
+        "expandSubtasks": "Unteraufgaben ausklappen",
+        "restartTomorrow": "Kein Problem, morgen geht's neu los",
+        "canStillToday": "Heute noch {n}× möglich",
+        "keepItUp": "Weiter so, du machst das großartig",
+        "recordedToday": "Heute {n}× erfasst · Kein Problem, morgen geht's neu los",
+        "correctMinusOne": "Korrektur: eins abziehen",
+        "iDidIt": "Ich hab's getan",
+        "honestRecord": "Ehrlich erfasst: Ich hab's getan",
+        "yesterdayKept": "Gestern durchgehalten",
+        "yesterdayExceeded": "Gestern überschritten – heute neu starten",
+        "recordOnce": "Einmal erfassen",
+        "futurePreview": "Vorschau",
+        "confirmPause": "Diese Gewohnheit pausieren? Während der Pause erscheint sie nicht im heutigen Zeitplan.",
+        "confirmArchive": "Diese Gewohnheit ausblenden? Du wirst sie danach nicht mehr sehen.",
+        "confirmDelete": "Diese Gewohnheit endgültig löschen? Der gesamte Verlauf geht ebenfalls verloren.",
+        "actionFailed": "Aktion fehlgeschlagen ({action}), bitte später erneut versuchen",
+        "genericError": "Fehler aufgetreten",
+        "pause": "Pausieren",
+        "pauseAria": "{title} pausieren",
+        "delete": "Löschen",
+        "deleteAria": "{title} löschen",
+        "edit": "Bearbeiten",
+        "hide": "Ausblenden",
+        "taskOptions": "Aufgabenoptionen"
+    },
+    "taskDetail": {
+        "moreActions": "Mehr Aktionen",
+        "today": "Heute",
+        "future": "Zukunft",
+        "noDetailsFallback": "Diese Gewohnheit hat keine Beschreibung – einfach dranbleiben!",
+        "dayProgress": "Tagesfortschritt",
+        "notYet": "Der Tag ist noch nicht erreicht",
+        "completedTapToClear": "Erledigt (erneut tippen zum Zurücksetzen)",
+        "completeAllCount": "Alle abschließen ({completed}/{total})",
+        "completed": "Erledigt",
+        "completeTask": "Aufgabe abschließen",
+        "subtasks": "Unteraufgaben",
+        "streak": "Serie",
+        "daysUnit": "Tage",
+        "totalCompletions": "Insgesamt erledigt",
+        "timesUnit": "Mal",
+        "tipsTitle": "💡 Tipps zum Dranbleiben",
+        "tipsFallback": "Verknüpfe diese Gewohnheit mit einer, die du schon hast (z. B.: direkt nach dem Zähneputzen) – das erhöht deine Erfolgschancen enorm!"
+    },
+    "taskForm": {
+        "editTask": "Aufgabe bearbeiten",
+        "newTask": "Neue Aufgabe",
+        "titlePlaceholder": "Aufgabenname (z. B. Wasser trinken)",
+        "chooseIcon": "Symbol wählen",
+        "habitDirection": "Richtung der Gewohnheit",
+        "direction": {
+            "increase": "Aufbauen",
+            "increaseSub": "Je mehr, desto besser",
+            "reduce": "Reduzieren",
+            "reduceSub": "Je weniger, desto besser",
+            "avoid": "Aufhören",
+            "avoidSub": "Komplett vermeiden"
+        },
+        "dailyCap": "Tageslimit",
+        "unitLabel": "Einheit",
+        "unitPlaceholderTimes": "Mal",
+        "reduceHint": "Erfasse, wie oft es passiert – bleibst du im Limit, ist das Ziel erreicht. Keine Strafe, nur Selbsterkenntnis.",
+        "avoidHint": "Ziel ist komplettes Vermeiden. Passiert heute nichts, ist das Ziel erreicht – und wenn doch, wird es nur notiert. Morgen geht's weiter.",
+        "type": {
+            "binary": "Einfach (erledigt/nicht erledigt)",
+            "quantitative": "Messbar (Schritte/ml)",
+            "checklist": "Checkliste (Unteraufgaben)"
+        },
+        "targetValue": "Zielwert",
+        "stepValueLabel": "Schritt pro Eintrag (z. B. +200)",
+        "subtasksCount": "Unteraufgaben ({n})",
+        "deleteFailed": "Löschen fehlgeschlagen",
+        "addSubtask": "+ Unteraufgabe hinzufügen",
+        "advancedSettings": "Datum, Wiederholung & Erinnerung",
+        "timeAndFrequency": "Zeit & Häufigkeit",
+        "startDate": "Startdatum",
+        "time": "Uhrzeit",
+        "repeatFrequency": "Wiederholung",
+        "freq": {
+            "once": "Einmalig",
+            "daily": "Täglich",
+            "weekly": "Wöchentlich",
+            "monthly": "Monatlich"
+        },
+        "specificWeekdays": "Feste Wochentage",
+        "flexibleFrequencyWeekly": "Flexible Häufigkeit (Zeitraum-Ziel)",
+        "repeatOn": "Wiederholen am:",
+        "weekDays": [
+            "So",
+            "Mo",
+            "Di",
+            "Mi",
+            "Do",
+            "Fr",
+            "Sa"
+        ],
+        "weeklyCompletePrefix": "Pro Woche",
+        "monthlyCompletePrefix": "Pro Monat",
+        "timesSuffix": "Mal",
+        "dailyLimitOnce": "Max. 1× pro Tag",
+        "specificDate": "Festes Datum",
+        "flexibleFrequency": "Flexible Häufigkeit",
+        "monthlyOnDate": "Am {d}. jeden Monats",
+        "monthlyNthWeekday": "Jeden {n}. {day} im Monat",
+        "endCondition": "Endbedingung:",
+        "endNever": "Nie beenden",
+        "endAfterCount": "Nach Anzahl Wiederholungen",
+        "endUntilDate": "Bis Datum",
+        "repeatPrefix": "Nach",
+        "timesThenStop": "Wiederholungen beenden",
+        "reminder": "Erinnerung",
+        "onTime": "Pünktlich ({time})",
+        "minutesBefore": "{n} Minuten vorher",
+        "hoursBefore": "{n} Stunden vorher",
+        "daysBefore": "{n} Tage vorher",
+        "reminderAutoCancel": "Wird die Aufgabe früher erledigt, entfällt die Erinnerung automatisch",
+        "notes": "Notizen",
+        "notesPlaceholder": "Schreib etwas …",
+        "anchor": "Anker",
+        "anchorHint": "(optional, ein Hinweis vor der Gewohnheit)",
+        "delete": "Löschen",
+        "subtaskNamePlaceholder": "Name der Unteraufgabe",
+        "deleteSubtask": "Unteraufgabe löschen",
+        "disabledSince": "Deaktiviert ({date})",
+        "confirmDeleteSubtask": "„{label}“ löschen?",
+        "unnamed": "Unbenannt",
+        "hideFromToday": "Ab heute nicht mehr anzeigen",
+        "keepPastRecords": "Bisherige Einträge bleiben erhalten",
+        "permanentDeleteAll": "Endgültig löschen, inklusive aller bisherigen Einträge",
+        "permanentDeleteDetail": "Alles weg – auch die bisherigen Häkchen verschwinden",
+        "noHistoryDetail": "Kein Verlauf vorhanden, diese Option ist nicht nötig",
+        "confirmDelete": "Löschen bestätigen"
+    },
+    "planGroup": {
+        "plan": "Plan",
+        "defaultPlanName": "Persönlicher Plan",
+        "createdBy": "Erstellt von {name}",
+        "expertFallback": "Experte",
+        "planDescription": "Planbeschreibung",
+        "generalTasks": "Allgemeine Aufgaben",
+        "phaseDays": "({n} Tage)",
+        "notStarted": "Noch nicht gestartet",
+        "confirmDeleteExpertTitle": "Experten-Plan wirklich löschen?",
+        "confirmDeleteTitle": "Plan wirklich löschen?",
+        "warning": "⚠️ Achtung",
+        "expertDeleteWarning": "Diese Liste wurde von deinem Experten für dich erstellt. Sprich vor dem Löschen unbedingt mit ihm. Ohne Rücksprache gelöschte Daten können nicht wiederhergestellt werden.",
+        "deleteWarning": "Beim Löschen des Plans werden auch alle enthaltenen Aufgaben unwiderruflich gelöscht.",
+        "deleteAnyway": "Trotzdem löschen",
+        "confirmDeleteButton": "Löschen bestätigen"
+    },
+    "location": {
+        "addLocation": "Ort hinzufügen",
+        "searchCity": "Stadt suchen"
+    },
+    "focusMap": {
+        "title": "Fokus-Karte",
+        "loading": "Lädt …",
+        "noCandidates": "Keine Kandidaten-Gewohnheiten zum Bewerten",
+        "addedCount": "{n} Gewohnheiten hinzugefügt",
+        "archivedNote": "Die übrigen {n} nicht gewählten wurden archiviert, die Kandidatenliste ist leer.",
+        "savePlanPrompt": "Möchtest du diese Gewohnheiten als Plan speichern? Du kannst ihn später wiederverwenden oder zur öffentlichen Freigabe einreichen.",
+        "saveAsPlan": "Als Plan speichern",
+        "done": "Fertig",
+        "mapTitle": "Deine Fokus-Karte",
+        "mapSubtitle": "Vier Zonen nach „Wirkung × Machbarkeit“ – so entscheidest du, was zuerst dran ist.",
+        "submitting": "Wird verarbeitet …",
+        "addHabitsCta": "{n} Gewohnheiten hinzufügen ›",
+        "batchRateFailed": "Sammelbewertung fehlgeschlagen, bitte später erneut versuchen",
+        "genericError": "Fehler aufgetreten",
+        "added": "Hinzugefügt",
+        "addAnyway": "Trotzdem hinzufügen",
+        "add": "Hinzufügen",
+        "quadrants": {
+            "golden": {
+                "label": "Zuerst machen",
+                "advice": "Hohe Wirkung und leicht machbar – am lohnendsten, am besten zuerst hinzufügen."
+            },
+            "big_fish": {
+                "label": "Lohnende Herausforderung",
+                "advice": "Große Wirkung, aber aktuell schwer machbar – starte mit einer einfacheren Version und setz dich nicht unter Druck."
+            },
+            "background": {
+                "label": "Nebenbei mitnehmen",
+                "advice": "Leicht machbar, aber begrenzte Wirkung – ergänze sie, wenn noch Luft ist."
+            },
+            "skip": {
+                "label": "Erst mal überspringen",
+                "advice": "Begrenzte Wirkung und schwer machbar – am besten erst mal liegen lassen; du kannst sie aber trotzdem hinzufügen."
+            }
+        },
+        "matrix": {
+            "skipShort": "Überspringen",
+            "impactAxis": "Wirkung →",
+            "abilityAxis": "Machbarkeit (rechts = leichter) →"
+        },
+        "rating": {
+            "prev": "‹ Zurück",
+            "next": "Weiter ›",
+            "viewMap": "Fokus-Karte ansehen ›",
+            "impact": {
+                "title": "Schritt 1 · Wirkung",
+                "q": "Wie stark beeinflusst diese Gewohnheit die Veränderung, die du dir wünschst?",
+                "sub": "Denk nur an den Bezug zu deinem Ziel – ob du es schaffst, ist hier egal.",
+                "lo": "Kaum spürbar",
+                "hi": "Sehr spürbar",
+                "aria": "Wirkung",
+                "labels": {
+                    "1": "Kaum spürbar",
+                    "2": "Wenig Wirkung",
+                    "3": "Mittel",
+                    "4": "Deutlich spürbar",
+                    "5": "Entscheidend"
+                }
+            },
+            "ability": {
+                "title": "Schritt 2 · Machbarkeit",
+                "q": "Wie leicht fällt dir diese Gewohnheit?",
+                "sub": "Nur die Schwierigkeit zählt – die Wirkung ist in diesem Schritt egal.",
+                "lo": "Sehr schwer",
+                "hi": "Sehr leicht",
+                "aria": "Machbarkeit",
+                "labels": {
+                    "1": "Sehr schwer",
+                    "2": "Eher schwer",
+                    "3": "Mittel",
+                    "4": "Eher leicht",
+                    "5": "Sehr leicht"
+                }
+            }
+        },
+        "duration": {
+            "title": "Wie lange willst du dranbleiben?",
+            "recommended": "Empfohlen",
+            "sciAria": "Wissenschaft dahinter ansehen",
+            "whyScience": "Warum 66 Tage? Die Wissenschaft dahinter",
+            "fullSource": "Vollständige Quelle und Erklärung ansehen",
+            "confirm": "Hinzufügen bestätigen",
+            "d21": {
+                "label": "21 Tage",
+                "sub": "Erster Versuch"
+            },
+            "d66": {
+                "label": "66 Tage",
+                "sub": "Automatisierung aufbauen"
+            },
+            "d90": {
+                "label": "90 Tage",
+                "sub": "Festigen"
+            },
+            "none": {
+                "label": "Unbegrenzt",
+                "sub": "Kein Enddatum, dauerhaftes Tracking"
+            }
+        },
+        "science": {
+            "summary": "Studien zeigen: Bis ein neues Verhalten zur „automatischen Reaktion ohne viel Willenskraft“ wird, dauert es im Schnitt etwa 66 Tage (je nach Person und Schwierigkeit 18–254 Tage). Deshalb ist 66 Tage unsere Voreinstellung."
+        }
+    },
+    "plan": {
+        "saveAsPlanTitle": "Als Plan speichern",
+        "nameLabel": "Planname",
+        "descriptionLabel": "Beschreibung (optional)",
+        "phasePreview": "Phasenvorschau ({n} Phasen)",
+        "phaseSummary": "{days} Tage · {n} Gewohnheiten",
+        "savePrivate": "Privat speichern",
+        "sharePublic": "Öffentliche Freigabe beantragen",
+        "createFailed": "Plan konnte nicht erstellt werden, bitte später erneut versuchen",
+        "genericError": "Fehler aufgetreten",
+        "phases": {
+            "p1": "Aufbauphase",
+            "p2": "Fortgeschritten",
+            "p3": "Herausforderung"
+        }
+    },
+    "stats": {
+        "title": "Statistik",
+        "loading": "Lädt …",
+        "loadError": "Statistik kann gerade nicht geladen werden: {error}",
+        "emptyTitle": "Mach deinen ersten Check-in und schau dann wieder vorbei 📊",
+        "emptySubtitle": "Die Statistik braucht mindestens einen Tag mit Einträgen, um etwas zu erzählen",
+        "daysUnit": "Tage",
+        "streak": {
+            "longestPrefix": "Dein längster Rekord",
+            "notToday": "Heute noch kein Check-in – los geht's 💪",
+            "startToday": "Mach heute deinen ersten Check-in und starte bei 1 🌱"
+        },
+        "rate": {
+            "last7": "Abschlussquote der letzten 7 Tage",
+            "last30": "Abschlussquote der letzten 30 Tage"
+        },
+        "domains": {
+            "title": "Verteilung über die 9 Gesundheitsbereiche",
+            "subtitle": "Letzte 30 Tage, Anzahl Abschlüsse",
+            "times": "{n}×",
+            "completed": "erledigt"
+        },
+        "heatmap": {
+            "title": "Letzte 12 Wochen",
+            "subtitle": "Jedes Feld ist ein Tag – je dunkler, desto mehr erledigt",
+            "dayTitle": "{date} · {n} erledigt",
+            "less": "Weniger",
+            "more": "Mehr"
+        },
+        "taskStreaks": {
+            "title": "Deine Gold-Habits",
+            "longest": "Längste: {n}"
+        }
+    },
+    "insights": {
+        "loading": "Lädt …",
+        "loadingEvidence": "Wissenschaftliche Belege werden geladen …",
+        "sectionAria": "Wissenschaftliche Belege",
+        "whyImportant": "Warum diese Gewohnheit wichtig ist",
+        "takeawayQuote": "„{text}“",
+        "collapse": "Einklappen",
+        "expand": "Ausklappen",
+        "hideDetail": "Studiendetails ausblenden",
+        "showDetail": "Studiendetails ansehen",
+        "sourceType": {
+            "journal": "Fachzeitschrift",
+            "book": "Buch",
+            "source": "Quelle"
+        }
+    },
+    "evidence": {
+        "tier": {
+            "strong": "Stark",
+            "moderate": "Mittel",
+            "preliminary": "Vorläufig"
+        },
+        "badge": {
+            "aria": "Evidenzstärke {tier}, tippe für die Bewertung",
+            "label": "Evidenzstärke {tier}"
+        },
+        "panel": {
+            "title": "Evidenzstärke-Bewertung",
+            "total": "Gesamt",
+            "totalValue": "{total} / 9 → Evidenzstärke {tier}",
+            "howScored": "So bewerten wir"
+        },
+        "rubric": {
+            "title": "So bewerten wir die Evidenzstärke",
+            "close": "Schließen",
+            "intro": "Jeder wissenschaftliche Beleg wird in 4 Dimensionen bewertet, die Summe ergibt drei Stufen. Die Punktzahl misst, „wie verlässlich die Evidenz ist“, nicht „wie gut die Gewohnheit ist“ – eine rigorose Studie hat auch dann hohe Evidenzstärke, wenn sie nur begrenzte Effekte findet.",
+            "points": "{n} Punkte",
+            "totalScale": "Gesamtpunktzahl 0–9 entspricht den Stufen:",
+            "tiers": "Stark ({strongFrom}–9) · Mittel ({moderateFrom}–{moderateTo}) · Vorläufig (0–{preliminaryTo})"
+        },
+        "dimensions": {
+            "studyType": {
+                "label": "Studientyp",
+                "l3": "Metaanalyse / systematisches Review",
+                "l2": "RCT-Interventionsstudie",
+                "l1": "Beobachtungsstudie",
+                "l0": "Tier / Mechanismus / Expertenmeinung"
+            },
+            "scale": {
+                "label": "Stichprobe & Größe",
+                "l2": "Große Humanstudie",
+                "l1": "Kleine Humanstudie",
+                "l0": "Nicht-human (Tiere/Zellen)"
+            },
+            "causality": {
+                "label": "Kausale Stärke",
+                "l2": "Kausalität durch Intervention belegt",
+                "l1": "Starke Korrelation + plausibler Mechanismus",
+                "l0": "Nur Korrelation / Mechanismus-Schluss"
+            },
+            "replication": {
+                "label": "Replikation",
+                "l2": "Mehrere Studien einig",
+                "l1": "Teilweise gestützt",
+                "l0": "Einzelstudie / gemischte Ergebnisse"
+            }
+        }
+    },
+    "journey": {
+        "tiers": {
+            "empty": "Brachland",
+            "village": "Dorf",
+            "town": "Kleinstadt",
+            "city": "Stadt",
+            "metropolis": "Metropole",
+            "megacity": "Megacity"
+        },
+        "panel": {
+            "totalPrefix": "Insgesamt",
+            "totalSuffix": "× erledigt",
+            "toNextTier": "Noch {n}× bis {tier}",
+            "maxTier": "Höchste Stufe erreicht",
+            "foodMemories": "{city} · {n} Essens-Erinnerungen",
+            "flagshipInfo": "Flaggschiff Lv{level} · {count} Gebäude",
+            "recent": "Letzte Einträge"
+        },
+        "empty": {
+            "plotAria": "Ein leeres Grundstück, das auf Gebäude wartet",
+            "startBuilding": "Beginne, deine Stadt zu bauen",
+            "waiting": "Deine Stadt wartet auf dich",
+            "bodyOff": "Aktiviere „Abschlussort erfassen“ – mit jeder erledigten Gewohnheit wächst diese Stadt ein Stück.",
+            "bodyOn": "Schließe die erste Gewohnheit mit erfasstem Ort ab, und hier entsteht dein erstes Gebäude.",
+            "goSettings": "In den Einstellungen aktivieren",
+            "trackingOn": "Abschlussort wird erfasst"
+        },
+        "overviewAria": "Übersicht der Reise-Welt",
+        "cityAria": "Die Stadt {city}",
+        "memory": {
+            "saving": "Wird zur Reise hinzugefügt …",
+            "saved": "Zur Reise hinzugefügt",
+            "capture": "Diese Mahlzeit festhalten"
+        }
+    },
+    "worlds": {
+        "journey": {
+            "name": "Reise",
+            "tagline": "Verwandle die Orte deiner erledigten Gewohnheiten in eine Stadtkarte der echten Welt"
+        },
+        "home": {
+            "name": "Zuhause",
+            "tagline": "Mach dein Zuhause mit jedem erledigten Tag Stück für Stück gemütlicher"
+        },
+        "figure": {
+            "name": "Figur",
+            "tagline": "Zieh einen Begleiter auf, der mit deinen Gewohnheiten mitwächst"
+        }
+    },
+    "figure": {
+        "creatureAria": "Figuren-Begleiter",
+        "emptyPrompt": "Schließe Gewohnheiten ab, und dein Begleiter beginnt zu wachsen",
+        "completedCount": "{n}× erledigt",
+        "evolveHint": "Noch {n} Abschlüsse, dann entwickelt sich dein Begleiter zu {next}",
+        "fullyGrown": "Dein Begleiter ist ganz groß geworden – danke für den gemeinsamen Weg",
+        "stages": {
+            "s1": "Ei",
+            "s2": "Jungtier",
+            "s3": "Wachstumsphase",
+            "s4": "Aktive Phase",
+            "s5": "Reifephase",
+            "s6": "Begleiter"
+        }
+    },
+    "tools": {
+        "start": "Start",
+        "pause": "Pause",
+        "skip": "Überspringen",
+        "reset": "Zurücksetzen",
+        "done": "Fertig",
+        "close": "Schließen",
+        "cycle": "Runde {current} / {total}",
+        "suggested": "Empfohlene Tools",
+        "timer": {
+            "focus": "Fokus",
+            "break": "Pause",
+            "ringAria": "Timer-Ring",
+            "describePomodoro": "Pomodoro {minutes} Min × {rounds} Runden",
+            "describeCount": "Timer {minutes} Min"
+        },
+        "breathing": {
+            "inhale": "Einatmen",
+            "hold": "Anhalten",
+            "exhale": "Ausatmen",
+            "describe": "{inhale}-{hold}-{exhale}-Atmung × {cycles} Runden"
+        },
+        "music": {
+            "describe": "Musik {minutes} Min"
+        }
+    },
+    "music": {
+        "play": "Abspielen",
+        "pause": "Pause",
+        "remainingAria": "Verbleibende Zeit",
+        "loop": "Wiederholen",
+        "similar": "Ähnliche weiterspielen",
+        "decreaseTime": "Zeit verringern",
+        "increaseTime": "Zeit erhöhen",
+        "minutes": "{n} Minuten",
+        "comingSoon": "Bald verfügbar",
+        "categoryComingSoon": "Titel in dieser Kategorie kommen bald",
+        "problems": {
+            "stress": {
+                "title": "Stress-Typ: Der Kopf kommt nicht zur Ruhe"
+            },
+            "circadian": {
+                "title": "Rhythmus-Typ: Müde, aber kein Schlaf"
+            },
+            "metabolic": {
+                "title": "Stoffwechsel-Typ: Nachts oft wach"
+            },
+            "hormonal": {
+                "title": "Hormon-Typ: Starke körperliche Schwankungen"
+            }
+        },
+        "categories": {
+            "calm": {
+                "title": "Kopf beruhigen"
+            },
+            "routine": {
+                "title": "Feste Routine"
+            },
+            "guard": {
+                "title": "Die ganze Nacht behütet"
+            },
+            "relax": {
+                "title": "Körper entspannen"
+            }
         }
     }
 }

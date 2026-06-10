@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useT } from '@/lib/i18n';
 
 // FocusMatrix — 2×2 焦點地圖矩陣。Y=影響力(上高)、X=執行度(右易)。
 // 每個 point 是帶編號的彩點；桌機 hover、手機點選顯示習慣名稱浮層；下方圖例對應編號↔名稱。
 // Props:
 //   points: Array<{ id, n, title, impact(1-5), ability(1-5), quadrant, color }>
 const CELLS = [
-  { key: 'big_fish',   label: '值得挑戰',   cls: 'top-0 left-0 bg-violet-50',  txt: 'text-violet-600' },
-  { key: 'golden',     label: '值得優先做', cls: 'top-0 left-1/2 bg-orange-50', txt: 'text-orange-600' },
-  { key: 'skip',       label: '建議跳過',   cls: 'top-1/2 left-0 bg-slate-50',  txt: 'text-slate-400' },
-  { key: 'background', label: '順手加碼',   cls: 'top-1/2 left-1/2 bg-cyan-50', txt: 'text-cyan-600' },
+  { key: 'big_fish',   labelKey: 'focusMap.quadrants.big_fish.label',   cls: 'top-0 left-0 bg-violet-50',  txt: 'text-violet-600' },
+  { key: 'golden',     labelKey: 'focusMap.quadrants.golden.label',     cls: 'top-0 left-1/2 bg-orange-50', txt: 'text-orange-600' },
+  { key: 'skip',       labelKey: 'focusMap.matrix.skipShort',           cls: 'top-1/2 left-0 bg-slate-50',  txt: 'text-slate-400' },
+  { key: 'background', labelKey: 'focusMap.quadrants.background.label', cls: 'top-1/2 left-1/2 bg-cyan-50', txt: 'text-cyan-600' },
 ];
 
 // (ability,impact) → 百分比座標（含同點水平微錯位）
@@ -26,6 +27,7 @@ function layout(points) {
 }
 
 const FocusMatrix = ({ points = [] }) => {
+  const { t } = useT();
   const [active, setActive] = useState(null); // 目前顯示名稱的 dot id
   const laid = layout(points);
   const tip = active != null ? laid.find(p => p.id === active) : null;
@@ -37,7 +39,7 @@ const FocusMatrix = ({ points = [] }) => {
         <div className="absolute inset-0 rounded-2xl overflow-hidden border border-gray-200">
           {CELLS.map(c => (
             <div key={c.key} className={`absolute w-1/2 h-1/2 p-1.5 ${c.cls}`}>
-              <span className={`text-[9px] font-extrabold ${c.txt}`}>{c.label}</span>
+              <span className={`text-[9px] font-extrabold ${c.txt}`}>{t(c.labelKey)}</span>
             </div>
           ))}
         </div>
@@ -67,9 +69,9 @@ const FocusMatrix = ({ points = [] }) => {
             {tip.n}. {tip.title}
           </div>
         )}
-        <span className="absolute -left-1 top-1/2 -rotate-90 origin-left -translate-y-1/2 text-[10px] font-bold text-gray-400 whitespace-nowrap">影響力 →</span>
+        <span className="absolute -left-1 top-1/2 -rotate-90 origin-left -translate-y-1/2 text-[10px] font-bold text-gray-400 whitespace-nowrap">{t('focusMap.matrix.impactAxis')}</span>
       </div>
-      <p className="text-center text-[10px] font-bold text-gray-400 mt-1.5">執行度（越右越容易）→</p>
+      <p className="text-center text-[10px] font-bold text-gray-400 mt-1.5">{t('focusMap.matrix.abilityAxis')}</p>
       {/* 圖例 */}
       <div className="grid grid-cols-2 gap-x-2.5 gap-y-1 mt-2">
         {laid.map(p => (

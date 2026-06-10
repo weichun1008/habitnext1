@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { Edit3, X } from 'lucide-react';
 import { LIFE_MOMENTS_GROUPED, CUSTOM_ANCHOR_MAX_LENGTH } from '@/lib/anchors';
+import { useT } from '@/lib/i18n';
+import { translateCue, translateTimeOfDay } from '@/lib/i18n/dataLabels';
 
 function AnchorButton({ label, selected, onClick }) {
   return (
@@ -40,6 +42,7 @@ function AnchorButton({ label, selected, onClick }) {
 //   3. The pill renders even when `value` is a custom string that doesn't
 //      match any preset — so the user always knows what's stored.
 export default function AnchorPicker({ value, onChange, yourTasks: _yourTasks, excludeTaskId: _excludeTaskId }) {
+  const { t } = useT();
   const [customMode, setCustomMode] = useState(false);
   const [customText, setCustomText] = useState('');
 
@@ -75,12 +78,12 @@ export default function AnchorPicker({ value, onChange, yourTasks: _yourTasks, e
           className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200"
         >
           <span className="text-sm text-emerald-800">
-            目前錨點：<span className="font-bold">{value}</span>
+            {t('explore.currentAnchor')}<span className="font-bold">{translateCue(value, t)}</span>
           </span>
           <button
             type="button"
             onClick={() => onChange('')}
-            aria-label="清除錨點"
+            aria-label={t('explore.clearAnchor')}
             className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 rounded-full p-1 transition-colors"
           >
             <X size={14} />
@@ -91,17 +94,17 @@ export default function AnchorPicker({ value, onChange, yourTasks: _yourTasks, e
       {/* Life moments — primary entry */}
       <div>
         <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-          生活時刻
+          {t('explore.lifeMoments')}
         </p>
         <div className="space-y-3">
           {LIFE_MOMENTS_GROUPED.map(group => (
             <div key={group.key}>
-              <p className="text-[10px] font-semibold text-gray-500 mb-1.5">{group.title}</p>
+              <p className="text-[10px] font-semibold text-gray-500 mb-1.5">{translateTimeOfDay(group.key, t)}</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {group.items.map(m => (
                   <AnchorButton
                     key={m.id}
-                    label={m.label}
+                    label={t(`data.anchors.${m.id}`)}
                     selected={value === m.label}
                     onClick={() => select(m.label)}
                   />
@@ -119,7 +122,7 @@ export default function AnchorPicker({ value, onChange, yourTasks: _yourTasks, e
               onClick={() => setCustomMode(true)}
               className="w-full px-3 py-2 rounded-xl text-sm font-medium text-center bg-gray-50 border border-dashed border-gray-300 text-gray-600 hover:bg-gray-100 flex items-center justify-center gap-1"
             >
-              <Edit3 size={14} /> 都不是？輸入自訂錨點
+              <Edit3 size={14} /> {t('explore.customAnchorCta')}
             </button>
           ) : (
             <div className="flex gap-2">
@@ -130,7 +133,7 @@ export default function AnchorPicker({ value, onChange, yourTasks: _yourTasks, e
                 value={customText}
                 onChange={(e) => setCustomText(e.target.value.slice(0, CUSTOM_ANCHOR_MAX_LENGTH))}
                 onKeyDown={handleCustomKey}
-                placeholder="輸入自訂錨點 (最多 30 字)"
+                placeholder={t('explore.customAnchorPlaceholder', { n: CUSTOM_ANCHOR_MAX_LENGTH })}
                 className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
               <button
@@ -138,14 +141,14 @@ export default function AnchorPicker({ value, onChange, yourTasks: _yourTasks, e
                 onClick={submitCustom}
                 className="px-4 py-2 rounded-xl bg-emerald-500 text-white text-sm font-bold hover:bg-emerald-600 transition-colors"
               >
-                加入
+                {t('explore.add')}
               </button>
               <button
                 type="button"
                 onClick={() => { setCustomMode(false); setCustomText(''); }}
                 className="px-3 py-2 rounded-xl bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition-colors"
               >
-                取消
+                {t('common.cancel')}
               </button>
             </div>
           )}

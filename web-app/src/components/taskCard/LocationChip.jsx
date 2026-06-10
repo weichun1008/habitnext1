@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { MapPin, Search } from 'lucide-react';
 import { searchCities } from '@/lib/cities';
+import { useT } from '@/lib/i18n';
 
 // LocationChip — Slice O. Shows a MapPin + city on a completed card / in TaskDetailModal.
 // Tapping opens a small popover to correct the city (recent cities + offline
@@ -14,6 +15,7 @@ import { searchCities } from '@/lib/cities';
 //   recentCities: string[]       — quick-pick chips (caller supplies)
 //   onPick(cityName): void       — persist the chosen/changed city
 const LocationChip = ({ city, recentCities = [], onPick }) => {
+    const { t } = useT();
     const [open, setOpen] = useState(false);
     const [q, setQ] = useState('');
 
@@ -33,7 +35,7 @@ const LocationChip = ({ city, recentCities = [], onPick }) => {
                 className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 hover:text-emerald-700"
             >
                 <MapPin size={11} />
-                {city || '加地點'}
+                {city || t('location.addLocation')}
             </button>
 
             {open && (
@@ -61,7 +63,7 @@ const LocationChip = ({ city, recentCities = [], onPick }) => {
                             autoFocus
                             value={q}
                             onChange={(e) => setQ(e.target.value)}
-                            placeholder="搜尋城市"
+                            placeholder={t('location.searchCity')}
                             className="flex-1 text-[12px] outline-none"
                         />
                     </div>

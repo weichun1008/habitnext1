@@ -2,8 +2,10 @@
 
 import { useRef } from 'react';
 import { ImagePlus, Image as ImageIcon, Loader } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 export default function MemoryCapture({ hasPhoto, onAttach, busy }) {
+  const { t } = useT();
   const inputRef = useRef(null);
 
   const handleClick = () => {
@@ -21,13 +23,13 @@ export default function MemoryCapture({ hasPhoto, onAttach, busy }) {
   let label;
   if (busy) {
     icon = <Loader size={14} className="animate-spin" aria-hidden="true" />;
-    label = '收進旅程中…';
+    label = t('journey.memory.saving');
   } else if (hasPhoto) {
     icon = <ImageIcon size={14} aria-hidden="true" />;
-    label = '已收進旅程';
+    label = t('journey.memory.saved');
   } else {
     icon = <ImagePlus size={14} aria-hidden="true" />;
-    label = '記錄這餐';
+    label = t('journey.memory.capture');
   }
 
   return (

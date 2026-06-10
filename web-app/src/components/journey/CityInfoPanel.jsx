@@ -4,17 +4,11 @@ import React from 'react';
 import { MapPin, Camera } from 'lucide-react';
 import IconRenderer from '@/components/IconRenderer';
 import { nextTierProgress } from '@/lib/journeyWorld';
-
-const TIER_LABELS = {
-  empty: '空地',
-  village: '村莊',
-  town: '城鎮',
-  city: '都市',
-  metropolis: '大都會',
-  megacity: '巨型都會',
-};
+import { useT } from '@/lib/i18n';
+import { translateDomain } from '@/lib/i18n/dataLabels';
 
 const CityInfoPanel = ({ cityData, userId }) => {
+  const { t } = useT();
   if (!cityData) return null;
   const { city, total, tier, domains = [], pins = [] } = cityData;
   const { nextTier, remaining } = nextTierProgress(total);
@@ -25,21 +19,23 @@ const CityInfoPanel = ({ cityData, userId }) => {
       <div className="flex items-center justify-between gap-2">
         <h3 className="text-lg font-semibold text-gray-900">{city}</h3>
         <span className="rounded-full bg-teal-600 px-2.5 py-0.5 text-xs font-medium text-white">
-          {TIER_LABELS[tier] || tier}
+          {t(`journey.tiers.${tier}`)}
         </span>
       </div>
 
       <div className="space-y-1">
         <p className="text-sm text-gray-700">
-          累積完成 <span className="font-semibold text-gray-900">{total}</span> 次
+          {t('journey.panel.totalPrefix')} <span className="font-semibold text-gray-900">{total}</span> {t('journey.panel.totalSuffix')}
         </p>
         <p className="text-xs text-gray-500">
-          {nextTier ? `再 ${remaining} 次升${TIER_LABELS[nextTier]}` : '已達最高階'}
+          {nextTier
+            ? t('journey.panel.toNextTier', { n: remaining, tier: t(`journey.tiers.${nextTier}`) })
+            : t('journey.panel.maxTier')}
         </p>
         {photoCount > 0 && (
           <div className="flex items-center gap-1.5 text-xs text-gray-500">
             <Camera size={14} className="shrink-0 text-teal-600" />
-            <span>{city} · {photoCount} 個美食回憶</span>
+            <span>{t('journey.panel.foodMemories', { city, n: photoCount })}</span>
           </div>
         )}
       </div>
@@ -49,9 +45,9 @@ const CityInfoPanel = ({ cityData, userId }) => {
           {domains.map((d) => (
             <li key={d.domain} className="flex items-center gap-2 text-sm">
               <IconRenderer category={d.domain} size={18} />
-              <span className="font-medium text-gray-800">{d.domain}</span>
+              <span className="font-medium text-gray-800">{translateDomain(d.domain, t)}</span>
               <span className="ml-auto text-xs text-gray-500">
-                旗艦 Lv{d.flagshipLevel} · {d.buildingCount} 棟
+                {t('journey.panel.flagshipInfo', { level: d.flagshipLevel, count: d.buildingCount })}
               </span>
             </li>
           ))}
@@ -60,7 +56,7 @@ const CityInfoPanel = ({ cityData, userId }) => {
 
       {pins.length > 0 && (
         <div className="space-y-1.5 border-t border-gray-100 pt-3">
-          <p className="text-xs font-medium text-gray-500">最近紀錄</p>
+          <p className="text-xs font-medium text-gray-500">{t('journey.panel.recent')}</p>
           <ul className="space-y-1.5">
             {pins.map((p, i) => (
               <li key={`${p.date}-${i}`} className="flex items-center gap-2 text-xs text-gray-600">
@@ -75,7 +71,7 @@ const CityInfoPanel = ({ cityData, userId }) => {
                 )}
                 <span className="text-gray-400">{p.date}</span>
                 <span className="truncate text-gray-800">{p.title}</span>
-                <span className="ml-auto shrink-0 text-gray-400">{p.domain}</span>
+                <span className="ml-auto shrink-0 text-gray-400">{translateDomain(p.domain, t)}</span>
               </li>
             ))}
           </ul>

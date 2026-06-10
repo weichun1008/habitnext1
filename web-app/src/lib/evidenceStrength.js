@@ -4,38 +4,39 @@
 // 只存 4 個原始面向整數；total / tier 一律由此推算。調整 levels.points 或
 // THRESHOLDS 後重新部署，即由既有原始值重算，無需資料遷移。
 
+// labelKey 為 i18n key — 元件顯示時用 t(labelKey)；label 保留為 zh-TW canonical（admin 介面與測試仍用）。
 export const DIMENSIONS = [
   {
-    key: 'studyType', label: '研究類型',
+    key: 'studyType', label: '研究類型', labelKey: 'evidence.dimensions.studyType.label',
     levels: [
-      { value: 3, label: '統合分析／系統綜述', points: 3 },
-      { value: 2, label: 'RCT 介入試驗', points: 2 },
-      { value: 1, label: '觀察性研究', points: 1 },
-      { value: 0, label: '動物／機制／專家意見', points: 0 },
+      { value: 3, label: '統合分析／系統綜述', labelKey: 'evidence.dimensions.studyType.l3', points: 3 },
+      { value: 2, label: 'RCT 介入試驗', labelKey: 'evidence.dimensions.studyType.l2', points: 2 },
+      { value: 1, label: '觀察性研究', labelKey: 'evidence.dimensions.studyType.l1', points: 1 },
+      { value: 0, label: '動物／機制／專家意見', labelKey: 'evidence.dimensions.studyType.l0', points: 0 },
     ],
   },
   {
-    key: 'scale', label: '對象與規模',
+    key: 'scale', label: '對象與規模', labelKey: 'evidence.dimensions.scale.label',
     levels: [
-      { value: 2, label: '大型人體', points: 2 },
-      { value: 1, label: '小型人體', points: 1 },
-      { value: 0, label: '非人體（動物／細胞）', points: 0 },
+      { value: 2, label: '大型人體', labelKey: 'evidence.dimensions.scale.l2', points: 2 },
+      { value: 1, label: '小型人體', labelKey: 'evidence.dimensions.scale.l1', points: 1 },
+      { value: 0, label: '非人體（動物／細胞）', labelKey: 'evidence.dimensions.scale.l0', points: 0 },
     ],
   },
   {
-    key: 'causality', label: '因果強度',
+    key: 'causality', label: '因果強度', labelKey: 'evidence.dimensions.causality.label',
     levels: [
-      { value: 2, label: '介入證明因果', points: 2 },
-      { value: 1, label: '強相關＋合理機制', points: 1 },
-      { value: 0, label: '僅相關／機制推論', points: 0 },
+      { value: 2, label: '介入證明因果', labelKey: 'evidence.dimensions.causality.l2', points: 2 },
+      { value: 1, label: '強相關＋合理機制', labelKey: 'evidence.dimensions.causality.l1', points: 1 },
+      { value: 0, label: '僅相關／機制推論', labelKey: 'evidence.dimensions.causality.l0', points: 0 },
     ],
   },
   {
-    key: 'replication', label: '重複驗證',
+    key: 'replication', label: '重複驗證', labelKey: 'evidence.dimensions.replication.label',
     levels: [
-      { value: 2, label: '多研究一致', points: 2 },
-      { value: 1, label: '部分支持', points: 1 },
-      { value: 0, label: '單一研究／結果混合', points: 0 },
+      { value: 2, label: '多研究一致', labelKey: 'evidence.dimensions.replication.l2', points: 2 },
+      { value: 1, label: '部分支持', labelKey: 'evidence.dimensions.replication.l1', points: 1 },
+      { value: 0, label: '單一研究／結果混合', labelKey: 'evidence.dimensions.replication.l0', points: 0 },
     ],
   },
 ];
@@ -44,9 +45,9 @@ export const DIMENSIONS = [
 export const THRESHOLDS = { strong: 7, moderate: 4 };
 
 export const TIER_META = {
-  strong: { key: 'strong', label: '強', filled: 3 },
-  moderate: { key: 'moderate', label: '中', filled: 2 },
-  preliminary: { key: 'preliminary', label: '初步', filled: 1 },
+  strong: { key: 'strong', label: '強', labelKey: 'evidence.tier.strong', filled: 3 },
+  moderate: { key: 'moderate', label: '中', labelKey: 'evidence.tier.moderate', filled: 2 },
+  preliminary: { key: 'preliminary', label: '初步', labelKey: 'evidence.tier.preliminary', filled: 1 },
 };
 
 // 只是 class token 字串（資料，非 import Tailwind）；元件套用。
@@ -66,6 +67,12 @@ function findLevel(key, value) {
 export function levelLabel(key, value) {
   const lvl = findLevel(key, value);
   return lvl ? lvl.label : '';
+}
+
+// 同 levelLabel，但回傳 i18n key（顯示端 t() 用）。
+export function levelLabelKey(key, value) {
+  const lvl = findLevel(key, value);
+  return lvl ? lvl.labelKey : '';
 }
 
 export function dimMaxPoints(key) {

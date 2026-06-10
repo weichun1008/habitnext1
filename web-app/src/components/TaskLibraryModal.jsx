@@ -7,6 +7,8 @@ import DomainGrid from './explore/DomainGrid';
 import HabitListView from './explore/HabitListView';
 import CategoryIcon from './explore/CategoryIcon';
 import AnchorPicker from './explore/AnchorPicker';
+import { useT } from '@/lib/i18n';
+import { translateCue, translateDomain } from '@/lib/i18n/dataLabels';
 
 // Slice K (2026-05-26): added two optional props.
 //   - onOpenAspirationPicker: when set, an "✨ 從嚮往開始" entry button
@@ -30,6 +32,7 @@ const TaskLibraryModal = ({
     onOpenAspirationPicker = null,
     initialHabit = null,
 }) => {
+    const { t } = useT();
     const [habits, setHabits] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -123,7 +126,7 @@ const TaskLibraryModal = ({
     const handleSelectHabit = (habit, diffKey) => {
         const config = habit.difficulties?.[diffKey];
         if (!config) {
-            alert('請先選擇難度');
+            alert(t('library.selectDifficultyFirst'));
             return;
         }
         setPendingHabit({ habit, diffKey });
@@ -170,7 +173,7 @@ const TaskLibraryModal = ({
         if (toastTimer) clearTimeout(toastTimer);
         const timer = setTimeout(() => setToast(null), 2200);
         setToastTimer(timer);
-        setToast({ text: `已加入：${habit.name}` });
+        setToast({ text: t('library.addedToast', { name: habit.name }) });
     };
 
     const visibleHabits = (() => {
@@ -200,12 +203,12 @@ const TaskLibraryModal = ({
     if (!isOpen) return null;
 
     const headerLabel = view === 'list' && selectedDomain
-        ? selectedDomain.name
+        ? translateDomain(selectedDomain.name, t)
         : view === 'search'
-            ? '搜尋結果'
+            ? t('library.searchResults')
             : view === 'anchor'
-                ? '選擇錨點'
-                : '選擇習慣';
+                ? t('library.chooseAnchor')
+                : t('library.chooseHabit');
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center">
@@ -242,7 +245,7 @@ const TaskLibraryModal = ({
                             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                             <input
                                 type="text"
-                                placeholder={view === 'list' ? `在「${selectedDomain?.name || ''}」內搜尋…` : '搜尋習慣…'}
+                                placeholder={view === 'list' ? t('library.searchInDomain', { name: translateDomain(selectedDomain?.name, t) }) : t('library.searchHabits')}
                                 value={search}
                                 onChange={(e) => handleSearchChange(e.target.value)}
                                 className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
@@ -267,8 +270,8 @@ const TaskLibraryModal = ({
                                 <Sparkles size={20} className="text-white" />
                             </div>
                             <div className="relative flex-1 min-w-0">
-                                <p className="text-base font-extrabold">從嚮往開始</p>
-                                <p className="text-xs text-white/90 leading-snug mt-0.5">不知從何下手？從你想成為的樣子出發，我們幫你配習慣</p>
+                                <p className="text-base font-extrabold">{t('library.fromAspiration')}</p>
+                                <p className="text-xs text-white/90 leading-snug mt-0.5">{t('library.fromAspirationHint')}</p>
                             </div>
                             <ChevronRight size={18} className="relative text-white/90 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" />
                         </button>
@@ -278,7 +281,7 @@ const TaskLibraryModal = ({
                             onClick={onOpenCustomForm}
                             className="w-full bg-gray-800 text-white text-base font-bold py-3 rounded-xl shadow-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2"
                         >
-                            <Edit2 size={20} /> 手動建立新任務
+                            <Edit2 size={20} /> {t('library.createCustomTask')}
                         </button>
                     )}
 
@@ -288,17 +291,17 @@ const TaskLibraryModal = ({
                         </div>
                     ) : view === 'domain' ? (
                         <>
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">選擇一個健康面向</p>
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t('library.pickDomain')}</p>
                             <DomainGrid categories={categories} onSelect={handleSelectDomain} />
                         </>
                     ) : view === 'anchor' ? (
                         <>
                             <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 mb-2">
-                                <p className="text-xs text-emerald-700 mb-1">準備加入：</p>
+                                <p className="text-xs text-emerald-700 mb-1">{t('library.aboutToAdd')}</p>
                                 <p className="text-sm font-bold text-emerald-900">{pendingHabit?.habit?.name}</p>
-                                <p className="text-xs text-emerald-700 mt-0.5">難度：{pendingHabit?.diffKey === 'beginner' ? '入門' : pendingHabit?.diffKey === 'intermediate' ? '進階' : '挑戰'}</p>
+                                <p className="text-xs text-emerald-700 mt-0.5">{t('library.difficultyLabel', { level: t(`difficulty.${pendingHabit?.diffKey === 'intermediate' ? 'intermediate' : pendingHabit?.diffKey === 'challenge' ? 'challenge' : 'beginner'}`) })}</p>
                             </div>
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">挑一個錨點（你習慣在什麼時候做）</p>
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t('library.pickAnchorHint')}</p>
                             <AnchorPicker
                                 value={pendingCue}
                                 onChange={setPendingCue}
@@ -308,14 +311,14 @@ const TaskLibraryModal = ({
                     ) : (
                         <>
                             <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                                {view === 'search' ? `搜尋「${search}」` : '推薦習慣'}
+                                {view === 'search' ? t('library.searchQuery', { query: search }) : t('library.recommendedHabits')}
                             </p>
                             <HabitListView
                                 habits={visibleHabits}
                                 selectedDifficulty={selectedDifficulty}
                                 setSelectedDifficulty={setSelectedDifficulty}
                                 onSelectHabit={handleSelectHabit}
-                                emptyText={view === 'search' ? '沒有符合的習慣' : '這個面向目前還沒有推薦習慣'}
+                                emptyText={view === 'search' ? t('library.noMatchingHabits') : t('explore.noRecommendedHabits')}
                             />
                         </>
                     )}
@@ -327,7 +330,7 @@ const TaskLibraryModal = ({
                             onClick={() => emitPendingTask(null)}
                             className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition-colors"
                         >
-                            略過錨點，直接加入
+                            {t('library.skipAnchor')}
                         </button>
                         <button
                             onClick={() => emitPendingTask(pendingCue)}
@@ -338,7 +341,7 @@ const TaskLibraryModal = ({
                                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                             }`}
                         >
-                            {pendingCue ? `加入（錨點：${pendingCue}）` : '請先選一個錨點'}
+                            {pendingCue ? t('library.addWithAnchor', { anchor: translateCue(pendingCue, t) }) : t('library.pickAnchorFirst')}
                         </button>
                     </div>
                 )}
@@ -346,14 +349,14 @@ const TaskLibraryModal = ({
                 {savedThisSession > 0 && view !== 'anchor' && (
                     <div className="px-6 py-3 border-t border-gray-100 bg-emerald-50 flex items-center justify-between gap-3 flex-shrink-0">
                         <p className="text-xs text-emerald-700">
-                            已加入 <span className="font-bold">{savedThisSession}</span> 個習慣到每日追蹤
+                            {t('library.savedThisSession', { n: savedThisSession })}
                         </p>
                         <button
                             type="button"
                             onClick={onClose}
                             className="text-xs font-bold text-emerald-700 underline hover:text-emerald-800"
                         >
-                            完成 →
+                            {t('library.done')}
                         </button>
                     </div>
                 )}

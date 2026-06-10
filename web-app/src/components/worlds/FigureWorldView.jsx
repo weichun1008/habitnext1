@@ -3,6 +3,7 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
 import FigureCreature from '@/components/worlds/FigureCreature';
+import { useT } from '@/lib/i18n';
 
 const CORAL = '#f97362';
 
@@ -10,6 +11,7 @@ const CORAL = '#f97362';
 // Read-only. data = { count, stage:{stage,name,min}, progress:{stage,name,
 // nextName,remaining} }, may be null while loading / before any completion.
 const FigureWorldView = ({ data, loading }) => {
+    const { t } = useT();
     if (loading) {
         return (
             <div className="max-w-md mx-auto animate-pulse">
@@ -32,7 +34,7 @@ const FigureWorldView = ({ data, loading }) => {
                 >
                     <FigureCreature stage={1} size={160} />
                     <p className="mt-6 text-base font-medium text-gray-700">
-                        完成習慣，你的夥伴會開始成長
+                        {t('figure.emptyPrompt')}
                     </p>
                 </div>
             </div>
@@ -59,15 +61,19 @@ const FigureWorldView = ({ data, loading }) => {
             >
                 <FigureCreature stage={stage.stage} size={200} />
 
-                <h1 className="mt-6 text-2xl font-bold text-gray-900">{stage.name}</h1>
-                <p className="mt-1 text-sm text-gray-500">已完成 {count} 次</p>
+                {/* 階段名稱以 stage 編號對應 i18n key 顯示（API 回傳的 name 為 zh-TW canonical） */}
+                <h1 className="mt-6 text-2xl font-bold text-gray-900">{t(`figure.stages.s${stage.stage}`)}</h1>
+                <p className="mt-1 text-sm text-gray-500">{t('figure.completedCount', { n: count })}</p>
 
                 <div className="mt-7 w-full">
                     {hasNext ? (
                         <>
                             <p className="flex items-center justify-center gap-1.5 text-sm font-medium text-gray-700">
                                 <Sparkles size={15} style={{ color: CORAL }} />
-                                再 {progress.remaining} 次完成，夥伴會進化到 {progress.nextName}
+                                {t('figure.evolveHint', {
+                                    n: progress.remaining,
+                                    next: t(`figure.stages.s${stage.stage + 1}`),
+                                })}
                             </p>
                             <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/70">
                                 <div
@@ -79,7 +85,7 @@ const FigureWorldView = ({ data, loading }) => {
                     ) : (
                         <p className="flex items-center justify-center gap-1.5 text-sm font-medium text-gray-700">
                             <Sparkles size={15} style={{ color: CORAL }} />
-                            夥伴已經完全長大，謝謝你一路的陪伴
+                            {t('figure.fullyGrown')}
                         </p>
                     )}
                 </div>

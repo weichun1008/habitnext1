@@ -8,8 +8,10 @@ import {
   IDENTITY_MAX_LENGTH,
   deriveDefaultIdentity,
 } from '@/lib/typeKeys';
+import { useT } from '@/lib/i18n';
 
 function IdentityButton({ label, selected, recommended, onClick }) {
+  const { t } = useT();
   return (
     <button
       type="button"
@@ -23,7 +25,7 @@ function IdentityButton({ label, selected, recommended, onClick }) {
     >
       {recommended && (
         <span className="absolute -top-1.5 -right-1.5 bg-amber-100 text-amber-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-          <Sparkles size={10} /> 推薦
+          <Sparkles size={10} /> {t('explore.recommended')}
         </span>
       )}
       {label}
@@ -40,6 +42,7 @@ function IdentityButton({ label, selected, recommended, onClick }) {
 //   2. Clicking the same selected option toggles it off.
 //   3. The pill renders for custom values too.
 export default function IdentityPicker({ value, onChange, userTypeKey = null }) {
+  const { t } = useT();
   const [customMode, setCustomMode] = useState(false);
   const [customText, setCustomText] = useState('');
 
@@ -76,12 +79,12 @@ export default function IdentityPicker({ value, onChange, userTypeKey = null }) 
           className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200"
         >
           <span className="text-sm text-emerald-800">
-            目前身分：<span className="font-bold">{value}</span>
+            {t('explore.currentIdentity')}<span className="font-bold">{value}</span>
           </span>
           <button
             type="button"
             onClick={() => onChange('')}
-            aria-label="清除身分"
+            aria-label={t('explore.clearIdentity')}
             className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 rounded-full p-1 transition-colors"
           >
             <X size={14} />
@@ -92,7 +95,7 @@ export default function IdentityPicker({ value, onChange, userTypeKey = null }) 
       {recommended && (
         <div>
           <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-            為你推薦的身分（{USER_TYPE_PROFILES[userTypeKey]?.label}）
+            {t('explore.recommendedIdentityFor', { type: USER_TYPE_PROFILES[userTypeKey] ? t(`explore.userTypes.${userTypeKey}`) : '' })}
           </p>
           <IdentityButton
             label={recommended}
@@ -105,7 +108,7 @@ export default function IdentityPicker({ value, onChange, userTypeKey = null }) 
 
       <div>
         <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-          或自選
+          {t('explore.orChooseYourOwn')}
         </p>
         <div className="space-y-2">
           {GENERIC_IDENTITIES.map(s => (
@@ -127,7 +130,7 @@ export default function IdentityPicker({ value, onChange, userTypeKey = null }) 
             onClick={() => setCustomMode(true)}
             className="w-full px-3 py-2 rounded-xl text-sm font-medium text-center bg-gray-50 border border-dashed border-gray-300 text-gray-600 hover:bg-gray-100 flex items-center justify-center gap-1"
           >
-            <Edit3 size={14} /> 自訂身分
+            <Edit3 size={14} /> {t('explore.customIdentityCta')}
           </button>
         ) : (
           <div className="flex gap-2">
@@ -138,7 +141,7 @@ export default function IdentityPicker({ value, onChange, userTypeKey = null }) 
               value={customText}
               onChange={(e) => setCustomText(e.target.value.slice(0, IDENTITY_MAX_LENGTH))}
               onKeyDown={handleCustomKey}
-              placeholder={`輸入自訂身分（最多 ${IDENTITY_MAX_LENGTH} 字）`}
+              placeholder={t('explore.customIdentityPlaceholder', { n: IDENTITY_MAX_LENGTH })}
               className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
             <button
@@ -146,14 +149,14 @@ export default function IdentityPicker({ value, onChange, userTypeKey = null }) 
               onClick={submitCustom}
               className="px-4 py-2 rounded-xl bg-emerald-500 text-white text-sm font-bold hover:bg-emerald-600 transition-colors"
             >
-              加入
+              {t('explore.add')}
             </button>
             <button
               type="button"
               onClick={() => { setCustomMode(false); setCustomText(''); }}
               className="px-3 py-2 rounded-xl bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition-colors"
             >
-              取消
+              {t('common.cancel')}
             </button>
           </div>
         )}
