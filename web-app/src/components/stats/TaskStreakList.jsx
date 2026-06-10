@@ -1,16 +1,20 @@
+'use client';
+
 import React from 'react';
 import { Trophy } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 // TaskStreakList — Slice I §6.2 widget
 // Top 5 task streaks by current, then longest, then title.
 const TaskStreakList = ({ topTaskStreaks }) => {
+    const { t } = useT();
     if (!topTaskStreaks || topTaskStreaks.length === 0) return null;
 
     return (
         <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
                 <Trophy size={18} className="text-amber-500" />
-                <p className="text-sm font-medium text-gray-700">你的金牌 Habit</p>
+                <p className="text-sm font-medium text-gray-700">{t('stats.taskStreaks.title')}</p>
             </div>
             <ul className="divide-y divide-gray-100">
                 {topTaskStreaks.map((item) => (
@@ -20,9 +24,9 @@ const TaskStreakList = ({ topTaskStreaks }) => {
                         </div>
                         <div className="text-right shrink-0">
                             <p className="text-sm font-semibold text-emerald-600">
-                                {item.currentStreak}<span className="text-xs text-gray-400 ml-0.5">天</span>
+                                {item.currentStreak}<span className="text-xs text-gray-400 ml-0.5">{t('stats.daysUnit')}</span>
                             </p>
-                            <p className="text-xs text-gray-400">最長 {item.longestStreak}</p>
+                            <p className="text-xs text-gray-400">{t('stats.taskStreaks.longest', { n: item.longestStreak })}</p>
                         </div>
                     </li>
                 ))}

@@ -11,6 +11,8 @@ import IdentityPicker from './explore/IdentityPicker';
 import PRESET_ASPIRATIONS from '../../prisma/seed/preset-aspirations.json';
 import IconRenderer from './IconRenderer';
 import { CATEGORY_CONFIG, domainToIconKey } from '@/lib/constants';
+import { useT } from '@/lib/i18n';
+import { translateDomain } from '@/lib/i18n/dataLabels';
 
 // Hex tints for inline gradient cards (CATEGORY_CONFIG.color stores Tailwind class names,
 // not hex, so we maintain a separate domain→hex map for CSS-in-JS usage).
@@ -75,6 +77,7 @@ export default function AspirationPicker({
     userSleepTypeKey = null,
     onSelectAspiration,
 }) {
+    const { t } = useT();
     const [existing, setExisting] = useState([]);
     const [loadingExisting, setLoadingExisting] = useState(false);
     const [submittingText, setSubmittingText] = useState(null); // which option is mid-POST
@@ -141,7 +144,7 @@ export default function AspirationPicker({
     const beginPick = ({ text, domain, source }) => {
         const trimmed = (text || '').trim();
         if (!trimmed) {
-            setError('請輸入嚮往內容');
+            setError(t('aspirations.errors.textRequired'));
             return;
         }
         // Reuse existing — skip the POST and the identity step entirely.
@@ -185,7 +188,7 @@ export default function AspirationPicker({
             onSelectAspiration?.(created);
         } catch (err) {
             console.error('[AspirationPicker] POST failed:', err);
-            setError('新增嚮往失敗，請再試一次');
+            setError(t('aspirations.errors.createFailed'));
         } finally {
             setSubmittingText(null);
         }
@@ -195,7 +198,7 @@ export default function AspirationPicker({
 
     const submitCustom = () => {
         if (!customDomain) {
-            setError('請選一個生活面向');
+            setError(t('aspirations.errors.domainRequired'));
             return;
         }
         beginPick({ text: customText, domain: customDomain, source: 'user' });
@@ -216,7 +219,7 @@ export default function AspirationPicker({
                             <button
                                 type="button"
                                 onClick={() => { setStep('pick'); setError(null); }}
-                                aria-label="返回"
+                                aria-label={t('common.back')}
                                 className="p-1 -ml-1 text-gray-500 hover:text-gray-800 flex-shrink-0"
                             >
                                 <ChevronLeft size={20} />
@@ -225,19 +228,19 @@ export default function AspirationPicker({
                         <div className="min-w-0">
                             <h3 id="aspiration-picker-title" className="font-bold text-lg text-gray-800 flex items-center gap-1.5">
                                 <Sparkles size={18} className="text-emerald-500" />
-                                {step === 'identity' ? '想成為怎樣的人？' : '你想要什麼？'}
+                                {step === 'identity' ? t('aspirations.identityTitle') : t('aspirations.pickTitle')}
                             </h3>
                             <p className="text-xs text-gray-500 mt-0.5">
                                 {step === 'identity'
-                                    ? '替這個嚮往立一個身分認同，會顯示在每日行程上方（可跳過）'
-                                    : '從這裡開始，我們會推薦合適的計畫與習慣'}
+                                    ? t('aspirations.identitySubtitle')
+                                    : t('aspirations.pickSubtitle')}
                             </p>
                         </div>
                     </div>
                     <button
                         type="button"
                         onClick={onClose}
-                        aria-label="關閉"
+                        aria-label={t('aspirations.close')}
                         className="p-1 -m-1 text-gray-400 hover:text-gray-600 flex-shrink-0"
                     >
                         <X size={22} />
@@ -254,7 +257,7 @@ export default function AspirationPicker({
                                 </div>
                             )}
                             <div className="px-3 py-2.5 rounded-xl bg-emerald-50 border border-emerald-100">
-                                <p className="text-[11px] text-emerald-600 mb-0.5">你的嚮往</p>
+                                <p className="text-[11px] text-emerald-600 mb-0.5">{t('aspirations.yourAspiration')}</p>
                                 <p className="text-sm font-bold text-emerald-900 leading-snug">{pendingAspiration?.text}</p>
                             </div>
                             <IdentityPicker
@@ -270,7 +273,7 @@ export default function AspirationPicker({
                                 disabled={Boolean(submittingText)}
                                 className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 transition-colors"
                             >
-                                跳過
+                                {t('aspirations.skip')}
                             </button>
                             <button
                                 type="button"
@@ -279,7 +282,7 @@ export default function AspirationPicker({
                                 className="flex-1 py-3 rounded-xl text-sm font-bold bg-emerald-500 text-white hover:bg-emerald-600 disabled:opacity-50 flex items-center justify-center gap-1 transition-colors"
                             >
                                 {submittingText ? <Loader size={14} className="animate-spin" /> : <ChevronRight size={14} />}
-                                {identityChoice ? '確認身分並繼續' : '先不設定，繼續'}
+                                {identityChoice ? t('aspirations.confirmIdentityContinue') : t('aspirations.skipIdentityContinue')}
                             </button>
                         </div>
                     </>
@@ -303,14 +306,14 @@ export default function AspirationPicker({
                                     key={domain}
                                     role="tab"
                                     aria-selected={on}
-                                    aria-label={domain}
+                                    aria-label={translateDomain(domain, t)}
                                     onClick={() => { setActiveTab(domain); setCustomMode(false); }}
                                     className={`flex-shrink-0 flex flex-col items-center gap-1 px-2.5 py-1.5 rounded-xl transition-colors ${on ? '' : 'opacity-60'}`}
                                 >
                                     <span className={`w-9 h-9 rounded-full flex items-center justify-center ${on ? (cfg?.bg || 'bg-emerald-100') : 'bg-gray-100'}`}>
                                         <IconRenderer category={domain} size={18} />
                                     </span>
-                                    <span className={`text-[10px] font-bold whitespace-nowrap ${on ? 'text-gray-700' : 'text-gray-400'}`}>{domain}</span>
+                                    <span className={`text-[10px] font-bold whitespace-nowrap ${on ? 'text-gray-700' : 'text-gray-400'}`}>{translateDomain(domain, t)}</span>
                                 </button>
                             );
                         })}
@@ -327,7 +330,7 @@ export default function AspirationPicker({
                                 {existingInDomain.map(a => (
                                     <button key={a.id} type="button" onClick={() => pickExisting(a)}
                                         className="w-full text-left rounded-2xl p-3.5 border border-emerald-200 bg-emerald-50/60 hover:shadow-sm transition-all">
-                                        <span className="text-[10px] font-bold text-emerald-600">已建立 · 繼續用</span>
+                                        <span className="text-[10px] font-bold text-emerald-600">{t('aspirations.existingBadge')}</span>
                                         <p className="text-sm font-bold text-gray-800 mt-0.5">{a.text}</p>
                                     </button>
                                 ))}
@@ -338,7 +341,7 @@ export default function AspirationPicker({
                                         style={{ background: `linear-gradient(135deg, ${tint}14, ${tint}26)`, border: `1px solid ${tint}33` }}>
                                         <span className="absolute -right-2 -bottom-3 opacity-10" aria-hidden><IconRenderer category={activeTab} size={62} /></span>
                                         {recSet.has(p.text) && (
-                                            <span className="absolute top-2.5 right-3 bg-amber-100 text-amber-700 text-[9px] font-bold rounded-full px-2 py-0.5 z-10">為你推薦</span>
+                                            <span className="absolute top-2.5 right-3 bg-amber-100 text-amber-700 text-[9px] font-bold rounded-full px-2 py-0.5 z-10">{t('aspirations.recommendedForYou')}</span>
                                         )}
                                         <p className="relative text-sm font-bold text-gray-800 leading-snug pr-12">{p.text}</p>
                                     </button>
@@ -346,18 +349,18 @@ export default function AspirationPicker({
                                 {!customMode ? (
                                     <button type="button" onClick={() => { setCustomMode(true); setCustomDomain(activeTab); }}
                                         className="w-full rounded-2xl border border-dashed border-emerald-300 bg-emerald-50/50 p-3 text-sm font-bold text-emerald-700 hover:bg-emerald-50 transition-colors">
-                                        ＋ 自己寫一句嚮往
+                                        {t('aspirations.writeYourOwn')}
                                     </button>
                                 ) : (
                                     <div className="rounded-2xl border border-emerald-200 p-3 space-y-2">
                                         <input type="text" autoFocus value={customText} maxLength={CUSTOM_TEXT_MAX}
-                                            onChange={e => setCustomText(e.target.value)} placeholder="我想…"
+                                            onChange={e => setCustomText(e.target.value)} placeholder={t('aspirations.customPlaceholder')}
                                             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" />
                                         <div className="flex gap-2">
                                             <button type="button" onClick={() => { setCustomMode(false); setCustomText(''); }}
-                                                className="flex-1 py-2 rounded-lg bg-gray-100 text-gray-600 text-sm font-bold">取消</button>
+                                                className="flex-1 py-2 rounded-lg bg-gray-100 text-gray-600 text-sm font-bold">{t('common.cancel')}</button>
                                             <button type="button" onClick={submitCustom} disabled={!customText.trim()}
-                                                className="flex-1 py-2 rounded-lg bg-emerald-500 text-white text-sm font-bold disabled:opacity-50">下一步</button>
+                                                className="flex-1 py-2 rounded-lg bg-emerald-500 text-white text-sm font-bold disabled:opacity-50">{t('common.next')}</button>
                                         </div>
                                     </div>
                                 )}

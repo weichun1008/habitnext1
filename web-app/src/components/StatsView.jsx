@@ -7,6 +7,7 @@ import CompletionRateCards from './stats/CompletionRateCards';
 import DomainBreakdownChart from './stats/DomainBreakdownChart';
 import WeeklyHeatmap from './stats/WeeklyHeatmap';
 import TaskStreakList from './stats/TaskStreakList';
+import { useT } from '@/lib/i18n';
 
 // StatsView — Slice I parent component
 // Fetches /api/stats once per mount and fans out to 5 sub-widgets.
@@ -28,22 +29,26 @@ const isEmpty = (stats) => {
 // Inline header with explicit 返回 button. Both desktop sidebar and the
 // AppHeader Calendar icon also navigate, but users reported those weren't
 // intuitive — this gives a clear in-page back affordance.
-const Header = ({ onBack }) => (
-    <div className="flex items-center gap-3 mb-1 px-1">
-        {onBack && (
-            <button
-                onClick={onBack}
-                className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors text-gray-500"
-                aria-label="返回"
-            >
-                <ArrowLeft size={20} />
-            </button>
-        )}
-        <h2 className="text-xl font-bold text-gray-800">統計</h2>
-    </div>
-);
+const Header = ({ onBack }) => {
+    const { t } = useT();
+    return (
+        <div className="flex items-center gap-3 mb-1 px-1">
+            {onBack && (
+                <button
+                    onClick={onBack}
+                    className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors text-gray-500"
+                    aria-label={t('common.back')}
+                >
+                    <ArrowLeft size={20} />
+                </button>
+            )}
+            <h2 className="text-xl font-bold text-gray-800">{t('stats.title')}</h2>
+        </div>
+    );
+};
 
 const StatsView = ({ userId, onBack }) => {
+    const { t } = useT();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -76,7 +81,7 @@ const StatsView = ({ userId, onBack }) => {
         return (
             <div className="p-4 space-y-4 w-full">
                 <Header onBack={onBack} />
-                <div className="text-center text-gray-400 py-12">載入中…</div>
+                <div className="text-center text-gray-400 py-12">{t('stats.loading')}</div>
             </div>
         );
     }
@@ -85,7 +90,7 @@ const StatsView = ({ userId, onBack }) => {
             <div className="p-4 space-y-4 w-full">
                 <Header onBack={onBack} />
                 <div className="text-center text-gray-500 py-12">
-                    <p>統計暫時無法載入：{error}</p>
+                    <p>{t('stats.loadError', { error })}</p>
                 </div>
             </div>
         );
@@ -95,8 +100,8 @@ const StatsView = ({ userId, onBack }) => {
             <div className="p-4 space-y-4 w-full">
                 <Header onBack={onBack} />
                 <div className="text-center text-gray-500 py-12">
-                    <p className="text-base">打完第一個卡再回來看 📊</p>
-                    <p className="text-xs text-gray-400 mt-2">統計需要至少一天的紀錄才有故事</p>
+                    <p className="text-base">{t('stats.emptyTitle')}</p>
+                    <p className="text-xs text-gray-400 mt-2">{t('stats.emptySubtitle')}</p>
                 </div>
             </div>
         );

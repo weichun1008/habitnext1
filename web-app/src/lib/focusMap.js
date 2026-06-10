@@ -4,26 +4,30 @@
 
 // 四象限定義（label/advice 為使用者可見白話文，無 BJ Fogg 字樣）。
 // iconKey 對應 lucide-react 元件名；color 為點/主色。
+// labelKey/adviceKey 為 i18n key — 元件顯示時用 t(labelKey)；label/advice 保留為 zh-TW canonical。
 const QUADRANTS = {
-  golden:     { label: '值得優先做', iconKey: 'Star',        color: '#ea580c', tone: 'amber', rec: 'recommended', advice: '高影響又容易做到 — 最划算，建議先加入。' },
-  big_fish:   { label: '值得挑戰',   iconKey: 'Mountain',    color: '#7c3aed', tone: 'violet', rec: 'park',       advice: '影響大但目前不易做到 — 可先從更簡單的版本開始，別逼太緊。' },
-  background: { label: '順手加碼',   iconKey: 'Sprout',      color: '#0891b2', tone: 'cyan',  rec: 'optional',    advice: '容易做但影響有限 — 行有餘力再加。' },
-  skip:       { label: '建議先跳過', iconKey: 'SkipForward', color: '#94a3b8', tone: 'gray',  rec: 'skip',        advice: '影響有限又不易做 — 建議先擱著；但你仍可自行加入。' },
+  golden:     { label: '值得優先做', labelKey: 'focusMap.quadrants.golden.label',     adviceKey: 'focusMap.quadrants.golden.advice',     iconKey: 'Star',        color: '#ea580c', tone: 'amber', rec: 'recommended', advice: '高影響又容易做到 — 最划算，建議先加入。' },
+  big_fish:   { label: '值得挑戰',   labelKey: 'focusMap.quadrants.big_fish.label',   adviceKey: 'focusMap.quadrants.big_fish.advice',   iconKey: 'Mountain',    color: '#7c3aed', tone: 'violet', rec: 'park',       advice: '影響大但目前不易做到 — 可先從更簡單的版本開始，別逼太緊。' },
+  background: { label: '順手加碼',   labelKey: 'focusMap.quadrants.background.label', adviceKey: 'focusMap.quadrants.background.advice', iconKey: 'Sprout',      color: '#0891b2', tone: 'cyan',  rec: 'optional',    advice: '容易做但影響有限 — 行有餘力再加。' },
+  skip:       { label: '建議先跳過', labelKey: 'focusMap.quadrants.skip.label',       adviceKey: 'focusMap.quadrants.skip.advice',       iconKey: 'SkipForward', color: '#94a3b8', tone: 'gray',  rec: 'skip',        advice: '影響有限又不易做 — 建議先擱著；但你仍可自行加入。' },
 };
 
 // 養成期間選項（給 DurationSheet）。value 為天數；null = 不設限（沒有終止日）。
+// labelKey/subKey 為 i18n key；label/sub 保留為 zh-TW canonical。
 const DURATION_OPTIONS = [
-  { value: 21,   label: '21 天',  sub: '起步嘗試' },
-  { value: 66,   label: '66 天',  sub: '養成自動化', recommended: true },
-  { value: 90,   label: '90 天',  sub: '鞏固成形' },
-  { value: null, label: '不設限', sub: '沒有終止日，持續追蹤' },
+  { value: 21,   label: '21 天',  sub: '起步嘗試',   labelKey: 'focusMap.duration.d21.label',  subKey: 'focusMap.duration.d21.sub' },
+  { value: 66,   label: '66 天',  sub: '養成自動化', labelKey: 'focusMap.duration.d66.label',  subKey: 'focusMap.duration.d66.sub', recommended: true },
+  { value: 90,   label: '90 天',  sub: '鞏固成形',   labelKey: 'focusMap.duration.d90.label',  subKey: 'focusMap.duration.d90.sub' },
+  { value: null, label: '不設限', sub: '沒有終止日，持續追蹤', labelKey: 'focusMap.duration.none.label', subKey: 'focusMap.duration.none.sub' },
 ];
 
 // 習慣養成的科學依據（漸進揭露用，不在主畫面寫全文）。數字不誇大。
+// summaryKey 為 i18n key；summary 保留為 zh-TW canonical。
 const HABIT_FORMATION_SCIENCE = {
   medianDays: 66,
   rangeDays: [18, 254],
   summary: '研究發現，新行為要變成「不太需要意志力的自動反應」，平均約需 66 天（會因人和習慣難度而異，落在 18–254 天）。所以我們把預設放在 66 天。',
+  summaryKey: 'focusMap.science.summary',
 };
 
 // Map an (impact, ability) pair to its quadrant key.

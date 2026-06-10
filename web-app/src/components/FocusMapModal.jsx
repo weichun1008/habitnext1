@@ -9,12 +9,14 @@ import DurationSheet from './focusMap/DurationSheet';
 import SaveAsPlanModal from './focusMap/SaveAsPlanModal';
 import { quadrantOf, recommendDefaults, sliderSeedFor, buildBatchPayload, QUADRANTS } from '@/lib/focusMap';
 import { buildPlanFromAspiration } from '@/lib/planBuilder';
+import { useT } from '@/lib/i18n';
 
 // FocusMapModal — 引導式三階段：影響力 → 執行度 → 焦點地圖（+ 養成期間）。
 // Props: isOpen, userId, onClose(), onActivated(count)
 const ORDER = ['golden', 'big_fish', 'background', 'skip'];
 
 const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onClose, onActivated }) => {
+  const { t } = useT();
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -122,11 +124,11 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onC
         setDoneCount(count);
         setArchivedCount(json.counts?.archive || 0);
       } else {
-        alert('批次評分失敗，請稍後再試');
+        alert(t('focusMap.batchRateFailed'));
       }
     } catch (e) {
       console.error('Batch rate submit error', e);
-      alert('發生錯誤');
+      alert(t('focusMap.genericError'));
     } finally {
       setSubmitting(false);
     }
@@ -138,7 +140,7 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onC
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center justify-center p-0 md:p-4">
       <div className="bg-white w-full max-w-xl h-[90dvh] md:max-h-[90dvh] rounded-t-2xl md:rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         <div className="px-5 py-3 border-b border-gray-100 flex justify-between items-center flex-shrink-0">
-          <h2 className="text-base font-bold text-gray-800">焦點地圖</h2>
+          <h2 className="text-base font-bold text-gray-800">{t('focusMap.title')}</h2>
           <button onClick={onClose} className="p-2 -mr-2 hover:bg-gray-100 rounded-full transition-colors">
             <X size={20} className="text-gray-500" />
           </button>
@@ -146,9 +148,9 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onC
 
         <div className="flex-1 overflow-y-auto p-4">
           {loading ? (
-            <p className="text-center text-sm text-gray-400 py-12">載入中…</p>
+            <p className="text-center text-sm text-gray-400 py-12">{t('focusMap.loading')}</p>
           ) : candidates.length === 0 ? (
-            <p className="text-center text-sm text-gray-400 py-12">沒有候選習慣可評分</p>
+            <p className="text-center text-sm text-gray-400 py-12">{t('focusMap.noCandidates')}</p>
           ) : phase !== 'map' ? (
             <RatingStep
               phase={phase}
@@ -162,26 +164,26 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onC
             />
           ) : doneCount != null ? (
             <div className="text-center py-10 px-4">
-              <p className="text-lg font-extrabold text-gray-800">已加入 {doneCount} 個習慣</p>
+              <p className="text-lg font-extrabold text-gray-800">{t('focusMap.addedCount', { n: doneCount })}</p>
               {archivedCount > 0 && (
-                <p className="text-xs text-gray-400 mt-1">其餘 {archivedCount} 個未選的已收進封存，候選清單已清空。</p>
+                <p className="text-xs text-gray-400 mt-1">{t('focusMap.archivedNote', { n: archivedCount })}</p>
               )}
-              <p className="text-xs text-gray-500 mt-1">要把這套習慣存成一個計畫嗎？之後可重複使用，或申請公開分享給大家。</p>
+              <p className="text-xs text-gray-500 mt-1">{t('focusMap.savePlanPrompt')}</p>
               <div className="flex flex-col gap-2 mt-5 max-w-xs mx-auto">
                 {aspirationId && (
                   <button type="button" onClick={() => setShowSavePlan(true)}
                     className="bg-gradient-to-r from-emerald-400 to-emerald-600 text-white rounded-xl py-3 font-extrabold transition-transform hover:-translate-y-0.5">
-                    把這套存成計畫
+                    {t('focusMap.saveAsPlan')}
                   </button>
                 )}
                 <button type="button" onClick={() => { onClose?.(); }}
-                  className="text-gray-500 hover:text-gray-700 font-bold text-sm py-2 transition-colors">完成</button>
+                  className="text-gray-500 hover:text-gray-700 font-bold text-sm py-2 transition-colors">{t('focusMap.done')}</button>
               </div>
             </div>
           ) : (
             <>
-              <h2 className="text-lg font-extrabold text-gray-800">你的焦點地圖</h2>
-              <p className="text-xs text-gray-500 mt-1 mb-3">依「影響力 × 執行度」分四區，幫你決定先做哪些。</p>
+              <h2 className="text-lg font-extrabold text-gray-800">{t('focusMap.mapTitle')}</h2>
+              <p className="text-xs text-gray-500 mt-1 mb-3">{t('focusMap.mapSubtitle')}</p>
               <FocusMatrix points={points} />
               <div className="mt-3">
                 {ORDER.map(qk => (
@@ -196,7 +198,7 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onC
           <div className="px-5 py-3 border-t border-gray-100 flex-shrink-0">
             <button type="button" onClick={() => setShowDur(true)} disabled={submitting}
               className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-400 to-emerald-600 disabled:opacity-50 text-white font-extrabold transition-transform hover:-translate-y-0.5">
-              {submitting ? '處理中…' : `加入 ${added.size} 個習慣 ›`}
+              {submitting ? t('focusMap.submitting') : t('focusMap.addHabitsCta', { n: added.size })}
             </button>
           </div>
         )}

@@ -64,8 +64,8 @@ const WorldPicker = ({ activeWorld, onSelectWorld, onEnterWorld }) => {
                                 {Art ? <Art size={46} /> : <Icon size={28} />}
                             </div>
 
-                            <h2 className="mt-4 text-lg font-bold text-gray-900">{w.name}</h2>
-                            <p className="mt-1 flex-1 text-sm leading-relaxed text-gray-500">{w.tagline}</p>
+                            <h2 className="mt-4 text-lg font-bold text-gray-900">{t(w.nameKey)}</h2>
+                            <p className="mt-1 flex-1 text-sm leading-relaxed text-gray-500">{t(w.taglineKey)}</p>
 
                             {/* Primary action */}
                             <div className="mt-5" onClick={(e) => e.stopPropagation()}>
@@ -75,7 +75,7 @@ const WorldPicker = ({ activeWorld, onSelectWorld, onEnterWorld }) => {
                                         className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:gap-3 hover:brightness-95"
                                         style={{ backgroundColor: w.accent }}
                                     >
-                                        {t('worldPicker.enterWorld', { name: w.name })}
+                                        {t('worldPicker.enterWorld', { name: t(w.nameKey) })}
                                         <ArrowRight size={16} />
                                     </button>
                                 ) : isActive ? (

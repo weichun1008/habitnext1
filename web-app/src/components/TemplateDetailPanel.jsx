@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Sparkles, Users, Calendar, ListChecks } from 'lucide-react';
 import AuthorBadge from './templates/AuthorBadge';
+import { useT } from '@/lib/i18n';
 
 // TemplateDetailPanel — Slice J
 // Renders a slide-in detail view for a Template inside the TemplateExplorer.
@@ -31,6 +32,7 @@ const computeSummary = (template) => {
 };
 
 const PhaseBlock = ({ phase, index }) => {
+    const { t } = useT();
     const tasks = Array.isArray(phase?.tasks) ? phase.tasks : [];
     return (
         <section className="mt-6 first:mt-0">
@@ -40,12 +42,12 @@ const PhaseBlock = ({ phase, index }) => {
                 </h4>
                 {phase.days > 0 && (
                     <span className="text-xs text-gray-400 flex-shrink-0 ml-2">
-                        {phase.days} 天
+                        {t('templates.daysCount', { n: phase.days })}
                     </span>
                 )}
             </div>
             {tasks.length === 0 ? (
-                <p className="text-xs text-gray-400 italic">（尚無任務）</p>
+                <p className="text-xs text-gray-400 italic">{t('templates.noTasksYet')}</p>
             ) : (
                 <ol className="space-y-2">
                     {tasks.map((task, i) => (
@@ -56,7 +58,7 @@ const PhaseBlock = ({ phase, index }) => {
                             <span className="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold flex items-center justify-center mt-0.5">
                                 {i + 1}
                             </span>
-                            <span className="leading-snug line-clamp-2">{task.title || '(無標題)'}</span>
+                            <span className="leading-snug line-clamp-2">{task.title || t('templates.untitled')}</span>
                         </li>
                     ))}
                 </ol>
@@ -73,6 +75,7 @@ const TemplateDetailPanel = ({
     joining = false,
     category = null,  // { name, color, icon } — resolved from PlanCategory by caller; falsy = hide chip
 }) => {
+    const { t } = useT();
     // Slide-in animation: start translated, then transition to 0 on mount.
     const [shown, setShown] = useState(false);
     useEffect(() => {
@@ -99,14 +102,14 @@ const TemplateDetailPanel = ({
                 shown ? 'translate-x-0' : 'translate-x-full'
             }`}
             role="dialog"
-            aria-label={`${template.name} 詳細介紹`}
+            aria-label={t('templates.detailAria', { name: template.name })}
         >
             {/* Header bar */}
             <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 flex-shrink-0">
                 <button
                     onClick={handleBack}
                     className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors text-gray-600"
-                    aria-label="返回"
+                    aria-label={t('common.back')}
                 >
                     <ArrowLeft size={20} />
                 </button>
@@ -121,7 +124,7 @@ const TemplateDetailPanel = ({
                 {isRecommended && (
                     <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-xs font-bold flex-shrink-0">
                         <Sparkles size={12} />
-                        為你推薦
+                        {t('templates.recommendedForYou')}
                     </span>
                 )}
             </div>
@@ -149,7 +152,7 @@ const TemplateDetailPanel = ({
                 {template.expert && (
                     <div className="flex items-center gap-2 text-xs text-gray-500 mb-4 flex-wrap">
                         <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
-                            {template.expert.title || '專家'}
+                            {template.expert.title || t('templates.expertFallback')}
                         </span>
                         {template.expert.name && <span>by {template.expert.name}</span>}
                     </div>
@@ -171,7 +174,7 @@ const TemplateDetailPanel = ({
                         <p className="text-lg font-bold text-gray-800 leading-none">
                             {summary.totalTasks}
                         </p>
-                        <p className="text-[10px] text-gray-400 mt-1">個任務</p>
+                        <p className="text-[10px] text-gray-400 mt-1">{t('templates.tasksUnit')}</p>
                     </div>
                     <div className="bg-gray-50 rounded-xl p-3">
                         <div className="flex items-center justify-center gap-1 text-gray-400 mb-1">
@@ -180,7 +183,7 @@ const TemplateDetailPanel = ({
                         <p className="text-lg font-bold text-gray-800 leading-none">
                             {summary.totalDays}
                         </p>
-                        <p className="text-[10px] text-gray-400 mt-1">天</p>
+                        <p className="text-[10px] text-gray-400 mt-1">{t('templates.daysUnit')}</p>
                     </div>
                     <div className="bg-gray-50 rounded-xl p-3">
                         <div className="flex items-center justify-center gap-1 text-gray-400 mb-1">
@@ -189,7 +192,7 @@ const TemplateDetailPanel = ({
                         <p className="text-lg font-bold text-gray-800 leading-none">
                             {template._count?.assignments ?? 0}
                         </p>
-                        <p className="text-[10px] text-gray-400 mt-1">人加入</p>
+                        <p className="text-[10px] text-gray-400 mt-1">{t('templates.joinedUnit')}</p>
                     </div>
                 </div>
 
@@ -197,7 +200,7 @@ const TemplateDetailPanel = ({
                 {summary.hasPhases ? (
                     <div>
                         <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">
-                            {summary.phaseCount} 階段
+                            {t('templates.phaseCount', { n: summary.phaseCount })}
                         </h3>
                         {phases.map((phase, i) => (
                             <PhaseBlock key={phase.id || i} phase={phase} index={i} />
@@ -206,10 +209,10 @@ const TemplateDetailPanel = ({
                 ) : (
                     <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 text-center">
                         <p className="text-sm text-amber-700">
-                            本計畫任務結構為舊版
+                            {t('templates.legacyStructure')}
                         </p>
                         <p className="text-xs text-amber-600 mt-1">
-                            加入後可在「今日」與「計畫總覽」看到完整內容
+                            {t('templates.legacyStructureHint')}
                         </p>
                     </div>
                 )}
@@ -222,7 +225,7 @@ const TemplateDetailPanel = ({
                     disabled={joining}
                     className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white py-3 rounded-xl text-sm font-bold transition-colors"
                 >
-                    {joining ? '加入中…' : '加入計畫'}
+                    {joining ? t('templates.joining') : t('templates.joinPlan')}
                 </button>
             </div>
         </div>

@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useT } from '@/lib/i18n';
 
 // CompletionRateCards — Slice I §6.2 widget
 // Two side-by-side cards: last 7 days and last 30 days completion rate.
@@ -14,11 +17,14 @@ const Card = ({ label, rate }) => {
     );
 };
 
-const CompletionRateCards = ({ rate }) => (
-    <div className="flex gap-3">
-        <Card label="最近 7 天完成率" rate={rate?.last7} />
-        <Card label="最近 30 天完成率" rate={rate?.last30} />
-    </div>
-);
+const CompletionRateCards = ({ rate }) => {
+    const { t } = useT();
+    return (
+        <div className="flex gap-3">
+            <Card label={t('stats.rate.last7')} rate={rate?.last7} />
+            <Card label={t('stats.rate.last30')} rate={rate?.last30} />
+        </div>
+    );
+};
 
 export default CompletionRateCards;

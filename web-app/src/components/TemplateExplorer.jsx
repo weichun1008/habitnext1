@@ -5,16 +5,18 @@ import {
     groupTemplatesBySection,
     sectionIdFor,
 } from '@/lib/templateRecommendation';
+import { useT } from '@/lib/i18n';
 
 // Lucide 圖示名稱 → component 對照（家族卡用；查無則 LayoutGrid）
 const FAMILY_ICONS = { Flower2, Moon, LayoutGrid };
 function familyIcon(name) { return FAMILY_ICONS[name] || LayoutGrid; }
 
-// 當 /api/plan-families 尚無資料時的 fallback。
+// 當 /api/plan-families 尚無資料時的 fallback。文案存 i18n key（titleKey 等），
+// render 時翻譯；API 來的家族則直接顯示 DB 的 title / intro / quizPendingCopy。
 const FALLBACK_FAMILIES = [
-  { slug: 'flower', title: '花朵型小課程', intro: '依女性週期身體狀態分型，14 天分階段任務。', icon: 'Flower2', color: '#ec4899', quizPendingCopy: '花朵分型問卷功能開發中 — 先瀏覽全部，完成後自動推薦。', order: 0, isActive: true },
-  { slug: 'sleep', title: '睡眠處方', intro: '依睡眠卡點分型，14 天 4 階段處方。', icon: 'Moon', color: '#6366f1', quizPendingCopy: '睡眠分型問卷功能開發中 — 先瀏覽全部，完成後自動推薦。', order: 1, isActive: true },
-  { slug: 'other', title: '其他公開計畫', intro: '專家設計的各式主題計畫。', icon: 'LayoutGrid', color: '#10b981', quizPendingCopy: null, order: 2, isActive: true },
+  { slug: 'flower', titleKey: 'templates.families.flower.title', introKey: 'templates.families.flower.intro', icon: 'Flower2', color: '#ec4899', quizPendingKey: 'templates.families.flower.quizPending', order: 0, isActive: true },
+  { slug: 'sleep', titleKey: 'templates.families.sleep.title', introKey: 'templates.families.sleep.intro', icon: 'Moon', color: '#6366f1', quizPendingKey: 'templates.families.sleep.quizPending', order: 1, isActive: true },
+  { slug: 'other', titleKey: 'templates.families.other.title', introKey: 'templates.families.other.intro', icon: 'LayoutGrid', color: '#10b981', quizPendingKey: null, order: 2, isActive: true },
 ];
 import TemplateDetailPanel from './TemplateDetailPanel';
 import AuthorBadge from './templates/AuthorBadge';
@@ -35,6 +37,7 @@ const fallbackForSlug = (slug) => {
 // the recommendation panel lands the user directly on that template's
 // detail view here, instead of forcing them to scroll-find it again.
 const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null, userSleepTypeKey = null, initialTemplate = null }) => {
+    const { t } = useT();
     const [templates, setTemplates] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -104,6 +107,11 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
         }
     };
 
+    // Fallback 家族存 i18n key、API 家族存 DB 文案 — 統一在這裡解析。
+    const famTitle = (f) => (f ? (f.titleKey ? t(f.titleKey) : f.title) : null);
+    const famIntro = (f) => (f ? (f.introKey ? t(f.introKey) : f.intro) : null);
+    const famQuizCopy = (f) => (f ? (f.quizPendingKey ? t(f.quizPendingKey) : f.quizPendingCopy) : null);
+
     // slug → { name, color, icon } lookup
     const categoryMap = useMemo(() => {
         const map = {};
@@ -163,11 +171,11 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                 onJoin(assignment);
                 onClose();
             } else {
-                alert('加入失敗，請稍後再試');
+                alert(t('templates.joinFailed'));
             }
         } catch (error) {
             console.error('Join template error:', error);
-            alert('發生錯誤');
+            alert(t('templates.errorOccurred'));
         } finally {
             setJoiningId(null);
             setSelectedTemplate(null);
@@ -190,7 +198,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                         {activeFamily && (
                             <button
                                 onClick={() => setActiveFamily(null)}
-                                aria-label="返回計畫家族"
+                                aria-label={t('templates.backToFamilies')}
                                 className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
                             >
                                 <ChevronLeft size={22} className="text-gray-600" />
@@ -198,10 +206,10 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                         )}
                         <div className="min-w-0">
                             <h2 className="text-xl font-bold text-gray-800 truncate">
-                                {activeFamily ? (families.find(f => f.slug === activeFamily)?.title || '計畫') : '探索習慣計畫'}
+                                {activeFamily ? (famTitle(families.find(f => f.slug === activeFamily)) || t('templates.planFallback')) : t('templates.exploreTitle')}
                             </h2>
                             <p className="text-sm text-gray-500 truncate">
-                                {activeFamily ? '選一個課程開始' : '選一個計畫家族開始'}
+                                {activeFamily ? t('templates.pickCourse') : t('templates.pickFamily')}
                             </p>
                         </div>
                     </div>
@@ -236,13 +244,13 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                             <Icon size={22} />
                                         </div>
                                         <div className="min-w-0 flex-1 pr-5">
-                                            <h3 className="font-bold text-gray-800 text-base">{fam.title}</h3>
-                                            <p className="text-xs text-gray-500 leading-relaxed mt-1">{fam.intro}</p>
+                                            <h3 className="font-bold text-gray-800 text-base">{famTitle(fam)}</h3>
+                                            <p className="text-xs text-gray-500 leading-relaxed mt-1">{famIntro(fam)}</p>
                                             <div className="flex items-center gap-2 mt-2 flex-wrap">
-                                                <span className="text-[11px] text-gray-400">{list.length} 個課程</span>
+                                                <span className="text-[11px] text-gray-400">{t('templates.courseCount', { n: list.length })}</span>
                                                 {hasRec && (
                                                     <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                                                        <Sparkles size={10} /> 有為你推薦
+                                                        <Sparkles size={10} /> {t('templates.hasRecommended')}
                                                     </span>
                                                 )}
                                             </div>
@@ -258,7 +266,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                             const items = grouped[activeFamily] || [];
                             const famObj = families.find(f => f.slug === activeFamily);
                             const showQuizPending = (activeFamily === 'flower' && !userTypeKey) || (activeFamily === 'sleep' && !userSleepTypeKey);
-                            const quizCopy = famObj?.quizPendingCopy;
+                            const quizCopy = famQuizCopy(famObj);
                             return (
                                 <div>
                                     {showQuizPending && quizCopy && (
@@ -268,7 +276,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                         </div>
                                     )}
                                     {items.length === 0 ? (
-                                        <div className="text-center py-12 text-gray-500 text-sm">這個家族目前還沒有公開課程</div>
+                                        <div className="text-center py-12 text-gray-500 text-sm">{t('templates.familyEmpty')}</div>
                                     ) : (
                                         <div className="space-y-3">
                                             {items.map(template => {
@@ -292,7 +300,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                             </span>
                                                             {recommended && (
                                                                 <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-[10px] font-bold flex-shrink-0">
-                                                                    <Sparkles size={10} /> 為你推薦
+                                                                    <Sparkles size={10} /> {t('templates.recommendedForYou')}
                                                                 </span>
                                                             )}
                                                         </div>
@@ -302,24 +310,24 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                         </div>
                                                         {template.authorType !== 'user' && (
                                                         <div className="flex items-center gap-2 text-xs text-gray-500 mb-2 flex-wrap">
-                                                            <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">{template.expert?.title || '專家'}</span>
+                                                            <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">{template.expert?.title || t('templates.expertFallback')}</span>
                                                             <span className="truncate">by {template.expert?.name}</span>
                                                         </div>
                                                         )}
                                                         <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-3 flex-1">
-                                                            {template.description || '這個計畫可以幫助你建立良好的生活習慣。'}
+                                                            {template.description || t('templates.descriptionFallback')}
                                                         </p>
                                                         <div className="flex items-center gap-3 text-[11px] text-gray-400 border-t border-gray-100 pt-2 mb-3">
                                                             <div className="flex items-center gap-1"><User size={12} /><span>{template._count?.assignments || 0}</span></div>
                                                             <div className="flex items-center gap-1"><Check size={12} /><span>{template._count?.tasks || 0}</span></div>
-                                                            <div className="ml-auto flex items-center gap-0.5 text-emerald-600"><span>詳情</span><ChevronRight size={12} /></div>
+                                                            <div className="ml-auto flex items-center gap-0.5 text-emerald-600"><span>{t('templates.details')}</span><ChevronRight size={12} /></div>
                                                         </div>
                                                         <button
                                                             onClick={(e) => { e.stopPropagation(); handleJoinClick(template); }}
                                                             disabled={joiningId === template.id}
                                                             className="w-full bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-2 rounded-lg text-sm font-bold transition-colors disabled:opacity-50"
                                                         >
-                                                            {joiningId === template.id ? '加入中...' : '加入計畫'}
+                                                            {joiningId === template.id ? t('templates.joining') : t('templates.joinPlan')}
                                                         </button>
                                                     </div>
                                                 );
@@ -354,7 +362,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                 <Calendar size={20} className="text-emerald-600" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-gray-800">選擇開始日期</h3>
+                                <h3 className="font-bold text-gray-800">{t('templates.chooseStartDate')}</h3>
                                 <p className="text-xs text-gray-500">{selectedTemplate.name}</p>
                             </div>
                         </div>
@@ -369,7 +377,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                     onChange={() => setStartDateOption('today')}
                                     className="w-4 h-4 text-emerald-500"
                                 />
-                                <span className="text-sm font-medium text-gray-700">今天開始</span>
+                                <span className="text-sm font-medium text-gray-700">{t('templates.startToday')}</span>
                             </label>
 
                             <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
@@ -381,7 +389,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                     onChange={() => setStartDateOption('tomorrow')}
                                     className="w-4 h-4 text-emerald-500"
                                 />
-                                <span className="text-sm font-medium text-gray-700">明天開始</span>
+                                <span className="text-sm font-medium text-gray-700">{t('templates.startTomorrow')}</span>
                             </label>
 
                             <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
@@ -393,7 +401,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                     onChange={() => setStartDateOption('custom')}
                                     className="w-4 h-4 text-emerald-500"
                                 />
-                                <span className="text-sm font-medium text-gray-700">指定日期</span>
+                                <span className="text-sm font-medium text-gray-700">{t('templates.startCustom')}</span>
                             </label>
 
                             {startDateOption === 'custom' && (
@@ -415,14 +423,14 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                 }}
                                 className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
                             >
-                                取消
+                                {t('common.cancel')}
                             </button>
                             <button
                                 onClick={() => confirmJoin(selectedTemplate, getStartDate())}
                                 disabled={startDateOption === 'custom' && !customDate}
                                 className="flex-1 py-3 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 transition-colors disabled:opacity-50"
                             >
-                                確認加入
+                                {t('templates.confirmJoin')}
                             </button>
                         </div>
                     </div>

@@ -12,6 +12,8 @@ import {
     Tooltip,
 } from 'recharts';
 
+import { useT } from '@/lib/i18n';
+
 // FocusMap — Slice D
 // Renders the habit-impact × habit-ability scatter for a single GENESIS+IO
 // domain. See spec:
@@ -103,6 +105,7 @@ const DotShape = (props) => {
 // ---- main component --------------------------------------------------------
 
 const FocusMap = ({ habits = [], onSelect }) => {
+    const { t } = useT();
     const dots = useMemo(() => applyJitter(habits || []), [habits]);
 
     const handleDotClick = (point) => {
@@ -117,8 +120,8 @@ const FocusMap = ({ habits = [], onSelect }) => {
             {/* Accessible label for the golden quadrant region — ReferenceArea
                 's aria-label doesn't bubble out to the DOM, so we surface a
                 visually-hidden element so screen readers + tests can find it. */}
-            <span className="sr-only" aria-label="黃金行為（高影響 × 高容易）">
-                黃金行為區（右上）
+            <span className="sr-only" aria-label={t('explore.goldenQuadrantAria')}>
+                {t('explore.goldenQuadrantLabel')}
             </span>
             <ResponsiveContainer width="100%" height={320}>
                 <ScatterChart margin={{ top: 20, right: 20, bottom: 36, left: 0 }}>
@@ -130,7 +133,7 @@ const FocusMap = ({ habits = [], onSelect }) => {
                         ticks={[1, 3, 5]}
                         tick={{ fontSize: 11, fill: '#9CA3AF' }}
                         label={{
-                            value: '影響 →',
+                            value: t('explore.impactAxis'),
                             position: 'insideBottom',
                             offset: -10,
                             style: { fill: '#6B7280', fontSize: 12 },
@@ -143,7 +146,7 @@ const FocusMap = ({ habits = [], onSelect }) => {
                         ticks={[1, 3, 5]}
                         tick={{ fontSize: 11, fill: '#9CA3AF' }}
                         label={{
-                            value: '容易 →',
+                            value: t('explore.abilityAxis'),
                             angle: -90,
                             position: 'insideLeft',
                             offset: 16,
@@ -155,7 +158,7 @@ const FocusMap = ({ habits = [], onSelect }) => {
                         x1={3.5} x2={5.5} y1={3.5} y2={5.5}
                         fill="#10B981" fillOpacity={0.08}
                         stroke="#10B981" strokeOpacity={0.2}
-                        aria-label="黃金行為（高影響 × 高容易）"
+                        aria-label={t('explore.goldenQuadrantAria')}
                     />
                     <Tooltip
                         cursor={false}
@@ -180,7 +183,7 @@ const FocusMap = ({ habits = [], onSelect }) => {
                         data-habit-id={d.id}
                         onClick={() => handleDotClick(d)}
                     >
-                        {d.name}（影響 {d.impact}・容易 {d.ability}）
+                        {t('explore.dotLabel', { name: d.name, impact: d.impact, ability: d.ability })}
                     </button>
                 ))}
             </div>

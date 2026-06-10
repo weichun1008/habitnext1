@@ -255,6 +255,207 @@
         "nthWeekdayOfMonth": "每月第 {n} 個星期{day}",
         "lastWeekdayOfMonth": "每月最後一個星期{day}"
     },
+    "difficulty": {
+        "beginner": "入門",
+        "intermediate": "進階",
+        "challenge": "挑戰"
+    },
+    "avatars": {
+        "sunrise": "日出",
+        "bloom": "花苞",
+        "wave": "海浪",
+        "sprout": "新芽",
+        "crystal": "晶石",
+        "star": "繁星",
+        "citrus": "柑橘",
+        "moon": "月夜",
+        "heart": "心動",
+        "mountain": "山林",
+        "cloud": "雲朵",
+        "berry": "莓果"
+    },
+    "library": {
+        "chooseHabit": "選擇習慣",
+        "chooseAnchor": "選擇錨點",
+        "searchResults": "搜尋結果",
+        "searchInDomain": "在「{name}」內搜尋…",
+        "searchHabits": "搜尋習慣…",
+        "searchQuery": "搜尋「{query}」",
+        "recommendedHabits": "推薦習慣",
+        "noMatchingHabits": "沒有符合的習慣",
+        "pickDomain": "選擇一個健康面向",
+        "fromAspiration": "從嚮往開始",
+        "fromAspirationHint": "不知從何下手？從你想成為的樣子出發，我們幫你配習慣",
+        "createCustomTask": "手動建立新任務",
+        "selectDifficultyFirst": "請先選擇難度",
+        "aboutToAdd": "準備加入：",
+        "difficultyLabel": "難度：{level}",
+        "pickAnchorHint": "挑一個錨點（你習慣在什麼時候做）",
+        "skipAnchor": "略過錨點，直接加入",
+        "addWithAnchor": "加入（錨點：{anchor}）",
+        "pickAnchorFirst": "請先選一個錨點",
+        "addedToast": "已加入：{name}",
+        "savedThisSession": "已加入 {n} 個習慣到每日追蹤",
+        "done": "完成 →"
+    },
+    "explore": {
+        "noRecommendedHabits": "這個面向目前還沒有推薦習慣",
+        "chooseDifficulty": "選擇難度：",
+        "addThisHabit": "加入此習慣",
+        "addDirectly": "直接加入",
+        "addCandidate": "加入候選",
+        "addedCandidate": "已加入候選",
+        "cancelCandidate": "取消候選",
+        "add": "加入",
+        "cadence": {
+            "daily": "每日",
+            "dailyTimes": "每日 {n} 次",
+            "weekly135": "週 3 (一三五)",
+            "weekly5Weekdays": "週 5 (週間)",
+            "weeklyTimes": "每週 {n} 次",
+            "yearly": "每年",
+            "halfYearly": "每半年",
+            "quarterly": "每季",
+            "monthly": "每月",
+            "everyNMonths": "每 {n} 個月"
+        },
+        "lifeMoments": "生活時刻",
+        "currentAnchor": "目前錨點：",
+        "clearAnchor": "清除錨點",
+        "customAnchorCta": "都不是？輸入自訂錨點",
+        "customAnchorPlaceholder": "輸入自訂錨點 (最多 {n} 字)",
+        "recommended": "推薦",
+        "currentIdentity": "目前身分：",
+        "clearIdentity": "清除身分",
+        "recommendedIdentityFor": "為你推薦的身分（{type}）",
+        "userTypes": {
+            "daisy": "雛菊型",
+            "rose": "玫瑰型",
+            "orchid": "蘭花型",
+            "sunflower": "向日葵型"
+        },
+        "orChooseYourOwn": "或自選",
+        "customIdentityCta": "自訂身分",
+        "customIdentityPlaceholder": "輸入自訂身分（最多 {n} 字）",
+        "goldenQuadrantAria": "黃金行為（高影響 × 高容易）",
+        "goldenQuadrantLabel": "黃金行為區（右上）",
+        "impactAxis": "影響 →",
+        "abilityAxis": "容易 →",
+        "dotLabel": "{name}（影響 {impact}・容易 {ability}）"
+    },
+    "templates": {
+        "exploreTitle": "探索習慣計畫",
+        "pickFamily": "選一個計畫家族開始",
+        "pickCourse": "選一個課程開始",
+        "planFallback": "計畫",
+        "backToFamilies": "返回計畫家族",
+        "families": {
+            "flower": {
+                "title": "花朵型小課程",
+                "intro": "依女性週期身體狀態分型，14 天分階段任務。",
+                "quizPending": "花朵分型問卷功能開發中 — 先瀏覽全部，完成後自動推薦。"
+            },
+            "sleep": {
+                "title": "睡眠處方",
+                "intro": "依睡眠卡點分型，14 天 4 階段處方。",
+                "quizPending": "睡眠分型問卷功能開發中 — 先瀏覽全部，完成後自動推薦。"
+            },
+            "other": {
+                "title": "其他公開計畫",
+                "intro": "專家設計的各式主題計畫。"
+            }
+        },
+        "courseCount": "{n} 個課程",
+        "hasRecommended": "有為你推薦",
+        "recommendedForYou": "為你推薦",
+        "familyEmpty": "這個家族目前還沒有公開課程",
+        "expertFallback": "專家",
+        "descriptionFallback": "這個計畫可以幫助你建立良好的生活習慣。",
+        "details": "詳情",
+        "joining": "加入中…",
+        "joinPlan": "加入計畫",
+        "joinFailed": "加入失敗，請稍後再試",
+        "errorOccurred": "發生錯誤",
+        "chooseStartDate": "選擇開始日期",
+        "startToday": "今天開始",
+        "startTomorrow": "明天開始",
+        "startCustom": "指定日期",
+        "confirmJoin": "確認加入",
+        "detailAria": "{name} 詳細介紹",
+        "daysCount": "{n} 天",
+        "noTasksYet": "（尚無任務）",
+        "untitled": "(無標題)",
+        "tasksUnit": "個任務",
+        "daysUnit": "天",
+        "joinedUnit": "人加入",
+        "phaseCount": "{n} 階段",
+        "legacyStructure": "本計畫任務結構為舊版",
+        "legacyStructureHint": "加入後可在「今日」與「計畫總覽」看到完整內容",
+        "communityAuthor": "用戶自創",
+        "officialAuthor": "官方"
+    },
+    "aspirations": {
+        "pickTitle": "你想要什麼？",
+        "pickSubtitle": "從這裡開始，我們會推薦合適的計畫與習慣",
+        "identityTitle": "想成為怎樣的人？",
+        "identitySubtitle": "替這個嚮往立一個身分認同，會顯示在每日行程上方（可跳過）",
+        "close": "關閉",
+        "yourAspiration": "你的嚮往",
+        "skip": "跳過",
+        "confirmIdentityContinue": "確認身分並繼續",
+        "skipIdentityContinue": "先不設定，繼續",
+        "existingBadge": "已建立 · 繼續用",
+        "recommendedForYou": "為你推薦",
+        "writeYourOwn": "＋ 自己寫一句嚮往",
+        "customPlaceholder": "我想…",
+        "becomeIdentity": "成為「{identity}」",
+        "loadingRecommendations": "載入推薦中…",
+        "suitablePlans": "適合的計畫",
+        "noMatchingPlans": "沒有對應的計畫",
+        "suitableHabits": "適合的習慣",
+        "noMatchingHabits": "沒有對應的習慣",
+        "planSummary": "{days} 天 · {tasks} 個任務",
+        "customStructure": "自訂結構",
+        "emptyResultsHint": "這個嚮往目前還沒有對應的計畫 / 習慣，去自己找看看：",
+        "skipExploreHint": "或者，跳過嚮往直接探索：",
+        "explorePlans": "探索計畫",
+        "exploreHabits": "探索習慣",
+        "candidateCount": "已加入 {n} 個候選",
+        "candidateHint": "繼續加入或開始評分挑出黃金行為",
+        "startScoring": "開始評分 →",
+        "loading": "載入中…",
+        "empty": "還沒有嚮往。從首頁的 [+] 開始新增。",
+        "setIdentity": "＋ 設定身分認同",
+        "saveIdentity": "儲存身分",
+        "identityEditPlaceholder": "例：我是個重視睡眠的人（最多 {n} 字）",
+        "uncategorized": "未分類",
+        "linkedTasks": "掛 {n} 個任務",
+        "markAchieved": "標記達成",
+        "archive": "封存",
+        "delete": "刪除",
+        "deleteConfirm": "確定要刪除「{text}」？掛在此嚮往的任務不會被刪除，但會從此嚮往脫鉤。",
+        "status": {
+            "active": "進行中",
+            "achieved": "已達成",
+            "archived": "已封存"
+        },
+        "time": {
+            "today": "今天",
+            "daysAgo": "{n} 天前",
+            "monthsAgo": "{n} 個月前",
+            "yearsAgo": "{n} 年前"
+        },
+        "errors": {
+            "textRequired": "請輸入嚮往內容",
+            "createFailed": "新增嚮往失敗，請再試一次",
+            "domainRequired": "請選一個生活面向",
+            "fetchRecommendationsFailed": "取得推薦失敗，請再試一次",
+            "fetchFailed": "取得嚮往失敗",
+            "updateFailed": "更新嚮往失敗",
+            "updateIdentityFailed": "更新身分失敗",
+            "deleteFailed": "刪除嚮往失敗"
+        }
+    },
     "taskCard": {
         "periodStatus": "{count}/{target} 次",
         "quit": "戒除",
@@ -420,6 +621,159 @@
     "location": {
         "addLocation": "加地點",
         "searchCity": "搜尋城市"
+    },
+    "focusMap": {
+        "title": "焦點地圖",
+        "loading": "載入中…",
+        "noCandidates": "沒有候選習慣可評分",
+        "addedCount": "已加入 {n} 個習慣",
+        "archivedNote": "其餘 {n} 個未選的已收進封存，候選清單已清空。",
+        "savePlanPrompt": "要把這套習慣存成一個計畫嗎？之後可重複使用，或申請公開分享給大家。",
+        "saveAsPlan": "把這套存成計畫",
+        "done": "完成",
+        "mapTitle": "你的焦點地圖",
+        "mapSubtitle": "依「影響力 × 執行度」分四區，幫你決定先做哪些。",
+        "submitting": "處理中…",
+        "addHabitsCta": "加入 {n} 個習慣 ›",
+        "batchRateFailed": "批次評分失敗，請稍後再試",
+        "genericError": "發生錯誤",
+        "added": "已加入",
+        "addAnyway": "仍要加入",
+        "add": "加入",
+        "quadrants": {
+            "golden": { "label": "值得優先做", "advice": "高影響又容易做到 — 最划算，建議先加入。" },
+            "big_fish": { "label": "值得挑戰", "advice": "影響大但目前不易做到 — 可先從更簡單的版本開始，別逼太緊。" },
+            "background": { "label": "順手加碼", "advice": "容易做但影響有限 — 行有餘力再加。" },
+            "skip": { "label": "建議先跳過", "advice": "影響有限又不易做 — 建議先擱著；但你仍可自行加入。" }
+        },
+        "matrix": {
+            "skipShort": "建議跳過",
+            "impactAxis": "影響力 →",
+            "abilityAxis": "執行度（越右越容易）→"
+        },
+        "rating": {
+            "prev": "‹ 上一個",
+            "next": "下一個 ›",
+            "viewMap": "看焦點地圖 ›",
+            "impact": {
+                "title": "第一步 · 影響力",
+                "q": "這個習慣對你想要的改變，影響有多大？",
+                "sub": "想它跟你的目標關聯多強，先別管做不做得到。",
+                "lo": "沒感覺",
+                "hi": "很有感",
+                "aria": "影響力",
+                "labels": { "1": "沒什麼感覺", "2": "影響不大", "3": "普通", "4": "蠻有感", "5": "非常關鍵" }
+            },
+            "ability": {
+                "title": "第二步 · 執行度",
+                "q": "對你來說，這個習慣有多容易做到？",
+                "sub": "純評估難易，影響大不大這步先不管。",
+                "lo": "很難",
+                "hi": "很容易",
+                "aria": "執行度",
+                "labels": { "1": "很難做到", "2": "有點難", "3": "普通", "4": "算容易", "5": "非常容易" }
+            }
+        },
+        "duration": {
+            "title": "想養成多久？",
+            "recommended": "推薦",
+            "sciAria": "查看背後科學",
+            "whyScience": "為什麼建議 66 天？查看背後科學",
+            "fullSource": "查看完整來源與說明",
+            "confirm": "確認加入",
+            "d21": { "label": "21 天", "sub": "起步嘗試" },
+            "d66": { "label": "66 天", "sub": "養成自動化" },
+            "d90": { "label": "90 天", "sub": "鞏固成形" },
+            "none": { "label": "不設限", "sub": "沒有終止日，持續追蹤" }
+        },
+        "science": {
+            "summary": "研究發現，新行為要變成「不太需要意志力的自動反應」，平均約需 66 天（會因人和習慣難度而異，落在 18–254 天）。所以我們把預設放在 66 天。"
+        }
+    },
+    "plan": {
+        "saveAsPlanTitle": "存成計畫",
+        "nameLabel": "計畫名稱",
+        "descriptionLabel": "描述（選填）",
+        "phasePreview": "階段預覽（共 {n} 階段）",
+        "phaseSummary": "{days} 天 · {n} 個習慣",
+        "savePrivate": "存為私人",
+        "sharePublic": "申請公開分享",
+        "createFailed": "建立計畫失敗，請稍後再試",
+        "genericError": "發生錯誤",
+        "phases": { "p1": "養成期", "p2": "進階", "p3": "挑戰" }
+    },
+    "stats": {
+        "title": "統計",
+        "loading": "載入中…",
+        "loadError": "統計暫時無法載入：{error}",
+        "emptyTitle": "打完第一個卡再回來看 📊",
+        "emptySubtitle": "統計需要至少一天的紀錄才有故事",
+        "daysUnit": "天",
+        "streak": {
+            "longestPrefix": "你的最長紀錄",
+            "notToday": "今天還沒打卡，加油 💪",
+            "startToday": "今天打第一個卡，從 1 開始 🌱"
+        },
+        "rate": {
+            "last7": "最近 7 天完成率",
+            "last30": "最近 30 天完成率"
+        },
+        "domains": {
+            "title": "9 大健康面向分布",
+            "subtitle": "最近 30 天，完成次數",
+            "times": "{n} 次",
+            "completed": "完成"
+        },
+        "heatmap": {
+            "title": "最近 12 週",
+            "subtitle": "每格代表一天，顏色越深當天完成越多",
+            "dayTitle": "{date} · {n} 個完成",
+            "less": "少",
+            "more": "多"
+        },
+        "taskStreaks": {
+            "title": "你的金牌 Habit",
+            "longest": "最長 {n}"
+        }
+    },
+    "insights": {
+        "loading": "載入中…",
+        "loadingEvidence": "載入科學佐證…",
+        "sectionAria": "科學佐證",
+        "whyImportant": "為什麼這個習慣重要",
+        "takeawayQuote": "「{text}」",
+        "collapse": "收合",
+        "expand": "展開",
+        "hideDetail": "收起研究細節",
+        "showDetail": "看研究細節",
+        "sourceType": { "journal": "期刊", "book": "書籍", "source": "來源" }
+    },
+    "evidence": {
+        "tier": { "strong": "強", "moderate": "中", "preliminary": "初步" },
+        "badge": {
+            "aria": "證據力 {tier}，點擊查看評分",
+            "label": "證據力 {tier}"
+        },
+        "panel": {
+            "title": "證據力評分",
+            "total": "總分",
+            "totalValue": "{total} / 9 → 證據力 {tier}",
+            "howScored": "了解我們怎麼評分"
+        },
+        "rubric": {
+            "title": "我們怎麼評證據力",
+            "close": "關閉",
+            "intro": "每則科學佐證從 4 個面向評分、加總分為三個等級。分數衡量「證據有多可信」，不代表「習慣有多好」——嚴謹研究即使結論是效果有限，證據力仍然高。",
+            "points": "{n} 分",
+            "totalScale": "總分 0–9 分對應等級：",
+            "tiers": "強（{strongFrom}–9）· 中（{moderateFrom}–{moderateTo}）· 初步（0–{preliminaryTo}）"
+        },
+        "dimensions": {
+            "studyType": { "label": "研究類型", "l3": "統合分析／系統綜述", "l2": "RCT 介入試驗", "l1": "觀察性研究", "l0": "動物／機制／專家意見" },
+            "scale": { "label": "對象與規模", "l2": "大型人體", "l1": "小型人體", "l0": "非人體（動物／細胞）" },
+            "causality": { "label": "因果強度", "l2": "介入證明因果", "l1": "強相關＋合理機制", "l0": "僅相關／機制推論" },
+            "replication": { "label": "重複驗證", "l2": "多研究一致", "l1": "部分支持", "l0": "單一研究／結果混合" }
+        }
     },
     "journey": {
         "tiers": {

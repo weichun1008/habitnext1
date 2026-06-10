@@ -2,19 +2,22 @@
 
 import React from 'react';
 import { scoreEvidence, TIER_META, TONE_CLASSES } from '@/lib/evidenceStrength';
+import { useT } from '@/lib/i18n';
 
 // 訊號格 badge。無評分 → null。點擊呼叫 onClick（卡片內會先 stopPropagation）。
 // active 時加一圈內框，表示對應的評分面板已展開。
 export default function EvidenceBadge({ evidence, onClick, active = false }) {
+  const { t } = useT();
   const score = scoreEvidence(evidence);
   if (!score) return null;
   const tone = TONE_CLASSES[score.tier];
   const filled = TIER_META[score.tier].filled;
+  const tierLabel = t(TIER_META[score.tier].labelKey);
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={`證據力 ${score.tierLabel}，點擊查看評分`}
+      aria-label={t('evidence.badge.aria', { tier: tierLabel })}
       aria-expanded={active}
       className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-bold whitespace-nowrap transition-all hover:brightness-95 hover:shadow-sm ${tone.bg} ${tone.text} ${active ? 'ring-1 ring-inset ring-gray-400/40' : ''}`}
     >
@@ -29,7 +32,7 @@ export default function EvidenceBadge({ evidence, onClick, active = false }) {
           />
         ))}
       </span>
-      證據力 {score.tierLabel}
+      {t('evidence.badge.label', { tier: tierLabel })}
     </button>
   );
 }

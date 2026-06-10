@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { Loader, Check, Archive, Trash2, Pencil, X } from 'lucide-react';
+import { useT } from '@/lib/i18n';
+import { translateDomain } from '@/lib/i18n/dataLabels';
 
 // identity is now an aspiration-level field (2026-06-03). Cap matches the
 // per-habit IdentityPicker's old limit so the data shape stays consistent.
@@ -24,29 +26,30 @@ const IDENTITY_MAX = 40;
 // v1 explicitly does NOT support editing text/domain. Spec §7: "改 = 刪除
 // 重建". So no edit action is shown — keep the contract narrow.
 
-function formatRelativeDate(iso) {
+function formatRelativeDate(iso, t) {
     if (!iso) return '';
     const then = new Date(iso);
     if (Number.isNaN(then.getTime())) return '';
     const ms = Date.now() - then.getTime();
     const days = Math.floor(ms / (1000 * 60 * 60 * 24));
-    if (days < 1) return '今天';
-    if (days < 30) return `${days} 天前`;
-    if (days < 365) return `${Math.floor(days / 30)} 個月前`;
-    return `${Math.floor(days / 365)} 年前`;
+    if (days < 1) return t('aspirations.time.today');
+    if (days < 30) return t('aspirations.time.daysAgo', { n: days });
+    if (days < 365) return t('aspirations.time.monthsAgo', { n: Math.floor(days / 30) });
+    return t('aspirations.time.yearsAgo', { n: Math.floor(days / 365) });
 }
 
-function statusBadge(status) {
+function statusBadge(status, t) {
     if (status === 'achieved') {
-        return <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">已達成</span>;
+        return <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">{t('aspirations.status.achieved')}</span>;
     }
     if (status === 'archived') {
-        return <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">已封存</span>;
+        return <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">{t('aspirations.status.archived')}</span>;
     }
-    return <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700">進行中</span>;
+    return <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700">{t('aspirations.status.active')}</span>;
 }
 
 export default function MyAspirationsTab({ userId }) {
+    const { t } = useT();
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -68,11 +71,11 @@ export default function MyAspirationsTab({ userId }) {
             setRows(Array.isArray(data) ? data.filter(a => a.status !== 'archived') : []);
         } catch (err) {
             console.error('[MyAspirationsTab] fetch failed:', err);
-            setError('取得嚮往失敗');
+            setError(t('aspirations.errors.fetchFailed'));
         } finally {
             setLoading(false);
         }
-    }, [userId]);
+    }, [userId, t]);
 
     useEffect(() => { load(); }, [load]);
 
@@ -89,7 +92,7 @@ export default function MyAspirationsTab({ userId }) {
             await load();
         } catch (err) {
             console.error('[MyAspirationsTab] patch failed:', err);
-            setError('更新嚮往失敗');
+            setError(t('aspirations.errors.updateFailed'));
         } finally {
             setPendingId(null);
         }
@@ -121,14 +124,14 @@ export default function MyAspirationsTab({ userId }) {
             await load();
         } catch (err) {
             console.error('[MyAspirationsTab] save identity failed:', err);
-            setError('更新身分失敗');
+            setError(t('aspirations.errors.updateIdentityFailed'));
         } finally {
             setPendingId(null);
         }
     };
 
     const deleteRow = async (id, text) => {
-        if (!confirm(`確定要刪除「${text}」？掛在此嚮往的任務不會被刪除，但會從此嚮往脫鉤。`)) return;
+        if (!confirm(t('aspirations.deleteConfirm', { text }))) return;
         setPendingId(id);
         setError(null);
         try {
@@ -137,7 +140,7 @@ export default function MyAspirationsTab({ userId }) {
             await load();
         } catch (err) {
             console.error('[MyAspirationsTab] delete failed:', err);
-            setError('刪除嚮往失敗');
+            setError(t('aspirations.errors.deleteFailed'));
         } finally {
             setPendingId(null);
         }
@@ -146,7 +149,7 @@ export default function MyAspirationsTab({ userId }) {
     if (loading) {
         return (
             <div className="flex items-center justify-center py-10 text-gray-400">
-                <Loader size={18} className="animate-spin mr-2" /> 載入中…
+                <Loader size={18} className="animate-spin mr-2" /> {t('aspirations.loading')}
             </div>
         );
     }
@@ -162,7 +165,7 @@ export default function MyAspirationsTab({ userId }) {
     if (rows.length === 0) {
         return (
             <div className="text-center py-10 text-gray-400 text-sm">
-                還沒有嚮往。從首頁的 [+] 開始新增。
+                {t('aspirations.empty')}
             </div>
         );
     }
@@ -192,7 +195,7 @@ export default function MyAspirationsTab({ userId }) {
                                             maxLength={IDENTITY_MAX}
                                             value={editingText}
                                             onChange={(e) => setEditingText(e.target.value.slice(0, IDENTITY_MAX))}
-                                            placeholder={`例：我是個重視睡眠的人（最多 ${IDENTITY_MAX} 字）`}
+                                            placeholder={t('aspirations.identityEditPlaceholder', { n: IDENTITY_MAX })}
                                             className="flex-1 min-w-0 px-2 py-1 border border-emerald-300 rounded-lg text-xs focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter') saveIdentity(a.id);
@@ -204,7 +207,7 @@ export default function MyAspirationsTab({ userId }) {
                                             onClick={() => saveIdentity(a.id)}
                                             disabled={isPending}
                                             className="p-1 rounded-lg bg-emerald-500 text-white hover:bg-emerald-600 disabled:opacity-50"
-                                            aria-label="儲存身分"
+                                            aria-label={t('aspirations.saveIdentity')}
                                         >
                                             <Check size={14} />
                                         </button>
@@ -213,7 +216,7 @@ export default function MyAspirationsTab({ userId }) {
                                             onClick={cancelEditIdentity}
                                             disabled={isPending}
                                             className="p-1 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 disabled:opacity-50"
-                                            aria-label="取消"
+                                            aria-label={t('common.cancel')}
                                         >
                                             <X size={14} />
                                         </button>
@@ -227,18 +230,18 @@ export default function MyAspirationsTab({ userId }) {
                                         {a.identity ? (
                                             <span className="text-xs font-medium text-emerald-700">{a.identity}</span>
                                         ) : (
-                                            <span className="text-xs text-gray-400">＋ 設定身分認同</span>
+                                            <span className="text-xs text-gray-400">{t('aspirations.setIdentity')}</span>
                                         )}
                                         <Pencil size={11} className="text-gray-300 group-hover:text-gray-500" />
                                     </button>
                                 )}
                                 <p className="text-[11px] text-gray-500 mt-1 flex items-center gap-1.5 flex-wrap">
-                                    {statusBadge(a.status)}
-                                    <span>{a.domain || '未分類'}</span>
+                                    {statusBadge(a.status, t)}
+                                    <span>{a.domain ? translateDomain(a.domain, t) : t('aspirations.uncategorized')}</span>
                                     <span>·</span>
-                                    <span>掛 {habitCount} 個任務</span>
+                                    <span>{t('aspirations.linkedTasks', { n: habitCount })}</span>
                                     <span>·</span>
-                                    <span>{formatRelativeDate(a.createdAt)}</span>
+                                    <span>{formatRelativeDate(a.createdAt, t)}</span>
                                 </p>
                             </div>
                             {isPending && <Loader size={14} className="animate-spin text-emerald-500 mt-1 flex-shrink-0" />}
@@ -251,7 +254,7 @@ export default function MyAspirationsTab({ userId }) {
                                     disabled={isPending}
                                     className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
                                 >
-                                    <Check size={12} /> 標記達成
+                                    <Check size={12} /> {t('aspirations.markAchieved')}
                                 </button>
                             )}
                             {a.status !== 'archived' && (
@@ -261,7 +264,7 @@ export default function MyAspirationsTab({ userId }) {
                                     disabled={isPending}
                                     className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50"
                                 >
-                                    <Archive size={12} /> 封存
+                                    <Archive size={12} /> {t('aspirations.archive')}
                                 </button>
                             )}
                             <button
@@ -270,7 +273,7 @@ export default function MyAspirationsTab({ userId }) {
                                 disabled={isPending}
                                 className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-red-50 text-red-600 hover:bg-red-100 disabled:opacity-50"
                             >
-                                <Trash2 size={12} /> 刪除
+                                <Trash2 size={12} /> {t('aspirations.delete')}
                             </button>
                         </div>
                     </li>
