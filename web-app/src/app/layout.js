@@ -1,4 +1,5 @@
 import "./globals.css";
+import { LocaleProvider } from "@/lib/i18n";
 
 export const metadata = {
     title: "Cofit Daily Health Tracker",
@@ -33,7 +34,9 @@ export default function RootLayout({ children }) {
                 />
             </head>
             <body className="font-sans antialiased">
-                <div id="root">{children}</div>
+                <LocaleProvider>
+                    <div id="root">{children}</div>
+                </LocaleProvider>
             </body>
         </html>
     );

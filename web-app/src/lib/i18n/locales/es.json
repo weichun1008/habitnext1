@@ -1,0 +1,86 @@
+{
+    "common": {
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "back": "Volver",
+        "next": "Siguiente",
+        "logout": "Cerrar sesión"
+    },
+    "header": {
+        "weekDays": ["L", "M", "X", "J", "V", "S", "D"],
+        "openProfile": "Abrir perfil",
+        "guest": "Invitado",
+        "worldAria": "Mundo",
+        "journeyAria": "Viaje",
+        "view": {
+            "manage": "Gestionar",
+            "dashboardDetail": "Insights",
+            "stats": "Estadísticas",
+            "world": "Mundo",
+            "journey": "Viaje",
+            "figure": "Figura",
+            "achievements": "Logros"
+        }
+    },
+    "login": {
+        "welcomeBack": "Bienvenido de nuevo",
+        "createAccount": "Crear una cuenta",
+        "syncSubtitle": "Inicia sesión para sincronizar tu historial de hábitos",
+        "joinSubtitle": "Únete a HabitNext y empieza a formar mejores hábitos",
+        "phone": "Número de teléfono",
+        "password": "Contraseña",
+        "phonePlaceholder": "Número de teléfono",
+        "passwordPlaceholder": "Introduce tu contraseña",
+        "loginButton": "Iniciar sesión",
+        "noAccountCta": "¿No tienes cuenta? Regístrate ahora",
+        "hasAccountCta": "¿Ya tienes cuenta? Volver al inicio de sesión",
+        "countryCode": "País",
+        "setPassword": "Establecer contraseña",
+        "passwordRule": "Mín. 6 caracteres",
+        "codeSentTo": "Código de verificación enviado a",
+        "demoCode": "(Demo: introduce 8888)",
+        "verifyCode": "Código de verificación",
+        "verifyAndRegister": "Verificar y registrar",
+        "errors": {
+            "loginFailed": "Error al iniciar sesión",
+            "networkError": "Error de red",
+            "incompleteData": "Por favor, rellena todos los campos",
+            "registerFailed": "Error de registro",
+            "registerSuccessLogin": "Registrado. Inicia sesión."
+        }
+    },
+    "profile": {
+        "title": "Perfil",
+        "myAspirations": "Mis aspiraciones",
+        "selectAvatar": "Elige tu avatar",
+        "nickname": "Apodo",
+        "phone": "Número de teléfono",
+        "nicknamePlaceholder": "Introduce tu apodo",
+        "phonePlaceholder": "Introduce el número de teléfono",
+        "changePassword": "Cambiar contraseña",
+        "cancelChangePassword": "Cancelar cambio de contraseña",
+        "oldPassword": "Contraseña actual",
+        "newPassword": "Nueva contraseña",
+        "confirmPassword": "Confirmar nueva contraseña",
+        "oldPasswordPlaceholder": "Introduce la contraseña actual",
+        "newPasswordPlaceholder": "Introduce la nueva contraseña (mín. 6 caracteres)",
+        "confirmPasswordPlaceholder": "Vuelve a introducir la nueva contraseña",
+        "fontSize": "Tamaño de fuente",
+        "fontSizeOptions": {
+            "standard": "Estándar",
+            "large": "Grande",
+            "xlarge": "Muy grande"
+        },
+        "language": "Idioma",
+        "trackLocation": "Registrar lugar al completar",
+        "trackLocationDescription": "Solo registra la ciudad cuando completas un hábito, guarda las coordenadas como números y nunca te rastrea en segundo plano. Puedes desactivarlo en cualquier momento.",
+        "errors": {
+            "oldPasswordRequired": "Por favor, introduce tu contraseña actual",
+            "newPasswordRequired": "Por favor, introduce una nueva contraseña",
+            "newPasswordTooShort": "La nueva contraseña debe tener al menos 6 caracteres",
+            "passwordMismatch": "La nueva contraseña y la confirmación no coinciden",
+            "updateFailed": "Error al actualizar",
+            "networkError": "Error de red. Inténtalo de nuevo."
+        }
+    }
+}
