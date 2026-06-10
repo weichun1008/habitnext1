@@ -1,0 +1,86 @@
+{
+    "common": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "back": "Back",
+        "next": "Next",
+        "logout": "Log out"
+    },
+    "header": {
+        "weekDays": ["M", "T", "W", "T", "F", "S", "S"],
+        "openProfile": "Open profile",
+        "guest": "Guest",
+        "worldAria": "World",
+        "journeyAria": "Journey",
+        "view": {
+            "manage": "Manage",
+            "dashboardDetail": "Insights",
+            "stats": "Stats",
+            "world": "World",
+            "journey": "Journey",
+            "figure": "Figure",
+            "achievements": "Achievements"
+        }
+    },
+    "login": {
+        "welcomeBack": "Welcome back",
+        "createAccount": "Create an account",
+        "syncSubtitle": "Sign in to sync your habit history",
+        "joinSubtitle": "Join HabitNext and start building better habits",
+        "phone": "Phone number",
+        "password": "Password",
+        "phonePlaceholder": "Phone number",
+        "passwordPlaceholder": "Enter your password",
+        "loginButton": "Sign in",
+        "noAccountCta": "No account yet? Register now",
+        "hasAccountCta": "Have an account? Back to sign in",
+        "countryCode": "Country",
+        "setPassword": "Set password",
+        "passwordRule": "6+ characters",
+        "codeSentTo": "Verification code sent to",
+        "demoCode": "(Demo: enter 8888)",
+        "verifyCode": "Verification code",
+        "verifyAndRegister": "Verify and register",
+        "errors": {
+            "loginFailed": "Sign-in failed",
+            "networkError": "Network error",
+            "incompleteData": "Please fill in all fields",
+            "registerFailed": "Registration failed",
+            "registerSuccessLogin": "Registered. Please sign in."
+        }
+    },
+    "profile": {
+        "title": "Profile",
+        "myAspirations": "My aspirations",
+        "selectAvatar": "Choose your avatar",
+        "nickname": "Nickname",
+        "phone": "Phone number",
+        "nicknamePlaceholder": "Enter your nickname",
+        "phonePlaceholder": "Enter phone number",
+        "changePassword": "Change password",
+        "cancelChangePassword": "Cancel password change",
+        "oldPassword": "Old password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm new password",
+        "oldPasswordPlaceholder": "Enter old password",
+        "newPasswordPlaceholder": "Enter new password (6+ chars)",
+        "confirmPasswordPlaceholder": "Re-enter new password",
+        "fontSize": "Font size",
+        "fontSizeOptions": {
+            "standard": "Standard",
+            "large": "Large",
+            "xlarge": "Extra large"
+        },
+        "language": "Language",
+        "trackLocation": "Track completion location",
+        "trackLocationDescription": "Only records the city when you complete a habit, stores coordinates as numbers, and never tracks you in the background. You can turn it off at any time.",
+        "errors": {
+            "oldPasswordRequired": "Please enter your old password",
+            "newPasswordRequired": "Please enter a new password",
+            "newPasswordTooShort": "New password must be at least 6 characters",
+            "passwordMismatch": "New password and confirmation don't match",
+            "updateFailed": "Update failed",
+            "networkError": "Network error. Please try again."
+        }
+    }
+}

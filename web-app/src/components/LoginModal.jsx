@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { User, Phone, ArrowRight, Loader2, Lock, Globe, KeyRound } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 const LoginModal = ({ isOpen, onLogin }) => {
+    const { t } = useT();
     const [mode, setMode] = useState('login'); // 'login' | 'register'
     const [step, setStep] = useState(1); // For register: 1 = details, 2 = verify
 
@@ -48,10 +50,10 @@ const LoginModal = ({ isOpen, onLogin }) => {
                 onLogin(data);
                 resetForm();
             } else {
-                setError(data.error || '登入失敗');
+                setError(data.error || t('login.errors.loginFailed'));
             }
         } catch (err) {
-            setError('網路連線錯誤');
+            setError(t('login.errors.networkError'));
         } finally {
             setLoading(false);
         }
@@ -60,7 +62,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
     const handleRegisterStep1 = (e) => {
         e.preventDefault();
         if (!phone || !password) {
-            setError('請填寫完整資料');
+            setError(t('login.errors.incompleteData'));
             return;
         }
         setStep(2);
@@ -105,13 +107,13 @@ const LoginModal = ({ isOpen, onLogin }) => {
                 } else {
                     // Should not happen if register success
                     setMode('login');
-                    setError('註冊成功，請登入');
+                    setError(t('login.errors.registerSuccessLogin'));
                 }
             } else {
-                setError(data.error || '註冊失敗');
+                setError(data.error || t('login.errors.registerFailed'));
             }
         } catch (err) {
-            setError('網路連線錯誤');
+            setError(t('login.errors.networkError'));
         } finally {
             setLoading(false);
         }
@@ -125,10 +127,10 @@ const LoginModal = ({ isOpen, onLogin }) => {
                         <User size={32} className="text-white" />
                     </div>
                     <h2 className="text-2xl font-black text-white mb-1">
-                        {mode === 'login' ? '歡迎回來' : '建立帳號'}
+                        {mode === 'login' ? t('login.welcomeBack') : t('login.createAccount')}
                     </h2>
                     <p className="text-white/80 text-sm">
-                        {mode === 'login' ? '登入以同步您的習慣紀錄' : '加入 HabitNext 開始養成好習慣'}
+                        {mode === 'login' ? t('login.syncSubtitle') : t('login.joinSubtitle')}
                     </p>
                 </div>
 
@@ -136,13 +138,13 @@ const LoginModal = ({ isOpen, onLogin }) => {
                     {mode === 'login' ? (
                         <form onSubmit={handleLogin} className="space-y-4">
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">手機號碼</label>
+                                <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">{t('login.phone')}</label>
                                 <div className="relative">
                                     <Phone size={18} className="absolute left-3 top-3 text-gray-400" />
                                     <input
                                         type="tel"
                                         className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
-                                        placeholder="0912345678"
+                                        placeholder={t('login.phonePlaceholder')}
                                         value={phone}
                                         onChange={e => setPhone(e.target.value)}
                                         required
@@ -151,13 +153,13 @@ const LoginModal = ({ isOpen, onLogin }) => {
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">密碼</label>
+                                <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">{t('login.password')}</label>
                                 <div className="relative">
                                     <Lock size={18} className="absolute left-3 top-3 text-gray-400" />
                                     <input
                                         type="password"
                                         className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
-                                        placeholder="輸入密碼"
+                                        placeholder={t('login.passwordPlaceholder')}
                                         value={password}
                                         onChange={e => setPassword(e.target.value)}
                                         required
@@ -177,12 +179,12 @@ const LoginModal = ({ isOpen, onLogin }) => {
                                 disabled={loading}
                                 className="w-full bg-gray-900 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-black transition-all flex items-center justify-center gap-2 disabled:opacity-70 mt-4"
                             >
-                                {loading ? <Loader2 size={20} className="animate-spin" /> : <>登入 <ArrowRight size={18} /></>}
+                                {loading ? <Loader2 size={20} className="animate-spin" /> : <>{t('login.loginButton')} <ArrowRight size={18} /></>}
                             </button>
 
                             <div className="text-center pt-2">
                                 <button type="button" onClick={() => { setMode('register'); setError(''); }} className="text-sm text-gray-500 hover:text-emerald-600 font-bold">
-                                    還沒有帳號？立即註冊
+                                    {t('login.noAccountCta')}
                                 </button>
                             </div>
                         </form>
@@ -193,7 +195,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
                                 <>
                                     <div className="flex gap-2">
                                         <div className="w-1/3">
-                                            <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">國碼</label>
+                                            <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">{t('login.countryCode')}</label>
                                             <div className="relative">
                                                 <Globe size={18} className="absolute left-2 top-3 text-gray-400" />
                                                 <select
@@ -209,13 +211,13 @@ const LoginModal = ({ isOpen, onLogin }) => {
                                             </div>
                                         </div>
                                         <div className="flex-1">
-                                            <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">手機號碼</label>
+                                            <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">{t('login.phone')}</label>
                                             <div className="relative">
                                                 <Phone size={18} className="absolute left-3 top-3 text-gray-400" />
                                                 <input
                                                     type="tel"
                                                     className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                                                    placeholder="0912345678"
+                                                    placeholder={t('login.phonePlaceholder')}
                                                     value={phone}
                                                     onChange={e => setPhone(e.target.value)}
                                                     required
@@ -225,13 +227,13 @@ const LoginModal = ({ isOpen, onLogin }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">設定密碼</label>
+                                        <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">{t('login.setPassword')}</label>
                                         <div className="relative">
                                             <Lock size={18} className="absolute left-3 top-3 text-gray-400" />
                                             <input
                                                 type="password"
                                                 className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                                                placeholder="6 位數以上密碼"
+                                                placeholder={t('login.passwordRule')}
                                                 value={password}
                                                 onChange={e => setPassword(e.target.value)}
                                                 required
@@ -250,19 +252,19 @@ const LoginModal = ({ isOpen, onLogin }) => {
                                         type="submit"
                                         className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 mt-4"
                                     >
-                                        下一步 <ArrowRight size={18} />
+                                        {t('common.next')} <ArrowRight size={18} />
                                     </button>
                                 </>
                             ) : (
                                 <>
                                     <div className="text-center mb-4">
-                                        <p className="text-sm text-gray-600">驗證碼已發送至</p>
+                                        <p className="text-sm text-gray-600">{t('login.codeSentTo')}</p>
                                         <p className="font-bold text-lg text-gray-800">{countryCode} {phone}</p>
-                                        <p className="text-xs text-indigo-500 mt-1">(Demo: 請輸入 8888)</p>
+                                        <p className="text-xs text-indigo-500 mt-1">{t('login.demoCode')}</p>
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">驗證碼</label>
+                                        <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">{t('login.verifyCode')}</label>
                                         <div className="relative">
                                             <KeyRound size={18} className="absolute left-3 top-3 text-gray-400" />
                                             <input
@@ -289,14 +291,14 @@ const LoginModal = ({ isOpen, onLogin }) => {
                                             onClick={() => setStep(1)}
                                             className="w-1/3 bg-gray-100 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-200 transition-all"
                                         >
-                                            返回
+                                            {t('common.back')}
                                         </button>
                                         <button
                                             type="submit"
                                             disabled={loading}
                                             className="flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
                                         >
-                                            {loading ? <Loader2 size={20} className="animate-spin" /> : '驗證並註冊'}
+                                            {loading ? <Loader2 size={20} className="animate-spin" /> : t('login.verifyAndRegister')}
                                         </button>
                                     </div>
                                 </>
@@ -304,7 +306,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
 
                             <div className="text-center pt-2">
                                 <button type="button" onClick={() => { setMode('login'); setStep(1); setError(''); }} className="text-sm text-gray-500 hover:text-indigo-600 font-bold">
-                                    已有帳號？返回登入
+                                    {t('login.hasAccountCta')}
                                 </button>
                             </div>
                         </form>

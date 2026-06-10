@@ -1,0 +1,86 @@
+{
+    "common": {
+        "cancel": "キャンセル",
+        "save": "保存",
+        "back": "戻る",
+        "next": "次へ",
+        "logout": "ログアウト"
+    },
+    "header": {
+        "weekDays": ["月", "火", "水", "木", "金", "土", "日"],
+        "openProfile": "プロフィールを開く",
+        "guest": "ゲスト",
+        "worldAria": "ワールド",
+        "journeyAria": "ジャーニー",
+        "view": {
+            "manage": "タスク管理",
+            "dashboardDetail": "インサイト",
+            "stats": "統計",
+            "world": "ワールド",
+            "journey": "ジャーニー",
+            "figure": "フィギュア",
+            "achievements": "アチーブメント"
+        }
+    },
+    "login": {
+        "welcomeBack": "おかえりなさい",
+        "createAccount": "アカウントを作成",
+        "syncSubtitle": "ログインして習慣の記録を同期",
+        "joinSubtitle": "HabitNext に参加して、よい習慣を始めましょう",
+        "phone": "電話番号",
+        "password": "パスワード",
+        "phonePlaceholder": "電話番号",
+        "passwordPlaceholder": "パスワードを入力",
+        "loginButton": "ログイン",
+        "noAccountCta": "アカウントがない？今すぐ登録",
+        "hasAccountCta": "アカウントをお持ちですか？ログインへ戻る",
+        "countryCode": "国コード",
+        "setPassword": "パスワードを設定",
+        "passwordRule": "6 文字以上",
+        "codeSentTo": "認証コードを送信しました",
+        "demoCode": "(デモ: 8888 を入力)",
+        "verifyCode": "認証コード",
+        "verifyAndRegister": "認証して登録",
+        "errors": {
+            "loginFailed": "ログインに失敗しました",
+            "networkError": "ネットワークエラー",
+            "incompleteData": "すべての項目を入力してください",
+            "registerFailed": "登録に失敗しました",
+            "registerSuccessLogin": "登録が完了しました。ログインしてください。"
+        }
+    },
+    "profile": {
+        "title": "プロフィール",
+        "myAspirations": "私の願い",
+        "selectAvatar": "アバターを選ぶ",
+        "nickname": "ニックネーム",
+        "phone": "電話番号",
+        "nicknamePlaceholder": "ニックネームを入力",
+        "phonePlaceholder": "電話番号を入力",
+        "changePassword": "パスワードを変更",
+        "cancelChangePassword": "パスワード変更をキャンセル",
+        "oldPassword": "旧パスワード",
+        "newPassword": "新パスワード",
+        "confirmPassword": "新パスワードの確認",
+        "oldPasswordPlaceholder": "旧パスワードを入力",
+        "newPasswordPlaceholder": "新パスワードを入力（6 文字以上）",
+        "confirmPasswordPlaceholder": "新パスワードを再入力",
+        "fontSize": "文字サイズ",
+        "fontSizeOptions": {
+            "standard": "標準",
+            "large": "大",
+            "xlarge": "特大"
+        },
+        "language": "言語",
+        "trackLocation": "完了場所を記録",
+        "trackLocationDescription": "習慣を完了したときの都市のみを記録し、座標を数値として保存します。バックグラウンドで位置を追跡することはありません。いつでもオフにできます。",
+        "errors": {
+            "oldPasswordRequired": "旧パスワードを入力してください",
+            "newPasswordRequired": "新パスワードを入力してください",
+            "newPasswordTooShort": "新パスワードは 6 文字以上必要です",
+            "passwordMismatch": "新パスワードと確認用パスワードが一致しません",
+            "updateFailed": "更新に失敗しました",
+            "networkError": "ネットワークエラー。後ほど再試行してください。"
+        }
+    }
+}

@@ -2,8 +2,7 @@ import React, { useMemo } from 'react';
 import { Calendar, Award, Plus, X, BookOpen, BarChart3, Map, Globe } from 'lucide-react';
 import Avatar from './Avatar';
 import WeekStrip from './WeekStrip';
-
-const WEEK_DAY_LABELS = ['一', '二', '三', '四', '五', '六', '日']; // Mon..Sun
+import { useT } from '@/lib/i18n';
 
 const AppHeader = ({
     onViewChange,
@@ -19,15 +18,18 @@ const AppHeader = ({
     selectedDate,
     onSelectDate,
 }) => {
+    const { t } = useT();
+    const weekDayLabels = t('header.weekDays'); // Mon..Sun，可能是 string[] 也可能是 fallback string
+
     const headerDateLabel = useMemo(() => {
         if (!selectedDate) return '';
         const d = new Date(selectedDate);
         if (isNaN(d.getTime())) return '';
         const m = d.getMonth() + 1;
         const day = d.getDate();
-        const wd = WEEK_DAY_LABELS[(d.getDay() + 6) % 7];
+        const wd = Array.isArray(weekDayLabels) ? weekDayLabels[(d.getDay() + 6) % 7] : '';
         return `${m}/${day} (${wd})`;
-    }, [selectedDate]);
+    }, [selectedDate, weekDayLabels]);
 
     return (
         <div className={`bg-white sticky top-0 z-30 shadow-sm ${className || ''}`}>
@@ -35,10 +37,10 @@ const AppHeader = ({
                 <button
                     onClick={onOpenProfile || (() => onViewChange('daily'))}
                     className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-                    aria-label="開啟個人資料"
+                    aria-label={t('header.openProfile')}
                 >
                     <Avatar user={user} size="w-8 h-8" />
-                    <span className="font-bold text-gray-800 text-sm md:text-base truncate max-w-[4.5rem] sm:max-w-none">{user?.nickname || user?.name || '訪客'}</span>
+                    <span className="font-bold text-gray-800 text-sm md:text-base truncate max-w-[4.5rem] sm:max-w-none">{user?.nickname || user?.name || t('header.guest')}</span>
                 </button>
 
                 {currentView === 'daily' ? (
@@ -50,13 +52,13 @@ const AppHeader = ({
                     </div>
                 ) : (
                     <span className="font-bold text-emerald-600">
-                        {currentView === 'manage' ? '任務管理'
-                            : currentView === 'dashboard_detail' ? '洞察報告'
-                            : currentView === 'stats' ? '統計'
-                            : currentView === 'world' ? '世界'
-                            : currentView === 'journey' ? '旅程'
-                            : currentView === 'figure' ? '公仔'
-                            : '成就中心'}
+                        {currentView === 'manage' ? t('header.view.manage')
+                            : currentView === 'dashboard_detail' ? t('header.view.dashboardDetail')
+                            : currentView === 'stats' ? t('header.view.stats')
+                            : currentView === 'world' ? t('header.view.world')
+                            : currentView === 'journey' ? t('header.view.journey')
+                            : currentView === 'figure' ? t('header.view.figure')
+                            : t('header.view.achievements')}
                     </span>
                 )}
 
@@ -72,10 +74,10 @@ const AppHeader = ({
                             <button onClick={() => onViewChange('stats')} className="w-8 h-8 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center hover:bg-purple-100 transition-colors">
                                 <BarChart3 size={20} />
                             </button>
-                            <button onClick={() => onViewChange('world')} className="w-8 h-8 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center hover:bg-amber-100 transition-colors" aria-label="世界">
+                            <button onClick={() => onViewChange('world')} className="w-8 h-8 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center hover:bg-amber-100 transition-colors" aria-label={t('header.worldAria')}>
                                 <Globe size={20} />
                             </button>
-                            <button onClick={onOpenJourney} className="w-8 h-8 bg-teal-50 text-teal-600 rounded-lg flex items-center justify-center hover:bg-teal-100 transition-colors" aria-label="旅程">
+                            <button onClick={onOpenJourney} className="w-8 h-8 bg-teal-50 text-teal-600 rounded-lg flex items-center justify-center hover:bg-teal-100 transition-colors" aria-label={t('header.journeyAria')}>
                                 <Map size={20} />
                             </button>
                             <button onClick={onOpenBadges} className="w-8 h-8 bg-gray-100 text-yellow-600 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors">

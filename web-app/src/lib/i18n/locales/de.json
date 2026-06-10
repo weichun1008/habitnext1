@@ -1,0 +1,86 @@
+{
+    "common": {
+        "cancel": "Abbrechen",
+        "save": "Speichern",
+        "back": "Zurück",
+        "next": "Weiter",
+        "logout": "Abmelden"
+    },
+    "header": {
+        "weekDays": ["M", "D", "M", "D", "F", "S", "S"],
+        "openProfile": "Profil öffnen",
+        "guest": "Gast",
+        "worldAria": "Welt",
+        "journeyAria": "Reise",
+        "view": {
+            "manage": "Verwalten",
+            "dashboardDetail": "Erkenntnisse",
+            "stats": "Statistik",
+            "world": "Welt",
+            "journey": "Reise",
+            "figure": "Figur",
+            "achievements": "Erfolge"
+        }
+    },
+    "login": {
+        "welcomeBack": "Willkommen zurück",
+        "createAccount": "Konto erstellen",
+        "syncSubtitle": "Melde dich an, um deine Gewohnheiten zu synchronisieren",
+        "joinSubtitle": "Tritt HabitNext bei und beginne, bessere Gewohnheiten aufzubauen",
+        "phone": "Telefonnummer",
+        "password": "Passwort",
+        "phonePlaceholder": "Telefonnummer",
+        "passwordPlaceholder": "Passwort eingeben",
+        "loginButton": "Anmelden",
+        "noAccountCta": "Noch kein Konto? Jetzt registrieren",
+        "hasAccountCta": "Bereits ein Konto? Zurück zur Anmeldung",
+        "countryCode": "Land",
+        "setPassword": "Passwort festlegen",
+        "passwordRule": "Mind. 6 Zeichen",
+        "codeSentTo": "Bestätigungscode gesendet an",
+        "demoCode": "(Demo: 8888 eingeben)",
+        "verifyCode": "Bestätigungscode",
+        "verifyAndRegister": "Bestätigen und registrieren",
+        "errors": {
+            "loginFailed": "Anmeldung fehlgeschlagen",
+            "networkError": "Netzwerkfehler",
+            "incompleteData": "Bitte fülle alle Felder aus",
+            "registerFailed": "Registrierung fehlgeschlagen",
+            "registerSuccessLogin": "Registriert. Bitte melde dich an."
+        }
+    },
+    "profile": {
+        "title": "Profil",
+        "myAspirations": "Meine Ziele",
+        "selectAvatar": "Wähle deinen Avatar",
+        "nickname": "Spitzname",
+        "phone": "Telefonnummer",
+        "nicknamePlaceholder": "Spitzname eingeben",
+        "phonePlaceholder": "Telefonnummer eingeben",
+        "changePassword": "Passwort ändern",
+        "cancelChangePassword": "Passwortänderung abbrechen",
+        "oldPassword": "Altes Passwort",
+        "newPassword": "Neues Passwort",
+        "confirmPassword": "Neues Passwort bestätigen",
+        "oldPasswordPlaceholder": "Altes Passwort eingeben",
+        "newPasswordPlaceholder": "Neues Passwort eingeben (mind. 6 Zeichen)",
+        "confirmPasswordPlaceholder": "Neues Passwort erneut eingeben",
+        "fontSize": "Schriftgröße",
+        "fontSizeOptions": {
+            "standard": "Standard",
+            "large": "Groß",
+            "xlarge": "Sehr groß"
+        },
+        "language": "Sprache",
+        "trackLocation": "Abschlussort erfassen",
+        "trackLocationDescription": "Erfasst nur die Stadt, wenn du eine Gewohnheit abschließt, speichert Koordinaten als Zahlen und verfolgt dich nie im Hintergrund. Jederzeit deaktivierbar.",
+        "errors": {
+            "oldPasswordRequired": "Bitte gib dein altes Passwort ein",
+            "newPasswordRequired": "Bitte gib ein neues Passwort ein",
+            "newPasswordTooShort": "Neues Passwort muss mindestens 6 Zeichen lang sein",
+            "passwordMismatch": "Neues Passwort und Bestätigung stimmen nicht überein",
+            "updateFailed": "Aktualisierung fehlgeschlagen",
+            "networkError": "Netzwerkfehler. Bitte versuche es erneut."
+        }
+    }
+}
