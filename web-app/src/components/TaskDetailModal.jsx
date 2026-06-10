@@ -9,7 +9,7 @@ import { visibleSubtasks } from '@/lib/subtasks';
 import TaskActionMenu from './taskCard/TaskActionMenu';
 import LocationChip from './taskCard/LocationChip';
 import { useT } from '@/lib/i18n';
-import { translateCue } from '@/lib/i18n/dataLabels';
+import { translateCue, translateUnit } from '@/lib/i18n/dataLabels';
 
 const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate, onAfterAction, onPickLocation, onStartTool, onToggleStar }) => {
     const { t } = useT();
@@ -175,7 +175,7 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                                 <div className="flex justify-between items-end mb-2">
                                     <span className="text-xs font-bold text-gray-400">{t('taskDetail.dayProgress')}</span>
                                     <span className="text-xl font-black text-gray-800">
-                                        {task.dailyProgress?.[currentDate]?.value || 0} <span className="text-sm text-gray-400 font-medium">/ {task.dailyTarget} {task.unit}</span>
+                                        {task.dailyProgress?.[currentDate]?.value || 0} <span className="text-sm text-gray-400 font-medium">/ {task.dailyTarget} {translateUnit(task.unit, t)}</span>
                                     </span>
                                 </div>
                                 <div className="w-full bg-gray-200 h-3 rounded-full overflow-hidden">

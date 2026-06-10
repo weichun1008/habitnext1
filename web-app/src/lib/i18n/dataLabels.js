@@ -42,3 +42,46 @@ export function translateDomain(name, t) {
     const k = DOMAIN_KEY_BY_NAME[name];
     return k ? t(`data.domains.${k}`) : (name || '');
 }
+
+// 常見計量單位（task.unit / config.unit 存 zh-TW canonical 字）→ i18n key。
+// 不在表內的（使用者自訂或新單位）原樣顯示。
+const UNIT_KEY_BY_LABEL = {
+    '秒': 'second',
+    '分': 'minute',
+    '分鐘': 'minute',
+    '小時': 'hour',
+    '次': 'time',
+    '回': 'time',
+    '套': 'set',
+    '組': 'set',
+    '下': 'rep',
+    '步': 'step',
+    '頁': 'page',
+    '個': 'item',
+    '粒': 'pill',
+    '顆': 'pill',
+    '杯': 'cup',
+    '碗': 'bowl',
+    '份': 'serving',
+    '克': 'gram',
+    'g': 'gram',
+    '公斤': 'kg',
+    'kg': 'kg',
+    'cc': 'cc',
+    'ml': 'ml',
+    '毫升': 'ml',
+    '公升': 'liter',
+    'l': 'liter',
+    '公里': 'km',
+    'km': 'km',
+    '公尺': 'meter',
+    'm': 'meter',
+    '天': 'day',
+};
+
+// 單位翻譯：DB 維持中文 canonical，顯示時走這個。
+export function translateUnit(unit, t) {
+    if (!unit) return unit;
+    const k = UNIT_KEY_BY_LABEL[unit];
+    return k ? t(`data.units.${k}`) : unit;
+}

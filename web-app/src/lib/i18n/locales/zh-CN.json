@@ -7,7 +7,15 @@
         "logout": "退出登录"
     },
     "header": {
-        "weekDays": ["一", "二", "三", "四", "五", "六", "日"],
+        "weekDays": [
+            "一",
+            "二",
+            "三",
+            "四",
+            "五",
+            "六",
+            "日"
+        ],
         "openProfile": "打开个人资料",
         "guest": "访客",
         "worldAria": "世界",
@@ -134,6 +142,29 @@
             "mind": "心灵",
             "cognition": "认知与智慧",
             "career": "职业与平衡"
+        },
+        "units": {
+            "second": "秒",
+            "minute": "分钟",
+            "hour": "小时",
+            "time": "次",
+            "set": "组",
+            "rep": "下",
+            "step": "步",
+            "page": "页",
+            "item": "个",
+            "pill": "颗",
+            "cup": "杯",
+            "bowl": "碗",
+            "serving": "份",
+            "gram": "克",
+            "kg": "公斤",
+            "cc": "毫升",
+            "ml": "毫升",
+            "liter": "升",
+            "km": "公里",
+            "meter": "米",
+            "day": "天"
         }
     },
     "daily": {
@@ -563,7 +594,15 @@
         "specificWeekdays": "固定星期",
         "flexibleFrequencyWeekly": "弹性频率（周期目标）",
         "repeatOn": "重复于：",
-        "weekDays": ["日", "一", "二", "三", "四", "五", "六"],
+        "weekDays": [
+            "日",
+            "一",
+            "二",
+            "三",
+            "四",
+            "五",
+            "六"
+        ],
         "weeklyCompletePrefix": "每周完成",
         "monthlyCompletePrefix": "每月完成",
         "timesSuffix": "次",
@@ -641,10 +680,22 @@
         "addAnyway": "仍要加入",
         "add": "加入",
         "quadrants": {
-            "golden": { "label": "值得优先做", "advice": "高影响又容易做到 — 最划算，建议先加入。" },
-            "big_fish": { "label": "值得挑战", "advice": "影响大但目前不易做到 — 可先从更简单的版本开始，别逼太紧。" },
-            "background": { "label": "顺手加码", "advice": "容易做但影响有限 — 有余力再加。" },
-            "skip": { "label": "建议先跳过", "advice": "影响有限又不易做 — 建议先搁着；但你仍可自行加入。" }
+            "golden": {
+                "label": "值得优先做",
+                "advice": "高影响又容易做到 — 最划算，建议先加入。"
+            },
+            "big_fish": {
+                "label": "值得挑战",
+                "advice": "影响大但目前不易做到 — 可先从更简单的版本开始，别逼太紧。"
+            },
+            "background": {
+                "label": "顺手加码",
+                "advice": "容易做但影响有限 — 有余力再加。"
+            },
+            "skip": {
+                "label": "建议先跳过",
+                "advice": "影响有限又不易做 — 建议先搁着；但你仍可自行加入。"
+            }
         },
         "matrix": {
             "skipShort": "建议跳过",
@@ -662,7 +713,13 @@
                 "lo": "没感觉",
                 "hi": "很有感",
                 "aria": "影响力",
-                "labels": { "1": "没什么感觉", "2": "影响不大", "3": "一般", "4": "挺有感", "5": "非常关键" }
+                "labels": {
+                    "1": "没什么感觉",
+                    "2": "影响不大",
+                    "3": "一般",
+                    "4": "挺有感",
+                    "5": "非常关键"
+                }
             },
             "ability": {
                 "title": "第二步 · 执行度",
@@ -671,7 +728,13 @@
                 "lo": "很难",
                 "hi": "很容易",
                 "aria": "执行度",
-                "labels": { "1": "很难做到", "2": "有点难", "3": "一般", "4": "算容易", "5": "非常容易" }
+                "labels": {
+                    "1": "很难做到",
+                    "2": "有点难",
+                    "3": "一般",
+                    "4": "算容易",
+                    "5": "非常容易"
+                }
             }
         },
         "duration": {
@@ -681,10 +744,22 @@
             "whyScience": "为什么建议 66 天？查看背后科学",
             "fullSource": "查看完整来源与说明",
             "confirm": "确认加入",
-            "d21": { "label": "21 天", "sub": "起步尝试" },
-            "d66": { "label": "66 天", "sub": "养成自动化" },
-            "d90": { "label": "90 天", "sub": "巩固成形" },
-            "none": { "label": "不设限", "sub": "没有终止日，持续追踪" }
+            "d21": {
+                "label": "21 天",
+                "sub": "起步尝试"
+            },
+            "d66": {
+                "label": "66 天",
+                "sub": "养成自动化"
+            },
+            "d90": {
+                "label": "90 天",
+                "sub": "巩固成形"
+            },
+            "none": {
+                "label": "不设限",
+                "sub": "没有终止日，持续追踪"
+            }
         },
         "science": {
             "summary": "研究发现，新行为要变成「不太需要意志力的自动反应」，平均约需 66 天（会因人和习惯难度而异，落在 18–254 天）。所以我们把默认值设为 66 天。"
@@ -700,7 +775,11 @@
         "sharePublic": "申请公开分享",
         "createFailed": "创建计划失败，请稍后再试",
         "genericError": "发生错误",
-        "phases": { "p1": "养成期", "p2": "进阶", "p3": "挑战" }
+        "phases": {
+            "p1": "养成期",
+            "p2": "进阶",
+            "p3": "挑战"
+        }
     },
     "stats": {
         "title": "统计",
@@ -746,10 +825,18 @@
         "expand": "展开",
         "hideDetail": "收起研究细节",
         "showDetail": "看研究细节",
-        "sourceType": { "journal": "期刊", "book": "书籍", "source": "来源" }
+        "sourceType": {
+            "journal": "期刊",
+            "book": "书籍",
+            "source": "来源"
+        }
     },
     "evidence": {
-        "tier": { "strong": "强", "moderate": "中", "preliminary": "初步" },
+        "tier": {
+            "strong": "强",
+            "moderate": "中",
+            "preliminary": "初步"
+        },
         "badge": {
             "aria": "证据力 {tier}，点击查看评分",
             "label": "证据力 {tier}"
@@ -769,10 +856,31 @@
             "tiers": "强（{strongFrom}–9）· 中（{moderateFrom}–{moderateTo}）· 初步（0–{preliminaryTo}）"
         },
         "dimensions": {
-            "studyType": { "label": "研究类型", "l3": "荟萃分析／系统综述", "l2": "RCT 干预试验", "l1": "观察性研究", "l0": "动物／机制／专家意见" },
-            "scale": { "label": "对象与规模", "l2": "大型人体", "l1": "小型人体", "l0": "非人体（动物／细胞）" },
-            "causality": { "label": "因果强度", "l2": "干预证明因果", "l1": "强相关＋合理机制", "l0": "仅相关／机制推论" },
-            "replication": { "label": "重复验证", "l2": "多研究一致", "l1": "部分支持", "l0": "单一研究／结果混合" }
+            "studyType": {
+                "label": "研究类型",
+                "l3": "荟萃分析／系统综述",
+                "l2": "RCT 干预试验",
+                "l1": "观察性研究",
+                "l0": "动物／机制／专家意见"
+            },
+            "scale": {
+                "label": "对象与规模",
+                "l2": "大型人体",
+                "l1": "小型人体",
+                "l0": "非人体（动物／细胞）"
+            },
+            "causality": {
+                "label": "因果强度",
+                "l2": "干预证明因果",
+                "l1": "强相关＋合理机制",
+                "l0": "仅相关／机制推论"
+            },
+            "replication": {
+                "label": "重复验证",
+                "l2": "多研究一致",
+                "l1": "部分支持",
+                "l0": "单一研究／结果混合"
+            }
         }
     },
     "journey": {
@@ -811,9 +919,18 @@
         }
     },
     "worlds": {
-        "journey": { "name": "旅程", "tagline": "把习惯完成的地点，建成一座真实世界的城市地图" },
-        "home": { "name": "居家", "tagline": "用每天的完成，把家一点一点布置得更温暖" },
-        "figure": { "name": "公仔", "tagline": "养一只陪你的伙伴，随着你的习惯一起长大" }
+        "journey": {
+            "name": "旅程",
+            "tagline": "把习惯完成的地点，建成一座真实世界的城市地图"
+        },
+        "home": {
+            "name": "居家",
+            "tagline": "用每天的完成，把家一点一点布置得更温暖"
+        },
+        "figure": {
+            "name": "公仔",
+            "tagline": "养一只陪你的伙伴，随着你的习惯一起长大"
+        }
     },
     "figure": {
         "creatureAria": "公仔伙伴",
@@ -868,16 +985,32 @@
         "comingSoon": "即将推出",
         "categoryComingSoon": "这个分类的曲目即将推出",
         "problems": {
-            "stress": { "title": "压力型：脑袋停不下来" },
-            "circadian": { "title": "节律型：明明很累却睡不着" },
-            "metabolic": { "title": "代谢失衡型：半夜易醒" },
-            "hormonal": { "title": "荷尔蒙波动型：身体起伏大" }
+            "stress": {
+                "title": "压力型：脑袋停不下来"
+            },
+            "circadian": {
+                "title": "节律型：明明很累却睡不着"
+            },
+            "metabolic": {
+                "title": "代谢失衡型：半夜易醒"
+            },
+            "hormonal": {
+                "title": "荷尔蒙波动型：身体起伏大"
+            }
         },
         "categories": {
-            "calm": { "title": "安抚大脑" },
-            "routine": { "title": "固定作息" },
-            "guard": { "title": "整夜守护" },
-            "relax": { "title": "身体放松" }
+            "calm": {
+                "title": "安抚大脑"
+            },
+            "routine": {
+                "title": "固定作息"
+            },
+            "guard": {
+                "title": "整夜守护"
+            },
+            "relax": {
+                "title": "身体放松"
+            }
         }
     }
 }

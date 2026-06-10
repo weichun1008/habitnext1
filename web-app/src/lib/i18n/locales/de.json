@@ -7,7 +7,15 @@
         "logout": "Abmelden"
     },
     "header": {
-        "weekDays": ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
+        "weekDays": [
+            "Mo",
+            "Di",
+            "Mi",
+            "Do",
+            "Fr",
+            "Sa",
+            "So"
+        ],
         "openProfile": "Profil öffnen",
         "guest": "Gast",
         "worldAria": "Welt",
@@ -134,6 +142,29 @@
             "mind": "Geist & Seele",
             "cognition": "Kognition & Weisheit",
             "career": "Karriere & Balance"
+        },
+        "units": {
+            "second": "Sek.",
+            "minute": "Min.",
+            "hour": "Std.",
+            "time": "Wdh.",
+            "set": "Sätze",
+            "rep": "Wdh.",
+            "step": "Schritte",
+            "page": "Seiten",
+            "item": "Stk.",
+            "pill": "Stk.",
+            "cup": "Tassen",
+            "bowl": "Schüsseln",
+            "serving": "Portionen",
+            "gram": "g",
+            "kg": "kg",
+            "cc": "ml",
+            "ml": "ml",
+            "liter": "L",
+            "km": "km",
+            "meter": "m",
+            "day": "Tage"
         }
     },
     "daily": {
@@ -563,7 +594,15 @@
         "specificWeekdays": "Feste Wochentage",
         "flexibleFrequencyWeekly": "Flexible Häufigkeit (Zeitraum-Ziel)",
         "repeatOn": "Wiederholen am:",
-        "weekDays": ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+        "weekDays": [
+            "So",
+            "Mo",
+            "Di",
+            "Mi",
+            "Do",
+            "Fr",
+            "Sa"
+        ],
         "weeklyCompletePrefix": "Pro Woche",
         "monthlyCompletePrefix": "Pro Monat",
         "timesSuffix": "Mal",
@@ -641,10 +680,22 @@
         "addAnyway": "Trotzdem hinzufügen",
         "add": "Hinzufügen",
         "quadrants": {
-            "golden": { "label": "Zuerst machen", "advice": "Hohe Wirkung und leicht machbar – am lohnendsten, am besten zuerst hinzufügen." },
-            "big_fish": { "label": "Lohnende Herausforderung", "advice": "Große Wirkung, aber aktuell schwer machbar – starte mit einer einfacheren Version und setz dich nicht unter Druck." },
-            "background": { "label": "Nebenbei mitnehmen", "advice": "Leicht machbar, aber begrenzte Wirkung – ergänze sie, wenn noch Luft ist." },
-            "skip": { "label": "Erst mal überspringen", "advice": "Begrenzte Wirkung und schwer machbar – am besten erst mal liegen lassen; du kannst sie aber trotzdem hinzufügen." }
+            "golden": {
+                "label": "Zuerst machen",
+                "advice": "Hohe Wirkung und leicht machbar – am lohnendsten, am besten zuerst hinzufügen."
+            },
+            "big_fish": {
+                "label": "Lohnende Herausforderung",
+                "advice": "Große Wirkung, aber aktuell schwer machbar – starte mit einer einfacheren Version und setz dich nicht unter Druck."
+            },
+            "background": {
+                "label": "Nebenbei mitnehmen",
+                "advice": "Leicht machbar, aber begrenzte Wirkung – ergänze sie, wenn noch Luft ist."
+            },
+            "skip": {
+                "label": "Erst mal überspringen",
+                "advice": "Begrenzte Wirkung und schwer machbar – am besten erst mal liegen lassen; du kannst sie aber trotzdem hinzufügen."
+            }
         },
         "matrix": {
             "skipShort": "Überspringen",
@@ -662,7 +713,13 @@
                 "lo": "Kaum spürbar",
                 "hi": "Sehr spürbar",
                 "aria": "Wirkung",
-                "labels": { "1": "Kaum spürbar", "2": "Wenig Wirkung", "3": "Mittel", "4": "Deutlich spürbar", "5": "Entscheidend" }
+                "labels": {
+                    "1": "Kaum spürbar",
+                    "2": "Wenig Wirkung",
+                    "3": "Mittel",
+                    "4": "Deutlich spürbar",
+                    "5": "Entscheidend"
+                }
             },
             "ability": {
                 "title": "Schritt 2 · Machbarkeit",
@@ -671,7 +728,13 @@
                 "lo": "Sehr schwer",
                 "hi": "Sehr leicht",
                 "aria": "Machbarkeit",
-                "labels": { "1": "Sehr schwer", "2": "Eher schwer", "3": "Mittel", "4": "Eher leicht", "5": "Sehr leicht" }
+                "labels": {
+                    "1": "Sehr schwer",
+                    "2": "Eher schwer",
+                    "3": "Mittel",
+                    "4": "Eher leicht",
+                    "5": "Sehr leicht"
+                }
             }
         },
         "duration": {
@@ -681,10 +744,22 @@
             "whyScience": "Warum 66 Tage? Die Wissenschaft dahinter",
             "fullSource": "Vollständige Quelle und Erklärung ansehen",
             "confirm": "Hinzufügen bestätigen",
-            "d21": { "label": "21 Tage", "sub": "Erster Versuch" },
-            "d66": { "label": "66 Tage", "sub": "Automatisierung aufbauen" },
-            "d90": { "label": "90 Tage", "sub": "Festigen" },
-            "none": { "label": "Unbegrenzt", "sub": "Kein Enddatum, dauerhaftes Tracking" }
+            "d21": {
+                "label": "21 Tage",
+                "sub": "Erster Versuch"
+            },
+            "d66": {
+                "label": "66 Tage",
+                "sub": "Automatisierung aufbauen"
+            },
+            "d90": {
+                "label": "90 Tage",
+                "sub": "Festigen"
+            },
+            "none": {
+                "label": "Unbegrenzt",
+                "sub": "Kein Enddatum, dauerhaftes Tracking"
+            }
         },
         "science": {
             "summary": "Studien zeigen: Bis ein neues Verhalten zur „automatischen Reaktion ohne viel Willenskraft“ wird, dauert es im Schnitt etwa 66 Tage (je nach Person und Schwierigkeit 18–254 Tage). Deshalb ist 66 Tage unsere Voreinstellung."
@@ -700,7 +775,11 @@
         "sharePublic": "Öffentliche Freigabe beantragen",
         "createFailed": "Plan konnte nicht erstellt werden, bitte später erneut versuchen",
         "genericError": "Fehler aufgetreten",
-        "phases": { "p1": "Aufbauphase", "p2": "Fortgeschritten", "p3": "Herausforderung" }
+        "phases": {
+            "p1": "Aufbauphase",
+            "p2": "Fortgeschritten",
+            "p3": "Herausforderung"
+        }
     },
     "stats": {
         "title": "Statistik",
@@ -746,10 +825,18 @@
         "expand": "Ausklappen",
         "hideDetail": "Studiendetails ausblenden",
         "showDetail": "Studiendetails ansehen",
-        "sourceType": { "journal": "Fachzeitschrift", "book": "Buch", "source": "Quelle" }
+        "sourceType": {
+            "journal": "Fachzeitschrift",
+            "book": "Buch",
+            "source": "Quelle"
+        }
     },
     "evidence": {
-        "tier": { "strong": "Stark", "moderate": "Mittel", "preliminary": "Vorläufig" },
+        "tier": {
+            "strong": "Stark",
+            "moderate": "Mittel",
+            "preliminary": "Vorläufig"
+        },
         "badge": {
             "aria": "Evidenzstärke {tier}, tippe für die Bewertung",
             "label": "Evidenzstärke {tier}"
@@ -769,10 +856,31 @@
             "tiers": "Stark ({strongFrom}–9) · Mittel ({moderateFrom}–{moderateTo}) · Vorläufig (0–{preliminaryTo})"
         },
         "dimensions": {
-            "studyType": { "label": "Studientyp", "l3": "Metaanalyse / systematisches Review", "l2": "RCT-Interventionsstudie", "l1": "Beobachtungsstudie", "l0": "Tier / Mechanismus / Expertenmeinung" },
-            "scale": { "label": "Stichprobe & Größe", "l2": "Große Humanstudie", "l1": "Kleine Humanstudie", "l0": "Nicht-human (Tiere/Zellen)" },
-            "causality": { "label": "Kausale Stärke", "l2": "Kausalität durch Intervention belegt", "l1": "Starke Korrelation + plausibler Mechanismus", "l0": "Nur Korrelation / Mechanismus-Schluss" },
-            "replication": { "label": "Replikation", "l2": "Mehrere Studien einig", "l1": "Teilweise gestützt", "l0": "Einzelstudie / gemischte Ergebnisse" }
+            "studyType": {
+                "label": "Studientyp",
+                "l3": "Metaanalyse / systematisches Review",
+                "l2": "RCT-Interventionsstudie",
+                "l1": "Beobachtungsstudie",
+                "l0": "Tier / Mechanismus / Expertenmeinung"
+            },
+            "scale": {
+                "label": "Stichprobe & Größe",
+                "l2": "Große Humanstudie",
+                "l1": "Kleine Humanstudie",
+                "l0": "Nicht-human (Tiere/Zellen)"
+            },
+            "causality": {
+                "label": "Kausale Stärke",
+                "l2": "Kausalität durch Intervention belegt",
+                "l1": "Starke Korrelation + plausibler Mechanismus",
+                "l0": "Nur Korrelation / Mechanismus-Schluss"
+            },
+            "replication": {
+                "label": "Replikation",
+                "l2": "Mehrere Studien einig",
+                "l1": "Teilweise gestützt",
+                "l0": "Einzelstudie / gemischte Ergebnisse"
+            }
         }
     },
     "journey": {
@@ -811,9 +919,18 @@
         }
     },
     "worlds": {
-        "journey": { "name": "Reise", "tagline": "Verwandle die Orte deiner erledigten Gewohnheiten in eine Stadtkarte der echten Welt" },
-        "home": { "name": "Zuhause", "tagline": "Mach dein Zuhause mit jedem erledigten Tag Stück für Stück gemütlicher" },
-        "figure": { "name": "Figur", "tagline": "Zieh einen Begleiter auf, der mit deinen Gewohnheiten mitwächst" }
+        "journey": {
+            "name": "Reise",
+            "tagline": "Verwandle die Orte deiner erledigten Gewohnheiten in eine Stadtkarte der echten Welt"
+        },
+        "home": {
+            "name": "Zuhause",
+            "tagline": "Mach dein Zuhause mit jedem erledigten Tag Stück für Stück gemütlicher"
+        },
+        "figure": {
+            "name": "Figur",
+            "tagline": "Zieh einen Begleiter auf, der mit deinen Gewohnheiten mitwächst"
+        }
     },
     "figure": {
         "creatureAria": "Figuren-Begleiter",
@@ -868,16 +985,32 @@
         "comingSoon": "Bald verfügbar",
         "categoryComingSoon": "Titel in dieser Kategorie kommen bald",
         "problems": {
-            "stress": { "title": "Stress-Typ: Der Kopf kommt nicht zur Ruhe" },
-            "circadian": { "title": "Rhythmus-Typ: Müde, aber kein Schlaf" },
-            "metabolic": { "title": "Stoffwechsel-Typ: Nachts oft wach" },
-            "hormonal": { "title": "Hormon-Typ: Starke körperliche Schwankungen" }
+            "stress": {
+                "title": "Stress-Typ: Der Kopf kommt nicht zur Ruhe"
+            },
+            "circadian": {
+                "title": "Rhythmus-Typ: Müde, aber kein Schlaf"
+            },
+            "metabolic": {
+                "title": "Stoffwechsel-Typ: Nachts oft wach"
+            },
+            "hormonal": {
+                "title": "Hormon-Typ: Starke körperliche Schwankungen"
+            }
         },
         "categories": {
-            "calm": { "title": "Kopf beruhigen" },
-            "routine": { "title": "Feste Routine" },
-            "guard": { "title": "Die ganze Nacht behütet" },
-            "relax": { "title": "Körper entspannen" }
+            "calm": {
+                "title": "Kopf beruhigen"
+            },
+            "routine": {
+                "title": "Feste Routine"
+            },
+            "guard": {
+                "title": "Die ganze Nacht behütet"
+            },
+            "relax": {
+                "title": "Körper entspannen"
+            }
         }
     }
 }

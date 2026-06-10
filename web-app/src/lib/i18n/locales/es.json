@@ -7,7 +7,15 @@
         "logout": "Cerrar sesión"
     },
     "header": {
-        "weekDays": ["Lu", "Ma", "Mi", "Ju", "Vi", "Sá", "Do"],
+        "weekDays": [
+            "Lu",
+            "Ma",
+            "Mi",
+            "Ju",
+            "Vi",
+            "Sá",
+            "Do"
+        ],
         "openProfile": "Abrir perfil",
         "guest": "Invitado",
         "worldAria": "Mundo",
@@ -134,6 +142,29 @@
             "mind": "Mente",
             "cognition": "Cognición y sabiduría",
             "career": "Carrera y equilibrio"
+        },
+        "units": {
+            "second": "s",
+            "minute": "min",
+            "hour": "h",
+            "time": "reps",
+            "set": "series",
+            "rep": "reps",
+            "step": "pasos",
+            "page": "páginas",
+            "item": "uds.",
+            "pill": "pastillas",
+            "cup": "tazas",
+            "bowl": "tazones",
+            "serving": "porciones",
+            "gram": "g",
+            "kg": "kg",
+            "cc": "ml",
+            "ml": "ml",
+            "liter": "L",
+            "km": "km",
+            "meter": "m",
+            "day": "días"
         }
     },
     "daily": {
@@ -563,7 +594,15 @@
         "specificWeekdays": "Días fijos de la semana",
         "flexibleFrequencyWeekly": "Frecuencia flexible (meta del periodo)",
         "repeatOn": "Repetir el:",
-        "weekDays": ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"],
+        "weekDays": [
+            "Do",
+            "Lu",
+            "Ma",
+            "Mi",
+            "Ju",
+            "Vi",
+            "Sá"
+        ],
         "weeklyCompletePrefix": "Cada semana completar",
         "monthlyCompletePrefix": "Cada mes completar",
         "timesSuffix": "veces",
@@ -641,10 +680,22 @@
         "addAnyway": "Añadir de todos modos",
         "add": "Añadir",
         "quadrants": {
-            "golden": { "label": "Empieza por aquí", "advice": "Alto impacto y fácil de hacer: lo más rentable, añádelo primero." },
-            "big_fish": { "label": "Vale el desafío", "advice": "Gran impacto pero difícil por ahora: empieza con una versión más sencilla y no te exijas demasiado." },
-            "background": { "label": "Extra de paso", "advice": "Fácil de hacer pero de impacto limitado: añádelo si te queda energía." },
-            "skip": { "label": "Mejor omitir por ahora", "advice": "Impacto limitado y difícil de hacer: déjalo de lado por ahora, aunque puedes añadirlo si quieres." }
+            "golden": {
+                "label": "Empieza por aquí",
+                "advice": "Alto impacto y fácil de hacer: lo más rentable, añádelo primero."
+            },
+            "big_fish": {
+                "label": "Vale el desafío",
+                "advice": "Gran impacto pero difícil por ahora: empieza con una versión más sencilla y no te exijas demasiado."
+            },
+            "background": {
+                "label": "Extra de paso",
+                "advice": "Fácil de hacer pero de impacto limitado: añádelo si te queda energía."
+            },
+            "skip": {
+                "label": "Mejor omitir por ahora",
+                "advice": "Impacto limitado y difícil de hacer: déjalo de lado por ahora, aunque puedes añadirlo si quieres."
+            }
         },
         "matrix": {
             "skipShort": "Omitir",
@@ -662,7 +713,13 @@
                 "lo": "Nada",
                 "hi": "Mucho",
                 "aria": "Impacto",
-                "labels": { "1": "Casi nada", "2": "Poco impacto", "3": "Normal", "4": "Bastante", "5": "Clave" }
+                "labels": {
+                    "1": "Casi nada",
+                    "2": "Poco impacto",
+                    "3": "Normal",
+                    "4": "Bastante",
+                    "5": "Clave"
+                }
             },
             "ability": {
                 "title": "Paso 2 · Facilidad",
@@ -671,7 +728,13 @@
                 "lo": "Muy difícil",
                 "hi": "Muy fácil",
                 "aria": "Facilidad",
-                "labels": { "1": "Muy difícil", "2": "Algo difícil", "3": "Normal", "4": "Bastante fácil", "5": "Muy fácil" }
+                "labels": {
+                    "1": "Muy difícil",
+                    "2": "Algo difícil",
+                    "3": "Normal",
+                    "4": "Bastante fácil",
+                    "5": "Muy fácil"
+                }
             }
         },
         "duration": {
@@ -681,10 +744,22 @@
             "whyScience": "¿Por qué sugerimos 66 días? Mira la ciencia detrás",
             "fullSource": "Ver la fuente completa y la explicación",
             "confirm": "Confirmar",
-            "d21": { "label": "21 días", "sub": "Primer intento" },
-            "d66": { "label": "66 días", "sub": "Automatizar el hábito" },
-            "d90": { "label": "90 días", "sub": "Consolidarlo" },
-            "none": { "label": "Sin límite", "sub": "Sin fecha de fin, seguimiento continuo" }
+            "d21": {
+                "label": "21 días",
+                "sub": "Primer intento"
+            },
+            "d66": {
+                "label": "66 días",
+                "sub": "Automatizar el hábito"
+            },
+            "d90": {
+                "label": "90 días",
+                "sub": "Consolidarlo"
+            },
+            "none": {
+                "label": "Sin límite",
+                "sub": "Sin fecha de fin, seguimiento continuo"
+            }
         },
         "science": {
             "summary": "Los estudios muestran que, en promedio, un comportamiento nuevo tarda unos 66 días en volverse «una respuesta automática que casi no requiere fuerza de voluntad» (varía entre 18 y 254 días según la persona y la dificultad del hábito). Por eso fijamos 66 días como valor predeterminado."
@@ -700,7 +775,11 @@
         "sharePublic": "Solicitar compartir públicamente",
         "createFailed": "No se pudo crear el plan. Inténtalo más tarde",
         "genericError": "Ocurrió un error",
-        "phases": { "p1": "Formación", "p2": "Avanzado", "p3": "Desafío" }
+        "phases": {
+            "p1": "Formación",
+            "p2": "Avanzado",
+            "p3": "Desafío"
+        }
     },
     "stats": {
         "title": "Estadísticas",
@@ -746,10 +825,18 @@
         "expand": "Expandir",
         "hideDetail": "Ocultar detalles del estudio",
         "showDetail": "Ver detalles del estudio",
-        "sourceType": { "journal": "Revista", "book": "Libro", "source": "Fuente" }
+        "sourceType": {
+            "journal": "Revista",
+            "book": "Libro",
+            "source": "Fuente"
+        }
     },
     "evidence": {
-        "tier": { "strong": "Sólida", "moderate": "Moderada", "preliminary": "Preliminar" },
+        "tier": {
+            "strong": "Sólida",
+            "moderate": "Moderada",
+            "preliminary": "Preliminar"
+        },
         "badge": {
             "aria": "Solidez de la evidencia: {tier}. Toca para ver la puntuación",
             "label": "Evidencia {tier}"
@@ -769,10 +856,31 @@
             "tiers": "Sólida ({strongFrom}–9) · Moderada ({moderateFrom}–{moderateTo}) · Preliminar (0–{preliminaryTo})"
         },
         "dimensions": {
-            "studyType": { "label": "Tipo de estudio", "l3": "Metaanálisis / revisión sistemática", "l2": "Ensayo de intervención (RCT)", "l1": "Estudio observacional", "l0": "Animal / mecanismo / opinión de expertos" },
-            "scale": { "label": "Sujetos y escala", "l2": "Humanos, gran escala", "l1": "Humanos, pequeña escala", "l0": "No humano (animales/células)" },
-            "causality": { "label": "Fuerza causal", "l2": "Causalidad demostrada por intervención", "l1": "Correlación fuerte + mecanismo plausible", "l0": "Solo correlación / inferencia del mecanismo" },
-            "replication": { "label": "Replicación", "l2": "Varios estudios coinciden", "l1": "Apoyo parcial", "l0": "Estudio único / resultados mixtos" }
+            "studyType": {
+                "label": "Tipo de estudio",
+                "l3": "Metaanálisis / revisión sistemática",
+                "l2": "Ensayo de intervención (RCT)",
+                "l1": "Estudio observacional",
+                "l0": "Animal / mecanismo / opinión de expertos"
+            },
+            "scale": {
+                "label": "Sujetos y escala",
+                "l2": "Humanos, gran escala",
+                "l1": "Humanos, pequeña escala",
+                "l0": "No humano (animales/células)"
+            },
+            "causality": {
+                "label": "Fuerza causal",
+                "l2": "Causalidad demostrada por intervención",
+                "l1": "Correlación fuerte + mecanismo plausible",
+                "l0": "Solo correlación / inferencia del mecanismo"
+            },
+            "replication": {
+                "label": "Replicación",
+                "l2": "Varios estudios coinciden",
+                "l1": "Apoyo parcial",
+                "l0": "Estudio único / resultados mixtos"
+            }
         }
     },
     "journey": {
@@ -811,9 +919,18 @@
         }
     },
     "worlds": {
-        "journey": { "name": "Viaje", "tagline": "Convierte los lugares donde completas hábitos en un mapa urbano del mundo real" },
-        "home": { "name": "Hogar", "tagline": "Con cada día completado, haz tu hogar un poco más acogedor" },
-        "figure": { "name": "Figura", "tagline": "Cría a un compañero que crece junto con tus hábitos" }
+        "journey": {
+            "name": "Viaje",
+            "tagline": "Convierte los lugares donde completas hábitos en un mapa urbano del mundo real"
+        },
+        "home": {
+            "name": "Hogar",
+            "tagline": "Con cada día completado, haz tu hogar un poco más acogedor"
+        },
+        "figure": {
+            "name": "Figura",
+            "tagline": "Cría a un compañero que crece junto con tus hábitos"
+        }
     },
     "figure": {
         "creatureAria": "Compañero figura",
@@ -868,16 +985,32 @@
         "comingSoon": "Próximamente",
         "categoryComingSoon": "Las pistas de esta categoría llegarán pronto",
         "problems": {
-            "stress": { "title": "Tipo estrés: la mente no se detiene" },
-            "circadian": { "title": "Tipo ritmo: agotado pero sin sueño" },
-            "metabolic": { "title": "Tipo metabólico: despertares de madrugada" },
-            "hormonal": { "title": "Tipo hormonal: altibajos del cuerpo" }
+            "stress": {
+                "title": "Tipo estrés: la mente no se detiene"
+            },
+            "circadian": {
+                "title": "Tipo ritmo: agotado pero sin sueño"
+            },
+            "metabolic": {
+                "title": "Tipo metabólico: despertares de madrugada"
+            },
+            "hormonal": {
+                "title": "Tipo hormonal: altibajos del cuerpo"
+            }
         },
         "categories": {
-            "calm": { "title": "Calmar la mente" },
-            "routine": { "title": "Rutina fija" },
-            "guard": { "title": "Protección toda la noche" },
-            "relax": { "title": "Relajar el cuerpo" }
+            "calm": {
+                "title": "Calmar la mente"
+            },
+            "routine": {
+                "title": "Rutina fija"
+            },
+            "guard": {
+                "title": "Protección toda la noche"
+            },
+            "relax": {
+                "title": "Relajar el cuerpo"
+            }
         }
     }
 }

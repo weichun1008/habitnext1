@@ -7,7 +7,15 @@
         "logout": "Log out"
     },
     "header": {
-        "weekDays": ["M", "T", "W", "T", "F", "S", "S"],
+        "weekDays": [
+            "M",
+            "T",
+            "W",
+            "T",
+            "F",
+            "S",
+            "S"
+        ],
         "openProfile": "Open profile",
         "guest": "Guest",
         "worldAria": "World",
@@ -134,6 +142,29 @@
             "mind": "Mind",
             "cognition": "Cognition & Wisdom",
             "career": "Career & Balance"
+        },
+        "units": {
+            "second": "sec",
+            "minute": "min",
+            "hour": "hr",
+            "time": "reps",
+            "set": "sets",
+            "rep": "reps",
+            "step": "steps",
+            "page": "pages",
+            "item": "items",
+            "pill": "pills",
+            "cup": "cups",
+            "bowl": "bowls",
+            "serving": "servings",
+            "gram": "g",
+            "kg": "kg",
+            "cc": "cc",
+            "ml": "ml",
+            "liter": "L",
+            "km": "km",
+            "meter": "m",
+            "day": "days"
         }
     },
     "daily": {
@@ -563,7 +594,15 @@
         "specificWeekdays": "Fixed weekdays",
         "flexibleFrequencyWeekly": "Flexible frequency (cycle goal)",
         "repeatOn": "Repeat on:",
-        "weekDays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        "weekDays": [
+            "Sun",
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat"
+        ],
         "weeklyCompletePrefix": "Complete",
         "monthlyCompletePrefix": "Complete",
         "timesSuffix": "times",
@@ -641,10 +680,22 @@
         "addAnyway": "Add anyway",
         "add": "Add",
         "quadrants": {
-            "golden": { "label": "Do these first", "advice": "High impact and easy to do — the best value. Add these first." },
-            "big_fish": { "label": "Worth the challenge", "advice": "High impact but hard right now — start with an easier version and don't push too hard." },
-            "background": { "label": "Easy extras", "advice": "Easy to do but limited impact — add them when you have room to spare." },
-            "skip": { "label": "Skip for now", "advice": "Limited impact and hard to do — best set aside, but you can still add them yourself." }
+            "golden": {
+                "label": "Do these first",
+                "advice": "High impact and easy to do — the best value. Add these first."
+            },
+            "big_fish": {
+                "label": "Worth the challenge",
+                "advice": "High impact but hard right now — start with an easier version and don't push too hard."
+            },
+            "background": {
+                "label": "Easy extras",
+                "advice": "Easy to do but limited impact — add them when you have room to spare."
+            },
+            "skip": {
+                "label": "Skip for now",
+                "advice": "Limited impact and hard to do — best set aside, but you can still add them yourself."
+            }
         },
         "matrix": {
             "skipShort": "Skip for now",
@@ -662,7 +713,13 @@
                 "lo": "Not much",
                 "hi": "A lot",
                 "aria": "Impact",
-                "labels": { "1": "Barely matters", "2": "Minor impact", "3": "Average", "4": "Quite impactful", "5": "Absolutely key" }
+                "labels": {
+                    "1": "Barely matters",
+                    "2": "Minor impact",
+                    "3": "Average",
+                    "4": "Quite impactful",
+                    "5": "Absolutely key"
+                }
             },
             "ability": {
                 "title": "Step 2 · Ease",
@@ -671,7 +728,13 @@
                 "lo": "Very hard",
                 "hi": "Very easy",
                 "aria": "Ease",
-                "labels": { "1": "Very hard", "2": "A bit hard", "3": "Average", "4": "Fairly easy", "5": "Very easy" }
+                "labels": {
+                    "1": "Very hard",
+                    "2": "A bit hard",
+                    "3": "Average",
+                    "4": "Fairly easy",
+                    "5": "Very easy"
+                }
             }
         },
         "duration": {
@@ -681,10 +744,22 @@
             "whyScience": "Why 66 days? See the science",
             "fullSource": "See the full source and explanation",
             "confirm": "Confirm and add",
-            "d21": { "label": "21 days", "sub": "Getting started" },
-            "d66": { "label": "66 days", "sub": "Becoming automatic" },
-            "d90": { "label": "90 days", "sub": "Locking it in" },
-            "none": { "label": "No limit", "sub": "No end date — keep tracking" }
+            "d21": {
+                "label": "21 days",
+                "sub": "Getting started"
+            },
+            "d66": {
+                "label": "66 days",
+                "sub": "Becoming automatic"
+            },
+            "d90": {
+                "label": "90 days",
+                "sub": "Locking it in"
+            },
+            "none": {
+                "label": "No limit",
+                "sub": "No end date — keep tracking"
+            }
         },
         "science": {
             "summary": "Research finds that turning a new behavior into an automatic response that needs little willpower takes about 66 days on average (it varies by person and habit difficulty, ranging from 18 to 254 days). That's why our default is 66 days."
@@ -700,7 +775,11 @@
         "sharePublic": "Apply to share publicly",
         "createFailed": "Couldn't create the plan. Please try again later.",
         "genericError": "Something went wrong",
-        "phases": { "p1": "Foundation", "p2": "Advanced", "p3": "Challenge" }
+        "phases": {
+            "p1": "Foundation",
+            "p2": "Advanced",
+            "p3": "Challenge"
+        }
     },
     "stats": {
         "title": "Stats",
@@ -746,10 +825,18 @@
         "expand": "Expand",
         "hideDetail": "Hide study details",
         "showDetail": "View study details",
-        "sourceType": { "journal": "Journal", "book": "Book", "source": "Source" }
+        "sourceType": {
+            "journal": "Journal",
+            "book": "Book",
+            "source": "Source"
+        }
     },
     "evidence": {
-        "tier": { "strong": "Strong", "moderate": "Moderate", "preliminary": "Preliminary" },
+        "tier": {
+            "strong": "Strong",
+            "moderate": "Moderate",
+            "preliminary": "Preliminary"
+        },
         "badge": {
             "aria": "Evidence strength: {tier}. Tap to see the score.",
             "label": "Evidence: {tier}"
@@ -769,10 +856,31 @@
             "tiers": "Strong ({strongFrom}–9) · Moderate ({moderateFrom}–{moderateTo}) · Preliminary (0–{preliminaryTo})"
         },
         "dimensions": {
-            "studyType": { "label": "Study type", "l3": "Meta-analysis / systematic review", "l2": "RCT intervention trial", "l1": "Observational study", "l0": "Animal / mechanistic / expert opinion" },
-            "scale": { "label": "Subjects & scale", "l2": "Large human study", "l1": "Small human study", "l0": "Non-human (animal/cell)" },
-            "causality": { "label": "Causal strength", "l2": "Intervention proves causation", "l1": "Strong correlation + plausible mechanism", "l0": "Correlation only / mechanistic inference" },
-            "replication": { "label": "Replication", "l2": "Consistent across studies", "l1": "Partially supported", "l0": "Single study / mixed results" }
+            "studyType": {
+                "label": "Study type",
+                "l3": "Meta-analysis / systematic review",
+                "l2": "RCT intervention trial",
+                "l1": "Observational study",
+                "l0": "Animal / mechanistic / expert opinion"
+            },
+            "scale": {
+                "label": "Subjects & scale",
+                "l2": "Large human study",
+                "l1": "Small human study",
+                "l0": "Non-human (animal/cell)"
+            },
+            "causality": {
+                "label": "Causal strength",
+                "l2": "Intervention proves causation",
+                "l1": "Strong correlation + plausible mechanism",
+                "l0": "Correlation only / mechanistic inference"
+            },
+            "replication": {
+                "label": "Replication",
+                "l2": "Consistent across studies",
+                "l1": "Partially supported",
+                "l0": "Single study / mixed results"
+            }
         }
     },
     "journey": {
@@ -811,9 +919,18 @@
         }
     },
     "worlds": {
-        "journey": { "name": "Journey", "tagline": "Turn the places where you complete habits into a real-world city map" },
-        "home": { "name": "Home", "tagline": "Make your home warmer, bit by bit, with each day's completions" },
-        "figure": { "name": "Figure", "tagline": "Raise a companion that grows alongside your habits" }
+        "journey": {
+            "name": "Journey",
+            "tagline": "Turn the places where you complete habits into a real-world city map"
+        },
+        "home": {
+            "name": "Home",
+            "tagline": "Make your home warmer, bit by bit, with each day's completions"
+        },
+        "figure": {
+            "name": "Figure",
+            "tagline": "Raise a companion that grows alongside your habits"
+        }
     },
     "figure": {
         "creatureAria": "Figure companion",
@@ -868,16 +985,32 @@
         "comingSoon": "Coming soon",
         "categoryComingSoon": "Tracks in this category are coming soon",
         "problems": {
-            "stress": { "title": "Stress type: a mind that won't switch off" },
-            "circadian": { "title": "Rhythm type: exhausted but can't fall asleep" },
-            "metabolic": { "title": "Metabolic type: waking in the middle of the night" },
-            "hormonal": { "title": "Hormonal type: big ups and downs in your body" }
+            "stress": {
+                "title": "Stress type: a mind that won't switch off"
+            },
+            "circadian": {
+                "title": "Rhythm type: exhausted but can't fall asleep"
+            },
+            "metabolic": {
+                "title": "Metabolic type: waking in the middle of the night"
+            },
+            "hormonal": {
+                "title": "Hormonal type: big ups and downs in your body"
+            }
         },
         "categories": {
-            "calm": { "title": "Calm the mind" },
-            "routine": { "title": "Steady routine" },
-            "guard": { "title": "All-night guard" },
-            "relax": { "title": "Body relaxation" }
+            "calm": {
+                "title": "Calm the mind"
+            },
+            "routine": {
+                "title": "Steady routine"
+            },
+            "guard": {
+                "title": "All-night guard"
+            },
+            "relax": {
+                "title": "Body relaxation"
+            }
         }
     }
 }

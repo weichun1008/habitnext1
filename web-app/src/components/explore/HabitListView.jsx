@@ -6,6 +6,7 @@ import IconRenderer from '../IconRenderer';
 import HabitInsightSection from '../insights/HabitInsightSection';
 import { CATEGORY_CONFIG, resolveIconKey } from '@/lib/constants';
 import { useT } from '@/lib/i18n';
+import { translateUnit } from '@/lib/i18n/dataLabels';
 
 // NOTE (2026-05-25, Slice K Task 11): the 「清單 ｜ 焦點地圖」view-mode
 // toggle was removed here. Spec v2 reframed the add-flow around the
@@ -61,7 +62,7 @@ function summarizeDifficulty(config, t) {
   if (!config) return '';
   const cadence = summarizeCadence(config.recurrence, t);
   if (config.type === 'quantitative') {
-    return `${config.dailyTarget}${config.unit || ''} · ${cadence}`;
+    return `${config.dailyTarget}${translateUnit(config.unit, t) || ''} · ${cadence}`;
   }
   return cadence;
 }

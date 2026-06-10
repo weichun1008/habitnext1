@@ -16,7 +16,7 @@ import {
 } from '@/lib/utils';
 import { visibleSubtasks } from '@/lib/subtasks';
 import { useT } from '@/lib/i18n';
-import { translateCue } from '@/lib/i18n/dataLabels';
+import { translateCue, translateUnit } from '@/lib/i18n/dataLabels';
 
 // `viewingDate` (yyyy-mm-dd) lets the card render any day's state — used by
 // the daily view's interactive week strip. Defaults to today so existing
@@ -71,7 +71,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
             currentVal = task.dailyProgress?.[dateStr]?.value || 0;
             targetVal = task.dailyTarget || 1;
             progressPercent = targetVal > 0 ? Math.min(100, (currentVal / targetVal) * 100) : 0;
-            displayStatus = `${currentVal}/${targetVal} ${task.unit}`;
+            displayStatus = `${currentVal}/${targetVal} ${translateUnit(task.unit, t)}`;
         } else {
             progressPercent = isCompleted ? 100 : 0;
             displayStatus = null;
@@ -432,7 +432,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                 <div className="flex justify-end gap-2 mt-2">
                     <button onClick={(e) => { e.stopPropagation(); handleUpdate('add', -(task.stepValue || 1)); }} className="w-8 h-6 flex items-center justify-center text-xs font-bold text-gray-500 hover:bg-gray-100 rounded-full border border-gray-200 transition-colors"><Minus size={12} /></button>
                     <button onClick={(e) => { e.stopPropagation(); handleUpdate('add', (task.stepValue || 1)); }} className="w-12 h-6 flex items-center justify-center text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-full border border-emerald-100 transition-colors">+{task.stepValue || 1}</button>
-                    <span className="text-xs text-gray-400 pt-1.5">{task.unit}</span>
+                    <span className="text-xs text-gray-400 pt-1.5">{translateUnit(task.unit, t)}</span>
                 </div>
             )}
 

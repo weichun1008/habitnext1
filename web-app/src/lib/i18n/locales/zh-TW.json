@@ -134,6 +134,29 @@
             "mind": "心靈",
             "cognition": "認知與智慧",
             "career": "職涯與平衡"
+        },
+        "units": {
+            "second": "秒",
+            "minute": "分鐘",
+            "hour": "小時",
+            "time": "次",
+            "set": "組",
+            "rep": "下",
+            "step": "步",
+            "page": "頁",
+            "item": "個",
+            "pill": "顆",
+            "cup": "杯",
+            "bowl": "碗",
+            "serving": "份",
+            "gram": "克",
+            "kg": "公斤",
+            "cc": "cc",
+            "ml": "ml",
+            "liter": "公升",
+            "km": "公里",
+            "meter": "公尺",
+            "day": "天"
         }
     },
     "daily": {
