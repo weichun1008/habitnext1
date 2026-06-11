@@ -12,8 +12,12 @@ import ja from './content/ja.json';
 import ko from './content/ko.json';
 import de from './content/de.json';
 import es from './content/es.json';
+import fr from './content/fr.json';
+import pt from './content/pt.json';
+import it from './content/it.json';
+import id from './content/id.json';
 
-const CONTENT = { en, 'zh-CN': zhCN, ja, ko, de, es };
+const CONTENT = { en, 'zh-CN': zhCN, ja, ko, de, es, fr, pt, it, id };
 
 // text：canonical 中文字串。locale：目標語言。zh-TW（或缺字典）回原字。
 export function localizeContent(text, locale) {
