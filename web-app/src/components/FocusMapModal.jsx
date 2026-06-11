@@ -10,13 +10,14 @@ import SaveAsPlanModal from './focusMap/SaveAsPlanModal';
 import { quadrantOf, recommendDefaults, sliderSeedFor, buildBatchPayload, QUADRANTS } from '@/lib/focusMap';
 import { buildPlanFromAspiration } from '@/lib/planBuilder';
 import { useT } from '@/lib/i18n';
+import { localizedTaskField } from '@/lib/i18n/dataLabels';
 
 // FocusMapModal — 引導式三階段：影響力 → 執行度 → 焦點地圖（+ 養成期間）。
 // Props: isOpen, userId, onClose(), onActivated(count)
 const ORDER = ['golden', 'big_fish', 'background', 'skip'];
 
 const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onClose, onActivated }) => {
-  const { t } = useT();
+  const { t, locale } = useT();
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -97,7 +98,7 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onC
     candidates.forEach((c, i) => {
       const r = ratings.get(c.id) || { impact: 3, ability: 3 };
       const q = quadrantOf(r.impact, r.ability);
-      out[q].push({ id: c.id, n: i + 1, title: c.title });
+      out[q].push({ id: c.id, n: i + 1, title: localizedTaskField(c, 'title', locale) });
     });
     return out;
   }, [candidates, ratings]);
@@ -105,7 +106,7 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onC
   const points = useMemo(() => candidates.map((c, i) => {
     const r = ratings.get(c.id) || { impact: 3, ability: 3 };
     const q = quadrantOf(r.impact, r.ability);
-    return { id: c.id, n: i + 1, title: c.title, impact: r.impact, ability: r.ability, quadrant: q, color: QUADRANTS[q].color };
+    return { id: c.id, n: i + 1, title: localizedTaskField(c, 'title', locale), impact: r.impact, ability: r.ability, quadrant: q, color: QUADRANTS[q].color };
   }), [candidates, ratings]);
 
   const handleConfirm = async () => {
@@ -154,7 +155,7 @@ const FocusMapModal = ({ isOpen, userId, aspirationId, aspirationTitle = '', onC
           ) : phase !== 'map' ? (
             <RatingStep
               phase={phase}
-              habitTitle={candidates[idx]?.title || ''}
+              habitTitle={candidates[idx] ? localizedTaskField(candidates[idx], 'title', locale) : ''}
               index={idx}
               total={total}
               value={phase === 'impact' ? curRating?.impact : curRating?.ability}

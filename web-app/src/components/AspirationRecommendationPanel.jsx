@@ -7,6 +7,7 @@ import { scoreEvidence } from '@/lib/evidenceStrength';
 import IconRenderer from './IconRenderer';
 import HabitListView from './explore/HabitListView';
 import { useT } from '@/lib/i18n';
+import { localizedHabitField } from '@/lib/i18n/dataLabels';
 
 // 從習慣的已發布 insights 取「最高 total」的 evidence；無則 null。
 function topEvidenceOf(habit) {
@@ -43,7 +44,7 @@ function SectionEmpty({ children }) {
 }
 
 function TemplateCard({ template, onPick, picking }) {
-    const { t } = useT();
+    const { t, locale } = useT();
     const phases = template?.tasks?.phases;
     const totalDays = Array.isArray(phases)
         ? phases.reduce((acc, ph) => acc + (Number(ph.days) || 0), 0)
@@ -84,7 +85,7 @@ function TemplateCard({ template, onPick, picking }) {
 }
 
 function HabitCard({ habit, onPick, onAddCandidate, onRemoveCandidate, picking, addedAsCandidate }) {
-    const { t } = useT();
+    const { t, locale } = useT();
     // Difficulties keys are pre-sorted by the enum order, but the seed habit
     // shape uses string keys so just look at which are enabled.
     const enabledLevels = ['beginner', 'intermediate', 'challenge'].filter(
@@ -108,14 +109,14 @@ function HabitCard({ habit, onPick, onAddCandidate, onRemoveCandidate, picking, 
         }`}>
             <div className="min-w-0">
                 <h5 className="font-bold text-sm text-gray-800 leading-snug">
-                    {habit.name}
+                    {localizedHabitField(habit, 'name', locale)}
                 </h5>
                 {topEvidence && (
                     <div className="mt-1"><EvidenceBadge evidence={topEvidence} /></div>
                 )}
                 {habit.description && (
                     <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
-                        {habit.description}
+                        {localizedHabitField(habit, 'description', locale)}
                     </p>
                 )}
                 {levelLabels.length > 0 && (
@@ -177,7 +178,7 @@ export default function AspirationRecommendationPanel({
     onSkipToTemplates,
     onSkipToHabits,
 }) {
-    const { t } = useT();
+    const { t, locale } = useT();
     const [data, setData] = useState(null); // { templates, habits }
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Sparkles, Users, Calendar, ListChecks } from 'lucide-react';
 import AuthorBadge from './templates/AuthorBadge';
 import { useT } from '@/lib/i18n';
+import { localizeContent } from '@/lib/i18n/content';
 
 // TemplateDetailPanel — Slice J
 // Renders a slide-in detail view for a Template inside the TemplateExplorer.
@@ -32,13 +33,13 @@ const computeSummary = (template) => {
 };
 
 const PhaseBlock = ({ phase, index }) => {
-    const { t } = useT();
+    const { t, locale } = useT();
     const tasks = Array.isArray(phase?.tasks) ? phase.tasks : [];
     return (
         <section className="mt-6 first:mt-0">
             <div className="flex items-baseline justify-between mb-3 pb-2 border-b border-gray-200">
                 <h4 className="text-sm font-bold text-gray-800">
-                    {phase.name || `Phase ${index + 1}`}
+                    {phase.name ? localizeContent(phase.name, locale) : `Phase ${index + 1}`}
                 </h4>
                 {phase.days > 0 && (
                     <span className="text-xs text-gray-400 flex-shrink-0 ml-2">
@@ -58,7 +59,7 @@ const PhaseBlock = ({ phase, index }) => {
                             <span className="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold flex items-center justify-center mt-0.5">
                                 {i + 1}
                             </span>
-                            <span className="leading-snug line-clamp-2">{task.title || t('templates.untitled')}</span>
+                            <span className="leading-snug line-clamp-2">{localizeContent(task.title, locale) || t('templates.untitled')}</span>
                         </li>
                     ))}
                 </ol>
@@ -75,7 +76,7 @@ const TemplateDetailPanel = ({
     joining = false,
     category = null,  // { name, color, icon } — resolved from PlanCategory by caller; falsy = hide chip
 }) => {
-    const { t } = useT();
+    const { t, locale } = useT();
     // Slide-in animation: start translated, then transition to 0 on mount.
     const [shown, setShown] = useState(false);
     useEffect(() => {
@@ -115,7 +116,7 @@ const TemplateDetailPanel = ({
                 </button>
                 <div className="flex-1 min-w-0">
                     <h2 className="text-base font-bold text-gray-800 truncate">
-                        {template.name}
+                        {localizeContent(template.name, locale)}
                     </h2>
                     <div className="mt-0.5">
                         <AuthorBadge template={template} />
@@ -161,7 +162,7 @@ const TemplateDetailPanel = ({
                 {/* Description */}
                 {template.description && (
                     <p className="text-sm text-gray-700 leading-relaxed mb-5 whitespace-pre-line">
-                        {template.description}
+                        {localizeContent(template.description, locale)}
                     </p>
                 )}
 

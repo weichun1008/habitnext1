@@ -8,7 +8,7 @@ import HabitListView from './explore/HabitListView';
 import CategoryIcon from './explore/CategoryIcon';
 import AnchorPicker from './explore/AnchorPicker';
 import { useT } from '@/lib/i18n';
-import { translateCue, translateDomain } from '@/lib/i18n/dataLabels';
+import { translateCue, translateDomain, localizedHabitField } from '@/lib/i18n/dataLabels';
 
 // Slice K (2026-05-26): added two optional props.
 //   - onOpenAspirationPicker: when set, an "✨ 從嚮往開始" entry button
@@ -32,7 +32,7 @@ const TaskLibraryModal = ({
     onOpenAspirationPicker = null,
     initialHabit = null,
 }) => {
-    const { t } = useT();
+    const { t, locale } = useT();
     const [habits, setHabits] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -173,7 +173,7 @@ const TaskLibraryModal = ({
         if (toastTimer) clearTimeout(toastTimer);
         const timer = setTimeout(() => setToast(null), 2200);
         setToastTimer(timer);
-        setToast({ text: t('library.addedToast', { name: habit.name }) });
+        setToast({ text: t('library.addedToast', { name: localizedHabitField(habit, 'name', locale) }) });
     };
 
     const visibleHabits = (() => {
@@ -298,7 +298,7 @@ const TaskLibraryModal = ({
                         <>
                             <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 mb-2">
                                 <p className="text-xs text-emerald-700 mb-1">{t('library.aboutToAdd')}</p>
-                                <p className="text-sm font-bold text-emerald-900">{pendingHabit?.habit?.name}</p>
+                                <p className="text-sm font-bold text-emerald-900">{localizedHabitField(pendingHabit?.habit, 'name', locale)}</p>
                                 <p className="text-xs text-emerald-700 mt-0.5">{t('library.difficultyLabel', { level: t(`difficulty.${pendingHabit?.diffKey === 'intermediate' ? 'intermediate' : pendingHabit?.diffKey === 'challenge' ? 'challenge' : 'beginner'}`) })}</p>
                             </div>
                             <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t('library.pickAnchorHint')}</p>
