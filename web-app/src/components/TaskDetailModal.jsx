@@ -9,7 +9,7 @@ import { visibleSubtasks } from '@/lib/subtasks';
 import TaskActionMenu from './taskCard/TaskActionMenu';
 import LocationChip from './taskCard/LocationChip';
 import { useT } from '@/lib/i18n';
-import { translateCue, translateUnit, localizedTaskField } from '@/lib/i18n/dataLabels';
+import { translateCue, translateUnit, localizedTaskField, localizedSubtaskLabel } from '@/lib/i18n/dataLabels';
 
 const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate, onAfterAction, onPickLocation, onStartTool, onToggleStar }) => {
     const { t, locale } = useT();
@@ -258,7 +258,7 @@ const TaskDetailModal = ({ isOpen, onClose, task, onEdit, onUpdate, initialDate,
                                                 <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isChecked ? 'bg-emerald-500 border-emerald-500' : 'border-gray-300'}`}>
                                                     {isChecked && <Check size={12} className="text-white" strokeWidth={3} />}
                                                 </div>
-                                                <span className={`text-sm ${isChecked ? 'text-gray-400 line-through' : (isReadonly ? 'text-gray-400' : 'text-gray-700')}`}>{sub.label}</span>
+                                                <span className={`text-sm ${isChecked ? 'text-gray-400 line-through' : (isReadonly ? 'text-gray-400' : 'text-gray-700')}`}>{localizedSubtaskLabel(sub.label, locale)}</span>
                                             </div>
                                         );
                                     })}

@@ -16,7 +16,7 @@ import {
 } from '@/lib/utils';
 import { visibleSubtasks } from '@/lib/subtasks';
 import { useT } from '@/lib/i18n';
-import { translateCue, translateUnit, localizedTaskField } from '@/lib/i18n/dataLabels';
+import { translateCue, translateUnit, localizedTaskField, localizedSubtaskLabel } from '@/lib/i18n/dataLabels';
 
 // `viewingDate` (yyyy-mm-dd) lets the card render any day's state — used by
 // the daily view's interactive week strip. Defaults to today so existing
@@ -419,7 +419,7 @@ const TaskCard = ({ task, onClick, onUpdate = () => { }, viewingDate, onAfterAct
                                         ? 'text-gray-400 line-through'
                                         : isLocked ? 'text-gray-400' : 'text-gray-700'
                                 }`}>
-                                    {sub.label}
+                                    {localizedSubtaskLabel(sub.label, locale)}
                                 </span>
                             </button>
                         );

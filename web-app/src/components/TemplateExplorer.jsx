@@ -6,6 +6,7 @@ import {
     sectionIdFor,
 } from '@/lib/templateRecommendation';
 import { useT } from '@/lib/i18n';
+import { localizeContent } from '@/lib/i18n/content';
 
 // Lucide 圖示名稱 → component 對照（家族卡用；查無則 LayoutGrid）
 const FAMILY_ICONS = { Flower2, Moon, LayoutGrid };
@@ -37,7 +38,7 @@ const fallbackForSlug = (slug) => {
 // the recommendation panel lands the user directly on that template's
 // detail view here, instead of forcing them to scroll-find it again.
 const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null, userSleepTypeKey = null, initialTemplate = null }) => {
-    const { t } = useT();
+    const { t, locale } = useT();
     const [templates, setTemplates] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -304,7 +305,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                                 </span>
                                                             )}
                                                         </div>
-                                                        <h3 className="font-bold text-gray-800 text-base leading-snug line-clamp-2 mb-1">{template.name}</h3>
+                                                        <h3 className="font-bold text-gray-800 text-base leading-snug line-clamp-2 mb-1">{localizeContent(template.name, locale)}</h3>
                                                         <div className="mb-2">
                                                             <AuthorBadge template={template} />
                                                         </div>
@@ -315,7 +316,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                                                         </div>
                                                         )}
                                                         <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-3 flex-1">
-                                                            {template.description || t('templates.descriptionFallback')}
+                                                            {localizeContent(template.description, locale) || t('templates.descriptionFallback')}
                                                         </p>
                                                         <div className="flex items-center gap-3 text-[11px] text-gray-400 border-t border-gray-100 pt-2 mb-3">
                                                             <div className="flex items-center gap-1"><User size={12} /><span>{template._count?.assignments || 0}</span></div>
@@ -363,7 +364,7 @@ const TemplateExplorer = ({ isOpen, onClose, userId, onJoin, userTypeKey = null,
                             </div>
                             <div>
                                 <h3 className="font-bold text-gray-800">{t('templates.chooseStartDate')}</h3>
-                                <p className="text-xs text-gray-500">{selectedTemplate.name}</p>
+                                <p className="text-xs text-gray-500">{localizeContent(selectedTemplate.name, locale)}</p>
                             </div>
                         </div>
 

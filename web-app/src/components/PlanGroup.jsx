@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Trash2, Info, ChevronDown, ChevronUp, Lock } from 'lucide-react';
 import TaskCard from './TaskCard';
 import { useT } from '@/lib/i18n';
+import { localizeContent } from '@/lib/i18n/content';
 
 const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTaskDelete, onUpdate }) => {
-    const { t } = useT();
+    const { t, locale } = useT();
     const [isExpanded, setIsExpanded] = useState(true);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -106,7 +107,7 @@ const PlanGroup = ({ assignment, tasks, onDelete, onTaskClick, onTaskEdit, onTas
                                                 <div className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${isActive ? 'bg-emerald-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                                     {idx + 1}
                                                 </div>
-                                                <span className="text-xs font-bold text-gray-700">{phase.name}</span>
+                                                <span className="text-xs font-bold text-gray-700">{localizeContent(phase.name, locale)}</span>
                                                 {phase.days && (
                                                     <span className="text-[10px] text-gray-400">{t('planGroup.phaseDays', { n: phase.days })}</span>
                                                 )}

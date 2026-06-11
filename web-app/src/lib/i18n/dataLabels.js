@@ -8,6 +8,7 @@
 // 所以 server-safe 的 lib 也能用。
 
 import { LIFE_MOMENTS } from '../anchors';
+import { localizeContent } from './content';
 
 const ANCHOR_ID_BY_LABEL = new Map(LIFE_MOMENTS.map(m => [m.label, m.id]));
 
@@ -86,30 +87,24 @@ export function translateUnit(unit, t) {
     return k ? t(`data.units.${k}`) : unit;
 }
 
-// 官方習慣的 name/description 翻譯。
-// habit.translations = { en: { name, description }, ... }（OfficialHabit.translations）。
-// zh-TW（canonical）或缺翻譯時 fallback 回原欄位。
+// 官方習慣 / template 的 name/description 顯示翻譯。
+// 一律以 canonical 中文字串查內容字典（lib/i18n/content），查不到回原字。
+// 不需要 DB 欄位或 relation —— 涵蓋官方習慣、template 任務、使用者改過名的 fallback。
 export function localizedHabitField(habit, field, locale) {
     if (!habit) return '';
-    if (locale && locale !== 'zh-TW') {
-        const tr = habit.translations?.[locale]?.[field];
-        if (tr) return tr;
-    }
-    return habit[field] || '';
+    return localizeContent(habit[field] || '', locale);
 }
 
-// 任務顯示標題/描述：任務是加入時從官方習慣複製的快照（title/details）。
-// 若快照仍等於官方 canonical（使用者沒改過字），顯示翻譯版；
-// 使用者改過 → 尊重使用者的字，原樣顯示。
+// 任務顯示標題/描述：task.title / task.details 是加入時複製的 canonical 中文快照。
+// 直接查內容字典；使用者若改過名（字串不在字典）就 fallback 回原字。
 export function localizedTaskField(task, field, locale) {
     if (!task) return '';
-    const own = task[field] || '';
-    const habit = task.officialHabit;
-    if (!habit) return own;
-    const habitField = field === 'title' ? 'name' : 'description';
-    const canonical = habit[habitField] || '';
-    if (own !== canonical) return own;
-    return localizedHabitField(habit, habitField, locale) || own;
+    return localizeContent(task[field] || '', locale);
+}
+
+// 子任務 label（task.subtasks[].label / template subtask）— 同樣走內容字典。
+export function localizedSubtaskLabel(label, locale) {
+    return localizeContent(label || '', locale);
 }
 
 // difficulties.{key}.label 是 DB 內的中文標籤（入門/進階/挑戰）。
