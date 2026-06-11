@@ -12,7 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const LOCALES = ['en', 'zh-CN', 'ja', 'ko', 'de', 'es'];
+const LOCALES = ['en', 'zh-CN', 'ja', 'ko', 'de', 'es', 'fr', 'pt', 'it', 'id'];
 const SEED = path.join(__dirname, '..', 'prisma', 'seed');
 const OUT = path.join(__dirname, '..', 'src', 'lib', 'i18n', 'content');
 

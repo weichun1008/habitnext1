@@ -1,0 +1,410 @@
+{
+    "每日攝取益生菌/發酵食物": {
+        "name": "Prends des probiotiques / aliments fermentés chaque jour",
+        "description": "Les probiotiques maintiennent l'équilibre du microbiote intestinal ; les aliments fermentés apportent des cultures vivantes et des acides gras à chaîne courte qui soutiennent l'immunité et la digestion."
+    },
+    "觀察並記錄每日排便狀況": {
+        "name": "Suis tes selles quotidiennes",
+        "description": "La forme des selles (échelle de Bristol) est un indicateur en temps réel de la santé intestinale ; un journal quotidien aide à repérer tôt les anomalies."
+    },
+    "避免攝取過敏原食物": {
+        "name": "Évite tes aliments allergènes",
+        "description": "Les allergènes personnels (comme le gluten ou les produits laitiers) peuvent déclencher une inflammation chronique ; les identifier et les éviter améliore la santé intestinale et le bien-être mental."
+    },
+    "定期進行健康檢查": {
+        "name": "Fais des bilans de santé réguliers",
+        "description": "Mieux vaut prévenir que guérir : un bilan annuel peut détecter des marqueurs de risque de maladie chronique avant l'apparition des symptômes."
+    },
+    "記錄家族病史風險": {
+        "name": "Enregistre tes antécédents familiaux",
+        "description": "L'histoire médicale familiale révèle des prédispositions génétiques, guidant ta stratégie de prévention et la fréquence de tes dépistages."
+    },
+    "每天攝取足夠膳食纖維": {
+        "name": "Mange assez de fibres alimentaires chaque jour",
+        "description": "Les fibres nourrissent les bonnes bactéries intestinales, favorisent un transit régulier, une glycémie stable et un cholestérol plus bas."
+    },
+    "餐前喝一杯溫水": {
+        "name": "Bois un verre d'eau tiède avant les repas",
+        "description": "S'hydrater avant le repas stimule les sécrétions gastriques et ralentit la prise alimentaire, aidant à contrôler les portions et à améliorer la digestion."
+    },
+    "避免不必要的抗生素使用": {
+        "name": "Évite les antibiotiques inutiles",
+        "description": "L'usage excessif d'antibiotiques perturbe le microbiote ; ne les prends que sur avis médical pour préserver la diversité microbienne."
+    },
+    "練習腹式呼吸按摩腸道": {
+        "name": "Pratique la respiration abdominale pour masser les intestins",
+        "description": "La respiration diaphragmatique mobilise le diaphragme et les organes internes et stimule le système nerveux parasympathique, favorisant la motilité intestinale et le soulagement du stress."
+    },
+    "攝取富含益生元的食物 (洋蔥/蒜)": {
+        "name": "Mange des aliments riches en prébiotiques (oignon/ail)",
+        "description": "Les prébiotiques sont la nourriture des probiotiques ; oignons, ail et autres aliments riches en oligosaccharides nourrissent les bonnes bactéries intestinales."
+    },
+    "每天早晨開窗通風": {
+        "name": "Ouvre les fenêtres pour aérer chaque matin",
+        "description": "Le dioxyde de carbone et les composés volatils s'accumulent la nuit et émoussent la vigilance ; aérer la chambre chaque matin améliore la qualité de l'air et la clarté mentale."
+    },
+    "整理工作桌面保持清爽": {
+        "name": "Garde ton bureau bien rangé",
+        "description": "Un environnement net réduit la distraction visuelle et la charge cognitive, soutenant la concentration et de meilleures décisions."
+    },
+    "接觸大自然/戶外散步": {
+        "name": "Va dans la nature / fais une marche en plein air",
+        "description": "Le temps passé dans les espaces verts fait baisser le cortisol et améliore l'humeur — une intervention santé peu coûteuse connue sous le nom d'« ordonnance verte »."
+    },
+    "減少暴露於噪音環境": {
+        "name": "Réduis l'exposition aux environnements bruyants",
+        "description": "L'exposition chronique au bruit augmente la tension artérielle et endommage l'audition ; réduire activement le bruit protège les systèmes cardiovasculaire et auditif."
+    },
+    "每週進行數位環境大掃除": {
+        "name": "Fais un grand ménage numérique chaque semaine",
+        "description": "Nettoyer les fichiers, te désabonner d'e-mails et organiser les icônes du bureau réduit la fatigue numérique et l'anxiété informationnelle."
+    },
+    "臥室保持完全黑暗 (助眠)": {
+        "name": "Garde la chambre complètement noire (pour le sommeil)",
+        "description": "La lumière supprime la sécrétion de mélatonine ; une pièce totalement sombre aide à s'endormir plus vite et à dormir plus profondément."
+    },
+    "種植室內植物淨化空氣": {
+        "name": "Cultive des plantes d'intérieur pour purifier l'air",
+        "description": "Les plantes d'intérieur absorbent certains composés organiques volatils et augmentent l'humidité, tout en procurant un effet psychologique apaisant."
+    },
+    "調整符合人體工學的桌椅": {
+        "name": "Installe un bureau et une chaise ergonomiques",
+        "description": "Un bureau et une chaise bien réglés réduisent l'accumulation de tensions sur la nuque, les épaules et le bas du dos — un investissement de base pour quiconque travaille de longues heures."
+    },
+    "定期清理冰箱與儲藏室": {
+        "name": "Nettoie le frigo et le garde-manger régulièrement",
+        "description": "Retirer les aliments périmés réduit le risque d'intoxication alimentaire, et un garde-manger bien organisé rend les choix sains plus évidents."
+    },
+    "減少使用一次性塑膠": {
+        "name": "Réduis le plastique à usage unique",
+        "description": "Moins de plastique réduit l'exposition aux microplastiques et l'impact environnemental ; apporter ses propres contenants est la façon la plus simple de commencer."
+    },
+    "執行 168 間歇性斷食": {
+        "name": "Fais le jeûne intermittent 16:8",
+        "description": "Une fenêtre de jeûne de 16 heures fait baisser l'insuline et active l'autophagie cellulaire — une intervention métabolique courante et facile à suivre."
+    },
+    "每餐攝取一個拳頭的蔬菜": {
+        "name": "Mange une portion de légumes de la taille de ton poing à chaque repas",
+        "description": "Les légumes fournissent fibres, vitamines et phytonutriments ; en manger assez est la pierre angulaire d'une alimentation équilibrée."
+    },
+    "減少精緻糖與澱粉攝取": {
+        "name": "Réduis le sucre et les féculents raffinés",
+        "description": "Le sucre et les féculents raffinés provoquent de fortes variations de glycémie ; un excès prolongé augmente le risque de syndrome métabolique."
+    },
+    "吃飯細嚼慢嚥 (每口20下)": {
+        "name": "Mâche lentement (20 mastications par bouchée)",
+        "description": "Une mastication complète laisse aux signaux de satiété le temps de se faire sentir, aidant à contrôler les portions et améliorant digestion et absorption."
+    },
+    "維持血糖穩定 (先吃菜肉再吃飯)": {
+        "name": "Garde la glycémie stable (légumes et protéines avant le riz)",
+        "description": "L'ordre des aliments influence la réponse glycémique postprandiale ; manger d'abord légumes et protéines atténue le pic de glycémie dû aux féculents."
+    },
+    "每天喝足 2500cc 水": {
+        "name": "Bois 2500 cc d'eau chaque jour",
+        "description": "L'hydratation influence le métabolisme, la peau et la cognition ; boire de petites quantités tout au long de la journée fonctionne mieux que beaucoup d'un coup."
+    },
+    "每週實行一日無肉日": {
+        "name": "Fais une journée sans viande chaque semaine",
+        "description": "Sauter les protéines animales un jour réduit l'apport en graisses saturées et l'impact environnemental, tout en ajoutant plus de diversité végétale à ton alimentation."
+    },
+    "避免晚餐後進食 (消夜)": {
+        "name": "Ne mange pas après le dîner (en-cas tardifs)",
+        "description": "Manger près de l'heure du coucher perturbe la digestion et la qualité du sommeil ; un jeûne du soir laisse le métabolisme se reposer et favorise la combustion des graisses."
+    },
+    "攝取優質 Omega-3 油脂": {
+        "name": "Apporte-toi des oméga-3 de qualité",
+        "description": "Les oméga-3 aident à contrer l'inflammation au niveau du système cardiovasculaire et du cerveau ; on en trouve dans les poissons gras, les graines de lin et les noix."
+    },
+    "閱讀食品營養標示": {
+        "name": "Lis les étiquettes nutritionnelles",
+        "description": "Comprendre calories, sucre, sodium et ordre des ingrédients est le premier pas pour sortir du piège des aliments ultra-transformés."
+    },
+    "每餐都要有一份蛋白質": {
+        "name": "Inclus une portion de protéines à chaque repas",
+        "description": "Les protéines stabilisent la glycémie, augmentent la satiété et préservent les muscles. Œufs, tofu, poulet ou lait de soja conviennent. 💡 Si tu jeûnes ou sautes un repas, choisis une difficulté plus basse, ou modifie les créneaux de repas après l'ajout."
+    },
+    "每餐前先喝一杯水": {
+        "name": "Bois un verre d'eau avant chaque repas",
+        "description": "200 à 300 cc d'eau avant les repas freine la faim, ralentit le rythme et aide à rester hydraté. 💡 Les jours de jeûne, choisis simplement la difficulté basse — continue à boire de l'eau."
+    },
+    "飯後散步 15 分鐘 (穩定血糖)": {
+        "name": "Marche 15 minutes après les repas (glycémie)",
+        "description": "Une activité légère après le repas abaisse nettement le pic glycémique postprandial, avec un grand bénéfice pour la santé métabolique."
+    },
+    "每天深蹲 30 下 (肌力)": {
+        "name": "Fais 30 squats par jour (force)",
+        "description": "Les squats travaillent les grands muscles du bas du corps, entretenant le métabolisme de base et la mobilité — un exercice de force à domicile très efficace."
+    },
+    "避免久坐超過 60 分鐘": {
+        "name": "Évite de rester assis plus de 60 minutes d'affilée",
+        "description": "Une position assise prolongée ralentit le métabolisme et augmente le risque cardiovasculaire ; se lever et bouger une fois par heure apporte déjà un net soulagement."
+    },
+    "每週進行 3 次有氧運動": {
+        "name": "Fais 3 séances de cardio par semaine",
+        "description": "Le cardio régulier améliore la condition cardiorespiratoire et la sensibilité à l'insuline — le niveau d'activité minimum recommandé par l'OMS."
+    },
+    "晨間脊椎伸展操": {
+        "name": "Fais des étirements de la colonne le matin",
+        "description": "Un court étirement au réveil active le système nerveux et améliore la mobilité vertébrale, réduisant les raideurs dans la journée."
+    },
+    "走樓梯代替搭電梯": {
+        "name": "Prends les escaliers plutôt que l'ascenseur",
+        "description": "Monter les escaliers est une activité non sportive (NEAT) très efficace, qui augmente ton activité quotidienne sans effort."
+    },
+    "進行 1 分鐘棒式 (Plank)": {
+        "name": "Tiens 1 minute de gainage (Plank)",
+        "description": "Le gainage renforce la stabilité du tronc, aidant à améliorer la posture, à protéger le bas du dos et à booster la performance globale."
+    },
+    "睡前拉筋放鬆肌肉": {
+        "name": "Étire-toi avant le coucher pour détendre tes muscles",
+        "description": "Les étirements sollicitent le système nerveux parasympathique et détendent les muscles, améliorant la qualité du sommeil et la souplesse du lendemain."
+    },
+    "每天步行 8000 步": {
+        "name": "Marche 8000 pas par jour",
+        "description": "Le nombre de pas est un indicateur composite de l'activité quotidienne ; la recherche montre que 7000 à 8000 pas par jour réduisent nettement la mortalité."
+    },
+    "練習單腳站立 (平衡感)": {
+        "name": "Entraîne-toi à tenir sur une jambe (équilibre)",
+        "description": "Tenir sur une jambe entraîne la proprioception et la stabilité du tronc — un des exercices les plus simples pour prévenir les chutes et ralentir le vieillissement."
+    },
+    "睡前 1 小時不看手機 (藍光)": {
+        "name": "Pas de téléphone pendant 1 heure avant le coucher (lumière bleue)",
+        "description": "La lumière bleue des écrans supprime la mélatonine ; ranger le téléphone avant de dormir accélère l'endormissement et approfondit le sommeil."
+    },
+    "練習 4-7-8 呼吸法紓壓": {
+        "name": "Pratique la respiration 4-7-8 pour décompresser",
+        "description": "La technique 4-7-8 stimule le nerf vague et active le parasympathique, apaisant l'anxiété en quelques minutes."
+    },
+    "確保每天 7 小時優質睡眠": {
+        "name": "Assure-toi 7 heures de sommeil de qualité chaque nuit",
+        "description": "La durée et la qualité du sommeil influencent directement l'immunité, la cognition et l'humeur ; 7 à 9 heures sont recommandées pour un adulte."
+    },
+    "建立固定的睡前儀式": {
+        "name": "Mets en place un rituel du coucher régulier",
+        "description": "Un rituel pré-sommeil régulier envoie un signal « il est temps de se reposer » au système nerveux, accélérant l'endormissement et approfondissant le sommeil."
+    },
+    "午後不再攝取咖啡因": {
+        "name": "Plus de caféine après midi",
+        "description": "La caféine a une demi-vie d'environ 5 à 6 heures ; en prendre l'après-midi gêne l'endormissement et réduit la part de sommeil profond."
+    },
+    "泡熱水澡放鬆神經": {
+        "name": "Prends un bain chaud pour détendre tes nerfs",
+        "description": "Un bain chaud 1 à 2 heures avant le coucher aide la température centrale à baisser, déclenchant la réponse d'endormissement et détendant les muscles."
+    },
+    "使用眼罩或耳塞助眠": {
+        "name": "Utilise un masque de nuit ou des bouchons d'oreille",
+        "description": "Bloquer lumière et bruit préserve l'intégrité des cycles de sommeil — particulièrement utile pour les citadins et les personnes au sommeil léger."
+    },
+    "寫下煩惱清單 (清空大腦)": {
+        "name": "Écris une liste des soucis (vider le cerveau)",
+        "description": "Externaliser ses soucis avant le coucher réduit la rumination, aidant le cerveau à passer du mode « à faire » au mode repos."
+    },
+    "早上起床曬 10 分鐘太陽": {
+        "name": "Prends 10 minutes de soleil matinal",
+        "description": "La lumière du matin recalibre l'horloge biologique et booste la sérotonine — une ancre clé pour une humeur et un sommeil stables."
+    },
+    "午間小睡 20 分鐘 (Power Nap)": {
+        "name": "Fais une sieste de 20 minutes (Power Nap)",
+        "description": "Une sieste de 20 minutes ou moins restaure la vigilance sans perturber le sommeil de la nuit ; au-delà de 30 minutes, tu risques d'entrer en sommeil profond et de te réveiller embrumé."
+    },
+    "每天擁抱家人/伴侶": {
+        "name": "Fais un câlin à ta famille / ton/ta partenaire chaque jour",
+        "description": "Le contact physique augmente l'ocytocine et abaisse les hormones du stress — une façon peu coûteuse de tisser un lien émotionnel."
+    },
+    "每週與一位好友通話": {
+        "name": "Appelle un proche chaque semaine",
+        "description": "Des liens sociaux solides comptent parmi les meilleurs prédicteurs de longévité ; entretiens-les activement plutôt que d'attendre passivement."
+    },
+    "練習傾聽不打斷": {
+        "name": "Entraîne-toi à écouter sans interrompre",
+        "description": "Écouter pleinement crée confiance et sentiment d'être compris — une compétence clé pour les relations proches et la communication au travail."
+    },
+    "主動表達感謝與愛": {
+        "name": "Exprime gratitude et amour ouvertement",
+        "description": "Verbaliser clairement les émotions positives profite aux deux côtés d'une relation, et plusieurs études en psychologie confirment qu'elle augmente le bien-être."
+    },
+    "參與社群活動減少孤獨感": {
+        "name": "Rejoins des activités collectives pour réduire la solitude",
+        "description": "La solitude peut nuire à la santé autant que le tabac ; des interactions sociales régulières sont une stratégie de prévention efficace."
+    },
+    "安排與伴侶的約會時光": {
+        "name": "Planifie un rendez-vous avec ton/ta partenaire",
+        "description": "Créer délibérément du temps de qualité ensemble entretient l'intimité ; la qualité compte plus que la fréquence."
+    },
+    "每天讚美一個人": {
+        "name": "Fais un compliment chaque jour",
+        "description": "Une louange précise alimente les cycles sociaux positifs et t'entraîne à remarquer les forces des autres."
+    },
+    "寫張卡片給重要的人": {
+        "name": "Écris une carte à une personne qui compte",
+        "description": "Les messages écrits à la main ont bien plus de profondeur émotionnelle que les messages instantanés — un investissement à fort rendement dans tes relations."
+    },
+    "練習換位思考": {
+        "name": "Entraîne-toi à te mettre à la place de l'autre",
+        "description": "Chercher activement à comprendre les situations du point de vue d'une autre personne réduit les conflits et développe l'empathie."
+    },
+    "與家人共進晚餐且不滑手機": {
+        "name": "Dîne en famille, téléphones rangés",
+        "description": "Partager un repas avec une attention pleine renforce les liens familiaux ; la recherche associe cela à une meilleure santé mentale chez les enfants et les ados."
+    },
+    "每日正念冥想 10 分鐘": {
+        "name": "Médite en pleine conscience 10 minutes par jour",
+        "description": "La méditation régulière peut remodeler la structure du cerveau et atténuer la réactivité de l'amygdale, améliorant la régulation émotionnelle."
+    },
+    "寫下感恩日記 (三件事)": {
+        "name": "Tiens un journal de gratitude (trois choses)",
+        "description": "Écrire chaque jour trois choses pour lesquelles tu es reconnaissant entraîne le cerveau à repérer les signaux positifs, augmentant nettement le bien-être subjectif."
+    },
+    "定義個人核心價值觀": {
+        "name": "Définis tes valeurs personnelles fondamentales",
+        "description": "Clarifier tes valeurs te donne une boussole pour décider, réduisant la sensation d'errance et l'anxiété de choix."
+    },
+    "練習自我慈悲與對話": {
+        "name": "Pratique l'auto-compassion et le dialogue intérieur",
+        "description": "Se traiter avec la même douceur qu'un bon ami est une compétence clé pour réduire l'autocritique et le risque dépressif."
+    },
+    "尋找生活中的意義感 (Ikigai)": {
+        "name": "Trouve ton sens de la vie (Ikigai)",
+        "description": "Un sentiment de sens relie les actions quotidiennes aux objectifs à long terme — un trait psychologique partagé par les Blue Zones de longévité."
+    },
+    "閱讀心靈成長書籍": {
+        "name": "Lis des livres de développement personnel",
+        "description": "Les livres de psychologie et de philosophie offrent des cadres de pensée qui t'aident à digérer les émotions et les grandes questions de la vie."
+    },
+    "進行十分鐘的靜默練習": {
+        "name": "Prends 10 minutes de silence",
+        "description": "Programmer délibérément un temps calme sans stimulation laisse le système nerveux récupérer de la surcharge sensorielle."
+    },
+    "練習寬恕與放下": {
+        "name": "Pratique le pardon et le lâcher-prise",
+        "description": "Une rancune persistante nuit au corps et à l'esprit ; pardonner n'est pas excuser l'autre — c'est te libérer toi-même."
+    },
+    "每天對著鏡子自我肯定": {
+        "name": "Fais des affirmations face au miroir chaque jour",
+        "description": "La recherche montre que l'auto-affirmation aide dans certains contextes mais peut se retourner contre les personnes à faible estime de soi. Considère cela comme un exercice de conscience de soi — les résultats varient selon les personnes."
+    },
+    "參與藝術創作或欣賞": {
+        "name": "Crée ou apprécie de l'art",
+        "description": "S'engager avec l'art stimule la créativité et l'expression émotionnelle, et peut aussi faire baisser le cortisol, hormone du stress."
+    },
+    "每天閱讀非虛構書籍 15 分鐘": {
+        "name": "Lis 15 minutes de non-fiction par jour",
+        "description": "Lire régulièrement de la non-fiction est une habitude à fort levier pour construire des connaissances transversales — bien plus structurée que des bribes éparses."
+    },
+    "學習一項新技能或語言": {
+        "name": "Apprends une nouvelle compétence ou une langue",
+        "description": "L'apprentissage continu construit une réserve cognitive, abaisse le risque de démence et élargit tes options de carrière."
+    },
+    "玩益智遊戲活化大腦": {
+        "name": "Joue à des jeux de réflexion pour rester vif",
+        "description": "Échecs, sudoku et autres puzzles font travailler la fonction exécutive et la mémoire de travail — un moyen accessible d'entretenir ton cerveau."
+    },
+    "進行深度工作 (Deep Work)": {
+        "name": "Fais du travail profond et concentré (Deep Work)",
+        "description": "Des blocs de haute concentration sans distraction sont la clé d'une production à forte valeur — de plus en plus rares, et de plus en plus un avantage compétitif."
+    },
+    "寫作或輸出今日所學": {
+        "name": "Écris ou partage ce que tu as appris aujourd'hui",
+        "description": "Produire en sortie oblige les connaissances à être structurées et testées — l'étape clé de la technique d'apprentissage de Feynman."
+    },
+    "收聽知識型 Podcast": {
+        "name": "Écoute des podcasts éducatifs",
+        "description": "Trajets et tâches ménagères peuvent devenir une fenêtre d'apprentissage régulière s'ils sont remplis d'audio riche en connaissances."
+    },
+    "每天學習一個新單字": {
+        "name": "Apprends un nouveau mot par jour",
+        "description": "Le vocabulaire sous-tend la précision de la pensée ; un mot par jour, c'est des centaines de mots nouveaux en un an."
+    },
+    "觀看一場 TED Talk": {
+        "name": "Regarde une conférence TED",
+        "description": "TED propose des conférences denses en idées et en savoirs frais — un canal efficace pour s'exposer à la pensée transdisciplinaire."
+    },
+    "練習批判性思考": {
+        "name": "Entraîne ton esprit critique",
+        "description": "Questionner les sources et repérer les sophismes est une défense essentielle à l'ère de la surcharge d'information."
+    },
+    "參加線上課程或講座": {
+        "name": "Suis un cours en ligne ou une conférence",
+        "description": "Les cours structurés offrent un parcours d'apprentissage guidé, plus simple pour bâtir un corpus complet que l'autodidaxie éparpillée."
+    },
+    "設定每日最重要的三件事": {
+        "name": "Définis tes trois tâches les plus importantes du jour",
+        "description": "Se concentrer sur trois MIT (Most Important Tasks) empêche les tâches secondaires de t'épuiser et concentre l'attention sur les objectifs à fort levier."
+    },
+    "劃分清晰的工作/生活界線": {
+        "name": "Trace des limites claires entre travail et vie",
+        "description": "Des limites explicites de temps ou d'espace empêchent le travail d'éroder ta vie personnelle — la base de la prévention du burn-out."
+    },
+    "定期檢視職涯成就感": {
+        "name": "Évalue régulièrement ton épanouissement professionnel",
+        "description": "Revoir périodiquement la direction de ta carrière t'évite le pilotage automatique ; ajuster tôt est bien plus efficace que corriger avec regret."
+    },
+    "優化工作流程提升效率": {
+        "name": "Optimise tes processus de travail pour gagner en efficacité",
+        "description": "Repérer les étapes répétitives et chronophages pour les automatiser ou les simplifier est la clé pour produire plus dans le même temps."
+    },
+    "尋找工作中的心流體驗": {
+        "name": "Trouve l'expérience du flow au travail",
+        "description": "Le flow vient plus facilement quand le défi correspond à tes capacités — une source de sens au travail et de motivation à long terme."
+    },
+    "整理收件匣 (Inbox Zero)": {
+        "name": "Vide ta boîte de réception (Inbox Zero)",
+        "description": "Garder ta boîte vide réduit l'anxiété informationnelle ; considère les e-mails comme des déclencheurs de tâches plutôt que comme du stockage."
+    },
+    "番茄鐘工作法": {
+        "name": "Utilise la technique Pomodoro",
+        "description": "Des cycles de 25 minutes de concentration et 5 minutes de pause soutiennent une production de qualité et préviennent l'épuisement des longues plages ininterrompues."
+    },
+    "拒絕不必要的會議": {
+        "name": "Refuse les réunions inutiles",
+        "description": "Les réunions sont des gouffres de temps ; évaluer activement si tu dois vraiment y assister libère de grandes plages pour le travail profond."
+    },
+    "每週回顧工作進度": {
+        "name": "Fais un bilan hebdomadaire de ton avancement",
+        "description": "Une revue hebdomadaire met en lumière progrès et écarts — une pratique clé pour rester aligné avec tes objectifs et ajuster ton rythme."
+    },
+    "建立個人品牌": {
+        "name": "Construis ta marque personnelle",
+        "description": "Publier régulièrement du contenu professionnel construit un capital de confiance personnel qui devient un levier lors d'un changement de carrière ou d'une création d'entreprise."
+    },
+    "睡前做 2 分鐘深呼吸（4-7-8）": {
+        "name": "Fais 2 minutes de respiration profonde avant le coucher (4-7-8)",
+        "description": "La méthode 4-7-8 abaisse l'activité du système sympathique, détend les muscles et aide à s'endormir ; environ 2 à 3 cycles suffisent à ressentir l'effet apaisant."
+    },
+    "第一餐吃完後吃保健品": {
+        "name": "Prends tes compléments après ton premier repas",
+        "description": "Les compléments s'absorbent mieux avec de la nourriture, et l'aliment dans l'estomac tamponne l'inconfort. Une ancre fixe les rend plus difficiles à oublier."
+    },
+    "起床後喝兩大口水": {
+        "name": "Bois deux grandes gorgées d'eau au réveil",
+        "description": "Après une nuit de métabolisme, le corps est légèrement déshydraté ; s'hydrater le matin relance le métabolisme et réduit les maux de tête matinaux."
+    },
+    "上完廁所後伸展 10 分鐘": {
+        "name": "Étire-toi 10 minutes après chaque passage aux toilettes",
+        "description": "Un passage aux toilettes est une ancre naturelle pour « se lever » ; utilise ce signal pour accumuler du temps d'étirement et éviter la position assise prolongée."
+    },
+    "空腹吃益生菌": {
+        "name": "Prends les probiotiques à jeun",
+        "description": "L'acidité gastrique est temporairement plus basse à jeun, donc plus de probiotiques survivent au passage vers l'intestin."
+    },
+    "睡前補充鎂": {
+        "name": "Prends du magnésium avant le coucher",
+        "description": "Le magnésium favorise la détente musculaire et un système nerveux apaisé ; le prendre avant le coucher améliore l'endormissement. À séparer du calcium et des produits laitiers."
+    },
+    "飯後補充薑黃和葉酸鐵": {
+        "name": "Prends du curcuma, du folate et du fer après les repas",
+        "description": "Le curcuma s'absorbe mieux avec des graisses alimentaires ; le folate et le fer sont à éviter à jeun pour réduire l'inconfort gastrique."
+    },
+    "想吃甜食先吃堅果等 10 分鐘": {
+        "name": "Envie de sucré ? Mange des noix et attends 10 minutes",
+        "description": "Les envies de sucre viennent souvent de variations glycémiques rapides ; manger des noix d'abord ralentit l'absorption, et l'envie disparaît généralement d'elle-même en 10 minutes."
+    },
+    "把含糖飲料換成白開水或無糖飲品": {
+        "name": "Remplace les boissons sucrées par de l'eau ou des boissons sans sucre",
+        "description": "Les boissons sucrées font grimper la glycémie rapidement sans rassasier ; passer aux boissons sans sucre est le premier pas le plus simple pour réduire le sucre."
+    },
+    "找一個 5 分鐘什麼都不做的時間": {
+        "name": "Prends 5 minutes pour ne strictement rien faire",
+        "description": "Une brève pause permet au système nerveux de passer d'une activation constante au mode parasympathique — un tampon émotionnel du quotidien."
+    }
+}

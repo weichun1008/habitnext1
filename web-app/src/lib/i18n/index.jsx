@@ -13,15 +13,23 @@ import ja from './locales/ja.json';
 import de from './locales/de.json';
 import es from './locales/es.json';
 import ko from './locales/ko.json';
+import fr from './locales/fr.json';
+import pt from './locales/pt.json';
+import it from './locales/it.json';
+import id from './locales/id.json';
 
 export const LOCALES = [
     { id: 'zh-TW', label: '繁體中文' },
     { id: 'zh-CN', label: '简体中文' },
     { id: 'en', label: 'English' },
     { id: 'ja', label: '日本語' },
+    { id: 'ko', label: '한국어' },
     { id: 'de', label: 'Deutsch' },
     { id: 'es', label: 'Español' },
-    { id: 'ko', label: '한국어' },
+    { id: 'fr', label: 'Français' },
+    { id: 'pt', label: 'Português' },
+    { id: 'it', label: 'Italiano' },
+    { id: 'id', label: 'Bahasa Indonesia' },
 ];
 
 export const DEFAULT_LOCALE = 'zh-TW';
@@ -35,6 +43,10 @@ const DICT = {
     de,
     es,
     ko,
+    fr,
+    pt,
+    it,
+    id,
 };
 
 export function loadLocale() {
